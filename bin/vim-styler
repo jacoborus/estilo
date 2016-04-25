@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const styler = require('../vim-styler.js')
+const path = require('path')
+
+let route = path.resolve(process.argv[2])
+styler(route)

@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test": "node test/index.js",
-    "linter": "eslint src vim-styler.js test"
+    "linter": "eslint src vim-styler.js test bin/vim-styler"
   },
   "keywords": [
     "vim",

@@ -1,0 +1,7 @@
+colors:
+  blue: '#bbddff'
+schemas:
+  one: 'blue #ffffff '
+hilinks:
+  hitest: one
+  other: ['#ff0000', false, 'bui']
