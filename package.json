@@ -10,6 +10,9 @@
     "hexterm": "^1.0.1",
     "yaml": "^0.3.0"
   },
+  "bin": {
+    "vim-styler" : "./bin/vim-styler"
+  },
   "devDependencies": {
     "eslint": "^2.8.0",
     "tape": "^4.5.1"
