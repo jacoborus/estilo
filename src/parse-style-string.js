@@ -24,13 +24,17 @@ module.exports = function (str, schemas, colors, name) {
     if (!temp) throw new Error('can\'t find schema: ' + props[0])
     schema = temp
   } else if (len === 3) {
-    schema[0] = getColorCode(props[0], colors, 'foreground', name)
-    schema[1] = getColorCode(props[1], colors, 'background', name)
-    schema[2] = getUI(props[2], name)
+    schema = [
+      getColorCode(props[0], colors, 'foreground', name),
+      getColorCode(props[1], colors, 'background', name),
+      getUI(props[2], name)
+    ]
   } else if (len === 2) {
-    schema[0] = getColorCode(props[0], colors, 'foreground', name)
-    schema[1] = getColorCode(props[1], colors, 'background', name)
-    schema[2] = false
+    schema = [
+      getColorCode(props[0], colors, 'foreground', name),
+      getColorCode(props[1], colors, 'background', name),
+      false
+    ]
   } else {
     throw new Error('wrong formatted schema: ' + name)
   }
