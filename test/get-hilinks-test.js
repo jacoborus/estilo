@@ -17,7 +17,7 @@ test('getHilinks: throws on missing data', t => {
 test('getHilinks: format hilinks', t => {
   const data = {
     normal: 'sch',
-    other: ['#bbddff']
+    other: ['#bbddff', '#ff5555', 'biru']
   }
   const schemas = {
     sch: '99'
@@ -28,8 +28,8 @@ test('getHilinks: format hilinks', t => {
 
   const other = hilinks.other
   t.is(other[0], '#bbddff', 'from array')
-  t.is(other[1], false, 'from array')
-  t.is(other[2], false, 'from array')
+  t.is(other[1], '#ff5555', 'from array')
+  t.is(other[2], 'bold,italic,reverse,underline', 'from array')
 
   t.end()
 })
