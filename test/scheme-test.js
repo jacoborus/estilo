@@ -13,7 +13,7 @@ hi other guifg=#333333 ctermfg=236 guibg=#dddddd ctermbg=253 gui=italic cterm=it
   t.end()
 })
 
-test('scheme: regular hilinks', t => {
+test('scheme: hilinks with empty values', t => {
   let hilinks = {
     normal: ['#bbddff'],
     other: [false, '#dddddd', 'italic']
