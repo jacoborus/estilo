@@ -11,10 +11,12 @@
     "yaml": "^0.3.0"
   },
   "devDependencies": {
+    "eslint": "^2.8.0",
     "tape": "^4.5.1"
   },
   "scripts": {
-    "test": "node test/index.js"
+    "test": "node test/index.js",
+    "linter": "eslint src vim-styler.js test"
   },
   "keywords": [
     "vim",
