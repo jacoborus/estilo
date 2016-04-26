@@ -2,8 +2,9 @@
 
 'use strict'
 
-const styler = require('../vim-styler.js')
+const estilo = require('../estilo.js')
 const path = require('path')
 
 let route = path.resolve(process.argv[2])
-styler(route)
+estilo(route)
+

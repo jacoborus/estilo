@@ -11,5 +11,6 @@ require('./scheme-test.js')
 require('./parser-test.js')
 require('./get-info-test.js')
 require('./parse-info-test.js')
-require('./vim-styler-test.js')
+require('./estilo-test.js')
 require('./bin-test.js')
+

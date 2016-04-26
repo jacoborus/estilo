@@ -1,5 +1,5 @@
-vim-styler
-==========
+Estilo
+======
 
 Generate full vim colorschemes from yaml templates with node.js
 
@@ -7,19 +7,19 @@ Generate full vim colorschemes from yaml templates with node.js
 ## Install
 
 ```sh
-npm install -g vim-styler
+npm install -g estilo
 ```
 
 ## Usage
 
 ```sh
-vim-styler mytemplate.yaml
+estilo mytemplate.yaml
 # will generate mytemplate.vim
 ```
 
 ## Template format
 
-**vim-styler** templates has 3 objects:
+**estilo** templates has 3 objects:
 
 ### colors
 

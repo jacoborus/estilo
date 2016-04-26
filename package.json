@@ -1,8 +1,8 @@
 {
-  "name": "vim-styler",
+  "name": "estilo",
   "version": "0.0.1",
-  "description": "Generate vim color schemes from .yaml templates",
-  "main": "vim-styler.js",
+  "description": "Generate vim color schemes from simple templates",
+  "main": "estilo.js",
   "directories": {
     "test": "test"
   },
@@ -11,7 +11,7 @@
     "yaml": "^0.3.0"
   },
   "bin": {
-    "vim-styler" : "./bin/vim-styler"
+    "estilo" : "./bin/estilo"
   },
   "devDependencies": {
     "eslint": "^2.8.0",
@@ -19,15 +19,16 @@
   },
   "scripts": {
     "test": "node test/index.js",
-    "linter": "eslint src vim-styler.js test bin/vim-styler"
+    "linter": "eslint src estilo.js test bin/estilo"
   },
   "keywords": [
     "vim",
     "color",
     "scheme",
     "schemes",
-    "themes"
+    "themes",
+    "generator"
   ],
-  "author": "Jacobo Tabernero",
+  "author": "Jacobo Tabernero http://jacoborus.codes",
   "license": "MIT"
 }
