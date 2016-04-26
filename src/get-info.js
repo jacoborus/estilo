@@ -1,13 +1,5 @@
 'use strict'
 
-// author
-// url
-// reset
-// background/bg
-// license
-// description
-// scheme
-
 const props = new Set(['author', 'scheme', 'description', 'url', 'background', 'license', 'version'])
 
 module.exports = function (data) {
