@@ -1,11 +1,10 @@
 {
     "env": {
         "es6": true,
-        "node": false,
+        "node": true,
         "mocha": true
     },
     "globals": {
-      "expect": true,
       "module": true,
       "exports": true,
       "console": true,
