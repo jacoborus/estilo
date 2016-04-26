@@ -21,6 +21,17 @@
     "test": "node test/index.js",
     "linter": "eslint src estilo.js test bin/estilo"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jacoborus/estilo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jacoborus/estilo/issues"
+  },
+  "homepage": "https://github.com/jacoborus/estilo",
+  "engines": {
+    "node": ">=5.9.0"
+  },
   "keywords": [
     "vim",
     "color",
