@@ -14,10 +14,10 @@ module.exports = function (hilinks) {
     if (!item) return
     out += `hi ${ k }`
     out += item[0]
-      ? ` guifg=${ item[0] } ctermfg=${ hexterm(item[0].slice(1)) }`
+      ? ` guifg=${ item[0] } ctermfg=${ hexterm(item[0]) }`
       : noFore
     out += item[1]
-      ? ` guibg=${ item[1] } ctermbg=${ hexterm(item[1].slice(1)) }`
+      ? ` guibg=${ item[1] } ctermbg=${ hexterm(item[1]) }`
       : noBack
     out += item[2]
       ? ` gui=${ item[2] } cterm=${ item[2] }`
