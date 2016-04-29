@@ -29,11 +29,9 @@ info:
   version: '0.0.1'
 colors:
   dark: '#282828'
-schemas:
-  darkish: '#aaaaaa dark b'
 hilinks:
-  Comment: 'darkish'
-  Constant: '#ff0000 #0000ff i'
+  Comment: '#aaaaaa dark'
+  Constant: '#ff0000 #0000ff bi'
 ```
 
 will generate:
@@ -58,6 +56,6 @@ if has("gui_running")
   set background=dark
 endif
 
-hi Comment guifg=#aaaaaa ctermfg=248 guibg=#282828 ctermbg=235 gui=bold cterm=bold
-hi Constant guifg=#ff0000 ctermfg=9 guibg=#0000ff ctermbg=12 gui=italic cterm=italic
+hi Comment guifg=#aaaaaa ctermfg=248 guibg=#282828 ctermbg=235 gui=NONE cterm=NONE
+hi Constant guifg=#ff0000 ctermfg=9 guibg=#0000ff ctermbg=12 gui=bold,italic cterm=bold,italic
 ```

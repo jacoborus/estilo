@@ -38,14 +38,12 @@ test('parser', t => {
       version: '2.1.0'
     },
     colors: {
-      blue: '#bbddff'
-    },
-    schemas: {
-      one: 'blue #ffffff '
+      blue: '#bbddff',
+      blanco: '#ffffff'
     },
     hilinks: {
-      hitest: 'one',
-      other: ['#ff0000', false, 'bui']
+      hitest: 'blue blanco',
+      other: '#ff0000 - bui'
     }
   }
   let parsed = parser(src)

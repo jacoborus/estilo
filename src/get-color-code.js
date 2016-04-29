@@ -2,7 +2,7 @@
 
 const isHexColor = require('./is-hex-color.js')
 
-module.exports = function (color, colors, part, schemaName) {
+module.exports = function (color, colors, part, hiName) {
   // return false if empty color
   if (!color || color === '-') return false
   // return custom color
@@ -12,6 +12,7 @@ module.exports = function (color, colors, part, schemaName) {
   if (isHexColor(color)) {
     return color
   }
+  console.log(color)
   // not valid color
-  throw new Error('wrong ' + part + ' in ' + schemaName)
+  throw new Error('wrong ' + part + ' in ' + hiName)
 }
