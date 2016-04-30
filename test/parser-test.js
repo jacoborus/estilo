@@ -24,7 +24,8 @@ if has("gui_running")
 endif
 
 hi hitest guifg=#bbddff ctermfg=153 guibg=#ffffff ctermbg=15 gui=NONE cterm=NONE
-hi other guifg=#ff0000 ctermfg=9 guibg=NONE ctermbg=NONE gui=bold,underline,italic cterm=bold,underline,italic\n`
+hi other guifg=#ff0000 ctermfg=9 guibg=NONE ctermbg=NONE gui=bold,underline,italic cterm=bold,underline,italic
+hi link linked other\n`
 
 test('parser', t => {
   const src = {
@@ -43,7 +44,8 @@ test('parser', t => {
     },
     hilinks: {
       hitest: 'blue blanco',
-      other: '#ff0000 - bui'
+      other: '#ff0000 - bui',
+      linked: '@other'
     }
   }
   let parsed = parser(src)

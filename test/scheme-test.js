@@ -14,12 +14,16 @@ test('scheme: regular hilinks', t => {
       fore: '#333333',
       back: '#dddddd',
       ui: 'italic'
+    },
+    linked: {
+      link: 'other'
     }
   }
   t.is(
     scheme(hilinks),
     `hi normal guifg=#bbddff ctermfg=153 guibg=#994444 ctermbg=95 gui=bold,reverse cterm=bold,reverse
-hi other guifg=#333333 ctermfg=236 guibg=#dddddd ctermbg=253 gui=italic cterm=italic\n`
+hi other guifg=#333333 ctermfg=236 guibg=#dddddd ctermbg=253 gui=italic cterm=italic
+hi link linked other\n`
   )
   t.end()
 })

@@ -7,7 +7,7 @@ let colors = {
   rojo: '#ff5555'
 }
 
-test('parseString: empty schema', t => {
+test('parseString:', t => {
   t.is(pss('   '), false, 'empty schema')
 
   let full = pss('#bbddff rojo bi', colors)
@@ -19,6 +19,12 @@ test('parseString: empty schema', t => {
   t.is(two.fore, false, 'two foreground')
   t.is(two.back, '#ff5555', 'two background')
   t.is(two.ui, false, 'two gui')
+
+  let linked = pss('@other', colors)
+  t.is(linked.link, 'other', 'linked link')
+  t.notOk(linked.fore, 'linked foreground')
+  t.notOk(linked.back, 'linked background')
+  t.notOk(linked.ui, 'linked gui')
 
   t.end()
 })

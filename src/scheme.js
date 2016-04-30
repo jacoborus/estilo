@@ -10,19 +10,23 @@ module.exports = function (hilinks) {
   let keys = Object.keys(hilinks)
   let out = ''
   keys.forEach(k => {
-    let item = hilinks[k]
-    if (!item) return
-    out += `hi ${ k }`
-    out += item.fore
-      ? ` guifg=${ item.fore } ctermfg=${ hexterm(item.fore) }`
-      : noFore
-    out += item.back
-      ? ` guibg=${ item.back } ctermbg=${ hexterm(item.back) }`
-      : noBack
-    out += item.ui
-      ? ` gui=${ item.ui } cterm=${ item.ui }`
-      : noUi
-    out += '\n'
+    let hi = hilinks[k]
+    if (!hi) return
+    if (hi.link) {
+      out += `hi link ${ k } ${ hi.link }\n`
+    } else {
+      out += `hi ${ k }`
+      out += hi.fore
+        ? ` guifg=${ hi.fore } ctermfg=${ hexterm(hi.fore) }`
+        : noFore
+      out += hi.back
+        ? ` guibg=${ hi.back } ctermbg=${ hexterm(hi.back) }`
+        : noBack
+      out += hi.ui
+        ? ` gui=${ hi.ui } cterm=${ hi.ui }`
+        : noUi
+      out += '\n'
+    }
   })
   return out
 }

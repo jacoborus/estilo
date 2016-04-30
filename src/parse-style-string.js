@@ -17,8 +17,16 @@ module.exports = function (str, colors, name) {
     return false
   }
 
+  // whether is link to other hilink
+  let first = props[0]
+  if (first.startsWith('@')) {
+    return {
+      link: first.slice(1)
+    }
+  }
+
   return {
-    fore: getColorCode(props[0], colors, 'foreground', name),
+    fore: getColorCode(first, colors, 'foreground', name),
     back: getColorCode(props[1], colors, 'background', name),
     ui: getUI(props[2], name)
   }

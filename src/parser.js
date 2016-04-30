@@ -9,5 +9,6 @@ const parseInfo = require('./parse-info.js')
 module.exports = function (src) {
   const info = getInfo(src.info)
   const colors = getColors(src.colors)
-  return parseInfo(info) + scheme(getHilinks(src.hilinks, colors))
+  const hilinks = getHilinks(src.hilinks, colors)
+  return parseInfo(info) + scheme(hilinks)
 }

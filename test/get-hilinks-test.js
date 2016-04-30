@@ -27,3 +27,18 @@ test('getHilinks: format hilinks', t => {
 
   t.end()
 })
+
+test('getHilinks: link styles', t => {
+  const data = {
+    normal: '@other'
+  }
+  const hilinks = getHilinks(data, colors)
+
+  const normal = hilinks.normal
+  t.is(normal.link, 'other')
+  t.notOk(normal.fore, 'no fore')
+  t.notOk(normal.back, 'no back')
+  t.notOk(normal.ui, 'no ui')
+
+  t.end()
+})
