@@ -7,8 +7,6 @@ info:
   version: '0.0.1'
 colors:
   dark: '#282828'
-schemas:
-  darkish: '#ddd dark b'
 hilinks:
   ### Vim editor colors
   ColorColumn: ''
@@ -60,40 +58,40 @@ hilinks:
   Comment: ''
   # Constant
   Constant: ''
-  String: ''
-  Character: ''
-  Boolean: ''
-  Number: ''
-  Float: ''
+  String: '' # Constant
+  Character: '' # Constant
+  Boolean: '' # Constant
+  Number: '' # Constant
+  Float: '' # Constant
   # Identifier
   Identifier: ''
-  Function: ''
+  Function: '' # Identifier
   # Statement
   Statement: ''
-  Conditional: ''
-  Repeat: ''
-  Label: ''
-  Operator: ''
-  Keyword: ''
-  Exception: ''
+  Conditional: '' # Statement
+  Repeat: '' # Statement
+  Label: '' # Statement
+  Operator: '' # Statement
+  Keyword: '' # Statement
+  Exception: '' # Statement
   # PreProc
   PreProc: ''
-  Include: ''
-  Define: ''
-  Macro: ''
-  PreCondit: ''
+  Include: '' # PreProc
+  Define: '' # PreProc
+  Macro: '' # PreProc
+  PreCondit: '' # PreProc
   # Type
   Type: ''
-  StorageClass: ''
-  Structure: ''
-  Typedef: ''
+  StorageClass: '' # Type
+  Structure: '' # Type
+  Typedef: '' # Type
   # Special
   Special: ''
-  SpecialChar: ''
-  Tag: ''
-  Delimiter: ''
-  SpecialComment: ''
-  Debug: ''
+  SpecialChar: '' # Special
+  Tag: '' # Special
+  Delimiter: '' # Special
+  SpecialComment: '' # Special
+  Debug: '' # Special
   #Underlined
   Underlined: ''
   #Ignore
@@ -102,7 +100,27 @@ hilinks:
   Error: ''
   # Todo
   Todo: ''
+  # help
+  helpNote: ''
+  helpHeadline: ''
+  helpStar: '' # Ignore
+  helpHyperTextEntry: '' # helpStar
+  helpHyperTextJump: '' # Identifier
+  helpSectionDelim: '' # PreProc
   #### languages
+  # vimScript
+  vimError: ''
+  vimCommentTitle: ''  # PreProc
+  vimComment: ''  # Comment
+  vimString: ''  # String
+  vimNumber: ''  # Number
+  vimOper: ''  # Operator
+  vimVar: ''  # Identifier
+  vimCommand: ''  # Statement
+  vimNorm: ''  # vimCommand
+  vimNormCmds: ''  # no link
+  vimIsCommand: ''  # no link
+  vimParenSep: ''  # Delimiter > Special
   # C highlighting
   cOperator: ''
   cPreCondit: ''
@@ -111,11 +129,11 @@ hilinks:
   cssClassName: ''
   cssColor: ''
   # Diff highlighting
-  # DiffAdded: '@DiffAdd'
+  DiffAdded: '' # DiffAdd
   DiffFile: ''
   DiffNewFile: ''
   DiffLine: ''
-  # DiffRemoved: '@DiffDelete'
+  DiffRemoved: '' # DiffDelete
   # Git highlighting
   gitCommitOverflow: ''
   gitCommitSummary: ''
@@ -125,9 +143,25 @@ hilinks:
   htmlEndTag: ''
   htmlTag: ''
   # JavaScript highlighting
-  javaScript: ''
   javaScriptBraces: ''
-  javaScriptNumber: ''
+  javaScriptBoolean: '' # Boolean
+  javaScriptConditional: '' # Conditional
+  javaScriptExceptions: '' # Special
+  javaScriptFuncArg: ''
+  javaScriptFuncComma: '' # Operator
+  javaScriptFuncKeyword: '' # Function
+  javaScriptFuncExp: '' # Title
+  javaScriptIdentifier: '' # Identifier
+  javaScriptLogicSymbols: '' # Operator
+  javaScriptNumber: '' # Number
+  javaScriptObjectKey: '' # No link
+  javaScriptOperator: '' # no link
+  javaScriptOpSymbols: '' # no link
+  javaScriptParens: '' # no link
+  javaScriptReserved: '' # Keyword > Statement
+  javaScriptStatement: '' # Statement
+  javaScriptString: '' # String
+  javaScriptTemplateString: '' # String
   # Markdown highlighting
   markdownCode: ''
   markdownError: ''
@@ -165,8 +199,34 @@ hilinks:
   GitGutterDelete: ''
   GitGutterChangeDelete: ''
   # NERDTree scrooloose/nerdtree
+  NERDTreeClosable: ''
+  NERDTreeDir: '' # link directory
   NERDTreeDirSlash: ''
   NERDTreeExecFile: ''
+  NERDTreeHelp: '' # no link
+  NERDTreeHelpCommand: '' # no link
+  NERDTreeHelpKey: '' # Identifier
+  NERDTreeHelpTitle: '' # Macro > PreProc
+  NERDTreeIgnore: '' # Ignore
+  NERDTreeOpenable: ''
+  NERDTreeToggleOn: '' # Question
+  NERDTreeToggleOff: '' # WarningMsg
   # ntpeters/vim-better-whitespace
   ExtraWhitespace: ''
   # CursorLineNr
+  yamlBlockMappingKey: '' # Identifier
+  yamlFlowCollection: '' # no link
+  yamlFlowIndicator: '' # Special
+  yamlFlowString: '' # no link
+  yamlFlowStringDelimiter: '' # no link
+  yamlInteger: '' # Number
+  yamlKeyFlowMapping: '' # yamlFlowIndicator > Special
+  yamlKeyValueDelimiter: '' # no link
+  # vim-plug
+  plugName: '' # Label > Statement
+  plugDash: '' # Special
+  plugStar: '' # Boolean
+  plugNumber: '' # Number
+  plug1: '' # Title
+  plug2: '' # Repeat > Statement
+  plugBracket: '' # Structure > Type
