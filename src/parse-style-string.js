@@ -17,9 +17,9 @@ module.exports = function (str, colors, name) {
     return false
   }
 
-  return [
-    getColorCode(props[0], colors, 'foreground', name),
-    getColorCode(props[1], colors, 'background', name),
-    getUI(props[2], name)
-  ]
+  return {
+    fore: getColorCode(props[0], colors, 'foreground', name),
+    back: getColorCode(props[1], colors, 'background', name),
+    ui: getUI(props[2], name)
+  }
 }

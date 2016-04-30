@@ -36,9 +36,9 @@ module.exports = function (data, colors) {
     } else {
       throw new Error('bad formatted hilinks')
     }
-    let ui = hilink[2]
+    let ui = hilink.ui
     if (ui) {
-      hilink[2] = parseui(ui)
+      hilink.ui = parseui(ui)
     }
     links[name] = hilink
   })

@@ -13,14 +13,14 @@ module.exports = function (hilinks) {
     let item = hilinks[k]
     if (!item) return
     out += `hi ${ k }`
-    out += item[0]
-      ? ` guifg=${ item[0] } ctermfg=${ hexterm(item[0]) }`
+    out += item.fore
+      ? ` guifg=${ item.fore } ctermfg=${ hexterm(item.fore) }`
       : noFore
-    out += item[1]
-      ? ` guibg=${ item[1] } ctermbg=${ hexterm(item[1]) }`
+    out += item.back
+      ? ` guibg=${ item.back } ctermbg=${ hexterm(item.back) }`
       : noBack
-    out += item[2]
-      ? ` gui=${ item[2] } cterm=${ item[2] }`
+    out += item.ui
+      ? ` gui=${ item.ui } cterm=${ item.ui }`
       : noUi
     out += '\n'
   })
