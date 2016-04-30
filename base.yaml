@@ -108,6 +108,15 @@ hilinks:
   helpHyperTextJump: '' # Identifier
   helpSectionDelim: '' # PreProc
   #### languages
+  # json
+  json: ''
+  jsonQuote: '' # Quote
+  jsonString: '' # String
+  jsonKeywordMatch: '' # no link
+  jsonKeyword: '' # Label > Statement
+  jsonBraces: '' # Delimiter > Special
+  jsonNumber: '' # Delimiter > Special
+  jsonBoolean: '' # Delimiter > Special
   # vimScript
   vimError: ''
   vimCommentTitle: ''  # PreProc
@@ -145,6 +154,7 @@ hilinks:
   # JavaScript highlighting
   javaScriptBraces: ''
   javaScriptBoolean: '' # Boolean
+  javaScriptComment: '' # Comment
   javaScriptConditional: '' # Conditional
   javaScriptExceptions: '' # Special
   javaScriptFuncArg: ''
@@ -162,6 +172,10 @@ hilinks:
   javaScriptStatement: '' # Statement
   javaScriptString: '' # String
   javaScriptTemplateString: '' # String
+  # js Docs
+  javaScriptDocTags: '' # Special
+  javaScriptDocSeeTag: '' # Function
+  javaScriptDocComment: '' # Comment
   # Markdown highlighting
   markdownCode: ''
   markdownError: ''
