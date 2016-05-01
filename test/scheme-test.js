@@ -17,7 +17,8 @@ test('scheme: regular hilinks', t => {
     },
     linked: {
       link: 'other'
-    }
+    },
+    empty: {}
   }
   t.is(
     scheme(hilinks),

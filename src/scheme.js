@@ -14,7 +14,7 @@ module.exports = function (hilinks) {
     if (!hi) return
     if (hi.link) {
       out += `hi link ${ k } ${ hi.link }\n`
-    } else {
+    } else if (hi.fore || hi.back || hi.ui) {
       out += `hi ${ k }`
       out += hi.fore
         ? ` guifg=${ hi.fore } ctermfg=${ hexterm(hi.fore) }`
