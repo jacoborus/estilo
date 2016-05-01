@@ -43,7 +43,7 @@ test('parser', t => {
       blanco: '#ffffff'
     },
     hilinks: {
-      hitest: 'blue blanco',
+      hitest: 'blue blanco * test comment',
       other: '#ff0000 - bui',
       linked: '@other'
     }

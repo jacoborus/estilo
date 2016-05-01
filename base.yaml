@@ -152,12 +152,12 @@ hilinks:
   htmlEndTag: ''
   htmlTag: ''
   # JavaScript highlighting
-  javaScriptBraces: ''
+  javaScriptBraces: '' # no link
   javaScriptBoolean: '' # Boolean
   javaScriptComment: '' # Comment
   javaScriptConditional: '' # Conditional
   javaScriptExceptions: '' # Special
-  javaScriptFuncArg: ''
+  javaScriptFuncArg: '' # no link
   javaScriptFuncComma: '' # Operator
   javaScriptFuncKeyword: '' # Function
   javaScriptFuncExp: '' # Title

@@ -10,5 +10,5 @@ colors:
   blue: '#bbddff'
 hilinks:
   hitest: 'blue #ffffff'
-  other: '#ff0000 - bui'
+  other: '#ff0000 - bui * a comment here'
   linked: '@other'
