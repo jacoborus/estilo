@@ -28,11 +28,29 @@ hi hitest guifg=#bbddff ctermfg=153 guibg=#ffffff ctermbg=15 gui=NONE cterm=NONE
 hi other guifg=#ff0000 ctermfg=9 guibg=NONE ctermbg=NONE gui=bold,underline,italic cterm=bold,underline,italic
 hi link linked other\n`
 
-test('estilo', t => {
+test('estilo: basic ommit destination', t => {
   estilo('./test/sample.yaml')
-  const str = fs.readFileSync('./sample.vim', 'utf-8')
+  const str = fs.readFileSync('./test/sample.vim', 'utf-8')
   t.is(str, testStr)
-  fs.unlink('./sample.vim', () => {
+  fs.unlink('./test/sample.vim', () => {
+    t.end()
+  })
+})
+
+test('estilo: custom destination', t => {
+  estilo('./test/sample.yaml', './custom.vim')
+  const str = fs.readFileSync('./custom.vim', 'utf-8')
+  t.is(str, testStr)
+  fs.unlink('./custom.vim', () => {
+    t.end()
+  })
+})
+
+test('estilo: ommit extensions', t => {
+  estilo('./test/sample', './other')
+  const str = fs.readFileSync('./other.vim', 'utf-8')
+  t.is(str, testStr)
+  fs.unlink('./other.vim', () => {
     t.end()
   })
 })

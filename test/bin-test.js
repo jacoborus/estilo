@@ -28,11 +28,11 @@ hi hitest guifg=#bbddff ctermfg=153 guibg=#ffffff ctermbg=15 gui=NONE cterm=NONE
 hi other guifg=#ff0000 ctermfg=9 guibg=NONE ctermbg=NONE gui=bold,underline,italic cterm=bold,underline,italic\n`
 
 test('bin', t => {
-  exec('node bin/estilo test/bin.yaml', err => {
+  exec('node bin/estilo test/bin.yaml binscheme', err => {
     if (err) throw err
-    const str = fs.readFileSync('./bin.vim', 'utf-8')
+    const str = fs.readFileSync('./binscheme.vim', 'utf-8')
     t.is(str, testStr)
-    fs.unlink('./bin.vim', () => {
+    fs.unlink('./binscheme.vim', () => {
       t.end()
     })
   })

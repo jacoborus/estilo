@@ -5,6 +5,22 @@
 const estilo = require('../estilo.js')
 const path = require('path')
 
-let route = path.resolve(process.argv[2])
-estilo(route)
+const help = `
+  estilo <input template> <output scheme>
+
+  Example:
+    estilo  mytemplate.yaml mycolorscheme.vim
+
+`
+if (!(2 in process.argv)) {
+  console.log(help)
+  process.exit(0)
+}
+
+let origin = path.resolve(process.argv[2])
+let destination = false
+if (3 in process.argv) {
+  destination = path.resolve(process.argv[3])
+}
+estilo(origin, destination)
 

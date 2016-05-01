@@ -3,11 +3,21 @@
 const parser = require('./src/parser.js')
 const yaml = require('yaml')
 const fs = require('fs')
-const path = require('path')
+const { basename, dirname } = require('path')
 
-module.exports = function (templatePath) {
-  const template = yaml.eval(fs.readFileSync(templatePath, 'utf8'))
+module.exports = function (origin, destination) {
+  // add extension to origin if it hasn't
+  if (basename(origin) === basename(origin, '.yaml')) {
+    origin = origin + '.yaml'
+  }
+  if (!destination) {
+    // destination with same name and path as origin, but with '.vim' extension
+    destination = dirname(origin) + '/' + basename(origin, '.yaml') + '.vim'
+  } else if (basename(destination) === basename(destination, '.vim')) {
+    // add extension to destination if it hasn't
+    destination = destination + '.vim'
+  }
+  const template = yaml.eval(fs.readFileSync(origin, 'utf8'))
   const out = parser(template)
-  const basename = path.basename(templatePath, '.yaml')
-  fs.writeFileSync(basename + '.vim', out)
+  fs.writeFileSync(destination, out)
 }
