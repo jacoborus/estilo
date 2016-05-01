@@ -58,40 +58,40 @@ hilinks:
   Comment: ''
   # Constant
   Constant: ''
-  String: '' # Constant
-  Character: '' # Constant
-  Boolean: '' # Constant
-  Number: '' # Constant
-  Float: '' # Constant
+  String: '* Constant'
+  Character: '* Constant'
+  Boolean: '* Constant'
+  Number: '* Constant'
+  Float: '* Constant'
   # Identifier
   Identifier: ''
-  Function: '' # Identifier
+  Function: '* Identifier'
   # Statement
   Statement: ''
-  Conditional: '' # Statement
-  Repeat: '' # Statement
-  Label: '' # Statement
-  Operator: '' # Statement
-  Keyword: '' # Statement
-  Exception: '' # Statement
+  Conditional: '* Statement'
+  Repeat: '* Statement'
+  Label: '* Statement'
+  Operator: '* Statement'
+  Keyword: '* Statement'
+  Exception: '* Statement'
   # PreProc
   PreProc: ''
-  Include: '' # PreProc
-  Define: '' # PreProc
-  Macro: '' # PreProc
-  PreCondit: '' # PreProc
+  Include: '* PreProc'
+  Define: '* PreProc'
+  Macro: '* PreProc'
+  PreCondit: '* PreProc'
   # Type
   Type: ''
-  StorageClass: '' # Type
-  Structure: '' # Type
-  Typedef: '' # Type
+  StorageClass: '* Type'
+  Structure: '* Type'
+  Typedef: '* Type'
   # Special
   Special: ''
-  SpecialChar: '' # Special
-  Tag: '' # Special
-  Delimiter: '' # Special
-  SpecialComment: '' # Special
-  Debug: '' # Special
+  SpecialChar: '* Special'
+  Tag: '* Special'
+  Delimiter: '* Special'
+  SpecialComment: '* Special'
+  Debug: '* Special'
   #Underlined
   Underlined: ''
   #Ignore
@@ -103,33 +103,33 @@ hilinks:
   # help
   helpNote: ''
   helpHeadline: ''
-  helpStar: '' # Ignore
-  helpHyperTextEntry: '' # helpStar
-  helpHyperTextJump: '' # Identifier
-  helpSectionDelim: '' # PreProc
+  helpStar: '* Ignore'
+  helpHyperTextEntry: '* helpStar'
+  helpHyperTextJump: '* Identifier'
+  helpSectionDelim: '* PreProc'
   #### languages
   # json
   json: ''
-  jsonQuote: '' # Quote
-  jsonString: '' # String
-  jsonKeywordMatch: '' # no link
-  jsonKeyword: '' # Label > Statement
-  jsonBraces: '' # Delimiter > Special
-  jsonNumber: '' # Delimiter > Special
-  jsonBoolean: '' # Delimiter > Special
+  jsonQuote: '* Quote'
+  jsonString: '* String'
+  jsonKeywordMatch: '* no link'
+  jsonKeyword: '* Label > Statement'
+  jsonBraces: '* Delimiter > Special'
+  jsonNumber: '* Delimiter > Special'
+  jsonBoolean: '* Delimiter > Special'
   # vimScript
   vimError: ''
-  vimCommentTitle: ''  # PreProc
-  vimComment: ''  # Comment
-  vimString: ''  # String
-  vimNumber: ''  # Number
-  vimOper: ''  # Operator
-  vimVar: ''  # Identifier
-  vimCommand: ''  # Statement
-  vimNorm: ''  # vimCommand
-  vimNormCmds: ''  # no link
-  vimIsCommand: ''  # no link
-  vimParenSep: ''  # Delimiter > Special
+  vimCommentTitle: '* PreProc'
+  vimComment: '* Comment'
+  vimString: '* String'
+  vimNumber: '* Number'
+  vimOper: '* Operator'
+  vimVar: '* Identifier'
+  vimCommand: '* Statement'
+  vimNorm: '* vimCommand'
+  vimNormCmds: '* no link'
+  vimIsCommand: '* no link'
+  vimParenSep: '* Delimiter > Special'
   # C highlighting
   cOperator: ''
   cPreCondit: ''
@@ -138,11 +138,11 @@ hilinks:
   cssClassName: ''
   cssColor: ''
   # Diff highlighting
-  DiffAdded: '' # DiffAdd
+  DiffAdded: '* DiffAdd'
   DiffFile: ''
   DiffNewFile: ''
   DiffLine: ''
-  DiffRemoved: '' # DiffDelete
+  DiffRemoved: '* DiffDelete'
   # Git highlighting
   gitCommitOverflow: ''
   gitCommitSummary: ''
@@ -152,30 +152,30 @@ hilinks:
   htmlEndTag: ''
   htmlTag: ''
   # JavaScript highlighting
-  javaScriptBraces: '' # no link
-  javaScriptBoolean: '' # Boolean
-  javaScriptComment: '' # Comment
-  javaScriptConditional: '' # Conditional
-  javaScriptExceptions: '' # Special
-  javaScriptFuncArg: '' # no link
-  javaScriptFuncComma: '' # Operator
-  javaScriptFuncKeyword: '' # Function
-  javaScriptFuncExp: '' # Title
-  javaScriptIdentifier: '' # Identifier
-  javaScriptLogicSymbols: '' # Operator
-  javaScriptNumber: '' # Number
-  javaScriptObjectKey: '' # No link
-  javaScriptOperator: '' # no link
-  javaScriptOpSymbols: '' # no link
-  javaScriptParens: '' # no link
-  javaScriptReserved: '' # Keyword > Statement
-  javaScriptStatement: '' # Statement
-  javaScriptString: '' # String
-  javaScriptTemplateString: '' # String
+  javaScriptBraces: '* no link'
+  javaScriptBoolean: '* Boolean'
+  javaScriptComment: '* Comment'
+  javaScriptConditional: '* Conditional'
+  javaScriptExceptions: '* Special'
+  javaScriptFuncArg: '* no link'
+  javaScriptFuncComma: '* Operator'
+  javaScriptFuncKeyword: '* Function'
+  javaScriptFuncExp: '* Title'
+  javaScriptIdentifier: '* Identifier'
+  javaScriptLogicSymbols: '* Operator'
+  javaScriptNumber: '* Number'
+  javaScriptObjectKey: '* No link'
+  javaScriptOperator: '* no link'
+  javaScriptOpSymbols: '* no link'
+  javaScriptParens: '* no link'
+  javaScriptReserved: '* Keyword > Statement'
+  javaScriptStatement: '* Statement'
+  javaScriptString: '* String'
+  javaScriptTemplateString: '* String'
   # js Docs
-  javaScriptDocTags: '' # Special
-  javaScriptDocSeeTag: '' # Function
-  javaScriptDocComment: '' # Comment
+  javaScriptDocTags: '* Special'
+  javaScriptDocSeeTag: '* Function'
+  javaScriptDocComment: '* Comment'
   # Markdown highlighting
   markdownCode: ''
   markdownError: ''
@@ -214,33 +214,33 @@ hilinks:
   GitGutterChangeDelete: ''
   # NERDTree scrooloose/nerdtree
   NERDTreeClosable: ''
-  NERDTreeDir: '' # link directory
+  NERDTreeDir: '* link directory'
   NERDTreeDirSlash: ''
   NERDTreeExecFile: ''
-  NERDTreeHelp: '' # no link
-  NERDTreeHelpCommand: '' # no link
-  NERDTreeHelpKey: '' # Identifier
-  NERDTreeHelpTitle: '' # Macro > PreProc
-  NERDTreeIgnore: '' # Ignore
+  NERDTreeHelp: '* no link'
+  NERDTreeHelpCommand: '* no link'
+  NERDTreeHelpKey: '* Identifier'
+  NERDTreeHelpTitle: '* Macro > PreProc'
+  NERDTreeIgnore: '* Ignore'
   NERDTreeOpenable: ''
-  NERDTreeToggleOn: '' # Question
-  NERDTreeToggleOff: '' # WarningMsg
+  NERDTreeToggleOn: '* Question'
+  NERDTreeToggleOff: '* WarningMsg'
   # ntpeters/vim-better-whitespace
   ExtraWhitespace: ''
   # CursorLineNr
-  yamlBlockMappingKey: '' # Identifier
-  yamlFlowCollection: '' # no link
-  yamlFlowIndicator: '' # Special
-  yamlFlowString: '' # no link
-  yamlFlowStringDelimiter: '' # no link
-  yamlInteger: '' # Number
-  yamlKeyFlowMapping: '' # yamlFlowIndicator > Special
-  yamlKeyValueDelimiter: '' # no link
+  yamlBlockMappingKey: '* Identifier'
+  yamlFlowCollection: '* no link'
+  yamlFlowIndicator: '* Special'
+  yamlFlowString: '* no link'
+  yamlFlowStringDelimiter: '* no link'
+  yamlInteger: '* Number'
+  yamlKeyFlowMapping: '* yamlFlowIndicator > Special'
+  yamlKeyValueDelimiter: '* no link'
   # vim-plug
-  plugName: '' # Label > Statement
-  plugDash: '' # Special
-  plugStar: '' # Boolean
-  plugNumber: '' # Number
-  plug1: '' # Title
-  plug2: '' # Repeat > Statement
-  plugBracket: '' # Structure > Type
+  plugName: '* Label > Statement'
+  plugDash: '* Special'
+  plugStar: '* Boolean'
+  plugNumber: '* Number'
+  plug1: '* Title'
+  plug2: '* Repeat > Statement'
+  plugBracket: '* Structure > Type'
