@@ -1,0 +1,46 @@
+# Comment
+Comment: ''
+# Constant
+Constant: ''
+String: '* Constant'
+Character: '* Constant'
+Boolean: '* Constant'
+Number: '* Constant'
+Float: '* Constant'
+# Identifier
+Identifier: ''
+Function: '* Identifier'
+# Statement
+Statement: ''
+Conditional: '* Statement'
+Repeat: '* Statement'
+Label: '* Statement'
+Operator: '* Statement'
+Keyword: '* Statement'
+Exception: '* Statement'
+# PreProc
+PreProc: ''
+Include: '* PreProc'
+Define: '* PreProc'
+Macro: '* PreProc'
+PreCondit: '* PreProc'
+# Type
+Type: ''
+StorageClass: '* Type'
+Structure: '* Type'
+Typedef: '* Type'
+# Special
+Special: ''
+SpecialChar: '* Special'
+Tag: '* Special'
+Delimiter: '* Special'
+SpecialComment: '* Special'
+Debug: '* Special'
+#Underlined
+Underlined: ''
+#Ignore
+Ignore: ''
+# Error
+Error: ''
+# Todo
+Todo: ''

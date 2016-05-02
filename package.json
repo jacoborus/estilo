@@ -7,6 +7,7 @@
     "test": "test"
   },
   "dependencies": {
+    "fs-extra": "^0.30.0",
     "hexterm": "^1.2.0",
     "minimist": "^1.2.0",
     "yaml": "^0.3.0"

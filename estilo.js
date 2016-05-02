@@ -5,7 +5,7 @@ const yaml = require('yaml')
 const fs = require('fs')
 const { basename, dirname } = require('path')
 
-module.exports = function (origin, destination) {
+function generateFile (origin, destination) {
   // add extension to origin if it hasn't
   if (basename(origin) === basename(origin, '.yaml')) {
     origin = origin + '.yaml'
@@ -20,4 +20,11 @@ module.exports = function (origin, destination) {
   const template = yaml.eval(fs.readFileSync(origin, 'utf8'))
   const out = parser(template)
   fs.writeFileSync(destination, out)
+}
+
+function generateFolder () {}
+
+module.exports = {
+  generateFile,
+  generateFolder
 }

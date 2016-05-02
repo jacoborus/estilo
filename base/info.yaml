@@ -1,0 +1,13 @@
+info: |
+  Fill this with info about your color scheme.
+  You can write multiple lines here
+background: 'dark'
+# estilo will take the remaining info from your package.json:
+# - scheme name: name
+# - version
+# - author
+# - description
+# - repo url
+# - issues url
+# - homepage url
+# - license

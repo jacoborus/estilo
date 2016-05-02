@@ -2,10 +2,11 @@
 
 'use strict'
 
-const estilo = require('../estilo.js')
+const { generateFile, generateFolder } = require('../estilo.js')
 const path = require('path')
 const argv = require('minimist')(process.argv.slice(2))
 const fs = require('fs')
+const init = require('./init.js')
 
 const args = argv._
 
@@ -57,9 +58,9 @@ function generate () {
     if (1 in args) {
       destination = path.resolve(args[1])
     }
-    estilo(origin, destination)
+    generateFile(origin, destination)
+  } else {
+    throw new Error(`Can't generate a folder: ${ origin }`)
+    // generateFolder(origin, args[1])
   }
-}
-
-function init () {
 }
