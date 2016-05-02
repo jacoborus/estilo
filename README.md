@@ -28,11 +28,12 @@ info:
   license: 'MIT'
   version: '0.0.1'
 colors:
-  dark: '#282828'
+  sky: '#bdf' # estilo will find the closest xterm color
+  mango: '#f7bf46'
 hilinks:
-  Comment: '#aaaaaa dark'
-  Constant: '#ff0000 #0000ff bi'
-  Search: '@constant'
+  Comment: 'sky mango' # dark is a selected color from color list
+  Constant: '#ff0000 #0000ff bi' # bi means bold,italic
+  Search: '@constant' # a link to Constant highlight style
 ```
 
 will generate:
@@ -57,7 +58,7 @@ if has("gui_running")
   set background=dark
 endif
 
-hi Comment guifg=#aaaaaa ctermfg=248 guibg=#282828 ctermbg=235 gui=NONE cterm=NONE
+hi Comment guifg=#bdf ctermfg=153 guibg=#f7bf46 ctermbg=215 gui=NONE cterm=NONE
 hi Constant guifg=#ff0000 ctermfg=9 guibg=#0000ff ctermbg=12 gui=bold,italic cterm=bold,italic
 hi link Search Constant
 ```
