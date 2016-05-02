@@ -1,9 +1,29 @@
 'use strict'
 
-const getColorCode = require('./get-color-code.js')
+const isHexColor = require('./is-hex-color.js')
 const getUI = require('./get-ui.js')
 
-module.exports = function (str, colors, name) {
+// for testing purposes
+parseStyleString.getColorCode = getColorCode
+
+module.exports = parseStyleString
+
+function getColorCode (color, colors, part, hiName) {
+  // return false if empty color
+  if (!color || color === '-') return false
+  // return custom color
+  const c = colors[color]
+  if (c) return c
+  // return direct hex color
+  if (isHexColor(color)) {
+    return color
+  }
+  console.log(color)
+  // not valid color
+  throw new Error('wrong ' + part + ' in ' + hiName)
+}
+
+function parseStyleString (str, colors, name) {
   str = str.trim()
   let props = str.split(' ').reduce((arr, el) => {
     el = el.trim()

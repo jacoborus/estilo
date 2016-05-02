@@ -2,12 +2,30 @@
 
 const test = require('tape')
 const pss = require('../src/parse-style-string.js')
+const gcc = pss.getColorCode
 
-let colors = {
-  rojo: '#ff5555'
-}
+test('getColorCode:', t => {
+  const colors = {
+    azul: '#bbddff'
+  }
+
+  t.is(gcc(''), false, 'empty')
+  t.is(gcc('-'), false, 'empty')
+  t.is(gcc('azul', colors), '#bbddff', 'from colors archive')
+  t.is('#aabbcc', '#aabbcc', 'real hexadecimal color')
+  t.throws(
+    () => gcc(3, colors, 'part', 'schemaName'),
+    /wrong part in schemaName/,
+    'throws on not valid color'
+  )
+  t.end()
+})
 
 test('parseString:', t => {
+  let colors = {
+    rojo: '#ff5555'
+  }
+
   let empty = pss('     ')
   t.is(Object.keys(empty).length, 0, 'empty schema')
 
