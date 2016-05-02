@@ -100,6 +100,7 @@ hilinks:
   Error: ''
   # Todo
   Todo: ''
+  #### Vim extra syntax highlighting
   # help
   helpNote: ''
   helpHeadline: ''
@@ -130,6 +131,18 @@ hilinks:
   vimNormCmds: '* no link'
   vimIsCommand: '* no link'
   vimParenSep: '* Delimiter > Special'
+  # changelog
+  changelogText: '* Normal'
+  changelogBullet: '* Type'
+  changelogColon: '* Type'
+  changelogFiles: '* Comment'
+  changelogFuncs: '* Comment'
+  changelogHeader: '* Statement'
+  changelogMail: '* Special'
+  changelogNumber: '* Number'
+  changelogMonth: '* Number'
+  changelogDay: '* Number'
+  changelogError: '* Folded'
   # C highlighting
   cOperator: ''
   cPreCondit: ''
@@ -206,7 +219,7 @@ hilinks:
   SignifySignAdd: ''
   SignifySignChange: ''
   SignifySignDelete: ''
-  # Plugins
+  #### Plugins
   # GitGutter airblade/vim-gitgutter
   GitGutterAdd: ''
   GitGutterChange: ''
@@ -244,3 +257,14 @@ hilinks:
   plug1: '* Title'
   plug2: '* Repeat > Statement'
   plugBracket: '* Structure > Type'
+  # fugitive
+  FugitiveblameBoundary: '* Keyword'
+  FugitiveblameHash: '* Identifier'
+  FugitiveblameUncommitted: '* Ignore'
+  FugitiveblameTime: '* PreProc'
+  FugitiveblameLineNumber: '* Number'
+  FugitiveblameOriginalFile: '* String'
+  FugitiveblameOriginalLineNumber: '* '
+  FugitiveblameShort: '* FugitiveblameDelimiter'
+  FugitiveblameDelimiter: '* Delimiter'
+  FugitiveblameNotCommittedYet: '* Comment'
