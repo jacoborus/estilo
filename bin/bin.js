@@ -6,7 +6,7 @@ const { generateFile, generateFolder } = require('../estilo.js')
 const path = require('path')
 const argv = require('minimist')(process.argv.slice(2))
 const fs = require('fs')
-const init = require('./init.js')
+const init = require('../src/init.js')
 
 const args = argv._
 
