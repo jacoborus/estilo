@@ -1,10 +1,11 @@
 'use strict'
 
 const isHexColor = require('./is-hex-color.js')
-const getUI = require('./get-ui.js')
+const uis = new Set(['u', 'b', 'r', 'i'])
 
 // for testing purposes
 parseStyleString.getColorCode = getColorCode
+parseStyleString.getUI = getUI
 
 module.exports = parseStyleString
 
@@ -21,6 +22,26 @@ function getColorCode (color, colors, part, hiName) {
   console.log(color)
   // not valid color
   throw new Error('wrong ' + part + ' in ' + hiName)
+}
+
+function getUI (ui, schemaName) {
+  // no defined gui
+  if (!ui) return false
+  // bad formatted gui
+  if (typeof ui !== 'string') {
+    throw new Error('wrong ui in ' + schemaName)
+  }
+  // 'NONE' as value
+  if (ui === 'NONE') return ui
+  // formatted gui, just check for valid value
+  let len = ui.length
+  while (len) {
+    let res = ui.charAt(--len)
+    if (!uis.has(res)) {
+      throw new Error('wrong ui in ' + schemaName)
+    }
+  }
+  return ui
 }
 
 function parseStyleString (str, colors, name) {

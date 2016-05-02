@@ -1,7 +1,7 @@
 'use strict'
 
 const test = require('tape')
-const parseInfo = require('../src/parse-info.js')
+const parseInfo = require('../src/print-info.js')
 
 const expected = `"
 " schemeTest v2.1.0

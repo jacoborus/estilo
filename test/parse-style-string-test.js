@@ -3,6 +3,7 @@
 const test = require('tape')
 const pss = require('../src/parse-style-string.js')
 const gcc = pss.getColorCode
+const getUI = pss.getUI
 
 test('getColorCode:', t => {
   const colors = {
@@ -17,6 +18,27 @@ test('getColorCode:', t => {
     () => gcc(3, colors, 'part', 'schemaName'),
     /wrong part in schemaName/,
     'throws on not valid color'
+  )
+  t.end()
+})
+
+test('getUI', t => {
+  t.is(getUI(''), false, 'empty value')
+  t.is(getUI(false), false, 'false value')
+  t.throws(
+    () => getUI(1, 'schemaName'),
+    /wrong ui in schemaName/,
+    'throws on bad type'
+  )
+  t.is(getUI('NONE'), 'NONE', 'NONE')
+  t.is(getUI('br'), 'br', 'valid formatted')
+  t.is(getUI('bu'), 'bu', 'valid formatted')
+  t.is(getUI('uir'), 'uir', 'valid formatted')
+  t.is(getUI('ubri'), 'ubri', 'valid formatted')
+  t.throws(
+    () => getUI('aui', 'schemaName'),
+    /wrong ui in schemaName/,
+    'throws on bad type'
   )
   t.end()
 })
