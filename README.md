@@ -13,8 +13,7 @@ npm install -g estilo
 ## Usage
 
 ```sh
-estilo mytemplate.yaml mycolorscheme.vim
-# will generate mycolorscheme.vim
+estilo generate mytemplate.yaml mycolorscheme.vim
 ```
 
 ## Template example
