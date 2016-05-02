@@ -1,6 +1,6 @@
 {
   "name": "estilo",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Generate vim color schemes without the hassle",
   "main": "estilo.js",
   "directories": {
@@ -8,10 +8,11 @@
   },
   "dependencies": {
     "hexterm": "^1.2.0",
+    "minimist": "^1.2.0",
     "yaml": "^0.3.0"
   },
   "bin": {
-    "estilo": "./bin/estilo"
+    "estilo": "./bin/bin.js"
   },
   "devDependencies": {
     "eslint": "^2.8.0",

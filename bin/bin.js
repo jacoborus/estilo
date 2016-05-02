@@ -4,6 +4,7 @@
 
 const estilo = require('../estilo.js')
 const path = require('path')
+const argv = require('minimist')(process.argv.slice(2))
 
 const help = `
   estilo <input template> <output scheme>
@@ -12,15 +13,17 @@ const help = `
     estilo  mytemplate.yaml mycolorscheme.vim
 
 `
-if (!(2 in process.argv)) {
+let cmds = argv._
+
+if (!cmds.length) {
   console.log(help)
   process.exit(0)
 }
 
-let origin = path.resolve(process.argv[2])
+let origin = path.resolve(cmds[0])
 let destination = false
-if (3 in process.argv) {
-  destination = path.resolve(process.argv[3])
+if (1 in cmds) {
+  destination = path.resolve(cmds[1])
 }
 estilo(origin, destination)
 
