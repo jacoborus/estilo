@@ -2,7 +2,7 @@
 
 
 function getVimCode (info) {
-  return `let colors_name="${info.scheme}"
+  return `let colors_name="${info.name}"
 hi clear
 if exists("syntax_on")
   syntax reset
@@ -17,7 +17,7 @@ const watermark = `"
 " https://github.com/jacoborus/estilo\n\n`
 
 function getFirst (info) {
-  let out = `"\n" ${info.scheme}`
+  let out = `"\n" ${info.name}`
   if (info.version) {
     out += ' v' + info.version
   }
@@ -25,7 +25,7 @@ function getFirst (info) {
   return out
 }
 
-const props = new Set(['description', 'url'])
+const props = new Set(['description', 'homepage'])
 const defs = new Set(['author', 'license', 'background'])
 
 module.exports = function (info) {

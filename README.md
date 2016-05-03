@@ -3,12 +3,7 @@ Estilo
 
 Generate full vim colorschemes from yaml templates with node.js
 
-
-## Install
-
-```sh
-npm install -g estilo
-```
+Estilo is a vim color scheme preprocessor
 
 ## Usage
 

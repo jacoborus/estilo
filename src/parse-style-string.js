@@ -19,7 +19,6 @@ function getColorCode (color, colors, part, hiName) {
   if (isHexColor(color)) {
     return color
   }
-  console.log(color)
   // not valid color
   throw new Error('wrong ' + part + ' in ' + hiName)
 }

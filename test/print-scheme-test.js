@@ -1,12 +1,11 @@
 'use strict'
 
 const test = require('tape')
-const parser = require('../src/parser')
+const printScheme = require('../src/print-scheme.js')
 
 const testStr = `"
 " scheme s v2.1.0
 " description d
-" url u
 " author: author a
 " license: MIT
 " background: dark
@@ -27,28 +26,28 @@ hi hitest guifg=#bbddff ctermfg=153 guibg=#ffffff ctermbg=15 gui=NONE cterm=NONE
 hi other guifg=#ff0000 ctermfg=9 guibg=NONE ctermbg=NONE gui=bold,underline,italic cterm=bold,underline,italic
 hi link linked other\n`
 
-test('parser', t => {
+test('printScheme', t => {
   const src = {
     info: {
       author: 'author a',
-      scheme: 'scheme s',
+      name: 'scheme s',
       background: 'dark',
       description: 'description d',
       license: 'MIT',
       url: 'url u',
-      version: '2.1.0'
+      version: '2.1.0',
+      colors: {
+        blue: '#bbddff',
+        blanco: '#ffffff'
+      }
     },
-    colors: {
-      blue: '#bbddff',
-      blanco: '#ffffff'
-    },
-    hilinks: {
+    templates: {
       hitest: 'blue blanco * test comment',
       other: '#ff0000 - bui',
       linked: '@other'
     }
   }
-  let parsed = parser(src)
+  let parsed = printScheme(src)
   t.is(parsed, testStr)
   t.end()
 })

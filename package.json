@@ -9,8 +9,8 @@
   "dependencies": {
     "fs-extra": "^0.30.0",
     "hexterm": "^1.2.0",
-    "minimist": "^1.2.0",
-    "yaml": "^0.3.0"
+    "js-yaml": "^3.6.0",
+    "minimist": "^1.2.0"
   },
   "bin": {
     "estilo": "./bin/bin.js"
@@ -21,7 +21,8 @@
   },
   "scripts": {
     "test": "node test/index.js",
-    "linter": "eslint src estilo.js test bin/estilo"
+    "linter": "eslint src estilo.js test bin/estilo",
+    "postinstall": "node scripts/postinstall.js"
   },
   "repository": {
     "type": "git",

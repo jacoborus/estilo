@@ -6,7 +6,6 @@ const parseInfo = require('../src/print-info.js')
 const expected = `"
 " schemeTest v2.1.0
 " description d
-" url u
 " author: author a
 " license: MIT
 " background: dark
@@ -26,7 +25,7 @@ endif\n\n`
 test('parseInfo: with watermark', t => {
   let data = {
     author: 'author a',
-    scheme: 'schemeTest',
+    name: 'schemeTest',
     background: 'dark',
     description: 'description d',
     license: 'MIT',

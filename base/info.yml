@@ -2,6 +2,7 @@ info: |
   Fill this with info about your color scheme.
   You can write multiple lines here
 background: 'dark'
+colors: {}
 # estilo will take the remaining info from your package.json:
 # - scheme name: name
 # - version

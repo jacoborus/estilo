@@ -52,7 +52,6 @@ test('parseString:', t => {
   t.is(Object.keys(empty).length, 0, 'empty schema')
 
   let full = pss('#bbddff rojo bi', colors)
-  console.log(full)
   t.is(full.fore, '#bbddff', 'full foreground')
   t.is(full.back, '#ff5555', 'full background')
   t.is(full.ui, 'bi', 'full gui')
