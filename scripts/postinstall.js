@@ -36,7 +36,7 @@ function init () {
 function addScripts (pkgPath) {
   let pkg = require(pkgPath)
   pkg.scripts = pkg.scripts || {}
-  pkg.scripts.estilo = 'estilo'
+  pkg.scripts.build = 'node node_modules/estilo/scripts/build.js'
   fs.writeJsonSync(pkgPath, pkg)
 }
 
