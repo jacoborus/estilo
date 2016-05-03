@@ -12,9 +12,6 @@
     "js-yaml": "^3.6.0",
     "minimist": "^1.2.0"
   },
-  "bin": {
-    "estilo": "./bin/bin.js"
-  },
   "devDependencies": {
     "eslint": "^2.8.0",
     "tape": "^4.5.1"
