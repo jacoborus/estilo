@@ -33,8 +33,8 @@ colors:
 Now you can set the highlight styles in the remaining .yml files in `estilo` folder with some rules:
 
 - first value is foreground
-- seconf value is background
-- third value is text style, and just accept firstr letter of every style (b: bold, r: reverse, u: underline, i: italic)
+- second value is background
+- third value is text style, and just accept first letter of every style (b: bold, r: reverse, u: underline, i: italic)
 - ommited values will be rendered as `NONE`
 - a hyphen means to ommit the value
 
@@ -53,3 +53,20 @@ hi Comment guifg=#bbddff ctermfg=153 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi Title guifg=NONE ctermfg=NONE guibg=ffbbcc ctermbg=218 gui=bold,underline cterm=bold,underline
 hi link WarningMsg Title
 ```
+
+Render the color scheme with
+
+```sh
+npm run build
+```
+
+
+Your scheme is almost ready, just add `node_modules` to `.gitignore` file before publishing
+
+
+
+<br><br>
+
+---
+
+© 2016 [Jacobo Tabernero](https://github.com/jacoborus) - Released under [MIT License](https://raw.github.com/jacoborus/estilo/master/LICENSE)
