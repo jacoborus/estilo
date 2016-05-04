@@ -42,7 +42,7 @@ test('printScheme', t => {
       }
     },
     templates: {
-      hitest: 'blue blanco * test comment',
+      hitest: 'blue blanco',
       other: '#ff0000 - bui',
       linked: '@other'
     }

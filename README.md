@@ -10,7 +10,7 @@ Estilo
 - Shortcuts for text styles
 - Autofill cterm values
 - Organized templates
-- Empty templates for lots of languages and plugins (see the [list of templates](https://github.com/jacoborus/estilo/tree/master/base ))
+- Empty templates for lots of languages and plugins (see the [list of templates](https://github.com/jacoborus/estilo/tree/master/base))
 - Templates indicate the default linked style of highlights through comments
 
 ## Requirements

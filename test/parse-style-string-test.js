@@ -67,26 +67,5 @@ test('parseString:', t => {
   t.notOk(linked.back, 'linked background')
   t.notOk(linked.ui, 'linked gui')
 
-  let simpleComment = pss('* hola adios', colors)
-  t.is(simpleComment.comment, 'hola adios', 'comment simple')
-  t.notOk(simpleComment.link, 'comment simple no link')
-  t.notOk(simpleComment.fore, 'comment simple no foreground')
-  t.notOk(simpleComment.back, 'comment simple no background')
-  t.notOk(simpleComment.ui, 'comment simple no gui')
-
-  let comment = pss('#bbddff rojo bi * hola', colors)
-  t.is(comment.comment, 'hola', 'comment')
-  t.notOk(comment.link, 'comment no link')
-  t.is(comment.fore, '#bbddff', 'comment foreground')
-  t.is(comment.back, '#ff5555', 'comment background')
-  t.is(comment.ui, 'bi', 'comment gui')
-
-  let foreComment = pss('#bbddff * hola', colors)
-  t.is(foreComment.comment, 'hola', 'foreComment')
-  t.notOk(foreComment.link, 'foreComment no link')
-  t.is(foreComment.fore, '#bbddff', 'foreComment foreground')
-  t.is(foreComment.back, false, 'foreComment background')
-  t.is(foreComment.ui, false, 'foreComment gui')
-
   t.end()
 })
