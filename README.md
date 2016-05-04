@@ -1,15 +1,25 @@
 Estilo
 ======
 
-**Estilo** is a tool for creating, improving and maintaining colorschemes for vim and its ecosystem.
+**Estilo** makes easy creating, improving and maintaining colorschemes for vim and its ecosystem.
 
-Generate full vim colorschemes from yaml templates with node.js
+## Features
 
-Estilo is a vim color scheme preprocessor
+- Easy to fill yaml templates
+- Convert hex colors to closest xterm values
+- Shortcuts for text styles
+- Autofill cterm values
+- Organized templates
+- Empty templates for lots of languages and plugins (see the [list of templates](https://github.com/jacoborus/estilo/tree/master/base ))
+- Templates indicate the default linked style of highlights through comments
+
+## Requirements
+
+It's written in pure javascript, so you will need nodejs installed in your computer.
 
 ## Usage
 
-### tl:dr
+### tl;dr
 
 Install *Estilo* in a npm package, edit the templates and `npm run build`
 
