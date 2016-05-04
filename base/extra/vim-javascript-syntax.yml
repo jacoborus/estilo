@@ -1,46 +1,46 @@
 # jelera/vim-javascript-syntax
-javaScriptEndColons: '* Operator'
-javaScriptOpSymbols: '* Operator'
-javaScriptLogicSymbols: '* Boolean'
-javaScriptParens: '* Operator'
-javaScriptTemplateDelim: '* Operator'
-javaScriptDocComment: '* Comment'
-javaScriptDocTags: '* Special'
-javaScriptDocSeeTag: '* Function'
-javaScriptDocParam: '* Function'
-javaScriptString: '* String'
-javaScriptTemplateString: '* String'
-javaScriptFloat: '* Number'
-javaScriptPrototype: '* Type'
-javaScriptSpecial: '* Special'
-javaScriptSource: '* Special'
-javaScriptGlobalObjects: '* Special'
-javaScriptExceptions: '* Special'
-javaScriptParensErrA: '* Error'
-javaScriptParensErrB: '* Error'
-javaScriptParensErrC: '* Error'
-javaScriptDomErrNo: '* Error'
-javaScriptDomNodeConsts: '* Constant'
-javaScriptDomElemAttrs: '* Label'
-javaScriptDomElemFuncs: '* Type'
-javaScriptWebAPI: '* Type'
-javaScriptHtmlElemAttrs: '* Label'
-javaScriptHtmlElemFuncs: '* Type'
-javaScriptCssStyles: '* Type'
-javaScriptBrowserObjects: '* Constant'
-javaScriptDOMObjects: '* Constant'
-javaScriptDOMMethods: '* Type'
-javaScriptDOMProperties: '* Label'
-javaScriptAjaxObjects: '* Constant'
-javaScriptAjaxMethods: '* Type'
-javaScriptAjaxProperties: '* Label'
-javaScriptFuncKeyword: '* Function'
-javaScriptFuncDef: '* PreProc'
-javaScriptFuncExp: '* Title'
-javaScriptFuncArg: '* Special'
-javaScriptFuncComma: '* Operator'
-javaScriptFuncEq: '* Operator'
-javaScriptHtmlEvents: '* Constant'
-javaScriptHtmlElemProperties: '* Label'
-javaScriptEventListenerKeywords: '* Type'
-javaScriptPropietaryObjects: '* Constant'
+javaScriptEndColons: '' # Operator
+javaScriptOpSymbols: '' # Operator
+javaScriptLogicSymbols: '' # Boolean
+javaScriptParens: '' # Operator
+javaScriptTemplateDelim: '' # Operator
+javaScriptDocComment: '' # Comment
+javaScriptDocTags: '' # Special
+javaScriptDocSeeTag: '' # Function
+javaScriptDocParam: '' # Function
+javaScriptString: '' # String
+javaScriptTemplateString: '' # String
+javaScriptFloat: '' # Number
+javaScriptPrototype: '' # Type
+javaScriptSpecial: '' # Special
+javaScriptSource: '' # Special
+javaScriptGlobalObjects: '' # Special
+javaScriptExceptions: '' # Special
+javaScriptParensErrA: '' # Error
+javaScriptParensErrB: '' # Error
+javaScriptParensErrC: '' # Error
+javaScriptDomErrNo: '' # Error
+javaScriptDomNodeConsts: '' # Constant
+javaScriptDomElemAttrs: '' # Label
+javaScriptDomElemFuncs: '' # Type
+javaScriptWebAPI: '' # Type
+javaScriptHtmlElemAttrs: '' # Label
+javaScriptHtmlElemFuncs: '' # Type
+javaScriptCssStyles: '' # Type
+javaScriptBrowserObjects: '' # Constant
+javaScriptDOMObjects: '' # Constant
+javaScriptDOMMethods: '' # Type
+javaScriptDOMProperties: '' # Label
+javaScriptAjaxObjects: '' # Constant
+javaScriptAjaxMethods: '' # Type
+javaScriptAjaxProperties: '' # Label
+javaScriptFuncKeyword: '' # Function
+javaScriptFuncDef: '' # PreProc
+javaScriptFuncExp: '' # Title
+javaScriptFuncArg: '' # Special
+javaScriptFuncComma: '' # Operator
+javaScriptFuncEq: '' # Operator
+javaScriptHtmlEvents: '' # Constant
+javaScriptHtmlElemProperties: '' # Label
+javaScriptEventListenerKeywords: '' # Type
+javaScriptPropietaryObjects: '' # Constant
