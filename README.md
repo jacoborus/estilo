@@ -1,13 +1,21 @@
 Estilo
 ======
 
+**Estilo** is a tool for creating, improving and maintaining colorschemes for vim and its ecosystem.
+
 Generate full vim colorschemes from yaml templates with node.js
 
 Estilo is a vim color scheme preprocessor
 
 ## Usage
 
-Create a npm module and fill package.json data (this data will be used later for rendering your scheme)
+### tl:dr
+
+Install *Estilo* in a npm package, edit the templates and `npm run build`
+
+### Step by step
+
+Create a npm module and fill package.json data (this data will be used when rendering your scheme)
 
 ```sh
 mkdir mycolors && cd mycolors && npm init
@@ -19,7 +27,7 @@ Then install estilo as a dependency. This step will add some scripts to package.
 npm install --save estilo
 ```
 
-Edit the colors in mycolors/estilo/info.yml. Use hex colors and **Estilo** will find the closest Xterm values.
+Edit the colors in `estilo/info.yml`. Use hex colors and **Estilo** will find the closest Xterm values.
 
 Example:
 
@@ -60,8 +68,11 @@ Render the color scheme with
 npm run build
 ```
 
+Your scheme is almost ready, just remember to add `node_modules` to `.gitignore` file before publishing
 
-Your scheme is almost ready, just add `node_modules` to `.gitignore` file before publishing
+```sh
+echo 'node_modules' >> .gitignore
+```
 
 
 
