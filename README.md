@@ -48,7 +48,7 @@ WarningMsg: 'link Title'
 
 Will render:
 
-```yaml
+```vim
 hi Comment guifg=#bbddff ctermfg=153 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi Title guifg=NONE ctermfg=NONE guibg=ffbbcc ctermbg=218 gui=bold,underline cterm=bold,underline
 hi link WarningMsg Title
