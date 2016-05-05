@@ -23,6 +23,10 @@ function getTemplateFiles (folderPath) {
     .map(i => resolve(folderPath, i))
 }
 
+function hasContent (tmpl) {
+  return Object.keys(tmpl).find(k => tmpl[k])
+}
+
 module.exports = function (folder) {
   let pkg = require(resolve(folder, 'package.json'))
 
@@ -48,7 +52,7 @@ module.exports = function (folder) {
     })
   })
 
-  const llPath = 'folder/addons/lightline.yml'
+  const llPath = resolve(estiloFolder, 'addons/lightline.yml')
   const lighlineTmpl = exists(llPath) ? yaml.safeLoad(fs.readFileSync(llPath)) : false
 
   Object.assign(info, pkg)
@@ -58,8 +62,8 @@ module.exports = function (folder) {
   fs.ensureDirSync(colorsFolder)
   fs.writeFileSync(`${colorsFolder}/${pkg.name}.vim`, scheme)
 
-  if (lighlineTmpl) {
-    const llTheme = renderLightline(lighlineTmpl)
+  if (lighlineTmpl && hasContent(lighlineTmpl)) {
+    const llTheme = renderLightline(pkg.name, lighlineTmpl, info.colors)
     fs.ensureDirSync(pluginsFolder)
     fs.writeFileSync(`${pluginsFolder}/${pkg.name}-lightline.vim`, llTheme)
   }

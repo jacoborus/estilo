@@ -37,7 +37,7 @@ module.exports = function (themeName, tmpl, colors) {
   let obj = string2array(tmpl)
   let out = outBegin
   Object.keys(obj).forEach(k => {
-    if (obj[k]) {
+    if (obj[k] && obj[k].length) {
       out += transform(k, obj[k], colors)
     }
   })
