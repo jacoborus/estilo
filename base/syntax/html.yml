@@ -4,7 +4,6 @@ htmlArg: '' # Type
 htmlTagName: '' # htmlStatement
 htmlSpecialTagName: '' # Exception
 htmlValue: '' # String
-htmlSpecialChar: '' # Special
 htmlH1: '' # Title
 htmlH2: '' # htmlH1
 htmlH3: '' # htmlH2
@@ -35,7 +34,6 @@ htmlString: '' # String
 htmlStatement: '' # Statement
 htmlComment: '' # Comment
 htmlCommentPart: '' # Comment
-htmlValue: '' # String
 htmlCommentError: '' # htmlError
 htmlTagError: '' # htmlError
 htmlEvent: '' # javaScript

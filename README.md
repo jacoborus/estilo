@@ -72,6 +72,8 @@ hi Title guifg=NONE ctermfg=NONE guibg=ffbbcc ctermbg=218 gui=bold,underline cte
 hi link WarningMsg Title
 ```
 
+Estilo can create your lighline theme too. Open lightline template (`your-scheme/estilo/addons/lighline.yml`) and follow the instructions in the comments
+
 Render the color scheme with
 
 ```sh
