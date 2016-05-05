@@ -1,0 +1,27 @@
+# normal
+normal.left: '' # 2 items
+normal.right: '' # 2 items
+normal.middle: '' # 1 item
+normal.error: '' # 1 item
+normal.warning: '' # 1 item
+# inactive
+inactive.left:  '' # 2 items
+inactive.right: '' # 2 items, linking to normal.right by default
+inactive.middle: '' # 1 item, linking to normal.middle by default
+# insert
+insert.left: '' # 2 items
+insert.right: '' # 2 items, linking to normal.right by default
+insert.middle: '' # 1 items, linking to normal.middle by default
+# replace
+replace.left: '' # 2 items
+replace.right: '' # 2 items, linking to normal.right by default
+replace.middle: '' # 1 items, linking to normal.middle by default
+# visual
+visual.left: '' # 2 items
+visual.right: '' # 2 items, linking to normal.right by default
+visual.middle: '' # 1 items, linking to normal.middle by default
+# tabline
+tabline.left: '' # 1 item
+tabline.tabsel: '' # 1 item
+tabline.middle: '' # 1 item
+tabline.right: '' # 1 item

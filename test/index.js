@@ -7,5 +7,6 @@ require('./get-hilinks-test.js')
 require('./print-hls-test.js')
 require('./print-scheme-test.js')
 require('./print-info-test.js')
+require('./render-lightline-test.js')
 require('./build-test.js')
 
