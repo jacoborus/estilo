@@ -2,10 +2,16 @@
 
 const { resolve, basename } = require('path')
 const fs = require('fs-extra')
-const printScheme = require('./print-scheme.js')
+const renderScheme = require('./print-scheme.js')
 const yaml = require('js-yaml')
 const renderLightline = require('./render-lightline.js')
 
+/**
+ * check if file exists
+ *
+ * @param {string} filepath
+ * @returns {boolean}
+ */
 function exists (filepath) {
   let res = true
   try {
@@ -16,9 +22,16 @@ function exists (filepath) {
   return res
 }
 
+/**
+ * getTemplateFiles
+ *
+ * @param {string} folderPath path to folder with yml templates
+ * @returns {array} list of template paths inside folder
+ */
 function getTemplateFiles (folderPath) {
   if (!exists(folderPath)) return []
   return fs.readdirSync(folderPath)
+    // filter .yml files
     .filter(i => basename(i) !== basename(i, '.yml'))
     .map(i => resolve(folderPath, i))
 }
@@ -27,46 +40,57 @@ function hasContent (tmpl) {
   return Object.keys(tmpl).find(k => tmpl[k])
 }
 
+/**
+ * convert
+ *
+ * read all templates in `folder` and its subfolders,
+ * then generate color schemes for vim and lightline
+ *
+ * @param {string} folder template folder path
+ */
 module.exports = function (folder) {
-  let pkg = require(resolve(folder, 'package.json'))
+  const pkg = require(resolve(folder, 'package.json'))
 
-  let colorsFolder = resolve(folder, 'colors')
-  let estiloFolder = resolve(folder, 'estilo')
-  let pluginsFolder = resolve(folder, 'plugin')
-  let templateFiles = [
+  const colorsFolder = resolve(folder, 'colors')
+  const estiloFolder = resolve(folder, 'estilo')
+  const pluginsFolder = resolve(folder, 'plugin')
+  const lightlinePath = resolve(estiloFolder, 'addons/lightline.yml')
+  const lighlineTmpl = exists(lightlinePath) ? yaml.safeLoad(fs.readFileSync(lightlinePath)) : false
+
+  let templatePaths = [
     estiloFolder + '/ui-base.yml',
     estiloFolder + '/syntax-base.yml'
   ]
-  templateFiles.push(...getTemplateFiles(estiloFolder + '/syntax'))
-  templateFiles.push(...getTemplateFiles(estiloFolder + '/extra'))
+  templatePaths.push(...getTemplateFiles(estiloFolder + '/syntax'))
+  templatePaths.push(...getTemplateFiles(estiloFolder + '/extra'))
 
-  let info = fs.readFileSync(estiloFolder + '/info.yml')
-  info = yaml.safeLoad(info)
+  // load info and colors
+  let info = yaml.safeLoad(fs.readFileSync(estiloFolder + '/info.yml'))
+  Object.assign(info, pkg)
 
+  // load all templates from disk
   let templates = {}
-  templateFiles.forEach(templatePath => {
-    let raw = fs.readFileSync(templatePath)
-    let obj = yaml.safeLoad(raw)
+  templatePaths.forEach(templatePath => {
+    const raw = fs.readFileSync(templatePath)
+    const obj = yaml.safeLoad(raw)
     Object.keys(obj).forEach(k => {
       templates[k] = obj[k]
     })
   })
 
-  const llPath = resolve(estiloFolder, 'addons/lightline.yml')
-  const lighlineTmpl = exists(llPath) ? yaml.safeLoad(fs.readFileSync(llPath)) : false
+  // render template
+  let scheme = renderScheme({ info, templates })
 
-  Object.assign(info, pkg)
-
-  let scheme = printScheme({ info, templates })
-
+  // write template to disk
   fs.ensureDirSync(colorsFolder)
   fs.writeFileSync(`${colorsFolder}/${pkg.name}.vim`, scheme)
 
+  // render lightline theme if possible
   if (lighlineTmpl && hasContent(lighlineTmpl)) {
     const llTheme = renderLightline(pkg.name, lighlineTmpl, info.colors)
     fs.ensureDirSync(pluginsFolder)
     fs.writeFileSync(`${pluginsFolder}/${pkg.name}-lightline.vim`, llTheme)
   }
 
-  console.log('OK!')
+  console.log('Done!')
 }
