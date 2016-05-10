@@ -23,6 +23,7 @@ function parseui (raw, hiName) {
 
 // extract hilink definitions from object
 // and return a new formatted object
+
 module.exports = function (data, colors) {
   if (!data || typeof data !== 'object') {
     throw new Error('wrong highlights object')

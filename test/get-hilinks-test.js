@@ -16,13 +16,13 @@ test('getHilinks: throws on missing data', t => {
 
 test('getHilinks: format hilinks', t => {
   const data = {
-    normal: '#bbddff #ff5555 biru'
+    normal: '#bbddff . biru'
   }
   const hilinks = getHilinks(data, colors)
 
   const normal = hilinks.normal
   t.is(normal.fore, '#bbddff', 'foreground')
-  t.is(normal.back, '#ff5555', 'background')
+  t.is(normal.back, '.', 'background')
   t.is(normal.ui, 'bold,italic,reverse,underline', 'ui')
 
   t.end()

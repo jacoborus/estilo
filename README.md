@@ -53,14 +53,15 @@ Now you can set the highlight styles in the remaining .yml files in `estilo` fol
 - first value is foreground
 - second value is background
 - third value is text style, and just accept first letter of every style (b: bold, r: reverse, u: underline, i: italic)
-- ommited values will be rendered as `NONE`
-- a hyphen means to ommit the value
+- a hyphen or an ommited value will be rendered as `NONE`
+- a dot (`.`) will not render this foregroung/background/style
 
 Example:
 
 ```yaml
 Comment: 'sky'
 Title: '- cherry bu'
+Other: '. cherry bu'
 WarningMsg: 'link Title'
 ```
 
@@ -69,6 +70,7 @@ Will render:
 ```vim
 hi Comment guifg=#bbddff ctermfg=153 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi Title guifg=NONE ctermfg=NONE guibg=ffbbcc ctermbg=218 gui=bold,underline cterm=bold,underline
+hi Other guibg=ffbbcc ctermbg=218 gui=bold,underline cterm=bold,underline
 hi link WarningMsg Title
 ```
 

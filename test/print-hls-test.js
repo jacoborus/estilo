@@ -6,13 +6,13 @@ const printHls = require('../src/print-hls.js')
 test('printHls: regular hilinks', t => {
   let hilinks = {
     normal: {
-      fore: '#bbddff',
+      fore: false,
       back: '#994444',
       ui: 'bold,reverse'
     },
     other: {
       fore: '#333333',
-      back: '#dddddd',
+      back: '.',
       ui: 'italic'
     },
     linked: {
@@ -22,8 +22,8 @@ test('printHls: regular hilinks', t => {
   }
   t.is(
     printHls(hilinks),
-    `hi normal guifg=#bbddff ctermfg=153 guibg=#994444 ctermbg=95 gui=bold,reverse cterm=bold,reverse
-hi other guifg=#333333 ctermfg=236 guibg=#dddddd ctermbg=253 gui=italic cterm=italic
+    `hi normal guifg=NONE ctermfg=NONE guibg=#994444 ctermbg=95 gui=bold,reverse cterm=bold,reverse
+hi other guifg=#333333 ctermfg=236 gui=italic cterm=italic
 hi link linked other\n`
   )
   t.end()

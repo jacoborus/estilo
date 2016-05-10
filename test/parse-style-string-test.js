@@ -10,8 +10,9 @@ test('getColorCode:', t => {
     azul: '#bbddff'
   }
 
-  t.is(gcc(''), false, 'empty')
-  t.is(gcc('-'), false, 'empty')
+  t.is(gcc(''), false, 'NONE')
+  t.is(gcc('-'), false, 'NONE')
+  t.is(gcc('.'), '.', 'empty')
   t.is(gcc('azul', colors), '#bbddff', 'from colors archive')
   t.is('#aabbcc', '#aabbcc', 'real hexadecimal color')
   t.throws(
@@ -35,6 +36,7 @@ test('getUI', t => {
   t.is(getUI('bu'), 'bu', 'valid formatted')
   t.is(getUI('uir'), 'uir', 'valid formatted')
   t.is(getUI('ubri'), 'ubri', 'valid formatted')
+  t.is(getUI('.'), '.', 'skip style')
   t.throws(
     () => getUI('aui', 'schemaName'),
     /wrong ui in schemaName/,
@@ -48,8 +50,8 @@ test('parseString:', t => {
     rojo: '#ff5555'
   }
 
-  let empty = pss('     ')
-  t.is(Object.keys(empty).length, 0, 'empty schema')
+  let noValue = pss('     ')
+  t.is(Object.keys(noValue).length, 0, 'empty schema')
 
   let full = pss('#bbddff rojo bi', colors)
   t.is(full.fore, '#bbddff', 'full foreground')
@@ -60,6 +62,11 @@ test('parseString:', t => {
   t.is(two.fore, false, 'two foreground')
   t.is(two.back, '#ff5555', 'two background')
   t.is(two.ui, false, 'two gui')
+
+  let empty = pss('. . bu', colors)
+  t.is(empty.fore, '.', 'empty foreground')
+  t.is(empty.back, '.', 'empty background')
+  t.is(empty.ui, 'bu', 'two gui')
 
   let linked = pss('@other', colors)
   t.is(linked.link, 'other', 'linked link')

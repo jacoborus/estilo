@@ -3,15 +3,11 @@
 const isHexColor = require('./is-hex-color.js')
 const uis = new Set(['u', 'b', 'r', 'i'])
 
-// for testing purposes
-parseStyleString.getColorCode = getColorCode
-parseStyleString.getUI = getUI
-
-module.exports = parseStyleString
-
 function getColorCode (color, colors, part, hiName) {
-  // return false if empty color
+  // return false if color is `NONE`
   if (!color || color === '-') return false
+  // return dot if empty color
+  if (color === '.') return color
   // return custom color
   const c = colors[color]
   if (c) return c
@@ -30,8 +26,8 @@ function getUI (ui, schemaName) {
   if (typeof ui !== 'string') {
     throw new Error('wrong ui in ' + schemaName)
   }
-  // 'NONE' as value
-  if (ui === 'NONE') return ui
+  // 'NONE' or empty value
+  if (ui === 'NONE' || ui === '.') return ui
   // formatted gui, just check for valid value
   let len = ui.length
   while (len) {
@@ -68,3 +64,9 @@ function parseStyleString (str, colors, name) {
     ui: getUI(props[2], name)
   }
 }
+
+// for testing purposes
+parseStyleString.getColorCode = getColorCode
+parseStyleString.getUI = getUI
+
+module.exports = parseStyleString
