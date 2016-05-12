@@ -85,7 +85,7 @@ Other: '. . ri'
 ```
 
 ```vim
-hi Other guibg=ffbbcc ctermbg=218 gui=bold,underline cterm=bold,underline
+hi Other gui=reverse,italic cterm=reverse,italic
 ```
 
 Link to other definition:
