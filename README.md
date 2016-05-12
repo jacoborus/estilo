@@ -56,21 +56,45 @@ Now you can set the highlight styles in the remaining .yml files in `estilo` fol
 - a hyphen or an ommited value will be rendered as `NONE`
 - a dot (`.`) will not render this foregroung/background/style
 
-Example:
+Examples:
+
+Omitting values:
 
 ```yaml
 Comment: 'sky'
-Title: '- cherry bu'
-Other: '. cherry bu'
-WarningMsg: 'link Title'
 ```
-
-Will render:
 
 ```vim
 hi Comment guifg=#bbddff ctermfg=153 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+```
+
+Omitting values with dashes:
+
+```yaml
+Title: '- cherry bu'
+```
+
+```vim
 hi Title guifg=NONE ctermfg=NONE guibg=ffbbcc ctermbg=218 gui=bold,underline cterm=bold,underline
+```
+
+Prevent to print style with dots
+
+```yaml
+Other: '. . ri'
+```
+
+```vim
 hi Other guibg=ffbbcc ctermbg=218 gui=bold,underline cterm=bold,underline
+```
+
+Link to other definition:
+
+```yaml
+WarningMsg: 'link Title'
+```
+
+```vim
 hi link WarningMsg Title
 ```
 
