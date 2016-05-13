@@ -62,7 +62,7 @@ module.exports = function (folder) {
     estiloFolder + '/syntax-base.yml'
   ]
   templatePaths.push(...getTemplateFiles(estiloFolder + '/syntax'))
-  templatePaths.push(...getTemplateFiles(estiloFolder + '/extra'))
+  templatePaths.push(...getTemplateFiles(estiloFolder + '/plugins'))
 
   // load info and colors
   let info = yaml.safeLoad(fs.readFileSync(estiloFolder + '/info.yml'))
