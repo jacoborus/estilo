@@ -2,7 +2,7 @@
 
 
 function getVimCode (info) {
-  return `let colors_name="${info.name}"
+  return `let g:colors_name="${info.name}"
 hi clear
 if exists("syntax_on")
   syntax reset
