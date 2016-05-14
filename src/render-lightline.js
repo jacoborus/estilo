@@ -2,10 +2,11 @@
 
 const hexterm = require('hexterm')
 const isHexColor = require('./is-hex-color.js')
-const outBegin = `if !exists("lightline#colorscheme#flatten")
-  finish
-endif
-let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}\n`
+
+function outBegin (themeName) {
+  return `if exists('g:${themeName}_lightline') && g:${themeName}_lightline
+  let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}\n`
+}
 
 function string2array (obj) {
   const out = {}
@@ -27,7 +28,7 @@ function transformColors (codes, colors) {
 
 function transform (prop, codes, colors) {
   let d = transformColors(codes, colors)
-  let out = `let s:p.${ prop } = [`
+  let out = `  let s:p.${ prop } = [`
   out += `[["${d[0]}", ${hexterm(d[0])}], ["${d[1]}", ${hexterm(d[1])}]]`
   if (d.length > 2) {
     out += `, [["${d[2]}", ${hexterm(d[2])}], ["${d[3]}", ${hexterm(d[3])}]]`
@@ -38,12 +39,12 @@ function transform (prop, codes, colors) {
 
 module.exports = function (themeName, tmpl, colors) {
   let obj = string2array(tmpl)
-  let out = outBegin
+  let out = outBegin(themeName)
   Object.keys(obj).forEach(k => {
     if (obj[k] && obj[k].length) {
       out += transform(k, obj[k], colors)
     }
   })
-  out += `let g:lightline#colorscheme#${ themeName }#palette = lightline#colorscheme#flatten(s:p)\n`
+  out += `  let g:lightline#colorscheme#${ themeName }#palette = lightline#colorscheme#flatten(s:p)\nendif\n`
   return out
 }
