@@ -2,7 +2,10 @@
 
 const hexterm = require('hexterm')
 const isHexColor = require('./is-hex-color.js')
-const outBegin = `let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}\n`
+const outBegin = `if !exists("lightline#colorscheme#flatten")
+  finish
+endif
+let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}\n`
 
 function string2array (obj) {
   const out = {}

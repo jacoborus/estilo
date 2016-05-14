@@ -3,7 +3,10 @@
 const test = require('tape')
 const render = require('../src/render-lightline.js')
 
-const result = `let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}
+const result = `if !exists("lightline#colorscheme#flatten")
+  finish
+endif
+let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}
 let s:p.normal.left = [[["#111111", 233], ["#555555", 240]], [["#999999", 246], ["#111111", 233]]]
 let s:p.normal.right = [[["#111111", 233], ["#555555", 240]], [["#999999", 246], ["#111111", 233]]]
 let s:p.normal.middle = [[["#555555", 240], ["#999999", 246]]]
