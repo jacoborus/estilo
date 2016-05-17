@@ -9,7 +9,7 @@ module.exports = function (data) {
     Object.keys(data).forEach(name => {
       let code = data[name]
       if (!code || !isHexColor(code)) {
-        throw new Error(`color ${ name } is invalid`)
+        throw new Error(`color ${name} is invalid`)
       }
       colors[name] = code
     })

@@ -1,7 +1,7 @@
 'use strict'
 
 const test = require('tape')
-const fs = require('fs-extra')
+const fs = require('../src/super-fs')
 const { resolve } = require('path')
 const convert = require('../src/convert.js')
 
@@ -30,7 +30,7 @@ hi Comment guifg=#bbddff ctermfg=153 guibg=#bbddff ctermbg=153 gui=bold,italic,r
 hi jsonPadding guifg=#bbddff ctermfg=153 guibg=#bbddff ctermbg=153 gui=bold,italic,reverse,underline cterm=bold,italic,reverse,underline\n`
 
 test('build', t => {
-  fs.removeSync('./test/sandbox/colors')
+  fs.rmrf('./test/sandbox/colors')
   convert(resolve('./test/sandbox'))
   const str = fs.readFileSync('./test/sandbox/colors/sandbox.vim', 'utf-8')
   t.is(str, testStr)

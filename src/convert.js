@@ -1,7 +1,8 @@
 'use strict'
 
+const mkdirp = require('mkdirp')
 const { resolve, basename } = require('path')
-const fs = require('fs-extra')
+const fs = require('fs')
 const renderScheme = require('./print-scheme.js')
 const yaml = require('js-yaml')
 const renderLightline = require('./render-lightline.js')
@@ -82,13 +83,13 @@ module.exports = function (folder) {
   let scheme = renderScheme({ info, templates })
 
   // write template to disk
-  fs.ensureDirSync(colorsFolder)
+  mkdirp.sync(colorsFolder)
   fs.writeFileSync(`${colorsFolder}/${pkg.name}.vim`, scheme)
 
   // render lightline theme if possible
   if (lighlineTmpl && hasContent(lighlineTmpl)) {
     const llTheme = renderLightline(pkg.name, lighlineTmpl, info.colors)
-    fs.ensureDirSync(pluginsFolder)
+    mkdirp.sync(pluginsFolder)
     fs.writeFileSync(`${pluginsFolder}/${pkg.name}-lightline.vim`, llTheme)
   }
 
