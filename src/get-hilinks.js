@@ -24,19 +24,17 @@ function parseui (raw, hiName) {
 // extract hilink definitions from object
 // and return a new formatted object
 
-module.exports = function (data, colors) {
-  if (!data || typeof data !== 'object') {
+module.exports = function (templates, colors) {
+  if (!templates || typeof templates !== 'object') {
     throw new Error('wrong highlights object')
   }
   let links = {}
-  Object.keys(data).forEach(name => {
-    const raw = data[name]
-    let hilink
-    if (typeof raw === 'string') {
-      hilink = parseStyleString(raw, colors, name)
-    } else {
-      throw new Error('bad formatted hilinks')
+  Object.keys(templates).forEach(name => {
+    const raw = templates[name]
+    if (typeof raw !== 'string') {
+      throw new Error('bad formatted hilinks:', name)
     }
+    let hilink = parseStyleString(raw, colors, name)
     let ui = hilink.ui
     if (ui) {
       hilink.ui = parseui(ui)

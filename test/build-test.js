@@ -31,10 +31,11 @@ hi jsonPadding guifg=#bbddff ctermfg=153 guibg=#bbddff ctermbg=153 gui=bold,ital
 
 test('build', t => {
   fs.rmrf('./test/sandbox/colors')
-  convert(resolve('./test/sandbox'))
-  const str = fs.readFileSync('./test/sandbox/colors/sandbox.vim', 'utf-8')
-  t.is(str, testStr)
-  fs.unlink('./test/sandbox/colors/sandbox.vim', () => {
-    t.end()
+  convert(resolve('./test/sandbox'), function () {
+    const str = fs.readFileSync('./test/sandbox/colors/sandbox.vim', 'utf-8')
+    t.is(str, testStr)
+    fs.unlink('./test/sandbox/colors/sandbox.vim', () => {
+      t.end()
+    })
   })
 })

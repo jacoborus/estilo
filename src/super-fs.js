@@ -4,17 +4,19 @@ const fs = require('fs')
 const path = require('path')
 
 function rmrf (dir) {
-  const list = fs.readdirSync(dir)
-  list.forEach(i => {
-    const filename = path.join(dir, i)
+  if (existsSync(dir)) {
+    const list = fs.readdirSync(dir)
+    list.forEach(i => {
+      const filename = path.join(dir, i)
 
-    if (fs.statSync(filename).isDirectory()) {
-      rmrf(filename)
-    } else {
-      fs.unlinkSync(filename)
-    }
-  })
-  fs.rmdirSync(dir)
+      if (fs.statSync(filename).isDirectory()) {
+        rmrf(filename)
+      } else {
+        fs.unlinkSync(filename)
+      }
+    })
+    fs.rmdirSync(dir)
+  }
 }
 
 /**
