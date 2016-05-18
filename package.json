@@ -14,12 +14,12 @@
     "ncp": "^2.0.0"
   },
   "devDependencies": {
-    "eslint": "^2.10.2",
+    "standard": "^7.1.0",
     "tape": "^4.5.1"
   },
   "scripts": {
     "test": "node test/index.js",
-    "linter": "eslint src estilo.js test bin/estilo",
+    "linter": "standard src estilo.js test bin/estilo",
     "postinstall": "node scripts/postinstall.js"
   },
   "repository": {

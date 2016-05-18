@@ -28,7 +28,7 @@ function transformColors (codes, colors) {
 
 function transform (prop, codes, colors) {
   let d = transformColors(codes, colors)
-  let out = `  let s:p.${ prop } = [`
+  let out = `  let s:p.${prop} = [`
   out += `[["${d[0]}", ${hexterm(d[0])}], ["${d[1]}", ${hexterm(d[1])}]]`
   if (d.length > 2) {
     out += `, [["${d[2]}", ${hexterm(d[2])}], ["${d[3]}", ${hexterm(d[3])}]]`
@@ -45,6 +45,6 @@ module.exports = function (themeName, tmpl, colors) {
       out += transform(k, obj[k], colors)
     }
   })
-  out += `  let g:lightline#colorscheme#${ themeName }#palette = lightline#colorscheme#flatten(s:p)\nendif\n`
+  out += `  let g:lightline#colorscheme#${themeName}#palette = lightline#colorscheme#flatten(s:p)\nendif\n`
   return out
 }
