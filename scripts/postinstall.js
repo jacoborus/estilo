@@ -36,4 +36,6 @@ function addScripts (pkgPath) {
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  '))
 }
 
-init()
+if (path.basename(path.resolve('..')) === 'node_modules') {
+  init()
+}
