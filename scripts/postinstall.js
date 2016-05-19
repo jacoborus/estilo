@@ -3,7 +3,7 @@
 const mkdirp = require('mkdirp')
 const fs = require('../src/super-fs.js')
 const path = require('path')
-const ncp = require('ncp')
+const bases = ['info.yml', 'syntax-base.yml', 'ui-base.yml']
 
 function init () {
   let schemeFolder = path.resolve('..', '..')
@@ -19,12 +19,25 @@ function init () {
     console.log('ok postinstall')
   } else {
     mkdirp.sync(estiloFolder)
-    const basePath = path.resolve('base')
+    const basePath = path.resolve(__dirname, '..', 'base')
     console.log('Installing base template...')
-    ncp(basePath, estiloFolder, err => {
-      if (err) throw err
+    Promise.all(bases.map(n => {
+      return fs.readProm(path.resolve(basePath, n))
+    }))
+    .then(files => {
+      return Promise.all(bases.map((f, i) => {
+        return fs.writeProm(path.resolve(estiloFolder, f), files[i].data)
+      }))
+    })
+    .then(() => {
+      console.log('installed: base template')
       addScripts(pkgPath)
       console.log('ok postinstall')
+    })
+    .catch(err => {
+      console.log(err)
+      console.log('----------------')
+      process.exit(0)
     })
   }
 }

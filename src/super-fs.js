@@ -27,7 +27,26 @@ function rmrf (dir) {
  */
 function exists (filepath, callback) {
   fs.stat(filepath, err => {
-    callback(err ? false : true)
+    if (err) callback(false)
+    else callback(true)
+  })
+}
+
+function readProm (origin) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(origin, (err, data) => {
+      if (err) reject('error reading ' + origin)
+      else resolve({ origin, data })
+    })
+  })
+}
+
+function writeProm (destination, data) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(destination, data, (err, data) => {
+      if (err) reject('error writing ' + destination)
+      else resolve({ destination, data })
+    })
   })
 }
 
@@ -47,8 +66,6 @@ function existsSync (filepath) {
   return res
 }
 
-fs.rmrf = rmrf
-fs.existsSync = existsSync
-fs.exists = exists
+Object.assign(fs, { rmrf, exists, existsSync, readProm, writeProm })
 
 module.exports = fs

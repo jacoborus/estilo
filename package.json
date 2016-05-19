@@ -1,6 +1,6 @@
 {
   "name": "estilo",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "Generate vim color schemes without the hassle",
   "main": "estilo.js",
   "directories": {
@@ -10,8 +10,7 @@
     "hexterm": "^1.2.0",
     "js-yaml": "^3.6.0",
     "minimist": "^1.2.0",
-    "mkdirp": "^0.5.1",
-    "ncp": "^2.0.0"
+    "mkdirp": "^0.5.1"
   },
   "devDependencies": {
     "standard": "^7.1.0",
@@ -19,7 +18,7 @@
   },
   "scripts": {
     "test": "node test/index.js",
-    "linter": "standard src estilo.js test bin/estilo",
+    "linter": "standard src/*.js estilo.js test bin/estilo",
     "postinstall": "node scripts/postinstall.js"
   },
   "repository": {

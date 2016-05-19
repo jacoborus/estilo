@@ -13,7 +13,7 @@ function printForeground (fore) {
   if (fore === '.') {
     return ''
   }
-  return ` guifg=${ fore } ctermfg=${ hexterm(fore) }`
+  return ` guifg=${fore} ctermfg=${hexterm(fore)}`
 }
 
 function printBackground (back) {
@@ -23,7 +23,7 @@ function printBackground (back) {
   if (back === '.') {
     return ''
   }
-  return ` guibg=${ back } ctermbg=${ hexterm(back) }`
+  return ` guibg=${back} ctermbg=${hexterm(back)}`
 }
 
 function printUi (ui) {
@@ -33,7 +33,7 @@ function printUi (ui) {
   if (ui === '.') {
     return ''
   }
-  return ` gui=${ ui } cterm=${ ui }`
+  return ` gui=${ui} cterm=${ui}`
 }
 
 module.exports = function (hilinks) {
@@ -43,9 +43,9 @@ module.exports = function (hilinks) {
     let hi = hilinks[k]
     if (!hi) return
     if (hi.link) {
-      out += `hi link ${ k } ${ hi.link }\n`
+      out += `hi link ${k} ${hi.link}\n`
     } else if (hi.fore || hi.back || hi.ui) {
-      out += `hi ${ k }`
+      out += `hi ${k}`
       out += printForeground(hi.fore)
       out += printBackground(hi.back)
       out += printUi(hi.ui)
