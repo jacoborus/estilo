@@ -15,7 +15,7 @@ function readFiles (templates) {
     }))
     .then(datas => {
       datas.forEach((d, i) => {
-        templates[i].data = d
+        templates[i].data = d.data
       })
       resolve(templates)
     })
