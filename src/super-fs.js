@@ -32,10 +32,19 @@ function exists (filepath, callback) {
   })
 }
 
+function existsProm (filepath) {
+  return new Promise((resolve, reject) => {
+    fs.stat(filepath, err => {
+      if (err) reject('File not exists: ' + filepath)
+      else resolve(filepath)
+    })
+  })
+}
+
 function readProm (origin) {
   return new Promise((resolve, reject) => {
     fs.readFile(origin, (err, data) => {
-      if (err) reject('error reading ' + origin)
+      if (err) reject('Error reading ' + origin)
       else resolve({ origin, data })
     })
   })
@@ -44,7 +53,7 @@ function readProm (origin) {
 function writeProm (destination, data) {
   return new Promise((resolve, reject) => {
     fs.writeFile(destination, data, (err, data) => {
-      if (err) reject('error writing ' + destination)
+      if (err) reject('Error writing ' + destination)
       else resolve({ destination, data })
     })
   })
@@ -66,6 +75,13 @@ function existsSync (filepath) {
   return res
 }
 
-Object.assign(fs, { rmrf, exists, existsSync, readProm, writeProm })
+Object.assign(fs, {
+  rmrf,
+  exists,
+  existsSync,
+  existsProm,
+  readProm,
+  writeProm
+})
 
 module.exports = fs

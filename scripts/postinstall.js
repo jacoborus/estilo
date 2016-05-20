@@ -6,9 +6,9 @@ const path = require('path')
 const bases = ['info.yml', 'syntax-base.yml', 'ui-base.yml']
 
 function init () {
-  let schemeFolder = path.resolve('..', '..')
-  let estiloFolder = schemeFolder + '/estilo'
-  let pkgPath = schemeFolder + '/package.json'
+  const schemeFolder = path.resolve(__dirname, '../../..')
+  const estiloFolder = schemeFolder + '/estilo'
+  const pkgPath = schemeFolder + '/package.json'
   // check for package.json
   if (!fs.existsSync(pkgPath)) {
     throw new Error('Estilo requires a package.json')
@@ -46,6 +46,7 @@ function addScripts (pkgPath) {
   let pkg = require(pkgPath)
   pkg.scripts = pkg.scripts || {}
   pkg.scripts.build = 'node node_modules/estilo/scripts/build.js'
+  pkg.scripts['add-template'] = 'node node_modules/estilo/scripts/add-template.js'
   fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, '  '))
 }
 

@@ -54,7 +54,7 @@ Now you can set the highlight styles in the remaining .yml files in `estilo` fol
 - second value is background
 - third value is text style, and just accept first letter of every style (b: bold, r: reverse, u: underline, i: italic)
 - a hyphen or an ommited value will be rendered as `NONE`
-- a dot (`.`) will not render this foregroung/background/style
+- a dot (`.`) will not render this foreground/background/style
 
 Examples:
 
@@ -97,6 +97,17 @@ WarningMsg: 'link Title'
 ```vim
 hi link WarningMsg Title
 ```
+
+Estilo bundles a pack of templates for common language syntaxes and plugins, you can add this templates by running `npm run add-template -- group/template-name` on your terminal. 
+
+Example: add go, ruby and fugitive templates
+
+```sh
+npm run add-template -- syntax/go syntax/ruby plugins/fugitive
+```
+
+See [full list of templates](https://github.com/jacoborus/estilo/tree/master/base) inside `syntax` and `plugins` folders
+
 
 Estilo can create your lighline theme too. Open lightline template (`your-scheme/estilo/addons/lighline.yml`) and follow the instructions in the comments
 
