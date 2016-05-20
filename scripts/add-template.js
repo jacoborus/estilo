@@ -43,17 +43,12 @@ function writeFiles (templates) {
   })
 }
 
-new Promise((resolve, reject) => {
-  let names = argv._
-  if (!names.length) reject('0 templates added')
-  else resolve(names)
-})
 // create objects for every template:
 // - name
 // - origin
 // - destination
 // - data
-.then(names => {
+function createObjects (names) {
   return names.map(n => {
     if (!n.endsWith('.yml')) n = n + '.yml'
     const shortName = n.substr(0, n.length - 4)
@@ -63,13 +58,22 @@ new Promise((resolve, reject) => {
       destination: path.resolve(estiloFolder, n)
     }
   })
+}
+
+new Promise((resolve, reject) => {
+  let names = argv._
+  if (!names.length) reject('0 templates added')
+  else resolve(names)
 })
+// create objects for every template:
+.then(createObjects)
 // check if origins exist
 .then(checkFiles)
 // read files data
 .then(readFiles)
 // write files
 .then(writeFiles)
+// success message
 .then(templates => {
   console.log('Added templates:\n')
   templates.forEach(t => console.log(t.name))
