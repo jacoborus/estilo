@@ -19,7 +19,7 @@ function init () {
     console.log('ok postinstall')
   } else {
     mkdirp.sync(estiloFolder)
-    const basePath = path.resolve(__dirname, '..', 'base')
+    const basePath = path.resolve(__dirname, '..', 'templates')
     console.log('Installing base template...')
     Promise.all(bases.map(n => {
       return fs.readProm(path.resolve(basePath, n))
