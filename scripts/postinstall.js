@@ -3,7 +3,7 @@
 const mkdirp = require('mkdirp')
 const fs = require('../src/super-fs.js')
 const path = require('path')
-const bases = ['info.yml', 'syntax-base.yml', 'ui-base.yml']
+const bases = ['info.yml', 'base.yml']
 
 function init () {
   const schemeFolder = path.resolve(__dirname, '../../..')
@@ -21,6 +21,7 @@ function init () {
     mkdirp.sync(estiloFolder)
     const basePath = path.resolve(__dirname, '..', 'templates')
     console.log('Installing base template...')
+
     Promise.all(bases.map(n => {
       return fs.readProm(path.resolve(basePath, n))
     }))
@@ -36,7 +37,6 @@ function init () {
     })
     .catch(err => {
       console.log(err)
-      console.log('----------------')
       process.exit(0)
     })
   }

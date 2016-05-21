@@ -1,16 +1,13 @@
-# Comment
+# BASE UI
 Comment: ''
-# Constant
 Constant: ''
 String: '' # Constant
 Character: '' # Constant
 Boolean: '' # Constant
 Number: '' # Constant
 Float: '' # Constant
-# Identifier
 Identifier: ''
 Function: '' # Identifier
-# Statement
 Statement: ''
 Conditional: '' # Statement
 Repeat: '' # Statement
@@ -18,29 +15,68 @@ Label: '' # Statement
 Operator: '' # Statement
 Keyword: '' # Statement
 Exception: '' # Statement
-# PreProc
 PreProc: ''
 Include: '' # PreProc
 Define: '' # PreProc
 Macro: '' # PreProc
 PreCondit: '' # PreProc
-# Type
 Type: ''
 StorageClass: '' # Type
 Structure: '' # Type
 Typedef: '' # Type
-# Special
 Special: ''
 SpecialChar: '' # Special
 Tag: '' # Special
 Delimiter: '' # Special
 SpecialComment: '' # Special
 Debug: '' # Special
-#Underlined
 Underlined: ''
-#Ignore
 Ignore: ''
-# Error
 Error: ''
-# Todo
 Todo: ''
+# BASE SYNTAX
+Comment: ''
+ColorColumn: ''
+Conceal: ''
+Cursor: ''
+CursorIM: ''
+CursorColumn: ''
+CursorLine: ''
+Directory: ''
+DiffAdd: ''
+DiffChange: ''
+DiffDelete: ''
+DiffText: ''
+ErrorMsg: ''
+VertSplit: ''
+Folded: ''
+FoldColumn: ''
+SignColumn: ''
+IncSearch: ''
+LineNr: ''
+MatchParen: ''
+ModeMsg: ''
+MoreMsg: ''
+NonText: ''
+Normal: ''
+PMenu: ''
+PMenuSel: ''
+PmenuSbar: ''
+PmenuThumb: ''
+Question: ''
+Search: ''
+SpecialKey: ''
+SpellBad: ''
+SpellLocal: ''
+SpellCap: ''
+SpellRare: ''
+StatusLine: ''
+StatusLineNC: ''
+TabLine: ''
+TabLineFill: ''
+TabLineSel: ''
+Title: ''
+Visual: ''
+VisualNOS: ''
+WarningMsg: ''
+WildMenu: ''
