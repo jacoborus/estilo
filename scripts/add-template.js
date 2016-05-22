@@ -6,7 +6,7 @@ const fs = require('../src/super-fs')
 const path = require('path')
 const schemeFolder = path.resolve(__dirname, '../../..')
 const estiloFolder = schemeFolder + '/estilo'
-const baseFolder = path.resolve(__dirname, '../base')
+const templatesFolder = path.resolve(__dirname, '../templates')
 
 function readFiles (templates) {
   return new Promise((resolve, reject) => {
@@ -54,7 +54,7 @@ function createObjects (names) {
     const shortName = n.substr(0, n.length - 4)
     return {
       name: shortName,
-      origin: path.resolve(baseFolder, n),
+      origin: path.resolve(templatesFolder, n),
       destination: path.resolve(estiloFolder, n)
     }
   })
