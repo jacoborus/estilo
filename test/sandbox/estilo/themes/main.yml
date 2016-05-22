@@ -1,0 +1,4 @@
+name: 'my-scheme'
+background: 'dark'
+colors:
+  blue: '@sky'

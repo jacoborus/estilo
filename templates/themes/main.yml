@@ -1,10 +1,8 @@
-info: |
-  Fill this with info about your color scheme.
-  You can write multiple lines here
 background: 'dark'
+name: 'my-scheme'
 colors: {}
+# you can link colors from colors.yml by prefixing their names with an @
 # estilo will take the remaining info from your package.json:
-# - scheme name: name
 # - version
 # - author
 # - description

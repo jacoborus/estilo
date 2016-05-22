@@ -3,14 +3,19 @@
 const test = require('tape')
 const getColors = require('../src/get-colors.js')
 
+const palette = {
+  azul: '#bbddff',
+  rojo: '#ff5555'
+}
+
 test('getColors: get valid colors', t => {
   let colors = {
-    azul: '#bbddff',
-    rojo: '#ff5555'
+    blue: '@azul',
+    red: '#ff0000'
   }
-  let set = getColors(colors)
-  t.is(set.azul, '#bbddff')
-  t.is(set.rojo, '#ff5555')
+  let set = getColors(palette, colors)
+  t.is(set.blue, '#bbddff')
+  t.is(set.red, '#ff0000')
   t.end()
 })
 
@@ -21,7 +26,7 @@ test('getColors: throws on empty color', t => {
     bad: ''
   }
   t.throws(
-    () => getColors(colors),
+    () => getColors({}, colors),
     /color bad is invalid/
   )
   t.end()
@@ -34,7 +39,7 @@ test('getColors: throws on wrong color', t => {
     worst: 1
   }
   t.throws(
-    () => getColors(colors),
+    () => getColors(palette, colors),
     /color worst is invalid/
   )
   t.end()
