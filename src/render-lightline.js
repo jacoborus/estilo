@@ -3,8 +3,8 @@
 const hexterm = require('hexterm')
 const isHexColor = require('./is-hex-color.js')
 
-function outBegin (themeName) {
-  return `if exists('g:${themeName}_lightline') && g:${themeName}_lightline
+function outBegin (schemeName) {
+  return `if exists('g:${schemeName}_lightline') && g:${schemeName}_lightline
   let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}\n`
 }
 
@@ -37,9 +37,11 @@ function transform (prop, codes, colors) {
   return out
 }
 
-module.exports = function (themeName, tmpl, colors) {
+module.exports = function (schemeName, tmpl, theme) {
+  const colors = theme.colors
+  const themeName = theme.name
   let obj = string2array(tmpl)
-  let out = outBegin(themeName)
+  let out = outBegin(schemeName)
   Object.keys(obj).forEach(k => {
     if (obj[k] && obj[k].length) {
       out += transform(k, obj[k], colors)

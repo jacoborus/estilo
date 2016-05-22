@@ -42,7 +42,8 @@ module.exports = function (folder, cb) {
     info: {},
     themesFolder,
     colorsFolder,
-    pluginsFolder
+    pluginsFolder,
+    lighlineTmpl
   }))
   // add info to schema
   .then(schema => getPalette(palettePath, schema))
@@ -198,13 +199,13 @@ function writeSchemes (schema) {
 }
 
 function renderLlThemes (schema) {
-  const { lighlineTmpl, themes } = schema
+  const { lighlineTmpl, themes, info } = schema
   // render lightline theme if possible
   if (lighlineTmpl && hasContent(lighlineTmpl)) {
     mkdirp.sync(schema.pluginsFolder)
     Object.keys(themes).forEach(k => {
       const theme = themes[k]
-      const llTheme = renderLightline(theme.name, lighlineTmpl, theme.colors)
+      const llTheme = renderLightline(info.name, lighlineTmpl, theme)
         // save lightline theme to disk
       fs.writeFileSync(`${schema.pluginsFolder}/${theme.name}-lightline.vim`, llTheme)
     })
