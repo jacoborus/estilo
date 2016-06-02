@@ -47,7 +47,7 @@ It's written in pure javascript, so you will need nodejs installed in your compu
 #### Create a npm module
 
 
-First of all you will need to create a new npm module and fill its package.json data, this data will be used when rendering your scheme
+First of all you will need to create a new npm module and fill its package.json data, this data will be used in your scheme
 
 ```sh
 mkdir mycolors && cd mycolors && npm init
@@ -56,7 +56,7 @@ mkdir mycolors && cd mycolors && npm init
 <a name="install-estilo"></a>
 #### Install Estilo
 
-Install estilo as a dependency. This step will add some scripts to package.json and create `estilo` folder, which contains your blank templates, themes and color palette
+Install estilo as a dependency. This step will add some scripts to package.json and create `estilo` folder, which contains your templates and palette.
 
 ```sh
 npm install --save estilo
