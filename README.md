@@ -19,6 +19,7 @@ Estilo
   - [Lightline theme](#lightline-theme)
 - [Publishing](#publishing)
 - [Useful resources](#useful-resources)
+- [Created with Estilo](#colors-schemes)
 
 
 <a name="features"></a>
@@ -220,6 +221,15 @@ echo 'node_modules' >> .gitignore
 - Trace syntax highlight of the word under the cursor: [vim-HiLinkTrace](https://github.com/gerw/vim-HiLinkTrace)
 - Preview colors inline: [vim-css-color](https://github.com/skammer/vim-css-color)
 - [yaml language elements](https://en.wikipedia.org/wiki/YAML#Language_elements<Paste>)
+
+
+<a name="colors-schemes"></a>
+## Created with Estilo
+
+- [Tender](https://github.com/jacoborus/tender.vim)
+- [add yours](https://github.com/jacoborus/estilo/compare)
+
+
 
 <br><br>
 
