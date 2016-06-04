@@ -54,6 +54,7 @@ javascriptNull: '' # Boolean
 javascriptNumber: '' # Number
 javascriptBoolean: '' # Boolean
 javascriptObjectLabel: '' # javascriptLabel
+javascriptObjectColon: '' # javascriptLabel
 javascriptLabel: '' # Label
 javascriptPropertyName: '' # Label
 javascriptImport: '' # Special
