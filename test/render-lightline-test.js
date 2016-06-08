@@ -60,8 +60,13 @@ const colors = {
   nine: '#999999'
 }
 
+const theme = {
+  colors: colors,
+  name: 'testing'
+}
+
 test('printLightline', t => {
-  const rendered = render('testing', tmpl, colors)
+  const rendered = render('testing', tmpl, theme)
   t.is(rendered, result)
   t.end()
 })
