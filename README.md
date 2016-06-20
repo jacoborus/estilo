@@ -6,20 +6,17 @@ Estilo
 
 - [Features](#features)
 - [Requirements](#requirements)
-- [Usage](#usage)
-  - [Create boilerplate](#create-boilerplate)
-    - [Create npm module](#create-npm-module)
-    - [Install Estilo](#install-estilo)
-  - [Create color themes](#create-color-themes)
-    - [Themes](#themes)
-    - [Color palette](#color-palette)
+- [Installation](#installation)
+- [Create color schemes](#create-color-schemes)
+  - [Define colors](#define-colors)
   - [Define syntax highlighting](#define-syntax-highlighting)
   - [Add more syntax highlighting definitions](#add-more-syntax-highlighting-definitions)
-  - [Generate colorschemes](#generate-colorschemes)
+  - [Color palette](#color-palette)
+  - [Render colorschemes](#render-colorschemes)
   - [Lightline theme](#lightline-theme)
 - [Publishing](#publishing)
+- [Created with Estilo](#created-with-estilo)
 - [Useful resources](#useful-resources)
-- [Created with Estilo](#colors-schemes)
 
 
 <a name="features"></a>
@@ -33,51 +30,47 @@ Estilo
 - Empty templates for lots of languages and plugins (see the [list of templates](https://github.com/jacoborus/estilo/tree/master/base))
 - Templates indicate the default linked style of highlights through comments
 
+
 <a name="requirements"></a>
 ## Requirements
 
 It's written in pure javascript, so you will need nodejs installed in your computer.
 
-<a name="usage"></a>
-## Usage
 
-<a name="create-boilerplate"></a>
-### Create boilerplate
+<a name="installation"></a>
+## Installation
 
-<a name="create-npm-module"></a>
-#### Create a npm module
-
-
-First of all you will need to create a new npm module and fill its package.json data, this data will be used in your scheme
+Create a new npm module and fill its package.json data, this data will be used later
 
 ```sh
 mkdir mycolors && cd mycolors && npm init
 ```
 
-<a name="install-estilo"></a>
-#### Install Estilo
-
-Install estilo as a dependency. This step will add some scripts to package.json and create `estilo` folder, which contains your templates and palette.
+Install estilo as a dependency. This step will add some scripts to `package.json` and create `estilo` folder, which contains your templates and colour palette.
 
 ```sh
 npm install --save estilo
 ```
 
-<a name="create-color-themes"></a>
-### Create color themes
 
-<a name="themes"></a>
-#### Themes
+<a name="create-color-schemes"></a>
+## Create color schemes
 
-Estilo can render a single color scheme or multiple variations (themes). You will need to create a yaml file for every theme in `estilo/themes` folder. 
 
-A theme has the following structure:
+<a name="define-colors"></a>
+## Define colors
 
-- name: the theme name
-- background: dark or light
-- colors: a object containing the colors you are going to use in this variant. Use hex colors, and closest xterm values will be added automatically
+Estilo can render a single color scheme or multiple variations, you will need to create a yaml file for every one in `estilo/themes` folder.
+
+A colorscheme template has the following structure:
+
+- name: the colorscheme name
+- background: 'dark' or 'light'
+- colors: an object containing the colors you are going to use in this colorscheme. Use hex colors, and closest xterm values will be added automatically
 
 Example:
+
+`my-scheme.yml`:
 
 ```yaml
 name: 'my-scheme'
@@ -87,54 +80,18 @@ colors:
   cherry: '#ffbbcc'
 ```
 
-<a name="color-palette"></a>
-#### Color palette
-
-Themes usually share some colors, you can add these colors to `estilo/palette.yml` file and link them from the themes by using `@` prefix.
-
-Example:
-
-`estilo/palette.yml`:
-
-```yaml
-sky: '#abd9ec'
-ocean: '#66afce'
-night: '#3c6f85'
-```
-
-`estilo/themes/my-dark-theme.yml`
-
-```yaml
-name: 'my-dark-theme'
-background: 'dark'
-colors:
-  blue1: '@sky'
-  blue2: '@ocean'
-```
-
-
-`estilo/themes/my-light-theme.yml`
-
-```yaml
-name: 'my-light-theme'
-background: 'light'
-colors:
-  blue1: '@ocean'
-  blue2: '@night'
-```
-
 <a name="define-syntax-highlighting"></a>
-### Define syntax highlighting
+## Define syntax highlighting
 
-Open `estilo/base.yml` and fill definitions with some rules:
+Then define your syntax highlighting, open `estilo/base.yml` and fill definitions with some rules:
 
 - first value is foreground
 - second value is background
-- third value is text style, and just accept first letter of every style (b: bold, r: reverse, u: underline, i: italic)
-- a hyphen (`-`)or an ommited value will be rendered as `NONE`
+- the third value is for text styles, and you should write just the first letter of every style (b: bold, r: reverse, u: underline, i: italic)
+- a hyphen (`-`) or an ommited value will be rendered as `NONE`
 - a dot (`.`) will not render this foreground/background/style
 
-Examples:
+Examples (template - result):
 
 Omitting values:
 
@@ -176,10 +133,11 @@ WarningMsg: 'link Title'
 hi link WarningMsg Title
 ```
 
-<a name="add-more-syntax-highlighting-definitions"></a>
-#### Add more syntax highlighting templates
 
-Estilo bundles a pack of templates for common language syntaxes and plugins, you can add this templates by running `npm run add-template -- group/template-name` on your terminal. 
+<a name="add-more-syntax-highlighting-definitions"></a>
+### Add more syntax highlighting templates
+
+Estilo bundles a pack of templates for common language syntaxes and plugins, you can add this templates by running `npm run add-template -- folder/template-name` on your terminal.
 
 Example: add go, ruby and fugitive templates
 
@@ -190,8 +148,35 @@ npm run add-template -- syntax/go syntax/ruby plugins/fugitive
 See [full list of templates](https://github.com/jacoborus/estilo/tree/master/base) inside `syntax` and `plugins` folders
 
 
-<a name="generate-colorschemes"></a>
-#### Generate colorschemes
+
+<a name="color-palette"></a>
+### Color palette
+
+Color schemes usually share some colors, you can add these colors to `estilo/palette.yml` file and link them from the color scheme templates by using `@` prefix.
+
+Example:
+
+`estilo/palette.yml`:
+
+```yaml
+sky: '#abd9ec'
+ocean: '#66afce'
+night: '#3c6f85'
+```
+
+`estilo/themes/my-dark-theme.yml`
+
+```yaml
+name: 'my-dark-theme'
+background: 'dark'
+colors:
+  blue1: '@sky'
+  blue2: '@ocean'
+```
+
+
+<a name="render-colorschemes"></a>
+### Render
 
 Render the color schemes from your terminal:
 
@@ -200,7 +185,7 @@ npm run build
 ```
 
 <a name="lightline-theme"></a>
-#### Lightline theme
+### Lightline theme
 
 Estilo can create your lighline theme too. Open lightline template (`your-scheme/estilo/addons/lighline.yml`) and follow the instructions in the comments
 
@@ -214,6 +199,14 @@ Your scheme is almost ready, just remember to add `node_modules` to `.gitignore`
 echo 'node_modules' >> .gitignore
 ```
 
+<a name="created-with-estilo"></a>
+## Created with Estilo
+
+- [Tender](https://github.com/jacoborus/tender.vim)
+- [add yours](https://github.com/jacoborus/estilo/compare)
+
+
+
 <a name="useful-resources"></a>
 ## Useful resources
 
@@ -221,14 +214,6 @@ echo 'node_modules' >> .gitignore
 - Trace syntax highlight of the word under the cursor: [vim-HiLinkTrace](https://github.com/gerw/vim-HiLinkTrace)
 - Preview colors inline: [vim-css-color](https://github.com/skammer/vim-css-color)
 - [yaml language elements](https://en.wikipedia.org/wiki/YAML#Language_elements<Paste>)
-
-
-<a name="colors-schemes"></a>
-## Created with Estilo
-
-- [Tender](https://github.com/jacoborus/tender.vim)
-- [add yours](https://github.com/jacoborus/estilo/compare)
-
 
 
 <br><br>
