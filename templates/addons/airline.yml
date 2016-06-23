@@ -1,0 +1,20 @@
+# normal
+normal.first: '' # foreground background
+normal.second: '' # foreground background
+normal.third: '' # foreground background
+# inactive
+inactive.left:  '' # foreground background
+inactive.right: '' # foreground background
+inactive.middle: '' # foreground background
+# insert
+insert.first: '' # foreground background
+insert.second: '' # foreground background
+insert.third: '' # foreground background
+# replace
+replace.first: '' # foreground background
+replace.second: '' # foreground background
+replace.third: '' # foreground background
+# visual
+visual.first: '' # foreground background
+visual.second: '' # foreground background
+visual.third: '' # foreground background
