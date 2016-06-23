@@ -1,20 +1,20 @@
 # normal
-normal.first: '' # foreground background
-normal.second: '' # foreground background
-normal.third: '' # foreground background
+normal1: '' # foreground background
+normal2: '' # foreground background
+normal3: '' # foreground background
 # inactive
-inactive.left:  '' # foreground background
-inactive.right: '' # foreground background
-inactive.middle: '' # foreground background
+inactive1:  '' # foreground background
+inactive2: '' # foreground background
+inactive3: '' # foreground background
 # insert
-insert.first: '' # foreground background
-insert.second: '' # foreground background
-insert.third: '' # foreground background
+insert1: '' # foreground background
+insert2: '' # foreground background
+insert3: '' # foreground background
 # replace
-replace.first: '' # foreground background
-replace.second: '' # foreground background
-replace.third: '' # foreground background
+replace1: '' # foreground background
+replace2: '' # foreground background
+replace3: '' # foreground background
 # visual
-visual.first: '' # foreground background
-visual.second: '' # foreground background
-visual.third: '' # foreground background
+visual1: '' # foreground background
+visual2: '' # foreground background
+visual3: '' # foreground background

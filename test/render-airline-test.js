@@ -3,33 +3,33 @@
 const test = require('tape')
 const render = require('../src/render-airline.js')
 
-const result = `if exists('g:tender_airline') && g:tender_airline
-  let g:airline#themes#tender#palette = {}
+const result = `if exists('g:testing_airline') && g:testing_airline
+  let g:airline#themes#testing#palette = {}
 
-  let s:normal1   = [ "#111111", "#555555", 233, 240 ]
-  let s:normal2   = [ "#555555", "#111111", 240, 233 ]
-  let s:normal3   = [ "#999999", "#555555", 246, 240 ]
-  let g:airline#themes#tender#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)
+  let s:normal1 = [ "#111111", "#555555", 233, 240 ]
+  let s:normal2 = [ "#555555", "#111111", 240, 233 ]
+  let s:normal3 = [ "#999999", "#555555", 246, 240 ]
+  let g:airline#themes#testing#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)
 
-  let s:insert1   = [ "#111111", "#555555", 233, 240 ]
-  let s:insert2   = [ "#555555", "#111111", 240, 233 ]
-  let s:insert3   = [ "#999999", "#555555", 246, 240 ]
-  let g:airline#themes#tender#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)
+  let s:insert1 = [ "#111111", "#555555", 233, 240 ]
+  let s:insert2 = [ "#555555", "#111111", 240, 233 ]
+  let s:insert3 = [ "#999999", "#555555", 246, 240 ]
+  let g:airline#themes#testing#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)
 
-  let s:replace1   = [ "#111111", "#555555", 233, 240 ]
-  let s:replace2   = [ "#555555", "#111111", 240, 233 ]
-  let s:replace3   = [ "#999999", "#555555", 246, 240 ]
-  let g:airline#themes#tender#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)
+  let s:replace1 = [ "#111111", "#555555", 233, 240 ]
+  let s:replace2 = [ "#555555", "#111111", 240, 233 ]
+  let s:replace3 = [ "#999999", "#555555", 246, 240 ]
+  let g:airline#themes#testing#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)
 
-  let s:visual1   = [ "#111111", "#555555", 233, 240 ]
-  let s:visual2   = [ "#555555", "#111111", 240, 233 ]
-  let s:visual3   = [ "#999999", "#555555", 246, 240 ]
-  let g:airline#themes#tender#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)
+  let s:visual1 = [ "#111111", "#555555", 233, 240 ]
+  let s:visual2 = [ "#555555", "#111111", 240, 233 ]
+  let s:visual3 = [ "#999999", "#555555", 246, 240 ]
+  let g:airline#themes#testing#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)
 
-  let s:inactive1   = [ "#111111", "#555555", 233, 240 ]
-  let s:inactive2   = [ "#555555", "#111111", 240, 233 ]
-  let s:inactive3   = [ "#999999", "#555555", 246, 240 ]
-  let g:airline#themes#tender#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)
+  let s:inactive1 = [ "#111111", "#555555", 233, 240 ]
+  let s:inactive2 = [ "#555555", "#111111", 240, 233 ]
+  let s:inactive3 = [ "#999999", "#555555", 246, 240 ]
+  let g:airline#themes#testing#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)
 endif`
 
 const tmpl = {
