@@ -3,7 +3,7 @@
 const test = require('tape')
 const render = require('../src/render-airline.js')
 
-const result = `if exists('g:testing_airline') && g:testing_airline
+const result = `if exists('g:pkgName_airline') && g:pkgName_airline
   let g:airline#themes#testing#palette = {}
 
   let s:normal1 = [ "#111111", "#555555", 233, 240 ]
@@ -56,13 +56,8 @@ const colors = {
   nine: '#999999'
 }
 
-const theme = {
-  colors: colors,
-  name: 'testing'
-}
-
 test('render airline theme', t => {
-  const rendered = render('testing', tmpl, theme)
+  const rendered = render('pkgName', 'testing', tmpl, colors)
   t.is(rendered, result)
   t.end()
 })

@@ -58,7 +58,7 @@ npm install --save estilo
 
 
 <a name="define-colors"></a>
-## Define colors
+### Define colors
 
 Estilo can render a single color scheme or multiple variations, you will need to create a yaml file for every one in `estilo/themes` folder.
 

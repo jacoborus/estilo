@@ -6,6 +6,7 @@ const fs = require('./super-fs')
 const renderThemes = require('./render-themes.js')
 const yaml = require('js-yaml')
 const renderLightline = require('./render-lightline.js')
+const renderAirline = require('./render-airline.js')
 
 /**
  * convert
@@ -24,8 +25,12 @@ module.exports = function (folder, cb) {
   const pluginsFolder = path.resolve(folder, 'plugin')
   const themesFolder = path.resolve(estiloFolder, 'themes')
   const lightlinePath = path.resolve(estiloFolder, 'addons/lightline.yml')
+  const airlinePath = path.resolve(estiloFolder, 'addons/airline.yml')
   const lighlineTmpl = fs.existsSync(lightlinePath)
     ? yaml.safeLoad(fs.readFileSync(lightlinePath))
+    : false
+  const airlineTmpl = fs.existsSync(airlinePath)
+    ? yaml.safeLoad(fs.readFileSync(airlinePath))
     : false
 
   getTemplatePaths(estiloFolder)
@@ -43,7 +48,8 @@ module.exports = function (folder, cb) {
     themesFolder,
     colorsFolder,
     pluginsFolder,
-    lighlineTmpl
+    lighlineTmpl,
+    airlineTmpl
   }))
   // add info to schema
   .then(schema => getPalette(palettePath, schema))
@@ -64,6 +70,8 @@ module.exports = function (folder, cb) {
   .then(writeSchemes)
   // render lightline theme
   .then(renderLlThemes)
+  // render airline theme
+  .then(renderAirlineThemes)
   // success message
   .then(() => console.log('Done!'))
   .then(cb)
@@ -206,8 +214,23 @@ function renderLlThemes (schema) {
     Object.keys(themes).forEach(k => {
       const theme = themes[k]
       const llTheme = renderLightline(info.name, lighlineTmpl, theme)
-        // save lightline theme to disk
+      // save lightline theme to disk
       fs.writeFileSync(`${schema.pluginsFolder}/${theme.name}-lightline.vim`, llTheme)
+    })
+  }
+  return schema
+}
+
+function renderAirlineThemes (schema) {
+  const { airlineTmpl, themes, info } = schema
+  // render airline theme if possible
+  if (airlineTmpl && hasContent(airlineTmpl)) {
+    mkdirp.sync(schema.pluginsFolder)
+    Object.keys(themes).forEach(k => {
+      const theme = themes[k]
+      const airlineTheme = renderAirline(info.name, theme.name, airlineTmpl, theme.colors)
+      // save airline theme to disk
+      fs.writeFileSync(`${schema.pluginsFolder}/${theme.name}-airline.vim`, airlineTheme)
     })
   }
   return schema
