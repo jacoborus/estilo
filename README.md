@@ -60,13 +60,13 @@ npm install --save estilo
 <a name="define-colors"></a>
 ### Define colors
 
-Estilo can render a single color scheme or multiple variations, you will need to create a yaml file for every one in `estilo/themes` folder.
+Estilo can render a single color scheme or multiple variants, you will need to create a yaml file for every one in `estilo/themes` folder.
 
 A colorscheme template has the following structure:
 
 - name: the colorscheme name
 - background: 'dark' or 'light'
-- colors: an object containing the colors you are going to use in this colorscheme. Use hex colors, and closest xterm values will be added automatically
+- colors: an object containing the colors you are going to use in this variant. Use hex colors, and closest xterm values will be added automatically
 
 Example:
 
@@ -152,7 +152,7 @@ See [full list of templates](https://github.com/jacoborus/estilo/tree/master/bas
 <a name="color-palette"></a>
 ### Color palette
 
-Color schemes usually share some colors, you can add these colors to `estilo/palette.yml` file and link them from the color scheme templates by using `@` prefix.
+Color schemes usually share some colors, you can add them to `estilo/palette.yml` file and link them from the templates by using `@` prefix.
 
 Example:
 
