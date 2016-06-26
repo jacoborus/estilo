@@ -1,7 +1,7 @@
 'use strict'
 
 const test = require('tape')
-const getColors = require('../src/get-colors.js')
+const getColors = require('../src/render-themes.js').getColors
 
 const palette = {
   azul: '#bbddff',

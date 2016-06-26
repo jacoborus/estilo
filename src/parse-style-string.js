@@ -8,7 +8,7 @@ function getColorCode (color, colors, part, hiName) {
   if (!color || color === '-') return false
   // return dot if empty color
   if (color === '.') return color
-  // return custom color
+  // return custom color if colorname is in palette
   const c = colors[color]
   if (c) return c
   // return direct hex color
