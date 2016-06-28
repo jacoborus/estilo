@@ -1,7 +1,7 @@
 Estilo
 ======
 
-**Estilo** makes easy creating, improving and maintaining colorschemes for vim and its ecosystem.
+**Estilo** makes easy creating, maintaining and versioning colorschemes for vim and its ecosystem.
 
 
 - [Features](#features)
