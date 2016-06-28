@@ -13,6 +13,7 @@
     "mkdirp": "^0.5.1"
   },
   "devDependencies": {
+    "gitbook-cli": "^2.3.0",
     "standard": "^7.1.2",
     "tape": "^4.6.0"
   },
