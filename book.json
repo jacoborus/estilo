@@ -1,0 +1,11 @@
+{
+  "root": "docs",
+  "author": "Jacobo Tabernero",
+  "language": "en",
+  "plugins": [ "github" ],
+  "pluginsConfig": {
+    "github": {
+      "url": "https://github.com/jacoborus/estilo"
+    }
+  }
+}
