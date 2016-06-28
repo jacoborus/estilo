@@ -39,4 +39,4 @@ let g:lightline = { 'colorscheme': 'MY_COLOR_SCHEME_NAME' }
 
 Replace `PKG_NAME` with the name of your package (the name from `package.json`), and `MY_COLOR_SCHEME_NAME` with the name of the colorscheme you want to activate.
 
-Remember to add instructions to the `README` of your project before you publish it.
+Remember to add instructions to the `README` of your project before publishing it.

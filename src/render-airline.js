@@ -1,7 +1,7 @@
 'use strict'
 
 const hexterm = require('hexterm')
-const isHexColor = require('./is-hex-color.js')
+const compile = require('./compile-status.js')
 
 /**
  * exports
@@ -54,36 +54,4 @@ function renderTheme (pkgName, schemeName, compiled) {
   let s:inactive3 = [ "${compiled.inactive3[0]}", "${compiled.inactive3[1]}", ${hexterm(compiled.inactive3[0])}, ${hexterm(compiled.inactive3[1])} ]
   let g:airline#themes#${schemeName}#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)
 endif`
-}
-
-/**
- * Convert all string values from a given
- * object (`template`) to arrays with hex colors
- *
- * @param {Object} template raw airline template
- * @returns {Object} transformed airline template
- */
-function compile (template, colors) {
-  const out = {}
-  Object.keys(template).forEach(k => {
-    let arr = template[k].split(' ').filter(x => x.trim())
-    out[k] = useHexColors(arr, colors)
-  })
-  return out
-}
-
-/**
- * useHexColors
- *
- * @param {Array} codes list of two color names
- * @param {Object} colors dictionary with colors
- * @returns {Array} colors transformed to hex values
- */
-function useHexColors (codes, colors) {
-  return codes.map(c => {
-    if (isHexColor(c)) return c
-    let code = colors[c]
-    if (!code) throw new Error(`Wrong color in lightline template: ${c}`)
-    return code
-  })
 }
