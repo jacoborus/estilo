@@ -24,7 +24,7 @@
     "linter": "standard src/*.js estilo.js test bin/estilo",
     "postinstall": "node scripts/postinstall.js",
     "docs:build": "gitbook build docs _book",
-    "docs:publish": "rimraf _book && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && touch .nojekyll && git add . && git commit -am 'update book' && git push git@github.com:jacoborus/estilo gh-pages --force"
+    "docs:publish": "rimraf _book && npm run docs:build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:jacoborus/estilo gh-pages --force"
   },
   "repository": {
     "type": "git",
