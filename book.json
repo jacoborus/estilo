@@ -1,5 +1,6 @@
 {
-  "root": "docs",
+  "root": "./docs",
+  "title": "Create vim colorschemes with Estilo",
   "author": "Jacobo Tabernero",
   "language": "en",
   "plugins": [ "github" ],
