@@ -30,7 +30,7 @@ Then set the rest of the properties. When you are done, you can render your colo
 
 Open your vim config file and add the next lines:
 
-```viml
+```vim
 " enable lighline theme
 let g:PKG_NAME_lightline = 1
 " set lighline theme (in yor lightline config)
