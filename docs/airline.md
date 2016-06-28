@@ -44,7 +44,7 @@ Then set the rest of the properties. When you are done, you can render your colo
 
 Open your vim config file and add the next lines:
 
-```viml
+```vim
 let g:PKG_NAME_airline = 1
 let g:airline_theme = 'MY_COLOR_SCHEME_NAME'
 ```
