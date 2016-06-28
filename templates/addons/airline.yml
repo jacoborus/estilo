@@ -1,20 +1,15 @@
-# normal
-normal1: '' # foreground background
-normal2: '' # foreground background
-normal3: '' # foreground background
-# inactive
-inactive1:  '' # foreground background
-inactive2: '' # foreground background
-inactive3: '' # foreground background
-# insert
-insert1: '' # foreground background
-insert2: '' # foreground background
-insert3: '' # foreground background
-# replace
-replace1: '' # foreground background
-replace2: '' # foreground background
-replace3: '' # foreground background
-# visual
-visual1: '' # foreground background
-visual2: '' # foreground background
-visual3: '' # foreground background
+normal1: ''
+normal2: ''
+normal3: ''
+inactive1: ''
+inactive2: ''
+inactive3: ''
+insert1: ''
+insert2: ''
+insert3: ''
+replace1: ''
+replace2: ''
+replace3: ''
+visual1: ''
+visual2: ''
+visual3: ''
