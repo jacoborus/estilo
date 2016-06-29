@@ -9,14 +9,48 @@ npm run add-template -- addons/lightline
 This command will create `lightline.yml` file in `estilo/addons` directory of your project. Open it, it will look like this:
 
 ```yml
-" TODO
+normal1: ''
+normal2: ''
+normal3: ''
+normal4: ''
+normal5: ''
+normalError: ''
+normalWarning: ''
+inactive1: ''
+inactive2: ''
+inactive3: ''
+inactive4: ''
+inactive5: ''
+insert1: ''
+insert2: ''
+insert3: ''
+insert4: ''
+insert5: ''
+replace1: ''
+replace2: ''
+replace3: ''
+replace4: ''
+replace5: ''
+visual1: ''
+visual2: ''
+visual3: ''
+visual4: ''
+visual5: ''
+tablineLeft: ''
+tablineSelected: ''
+tablineMiddle: ''
+tablineRight: ''
 ```
 
 Every property in the template is composed by a name and a number, they represents how a part of the status line will look in a particular vim mode. That means the first line defines the style of the part 1 of the bar in normal mode.
 
-Part 1 represents the first block of the status bar, part 2 the second and so on
+Part 1 represents the first block of the status bar, part 2 the second and so on. The `normalError` and `normalWarning` properties affect to block3 in those states.
 
-**TODO:** add screenshot
+![lightline blocks](https://cloud.githubusercontent.com/assets/829859/16469975/033f95f8-3e54-11e6-8ac5-0bd398d64d47.png)
+
+The last four lines define the tabline style:
+
+![lightline tabs blocks](https://cloud.githubusercontent.com/assets/829859/16470183/02cd2f9e-3e55-11e6-9889-bd6123f8bf1e.png)
 
 Go to the first definition and fill its value inside the quotes (`''`), write the foreground and the background color names separated by a space (these ones should be in your color template). It should look something like this:
 
