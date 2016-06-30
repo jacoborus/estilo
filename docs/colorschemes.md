@@ -94,11 +94,21 @@ night: '#3c6f85'
 `estilo/themes/my-dark-theme.yml`
 
 ```yaml
-name: 'my-dark-theme'
+name: 'my_dark_theme'
 background: 'dark'
 colors:
-  blue1: '@sky'
-  blue2: '@ocean'
+  bg: '@night'
+  text: '@sky'
+  blue: '@ocean'
+```
+
+```yaml
+name: 'my_light_theme'
+background: 'light'
+colors:
+  bg: '@sky'
+  text: '@night'
+  blue: '@ocean'
 ```
 
 
