@@ -1,14 +1,12 @@
 # Create color schemes
 
-## Define colors
-
 Estilo can render a single color scheme or multiple variants, you will need to create a yaml file for every one in `estilo/themes` folder.
 
 A colorscheme template has the following structure:
 
 - name: the colorscheme name
 - background: 'dark' or 'light'
-- colors: an object containing the colors you are going to use in this variant. Use hex colors, and closest xterm values will be added automatically
+- colors: an object containing the colors you are going to use in this variant. Use hex colors, and closest xterm values will be added automatically on render time
 
 Example:
 
@@ -22,7 +20,6 @@ colors:
   cherry: '#ffbbcc'
 ```
 
-<a name="define-syntax-highlighting"></a>
 ## Define syntax highlighting
 
 Then define your syntax highlighting, open `estilo/base.yml` and fill definitions with some rules:
@@ -76,23 +73,13 @@ hi link WarningMsg Title
 ```
 
 
-## Add more syntax highlighting templates
-
-Estilo bundles a pack of templates for common language syntaxes and plugins, you can add this templates by running `npm run add-template -- folder/template-name` on your terminal.
-
-Example: add go, ruby and fugitive templates
-
-```sh
-npm run add-template -- syntax/go syntax/ruby plugins/fugitive
-```
-
-See [full list of templates](https://github.com/jacoborus/estilo/tree/master/base) inside `syntax` and `plugins` folders
+**Estilo** bundles a bunch of templates besides the base one, visit [Extending colorschemes](extending-colorschemes) to know how to use them.
 
 
 
 ## Color palette
 
-Color schemes usually share some colors, you can add them to `estilo/palette.yml` file and link them from the templates by using `@` prefix.
+Color schemes usually share some colors, you can add them to `estilo/palette.yml` file and link them from the color themes by using `@` prefix.
 
 Example:
 
