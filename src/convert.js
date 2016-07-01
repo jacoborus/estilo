@@ -213,7 +213,7 @@ function renderLlThemes (schema) {
     mkdirp.sync(schema.pluginsFolder)
     Object.keys(themes).forEach(k => {
       const theme = themes[k]
-      const llTheme = renderLightline(info.name, lighlineTmpl, theme)
+      const llTheme = renderLightline(info.name, theme.name, lighlineTmpl, theme.colors)
       // save lightline theme to disk
       fs.writeFileSync(`${schema.pluginsFolder}/${theme.name}-lightline.vim`, llTheme)
     })
