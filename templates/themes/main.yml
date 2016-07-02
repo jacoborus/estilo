@@ -1,10 +1,4 @@
 background: 'dark'
 name: 'my-scheme'
-colors: {}
-# you can link colors from colors.yml by prefixing their names with an @
-# estilo will take the remaining info from your package.json:
-# - version
-# - author
-# - description
-# - homepage url
-# - license
+colors:
+  maincolor: '@myblue'

@@ -3,7 +3,7 @@
 const mkdirp = require('mkdirp')
 const fs = require('../src/super-fs.js')
 const path = require('path')
-const bases = ['info.yml', 'base.yml']
+const bases = ['base.yml', 'palette.yml']
 
 function init () {
   const schemeFolder = path.resolve(__dirname, '../../..')
