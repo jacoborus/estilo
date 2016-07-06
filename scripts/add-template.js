@@ -5,60 +5,8 @@ const argv = require('minimist')(process.argv.slice(2))
 const fs = require('../src/super-fs')
 const path = require('path')
 const schemeFolder = path.resolve(__dirname, '../../..')
-const estiloFolder = schemeFolder + '/estilo'
-const templatesFolder = path.resolve(__dirname, '../templates')
-
-function readFiles (templates) {
-  return new Promise((resolve, reject) => {
-    Promise.all(templates.map(t => {
-      return fs.readProm(t.origin)
-    }))
-    .then(datas => {
-      datas.forEach((d, i) => {
-        templates[i].data = d.data
-      })
-      resolve(templates)
-    })
-    .catch(reject)
-  })
-}
-
-function checkFiles (templates) {
-  return new Promise((resolve, reject) => {
-    Promise.all(templates.map(t => {
-      return fs.existsProm(t.origin)
-    }))
-    .then(() => resolve(templates))
-    .catch(reject)
-  })
-}
-
-function writeFiles (templates) {
-  return new Promise((resolve, reject) => {
-    Promise.all(templates.map(t => {
-      return fs.writeProm(t.destination, t.data)
-    }))
-    .then(() => resolve(templates))
-    .catch(reject)
-  })
-}
-
-// create objects for every template:
-// - name
-// - origin
-// - destination
-// - data
-function createObjects (names) {
-  return names.map(n => {
-    if (!n.endsWith('.yml')) n = n + '.yml'
-    const shortName = n.substr(0, n.length - 4)
-    return {
-      name: shortName,
-      origin: path.resolve(templatesFolder, n),
-      destination: path.resolve(estiloFolder, n)
-    }
-  })
-}
+const templatesFolder = path.resolve(schemeFolder, '/estilo/templates')
+const syntaxFolder = path.resolve(__dirname, '../templates/syntax')
 
 new Promise((resolve, reject) => {
   let names = argv._
@@ -83,3 +31,56 @@ new Promise((resolve, reject) => {
   console.log(err)
   process.exit(1)
 })
+
+// create objects for every template:
+// - name
+// - origin
+// - destination
+// - data
+function createObjects (names) {
+  return names.map(n => {
+    if (!n.endsWith('.yml')) n = n + '.yml'
+    const shortName = n.substr(0, n.length - 4)
+    return {
+      name: shortName,
+      origin: path.resolve(syntaxFolder, n),
+      destination: path.resolve(templatesFolder, n)
+    }
+  })
+}
+
+function checkFiles (templates) {
+  return new Promise((resolve, reject) => {
+    Promise.all(templates.map(t => {
+      return fs.existsProm(t.origin)
+    }))
+    .then(() => resolve(templates))
+    .catch(reject)
+  })
+}
+
+function readFiles (templates) {
+  return new Promise((resolve, reject) => {
+    Promise.all(templates.map(t => {
+      return fs.readProm(t.origin)
+    }))
+    .then(datas => {
+      datas.forEach((d, i) => {
+        templates[i].data = d.data
+      })
+      resolve(templates)
+    })
+    .catch(reject)
+  })
+}
+
+function writeFiles (templates) {
+  return new Promise((resolve, reject) => {
+    Promise.all(templates.map(t => {
+      return fs.writeProm(t.destination, t.data)
+    }))
+    .then(() => resolve(templates))
+    .catch(reject)
+  })
+}
+
