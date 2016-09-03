@@ -75,7 +75,7 @@ function existsSync (filepath) {
   return res
 }
 
-Object.assign(fs, {
+module.exports = Object.assign({}, fs, {
   rmrf,
   exists,
   existsSync,
@@ -83,5 +83,3 @@ Object.assign(fs, {
   readProm,
   writeProm
 })
-
-module.exports = fs
