@@ -34,7 +34,7 @@ function createObjects (names) {
   return names.map(n => {
     return {
       name: n,
-      origin: path.resolve(__dirname, '..', 'templates/syntax-extra', n + '.yml'),
+      origin: path.resolve(__dirname, '..', 'templates/syntax', n + '.yml'),
       destination: path.resolve('estilo/syntax', n + '.yml')
     }
   })
