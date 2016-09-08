@@ -11,22 +11,22 @@ const checkPalette = require('./check-palette.js')
 
 module.exports = function (project) {
   return new Promise((resolve, reject) => {
-    const { palettes, templates, info } = project
+    const { palettes, info } = project
 
-    // search for errors in palette
-    palettes.forEach(palette => checkPalette(palette))
+    // search for errors in color palettes
+    Object.keys(palettes).forEach(k => checkPalette(palettes[k], k))
 
-    // check colorschemes
-    if (!info.colorchemes || !info.colorchemes.length) {
+    // check colorschemes to render
+    if (!info.colorschemes || !info.colorschemes.length) {
       return reject('Nothing to render')
     }
 
-    info.colorchemes.forEach(c => {
+    info.colorschemes.forEach(c => {
       if (!c.name) {
         throw new Error('Error reading estilo.yml, colorschemes needs a name')
       }
       if (c.background) {
-        if (c.background !== 'dark' || c.background !== 'light') {
+        if (c.background !== 'dark' && c.background !== 'light') {
           throw new Error(c.name + ' colorscheme has a wrong background')
         }
       }
@@ -34,18 +34,19 @@ module.exports = function (project) {
         throw new Error(c.name + ' colorscheme has not a color palette')
       }
       if (!palettes[c.palette]) {
-        throw new Error(c.name + ' colorscheme: ' + c.palette + ' palette doesn\'t exists')
+        console.log(palettes)
+        throw new Error('Colorscheme: ' + c.name + ' palette doesn\'t exists: ' + c.palette)
       }
     })
 
     // render colorschemes
-    info.colorchemes.forEach(c => {
-      renderColorscheme(info, c, palettes[c.palette], templates)
+    info.colorschemes.forEach(c => {
+      c.rendered = renderColorscheme(info, c, palettes[c.palette], project.syntax)
     })
 
     // write colorschemes to disk
     mkdirp.sync(path.resolve(project.path, 'colors'))
-    info.colorchemes.forEach(c => {
+    info.colorschemes.forEach(c => {
       fs.writeFileSync(path.resolve(project.path, 'colors', c.name + '.vim'), c.rendered)
     })
   })

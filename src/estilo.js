@@ -1,8 +1,11 @@
+#!/usr/bin/env node
+
 'use strict'
 
 const { resolve } = require('path')
 const convert = require('../src/convert.js')
-const argv = require('minimist')(process.argv.slice(2))
+const minimist = require('minimist')
+const argv = minimist(process.argv.slice(2))
 
 if (!argv._.length) {
   console.log('No command found')

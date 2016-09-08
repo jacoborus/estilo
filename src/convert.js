@@ -14,7 +14,11 @@ const yaml = require('js-yaml')
  * @param {string} folder template folder path
  */
 module.exports = function (folder, cb) {
-  const pkg = yaml.safeLoad(fs.readFileSync(path.resolve(folder, 'estilo.yml')))
+  const infoPath = path.resolve(folder, 'estilo.yml')
+  if (!fs.existsSync(infoPath)) {
+    throw new Error('Estilo config filo doesn\'t exists: ' + infoPath)
+  }
+  const pkg = yaml.safeLoad(fs.readFileSync(infoPath))
   const estiloFolder = path.resolve(folder, 'estilo')
 
   getYmlsInsideFolder(estiloFolder + '/syntax')
@@ -28,9 +32,7 @@ module.exports = function (folder, cb) {
     info: pkg
   }))
   .then(joinTemplates)
-  // add path of themes to project
-  .then(addPalettePaths)
-  // load themes
+  // load palettes
   .then(loadPalettes)
   // render schemes
   .then(renderProject)
@@ -90,30 +92,20 @@ function joinTemplates (project) {
   return project
 }
 
-function addPalettePaths (project) {
+function loadPalettes (project) {
   const palettesFolder = path.resolve(project.path, 'estilo', 'palettes')
+  project.palettes = {}
   return new Promise((resolve, reject) => {
     fs.readdir(palettesFolder, (err, names) => {
       if (err) reject('Error loading themes folder')
       else {
-        project.palettePaths = names.map(n => path.resolve(palettesFolder, n))
+        names.forEach(n => {
+          const id = path.basename(n, '.yml')
+          const raw = fs.readFileSync(path.resolve(palettesFolder, n))
+          project.palettes[id] = yaml.safeLoad(raw)
+        })
         resolve(project)
       }
     })
-  })
-}
-
-function loadPalettes (project) {
-  return new Promise((resolve, reject) => {
-    Promise.all(project.palettePaths.map(p => fs.readProm(p)))
-    .then(datas => {
-      project.palettes = {}
-      datas.forEach(r => {
-        const data = yaml.safeLoad(r.data)
-        project.palettes[data.name] = data
-      })
-      resolve(project)
-    })
-    .catch(err => reject(err))
   })
 }
