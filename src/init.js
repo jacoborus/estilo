@@ -4,6 +4,7 @@ const path = require('path')
 const inquirer = require('inquirer')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
+const addTemplate = require('./add-template.js')
 
 const defaultPalette = 'myblue: \'#99ccff\''
 
@@ -107,5 +108,6 @@ lightline:
   mkdirp.sync(path.resolve(projectPath, 'estilo'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'syntax'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
-  fs.writeFileSync(path.resolve(projectPath, 'estilo', options.name + '.yml'), defaultPalette)
+  fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
+  addTemplate(['base'])
 }
