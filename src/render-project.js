@@ -7,11 +7,11 @@ const path = require('path')
 const renderColorscheme = require('./render-colorscheme.js')
 const checkPalette = require('./check-palette.js')
 const renderAirline = require('./render-airline.js')
-// const renderLightline = require('./render-lightline.js')
+const renderLightline = require('./render-lightline.js')
 
 module.exports = function (project) {
   return new Promise((resolve, reject) => {
-    const { palettes, info, airlineStyles } = project
+    const { palettes, info, airlineStyles, lightlineStyles } = project
 
     // search for errors in color palettes
     Object.keys(palettes).forEach(k => checkPalette(palettes[k], k))
@@ -90,7 +90,7 @@ module.exports = function (project) {
         if (!t.style) {
           throw new Error(t.name + ' lightline theme has a wrong style')
         }
-        if (!airlineStyles[t.style]) {
+        if (!lightlineStyles[t.style]) {
           throw new Error('lightline theme: ' + t.name + ' style doesn\'t exists: ' + t.style)
         }
         if (!t.palette) {
@@ -103,7 +103,7 @@ module.exports = function (project) {
 
       // render colorschemes
       info.lightline.forEach(t => {
-        t.rendered = renderAirline(info.name, t.name, airlineStyles[t.style], palettes[t.palette])
+        t.rendered = renderLightline(info.name, t.name, lightlineStyles[t.style], palettes[t.palette])
       })
 
       // write colorschemes to disk
