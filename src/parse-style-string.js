@@ -39,7 +39,7 @@ function getUI (ui, schemaName) {
   return ui
 }
 
-function parseStyleString (str, colors, name) {
+function parseStyleString (str, palette, name) {
   str = str.trim()
   let props = str.split(' ').reduce((arr, el) => {
     el = el.trim()
@@ -59,8 +59,8 @@ function parseStyleString (str, colors, name) {
   }
 
   return {
-    fore: getColorCode(first, colors, 'foreground', name),
-    back: getColorCode(props[1], colors, 'background', name),
+    fore: getColorCode(first, palette.colors, 'foreground', name),
+    back: getColorCode(props[1], palette.colors, 'background', name),
     ui: getUI(props[2], name)
   }
 }
