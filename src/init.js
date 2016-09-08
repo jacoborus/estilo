@@ -5,6 +5,8 @@ const inquirer = require('inquirer')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
 
+const defaultPalette = 'myblue: \'#99ccff\''
+
 module.exports = function (projectPath, auto) {
   const folderName = path.basename(projectPath)
   const questions = [
@@ -100,11 +102,10 @@ lightline:
     palette: ${options.name}`
   }
 
-  console.log(estiloStr)
-
   mkdirp.sync(projectPath)
   fs.writeFileSync(path.resolve(projectPath, 'estilo.yml'), estiloStr)
   mkdirp.sync(path.resolve(projectPath, 'estilo'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'syntax'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
+  fs.writeFileSync(path.resolve(projectPath, 'estilo', options.name + '.yml'), defaultPalette)
 }
