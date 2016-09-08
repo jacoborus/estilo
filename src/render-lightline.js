@@ -14,12 +14,8 @@ const compile = require('./compile-status.js')
  * @param {Object} colors Dictionary with color names and their hex values
  * @returns {String} The rendered airline theme
  */
-module.exports = function (pkgName, schemeName, template, colors) {
-  let model = compile(template, colors)
-  return renderLightTheme(pkgName, schemeName, model)
-}
-
-function renderLightTheme (pkgName, themeName, d) {
+module.exports = function (pkgName, themeName, template, colors) {
+  let d = compile(template, colors)
   return `if exists('g:${pkgName}_lightline') && g:${pkgName}_lightline
   let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}
   let s:p.normal.left = [[["${d.normal1[0]}", ${h(d.normal1[0])}], ["${d.normal1[1]}", ${h(d.normal1[1])}]], [["${d.normal2[0]}", ${h(d.normal2[0])}], ["${d.normal2[1]}", ${h(d.normal2[1])}]]]
