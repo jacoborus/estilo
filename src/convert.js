@@ -34,6 +34,8 @@ module.exports = function (folder, cb) {
   .then(joinTemplates)
   // load palettes
   .then(loadPalettes)
+  .then(loadAirlineStyles)
+  .then(loadLightlineStyles)
   // render schemes
   .then(renderProject)
   // success message
@@ -103,6 +105,42 @@ function loadPalettes (project) {
           const id = path.basename(n, '.yml')
           const raw = fs.readFileSync(path.resolve(palettesFolder, n))
           project.palettes[id] = yaml.safeLoad(raw)
+        })
+        resolve(project)
+      }
+    })
+  })
+}
+
+function loadAirlineStyles (project) {
+  const airlineFolder = path.resolve(project.path, 'estilo', 'airline')
+  project.airlineStyles = {}
+  return new Promise((resolve, reject) => {
+    fs.readdir(airlineFolder, (err, names) => {
+      if (err) reject('Error loading themes folder')
+      else {
+        names.forEach(n => {
+          const id = path.basename(n, '.yml')
+          const raw = fs.readFileSync(path.resolve(airlineFolder, n))
+          project.airlineStyles[id] = yaml.safeLoad(raw)
+        })
+        resolve(project)
+      }
+    })
+  })
+}
+
+function loadLightlineStyles (project) {
+  const llFolder = path.resolve(project.path, 'estilo', 'lightline')
+  project.lightlineStyles = {}
+  return new Promise((resolve, reject) => {
+    fs.readdir(llFolder, (err, names) => {
+      if (err) reject('Error loading themes folder')
+      else {
+        names.forEach(n => {
+          const id = path.basename(n, '.yml')
+          const raw = fs.readFileSync(path.resolve(llFolder, n))
+          project.lightlineStyles[id] = yaml.safeLoad(raw)
         })
         resolve(project)
       }
