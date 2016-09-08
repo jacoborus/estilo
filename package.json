@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "hexterm": "^1.2.0",
+    "inquirer": "^1.1.3",
     "js-yaml": "^3.6.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1"
