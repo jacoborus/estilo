@@ -5,55 +5,27 @@ Estilo
 
 **This project is under active development, API may change**
 
-[![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 - [Features](#features)
-- [Requirements](#requirements)
 - [Installation](#installation)
 - [Create color schemes](#create-color-schemes)
-  - [Define colors](#define-colors)
+  - [Define color palettes](#define-color-palettes)
   - [Define syntax highlighting](#define-syntax-highlighting)
   - [Add more syntax highlighting definitions](#add-more-syntax-highlighting-definitions)
-  - [Color palette](#color-palette)
-  - [Render colorschemes](#render-colorschemes)
-  - [Lightline theme](#lightline-theme)
+  - [Rendering](#renderng)
 - [Publishing](#publishing)
 - [Created with Estilo](#created-with-estilo)
 - [Useful resources](#useful-resources)
 
 
-<a name="features"></a>
-## Features
-
-- Easy to fill yaml templates
-- Convert hex colors to closest xterm values
-- Shortcuts for text styles
-- Autofill cterm values
-- Organized templates
-- Empty templates for lots of languages and plugins (see the [list of templates](https://github.com/jacoborus/estilo/tree/master/base))
-- Templates indicate the default linked style of highlights through comments
-
-
-<a name="requirements"></a>
-## Requirements
-
-It's written in pure javascript, so you will need nodejs installed in your computer.
-
-
 <a name="installation"></a>
 ## Installation
 
-Create a new npm module and fill its package.json data, this data will be used later
+It's written in pure javascript, so you will need [node.js](https://nodejs.org) installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
 
 ```sh
-mkdir mycolors && cd mycolors && npm init
-```
-
-Install estilo as a dependency. This step will add some scripts to `package.json` and create `estilo` folder, which contains your templates and colour palette.
-
-```sh
-npm install --save estilo
+npm install -g estilo
 ```
 
 
