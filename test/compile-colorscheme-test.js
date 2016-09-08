@@ -1,24 +1,24 @@
 'use strict'
 
 const test = require('tape')
-const getHilinks = require('../src/get-hilinks.js')
-const colors = {
+const compileColorscheme = require('../src/compile-colorscheme.js')
+const palette = {
   azul: '#bbddff'
 }
 
 test('getHilinks: throws on missing data', t => {
   t.throws(
-    () => getHilinks(),
+    () => compileColorscheme(),
     /wrong highlights object/
   )
   t.end()
 })
 
 test('getHilinks: format hilinks', t => {
-  const data = {
+  const templates = {
     normal: '#bbddff . biru'
   }
-  const hilinks = getHilinks(data, colors)
+  const hilinks = compileColorscheme(templates, palette)
 
   const normal = hilinks.normal
   t.is(normal.fore, '#bbddff', 'foreground')
@@ -29,10 +29,10 @@ test('getHilinks: format hilinks', t => {
 })
 
 test('getHilinks: link styles', t => {
-  const data = {
+  const templates = {
     normal: '@other'
   }
-  const hilinks = getHilinks(data, colors)
+  const hilinks = compileColorscheme(templates, palette)
 
   const normal = hilinks.normal
   t.is(normal.link, 'other')

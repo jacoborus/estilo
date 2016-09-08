@@ -1,7 +1,7 @@
 'use strict'
 
 const test = require('tape')
-const printHls = require('../src/print-hls.js')
+const printCompiled = require('../src/print-compiled-colorscheme.js')
 
 test('printHls: regular hilinks', t => {
   let hilinks = {
@@ -21,7 +21,7 @@ test('printHls: regular hilinks', t => {
     empty: {}
   }
   t.is(
-    printHls(hilinks),
+    printCompiled(hilinks),
     `hi normal guifg=NONE ctermfg=NONE guibg=#994444 ctermbg=95 gui=bold,reverse cterm=bold,reverse
 hi other guifg=#333333 ctermfg=236 gui=italic cterm=italic
 hi link linked other\n`
@@ -41,7 +41,7 @@ test('printHls: hilinks with empty values', t => {
     }
   }
   t.is(
-    printHls(hilinks),
+    printCompiled(hilinks),
     `hi normal guifg=#bbddff ctermfg=153 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 hi other guifg=NONE ctermfg=NONE guibg=#dddddd ctermbg=253 gui=italic cterm=italic\n`
   )

@@ -1,7 +1,6 @@
 'use strict'
 
 const hexterm = require('hexterm')
-const printInfo = require('./print-info.js')
 
 const noFore = ' guifg=NONE ctermfg=NONE'
 const noBack = ' guibg=NONE ctermbg=NONE'
@@ -25,8 +24,8 @@ function printTextStyle (ui) {
   return ` gui=${ui} cterm=${ui}`
 }
 
-module.exports = function (info, colorcheme, hilinks) {
-  let out = printInfo(info, colorcheme)
+module.exports = function (hilinks) {
+  let out = ''
   Object.keys(hilinks).forEach(k => {
     let hi = hilinks[k]
     if (!hi) return
