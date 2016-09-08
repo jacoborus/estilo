@@ -25,8 +25,8 @@ function printTextStyle (ui) {
   return ` gui=${ui} cterm=${ui}`
 }
 
-module.exports = function (schema, hilinks) {
-  let out = printInfo(schema)
+module.exports = function (info, colorcheme, hilinks) {
+  let out = printInfo(info, colorcheme)
   Object.keys(hilinks).forEach(k => {
     let hi = hilinks[k]
     if (!hi) return

@@ -2,11 +2,11 @@
 
 const isHexColor = require('./is-hex-color.js')
 
-module.exports = function (palette) {
-  Object.keys(palette.colors).forEach(c => {
-    const color = palette.colors[c]
+module.exports = function (colors, paletteName) {
+  Object.keys(colors).forEach(c => {
+    const color = colors[c]
     if (!color || !isHexColor(color)) {
-      throw new Error(`color ${color} is invalid. Palette: ` + palette.name)
+      throw new Error(`color ${color} is invalid. Palette: ` + paletteName)
     }
   })
 }

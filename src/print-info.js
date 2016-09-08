@@ -1,22 +1,21 @@
 'use strict'
 
-function getVimCode (schema) {
-  return `let g:colors_name="${schema.name}"
+function getVimCode (colorscheme) {
+  return `let g:colors_name="${colorscheme.name}"
 hi clear
 if exists("syntax_on")
   syntax reset
 endif
 if has("gui_running")
-  set background=${schema.background}
+  set background=${colorscheme.background}
 endif\n\n`
 }
 
 const props = new Set(['description', 'homepage'])
 const defs = new Set(['author', 'license'])
 
-module.exports = function (schema) {
-  const { info } = schema
-  let out = `"\n" ${schema.name}`
+module.exports = function (info, colorscheme) {
+  let out = `"\n" ${colorscheme.name}`
   if (info.version) {
     out += ` v${info.version}`
   }
@@ -31,6 +30,6 @@ module.exports = function (schema) {
       out += `" ${d}: ${info[d]}\n`
     }
   })
-  out += getVimCode(schema)
+  out += getVimCode(colorscheme)
   return out
 }
