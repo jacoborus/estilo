@@ -99,7 +99,7 @@ function loadPalettes (project) {
   project.palettes = {}
   return new Promise((resolve, reject) => {
     fs.readdir(palettesFolder, (err, names) => {
-      if (err) reject('Error loading themes folder')
+      if (err) reject('Error loading palettes folder')
       else {
         names.forEach(n => {
           const id = path.basename(n, '.yml')
@@ -117,7 +117,7 @@ function loadAirlineStyles (project) {
   project.airlineStyles = {}
   return new Promise((resolve, reject) => {
     fs.readdir(airlineFolder, (err, names) => {
-      if (err) reject('Error loading themes folder')
+      if (err) reject('Error loading airline folder')
       else {
         names.forEach(n => {
           const id = path.basename(n, '.yml')
@@ -135,7 +135,7 @@ function loadLightlineStyles (project) {
   project.lightlineStyles = {}
   return new Promise((resolve, reject) => {
     fs.readdir(llFolder, (err, names) => {
-      if (err) reject('Error loading themes folder')
+      if (err) reject('Error loading lightline folder')
       else {
         names.forEach(n => {
           const id = path.basename(n, '.yml')
