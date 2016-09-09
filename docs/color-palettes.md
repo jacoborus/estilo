@@ -6,11 +6,12 @@ Every project needs a minimum of one color palette in `yourprojet/estilo/palette
 You can write as many palettes as you want. This is a simple example of one:
 
 ```yaml
-lemon: '#ffc24b'
-grass: '#adba00'
-ocean: '#73cef4'
-blood: '#f43753'
+lemon: '#ffcc55'
+grass: '#99bb00'
+ocean: '#66bbff'
+blood: '#ee2244'
 text: '#eeeeee'
 bg: '#282828'
 ```
 
+**Next: [Syntax highlighting](http://estilo.jacoborus.codes/syntax-highlighting.html)**

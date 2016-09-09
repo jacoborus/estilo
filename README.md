@@ -17,10 +17,10 @@ Estilo is written in pure javascript, so you will need [node.js](https://nodejs.
 npm install -g estilo
 ```
 
-Then initialize your project and follow the instructions:
+Initialize your project and follow the instructions:
 
 ```sh
-estilo init myproject
+estilo init my-project-folder
 ```
 
 **Next: [create some color palettes](http://estilo.jacoborus.codes/color-palettes.html)**
