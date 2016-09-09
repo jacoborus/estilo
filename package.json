@@ -1,12 +1,13 @@
 {
   "name": "estilo",
-  "version": "0.13.3",
+  "version": "0.13.4",
   "description": "Generate vim color schemes without the hassle",
   "main": "estilo.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
+    "chalk": "^1.1.3",
     "hexterm": "^1.2.0",
     "inquirer": "^1.1.3",
     "js-yaml": "^3.6.0",

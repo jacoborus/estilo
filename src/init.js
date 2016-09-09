@@ -5,6 +5,8 @@ const inquirer = require('inquirer')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
 const addTemplate = require('./add-template.js')
+const chalk = require('chalk')
+const { log } = console
 
 const defaultPalette = 'myblue: \'#99ccff\''
 
@@ -83,7 +85,8 @@ module.exports = function (projectPath, auto) {
       license: 'MIT',
       airline: true,
       lightline: true,
-      description: ''
+      description: '',
+      templates: []
     })
   } else {
     inquirer.prompt(questions).then(function (answers) {
@@ -94,11 +97,11 @@ module.exports = function (projectPath, auto) {
 
 function createBoilerplate (projectPath, options) {
   let estiloStr = `name: '${options.name}'
-version: '${options.version}'
-license: '${options.license}'
-author: '${options.author}'
-url: '${options.url}'
-description: '${options.description}'
+version: '${options.version || ''}'
+license: '${options.license || ''}'
+author: '${options.author || ''}'
+url: '${options.url || ''}'
+description: '${options.description || ''}'
 colorschemes:
   - name: ${options.name}
     background: 'dark'
@@ -119,11 +122,11 @@ lightline:
     palette: ${options.name}`
   }
 
-  mkdirp.sync(projectPath)
   fs.writeFileSync(path.resolve(projectPath, 'estilo.yml'), estiloStr)
   mkdirp.sync(path.resolve(projectPath, 'estilo'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'syntax'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
   addTemplate(options.templates.concat('base.yml'), true)
+  log(chalk.green.bold('\nYour project is ready'))
 }
