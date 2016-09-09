@@ -3,4 +3,3 @@ node_modules
 test/sandbox/colors
 npm-debug.log
 _book
-docs/README.md

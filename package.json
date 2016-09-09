@@ -26,7 +26,7 @@
   "scripts": {
     "test": "node test/index.js",
     "linter": "standard src/*.js estilo.js test/*.js",
-    "docs:publish": "rimraf _book && rm -f docs/README.md && cp README.md docs/README.md && gitbook build && cp CNAME _book && rm -f docs/README.md && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:jacoborus/estilo gh-pages --force"
+    "docs:publish": "rimraf _book && cp -f README.md docs/README.md && gitbook build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:jacoborus/estilo gh-pages --force && rm -f ../docs/README.md"
   },
   "repository": {
     "type": "git",
