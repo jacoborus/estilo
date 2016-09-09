@@ -1,41 +1,4 @@
 # BASE UI
-Comment: ''
-Constant: ''
-String: '' # Constant
-Character: '' # Constant
-Boolean: '' # Constant
-Number: '' # Constant
-Float: '' # Constant
-Identifier: ''
-Function: '' # Identifier
-Statement: ''
-Conditional: '' # Statement
-Repeat: '' # Statement
-Label: '' # Statement
-Operator: '' # Statement
-Keyword: '' # Statement
-Exception: '' # Statement
-PreProc: ''
-Include: '' # PreProc
-Define: '' # PreProc
-Macro: '' # PreProc
-PreCondit: '' # PreProc
-Type: ''
-StorageClass: '' # Type
-Structure: '' # Type
-Typedef: '' # Type
-Special: ''
-SpecialChar: '' # Special
-Tag: '' # Special
-Delimiter: '' # Special
-SpecialComment: '' # Special
-Debug: '' # Special
-Underlined: ''
-Ignore: ''
-Error: ''
-Todo: ''
-# BASE SYNTAX
-Comment: ''
 ColorColumn: ''
 Conceal: ''
 Cursor: ''
@@ -80,3 +43,39 @@ Visual: ''
 VisualNOS: ''
 WarningMsg: ''
 WildMenu: ''
+# BASE SYNTAX
+Comment: ''
+Constant: ''
+String: '' # Constant
+Character: '' # Constant
+Boolean: '' # Constant
+Number: '' # Constant
+Float: '' # Constant
+Identifier: ''
+Function: '' # Identifier
+Statement: ''
+Conditional: '' # Statement
+Repeat: '' # Statement
+Label: '' # Statement
+Operator: '' # Statement
+Keyword: '' # Statement
+Exception: '' # Statement
+PreProc: ''
+Include: '' # PreProc
+Define: '' # PreProc
+Macro: '' # PreProc
+PreCondit: '' # PreProc
+Type: ''
+StorageClass: '' # Type
+Structure: '' # Type
+Typedef: '' # Type
+Special: ''
+SpecialChar: '' # Special
+Tag: '' # Special
+Delimiter: '' # Special
+SpecialComment: '' # Special
+Debug: '' # Special
+Underlined: ''
+Ignore: ''
+Error: ''
+Todo: ''
