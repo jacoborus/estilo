@@ -7,19 +7,23 @@ Estilo
 
 [![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-## Documentation
+** [See documentation](http://estilo.jacoborus.codes)
 
-- [Features](http://estilo.jacoborus.codes)
-- [Installation](http://estilo.jacoborus.codes)
-- [Create color schemes](http://estilo.jacoborus.codes)
-  - [Define color palettes](http://estilo.jacoborus.codes)
-  - [Define syntax highlighting](http://estilo.jacoborus.codes)
-  - [Add more syntax highlighting definitions](http://estilo.jacoborus.codes)
-  - [Rendering](http://estilo.jacoborus.codes)
-- [Publishing](http://estilo.jacoborus.codes)
-- [Created with Estilo](http://estilo.jacoborus.codes)
-- [Useful resources](http://estilo.jacoborus.codes)
+## Quick start
 
+Estilo is written in pure javascript, so you will need [node.js](https://nodejs.org) installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
+
+```sh
+npm install -g estilo
+```
+
+Then initialize your project and follow the instructions:
+
+```sh
+estilo init myproject
+```
+
+**Next: [create some color palettes](http://estilo.jacoborus.codes/color-palettes.html)**
 
 <br><br>
 
