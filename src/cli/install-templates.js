@@ -5,7 +5,7 @@ const path = require('path')
 const chalk = require('chalk')
 const { log } = console
 
-module.exports = function (templateNames) {
+module.exports = function (templateNames, callback) {
   new Promise((resolve, reject) => {
     if (!templateNames.length) reject('0 templates added')
     else resolve(templateNames)
@@ -51,6 +51,7 @@ module.exports = function (templateNames) {
   .then(templates => {
     log(chalk.blue.bold('\nNew syntax templates:'))
     templates.forEach(t => log(chalk.green(t.name.slice(0, -4))))
+    if (callback) callback()
   })
   .catch(err => {
     log(chalk.red.bold('Aborting due an error while adding templates'))

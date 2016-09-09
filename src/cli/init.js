@@ -5,6 +5,8 @@ const inquirer = require('inquirer')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
 const installTemplates = require('./install-templates.js')
+const installAirline = require('./install-airline.js')
+const installLightline = require('./install-lightline.js')
 const chalk = require('chalk')
 const { log } = console
 
@@ -52,18 +54,6 @@ module.exports = function (projectPath, auto) {
       message: 'Project url:'
     },
     {
-      type: 'confirm',
-      name: 'airline',
-      message: 'Add an Airline theme style?',
-      default: true
-    },
-    {
-      type: 'confirm',
-      name: 'lightline',
-      message: 'Add an Lightline theme style?',
-      default: true
-    },
-    {
       type: 'input',
       name: 'description',
       message: 'Short description:'
@@ -107,26 +97,17 @@ colorschemes:
     background: 'dark'
     palette: ${options.name}`
 
-  if (options.airline) {
-    estiloStr += `
-airline:
-  - name: ${options.name}
-    style: ${options.name}
-    palette: ${options.name}`
-  }
-  if (options.lightline) {
-    estiloStr += `
-lightline:
-  - name: ${options.name}
-    style: ${options.name}
-    palette: ${options.name}`
-  }
-
   fs.writeFileSync(path.resolve(projectPath, 'estilo.yml'), estiloStr)
   mkdirp.sync(path.resolve(projectPath, 'estilo'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'syntax'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
-  installTemplates(options.templates.concat('base.yml'), true)
-  log(chalk.green.bold('\nYour project is ready'))
+
+  installTemplates(options.templates.concat('base.yml'), function () {
+    installAirline(projectPath, function () {
+      installLightline(projectPath, function () {
+        log(chalk.green.bold('\nYour project is ready'))
+      })
+    })
+  })
 }

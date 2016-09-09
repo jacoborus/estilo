@@ -28,7 +28,6 @@ module.exports = function (folder, cb) {
   .then(templates => ({
     templates,
     path: folder,
-    // add pkg to info
     info: pkg
   }))
   .then(joinTemplates)
@@ -39,7 +38,6 @@ module.exports = function (folder, cb) {
   // render schemes
   .then(renderProject)
   // success message
-  .then(() => console.log('Done!'))
   .then(cb)
   .catch(err => {
     console.log('Error:\n')
