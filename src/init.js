@@ -10,6 +10,16 @@ const defaultPalette = 'myblue: \'#99ccff\''
 
 module.exports = function (projectPath, auto) {
   const folderName = path.basename(projectPath)
+  const templateFiles = fs.readdirSync(path.resolve(__dirname, '..', 'templates/syntax'))
+  const indexBase = templateFiles.indexOf('base.yml')
+  templateFiles.splice(indexBase, 1)
+  let templateChoices = templateFiles.map(f => {
+    return {
+      name: f.slice(0, -4),
+      value: f
+    }
+  })
+
   const questions = [
     {
       type: 'input',
@@ -55,6 +65,12 @@ module.exports = function (projectPath, auto) {
       type: 'input',
       name: 'description',
       message: 'Short description:'
+    },
+    {
+      type: 'checkbox',
+      message: 'Select some syntax templates',
+      name: 'templates',
+      choices: templateChoices
     }
   ]
 
@@ -109,5 +125,5 @@ lightline:
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'syntax'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
-  addTemplate(['base'])
+  addTemplate(options.templates.concat('base.yml'), true)
 }

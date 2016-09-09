@@ -4,7 +4,7 @@
 const fs = require('../src/super-fs')
 const path = require('path')
 
-module.exports = function (templateNames) {
+module.exports = function (templateNames, silent) {
   new Promise((resolve, reject) => {
     if (!templateNames.length) reject('0 templates added')
     else resolve(templateNames)
@@ -19,8 +19,10 @@ module.exports = function (templateNames) {
   .then(writeFiles)
   // success message
   .then(templates => {
-    console.log('Added templates:\n')
-    templates.forEach(t => console.log(t.name))
+    if (!silent) {
+      console.log('Added templates:\n')
+      templates.forEach(t => console.log(t.name))
+    }
   })
   .catch(err => {
     console.log('Aborting due an error while adding templates')
@@ -34,8 +36,8 @@ function createObjects (names) {
   return names.map(n => {
     return {
       name: n,
-      origin: path.resolve(__dirname, '..', 'templates/syntax', n + '.yml'),
-      destination: path.resolve('estilo/syntax', n + '.yml')
+      origin: path.resolve(__dirname, '..', 'templates/syntax', n),
+      destination: path.resolve('estilo/syntax', n)
     }
   })
 }
