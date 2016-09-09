@@ -2,10 +2,10 @@ Syntax highlighting
 ===================
 
 
-Open `estilo/syntax/base.yml` with vim and fill definitions with these rules:
+Open `estilo/syntax/base.yml` (and then the other templates inside the folder) with vim and fill its definitions with these rules:
 
-- first value is foreground
-- second value is background
+- first value is the foreground
+- second value is the background
 - the third value is for text styles, and you should write just the first letter of every style (b: bold, r: reverse, u: underline, i: italic)
 - a hyphen (`-`) or an ommited value will be rendered as `NONE`
 - a dot (`.`) will not render this foreground/background/style
@@ -60,5 +60,5 @@ hi link WarningMsg Title
 Estilo bundles a pack of templates for common language syntaxes and plugins, you can add this templates by running `estilo add-template` on your terminal.
 
 
-See [full list of templates](https://github.com/jacoborus/estilo/tree/master/templates/syntax)
+See [full list of syntax templates](https://github.com/jacoborus/estilo/tree/master/templates/syntax)
 
