@@ -57,12 +57,45 @@ hi link WarningMsg Title
 ```
 
 
-### Add more syntax highlighting templates
+## Add more syntax highlighting templates
 
 Estilo bundles a pack of templates for common language syntaxes and plugins, you can add this templates by running `estilo add-template` on your terminal.
 
 
 See [full list of syntax templates](https://github.com/jacoborus/estilo/tree/master/templates/syntax)
+
+
+## Add colorschemes to `estilo.yml`
+
+Open `estilo.yml` file and add an object for each colorcheme with its parameters inside `colorschemes` list. Every one has 3 parameters:
+
+- name: the name of the colorscheme (should have not spaces)
+- background: 'dark' or 'light' ('dark' by default)
+- palette: the name of the color palette. It's the same as the file inside `palettes` folder without the `.yml` extension
+
+Example:
+
+```yml
+colorschemes:
+  - name: 'awesome-night'
+    background: 'dark'
+    palette: 'night'
+  - name: 'awesome-day'
+    background: 'light'
+    palette: 'day'
+```
+
+
+## Render
+
+With the command line in the project folder:
+
+```sh
+estilo render
+```
+
+Rendered files are in `colors` folder of your project
+
 
 ---
 

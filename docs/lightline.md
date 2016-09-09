@@ -1,12 +1,14 @@
 # Lightline themes
 
-Before creating the Lightline theme you need at least one color template in `estilo/themes` folder. Then proceed to add the blank template from the command line:
+## Creating styles
+
+Before creating any lightline theme you need at least one color palette in `estilo/palettes` folder. Then proceed to add the blank lightline template from the command line (use your own `STYLE_NAME`s):
 
 ```sh
-npm run add-template -- addons/lightline
+estilo add-lightline STYLE_NAME
 ```
 
-This command will create `lightline.yml` file in `estilo/addons` directory of your project. Open it, it will look like this:
+This command will create `STYLE_NAME.yml` file in `estilo/lightline` directory of your project. Open it, it will look like this:
 
 ```yml
 normal1: ''
@@ -58,7 +60,40 @@ Go to the first definition and fill its value inside the quotes (`''`), write th
 normal1: 'myblue mydark'
 ```
 
-### Activating the theme
+
+## Add theme to `estilo.yml`
+
+Open `estilo.yml` file and add an object for each theme with its parameters inside `lightline` list. Every one has 3 parameters:
+
+- name: the name of the lightline theme. Should have not spaces or dashes (`-`)
+- palette: the name of the color palette. It's the same as the file inside `palettes` folder without the `.yml` extension
+- style: It's the same as the file inside `lightline` folder without the `.yml` extension
+
+Example:
+
+```yml
+lightline:
+  - name: 'awesome-night'
+    background: 'dark'
+    palette: 'night'
+  - name: 'awesome-day'
+    background: 'light'
+    palette: 'day'
+```
+
+
+## Render
+
+With the command line in the project folder:
+
+```sh
+estilo render
+```
+
+Rendered files are in `plugins` folder of your project
+
+
+## Activating the theme
 
 Open your vim config file and add the next lines:
 

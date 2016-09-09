@@ -3,4 +3,4 @@
 
 ---
 
-**Next: [useful resources](useful-resources.md)**
+**Next: [Useful resources](useful-resources.md)**
