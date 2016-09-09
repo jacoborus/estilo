@@ -1,12 +1,9 @@
 'use strict'
 
-const mkdirp = require('mkdirp')
 const path = require('path')
 const fs = require('./super-fs')
-const renderThemes = require('./render-themes.js')
+const renderProject = require('./render-project.js')
 const yaml = require('js-yaml')
-const renderLightline = require('./render-lightline.js')
-const renderAirline = require('./render-airline.js')
 
 /**
  * convert
@@ -17,67 +14,36 @@ const renderAirline = require('./render-airline.js')
  * @param {string} folder template folder path
  */
 module.exports = function (folder, cb) {
-  const pkg = require(path.resolve(folder, 'package.json'))
-
-  const colorsFolder = path.resolve(folder, 'colors')
+  const infoPath = path.resolve(folder, 'estilo.yml')
+  if (!fs.existsSync(infoPath)) {
+    throw new Error('Estilo config filo doesn\'t exists: ' + infoPath)
+  }
+  const pkg = yaml.safeLoad(fs.readFileSync(infoPath))
   const estiloFolder = path.resolve(folder, 'estilo')
-  const palettePath = path.resolve(estiloFolder, 'palette.yml')
-  const pluginsFolder = path.resolve(folder, 'plugin')
-  const themesFolder = path.resolve(estiloFolder, 'themes')
-  const lightlinePath = path.resolve(estiloFolder, 'addons/lightline.yml')
-  const airlinePath = path.resolve(estiloFolder, 'addons/airline.yml')
-  const lighlineTmpl = fs.existsSync(lightlinePath)
-    ? yaml.safeLoad(fs.readFileSync(lightlinePath))
-    : false
-  const airlineTmpl = fs.existsSync(airlinePath)
-    ? yaml.safeLoad(fs.readFileSync(airlinePath))
-    : false
 
-  getTemplatePaths(estiloFolder)
-  .then(arr => {
-    return [
-      estiloFolder + '/base.yml'
-    ].concat(arr[0]).concat(arr[1])
-  })
+  getYmlsInsideFolder(estiloFolder + '/syntax')
   // load template files
-  .then(loadTemplates)
-  // create schema with templates and empty info
+  .then((paths) => Promise.all(paths.map(p => loadTemplate(p))))
+  // create project with templates and empty info
   .then(templates => ({
     templates,
-    info: {},
-    themesFolder,
-    colorsFolder,
-    pluginsFolder,
-    lighlineTmpl,
-    airlineTmpl
+    path: folder,
+    // add pkg to info
+    info: pkg
   }))
-  // add info to schema
-  .then(schema => getPalette(palettePath, schema))
-  // add pkg to info
-  .then(schema => {
-    schema.info = pkg
-    return schema
-  })
-  // add path of themes to schema
-  .then(addThemePaths)
-  // load themes
-  .then(getThemes)
-  .then(splitThemesInfo)
-  // render schemes
   .then(joinTemplates)
-  .then(renderThemes)
-  // save scheme to disk
-  .then(writeSchemes)
-  // render lightline theme
-  .then(renderLlThemes)
-  // render airline theme
-  .then(renderAirlineThemes)
+  // load palettes
+  .then(loadPalettes)
+  .then(loadAirlineStyles)
+  .then(loadLightlineStyles)
+  // render schemes
+  .then(renderProject)
   // success message
   .then(() => console.log('Done!'))
   .then(cb)
   .catch(err => {
+    console.log('Error:\n')
     console.log(err)
-    throw err
   })
 }
 
@@ -89,27 +55,20 @@ module.exports = function (folder, cb) {
  */
 function getYmlsInsideFolder (folderPath) {
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(folderPath)) resolve([])
+    if (!fs.existsSync(folderPath)) reject('Cant\' find syntax templates folder: ' + folderPath)
     else {
       fs.readdir(folderPath, (err, data) => {
-        if (err) reject('Error reading', folderPath)
+        if (err) reject('Error reading syntax templates folder: ' + folderPath)
         else {
           resolve(
             data
-              .filter(i => path.basename(i) !== path.basename(i, '.yml'))
-              .map(i => path.resolve(folderPath, i))
+            .filter(i => path.basename(i) !== path.basename(i, '.yml'))
+            .map(i => path.resolve(folderPath, i))
           )
         }
       })
     }
   })
-}
-
-function getTemplatePaths (estiloFolder) {
-  return Promise.all([
-    getYmlsInsideFolder(estiloFolder + '/syntax'),
-    getYmlsInsideFolder(estiloFolder + '/plugins')
-  ])
 }
 
 function loadTemplate (path) {
@@ -120,118 +79,71 @@ function loadTemplate (path) {
     })
   })
 }
-// load all templates from disk
-function loadTemplates (paths) {
-  return Promise.all(paths.map(p => loadTemplate(p)))
-}
 
-// load info and colors
-function getPalette (palettePath, schema) {
-  return new Promise((resolve, reject) => {
-    if (!fs.existsSync(palettePath)) {
-      schema.palette = {}
-      return resolve(schema)
-    }
-    fs.readFile(palettePath, 'utf8', (err, data) => {
-      if (err) reject('Error loading palette')
-      else {
-        schema.palette = yaml.safeLoad(data)
-        resolve(schema)
-      }
-    })
-  })
-}
-
-function addThemePaths (schema) {
-  const themesFolder = schema.themesFolder
-  return new Promise((resolve, reject) => {
-    fs.readdir(themesFolder, (err, names) => {
-      if (err) reject('Error loading themes folder')
-      else {
-        schema.themePaths = names.map(n => path.resolve(themesFolder, n))
-        resolve(schema)
-      }
-    })
-  })
-}
-
-function getThemes (schema) {
-  return new Promise((resolve, reject) => {
-    Promise.all(schema.themePaths.map(p => fs.readProm(p)))
-    .then(datas => {
-      schema.rawThemes = datas
-      resolve(schema)
-    })
-    .catch(err => reject(err))
-  })
-}
-
-function splitThemesInfo (schema) {
-  const raw = schema.rawThemes
-  schema.themes = {}
-  raw.forEach(r => {
-    const data = yaml.safeLoad(r.data)
-    schema.themes[data.name] = data
-  })
-  return schema
-}
-
-function joinTemplates (schema) {
-  const precompiled = {}
-  Object.keys(schema.templates).forEach(t => {
-    const template = schema.templates[t]
+function joinTemplates (project) {
+  const syntax = {}
+  project.templates.forEach(template => {
     Object.keys(template).forEach(k => {
       let hi = template[k]
       if (hi) {
-        precompiled[k] = hi
+        syntax[k] = hi
       }
     })
   })
-  schema.templates = precompiled
-  return schema
+  project.syntax = syntax
+  return project
 }
 
-function hasContent (tmpl) {
-  return Object.keys(tmpl).find(k => tmpl[k])
-}
-
-function writeSchemes (schema) {
-  const colorsFolder = schema.colorsFolder
-  mkdirp.sync(colorsFolder)
-  const { themes } = schema
-  Object.keys(themes).forEach(t => {
-    const theme = themes[t]
-    fs.writeFileSync(`${colorsFolder}/${theme.name}.vim`, theme.out)
+function loadPalettes (project) {
+  const palettesFolder = path.resolve(project.path, 'estilo', 'palettes')
+  project.palettes = {}
+  return new Promise((resolve, reject) => {
+    fs.readdir(palettesFolder, (err, names) => {
+      if (err) reject('Error loading themes folder')
+      else {
+        names.forEach(n => {
+          const id = path.basename(n, '.yml')
+          const raw = fs.readFileSync(path.resolve(palettesFolder, n))
+          project.palettes[id] = yaml.safeLoad(raw)
+        })
+        resolve(project)
+      }
+    })
   })
-  return schema
 }
 
-function renderLlThemes (schema) {
-  const { lighlineTmpl, themes, info } = schema
-  // render lightline theme if possible
-  if (lighlineTmpl && hasContent(lighlineTmpl)) {
-    mkdirp.sync(schema.pluginsFolder)
-    Object.keys(themes).forEach(k => {
-      const theme = themes[k]
-      const llTheme = renderLightline(info.name, theme.name, lighlineTmpl, theme.colors)
-      // save lightline theme to disk
-      fs.writeFileSync(`${schema.pluginsFolder}/${theme.name}-lightline.vim`, llTheme)
+function loadAirlineStyles (project) {
+  const airlineFolder = path.resolve(project.path, 'estilo', 'airline')
+  project.airlineStyles = {}
+  return new Promise((resolve, reject) => {
+    fs.readdir(airlineFolder, (err, names) => {
+      if (err) reject('Error loading themes folder')
+      else {
+        names.forEach(n => {
+          const id = path.basename(n, '.yml')
+          const raw = fs.readFileSync(path.resolve(airlineFolder, n))
+          project.airlineStyles[id] = yaml.safeLoad(raw)
+        })
+        resolve(project)
+      }
     })
-  }
-  return schema
+  })
 }
 
-function renderAirlineThemes (schema) {
-  const { airlineTmpl, themes, info } = schema
-  // render airline theme if possible
-  if (airlineTmpl && hasContent(airlineTmpl)) {
-    mkdirp.sync(schema.pluginsFolder)
-    Object.keys(themes).forEach(k => {
-      const theme = themes[k]
-      const airlineTheme = renderAirline(info.name, theme.name, airlineTmpl, theme.colors)
-      // save airline theme to disk
-      fs.writeFileSync(`${schema.pluginsFolder}/${theme.name}-airline.vim`, airlineTheme)
+function loadLightlineStyles (project) {
+  const llFolder = path.resolve(project.path, 'estilo', 'lightline')
+  project.lightlineStyles = {}
+  return new Promise((resolve, reject) => {
+    fs.readdir(llFolder, (err, names) => {
+      if (err) reject('Error loading themes folder')
+      else {
+        names.forEach(n => {
+          const id = path.basename(n, '.yml')
+          const raw = fs.readFileSync(path.resolve(llFolder, n))
+          project.lightlineStyles[id] = yaml.safeLoad(raw)
+        })
+        resolve(project)
+      }
     })
-  }
-  return schema
+  })
 }

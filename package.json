@@ -1,6 +1,6 @@
 {
   "name": "estilo",
-  "version": "0.12.3",
+  "version": "0.13.0",
   "description": "Generate vim color schemes without the hassle",
   "main": "estilo.js",
   "directories": {
@@ -8,9 +8,13 @@
   },
   "dependencies": {
     "hexterm": "^1.2.0",
+    "inquirer": "^1.1.3",
     "js-yaml": "^3.6.0",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1"
+  },
+  "bin": {
+    "estilo": "./src/estilo.js"
   },
   "devDependencies": {
     "gitbook-cli": "^2.3.0",
@@ -21,9 +25,8 @@
   },
   "scripts": {
     "test": "node test/index.js",
-    "linter": "standard src/*.js estilo.js test bin/estilo",
-    "postinstall": "node scripts/postinstall.js",
-    "docs:publish": "rimraf _book && gitbook build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:jacoborus/estilo gh-pages --force"
+    "linter": "standard src/*.js estilo.js test/*.js",
+    "docs:publish": "rimraf _book && cp -f README.md docs/README.md && gitbook build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:jacoborus/estilo gh-pages --force && rm -f ../docs/README.md"
   },
   "repository": {
     "type": "git",

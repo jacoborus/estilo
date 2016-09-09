@@ -1,9 +1,8 @@
 # Summary
 
 * [Introduction](README.md)
-* [Installation](installation.md)
-* [Vim colorschemes](colorschemes.md)
-* [Extending colorschemes](extending-colorschemes.md)
+* [Color palettes](color-palettes.md)
+* [Colorschemes](colorschemes.md)
 * [Airline themes](airline.md)
 * [Lightline themes](lightline.md)
 * [CLI](cli.md)

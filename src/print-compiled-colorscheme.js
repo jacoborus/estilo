@@ -25,9 +25,8 @@ function printTextStyle (ui) {
 }
 
 module.exports = function (hilinks) {
-  let keys = Object.keys(hilinks)
   let out = ''
-  keys.forEach(k => {
+  Object.keys(hilinks).forEach(k => {
     let hi = hilinks[k]
     if (!hi) return
     if (hi.link) {

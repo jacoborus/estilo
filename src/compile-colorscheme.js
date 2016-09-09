@@ -24,7 +24,7 @@ function parseui (raw, hiName) {
 // extract hilink definitions from object
 // and return a new formatted object
 
-module.exports = function (templates, colors) {
+module.exports = function (templates, palette) {
   if (!templates || typeof templates !== 'object') {
     throw new Error('wrong highlights object')
   }
@@ -34,7 +34,7 @@ module.exports = function (templates, colors) {
     if (typeof raw !== 'string') {
       throw new Error('bad formatted hilinks:', name)
     }
-    let hilink = parseStyleString(raw, colors, name)
+    let hilink = parseStyleString(raw, palette, name)
     let ui = hilink.ui
     if (ui) {
       hilink.ui = parseui(ui)

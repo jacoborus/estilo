@@ -1,12 +1,14 @@
 # Airline themes
 
-Before creating the airline theme you need at least one color template in `estilo/themes` folder. Then proceed to add the blank airline template from the command line:
+## Creating styles
+
+Before creating the airline theme you need at least one color palette in `estilo/themes` folder. Then proceed to add the blank airline template from the command line (use your own `STYLE_NAME`s):
 
 ```sh
-npm run add-template -- addons/airline
+estilo add-airline STYLE_NAME
 ```
 
-This command will create `airline.yml` file in `estilo/addons` directory of your project. Open it, it will look like this:
+This command will create `STYLE_NAME.yml` file in `estilo/airline` directory of your project. Open it, it will look like this:
 
 ```yml
 normal1: ''
@@ -38,7 +40,38 @@ Go to the first definition and fill its value inside the quotes (`''`), write th
 normal1: 'myblue mydark'
 ```
 
-Then set the rest of the properties. When you are done, you can render your color scheme as usually (`npm run build`), and **Estilo** will create so many airline themes as color templates you created in `estilo/themes`.
+
+## Add theme to `estilo.yml`
+
+Open `estilo.yml` file and add an object for each theme with its parameters inside `airline` list. Every one has 3 parameters:
+
+- name: the name of the airline theme (should have not spaces)
+- palette: the name of the color palette. It's the same as the file inside `palettes` folder without the `.yml` extension
+- style: It's the same as the file inside `airline` folder without the `.yml` extension
+
+Example:
+
+```yml
+airline:
+  - name: 'awesome-night'
+    palette: 'awesome'
+    style: 'night'
+  - name: 'awesome-day'
+    palette: 'awesome'
+    style: 'day'
+```
+
+
+## Render
+
+With the command line in the project folder:
+
+```sh
+estilo render
+```
+
+Rendered files are in `plugins` folder of your project
+
 
 ## Activating the theme
 
@@ -46,9 +79,14 @@ Open your vim config file and add the next lines:
 
 ```vim
 let g:PKG_NAME_airline = 1
-let g:airline_theme = 'MY_COLOR_SCHEME_NAME'
+let g:airline_theme = 'MY_THEME_NAME'
 ```
 
-Replace `PKG_NAME` with the name of your package (the name from `package.json`), and `MY_COLOR_SCHEME_NAME` with the name of the colorscheme you want to activate.
+Replace `PKG_NAME` with the name of your project (the name from `estilo.yml`), and `MY_THEME_NAME` with the name of the Airline theme you want to activate.
 
 Remember to add instructions to the `README` of your project before you publish it.
+
+
+---
+
+**Next: [Lightline themes](lightline.md)**
