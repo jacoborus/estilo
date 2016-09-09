@@ -7,7 +7,7 @@ Estilo
 
 [![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-** [See documentation](http://estilo.jacoborus.codes)
+**[See documentation](http://estilo.jacoborus.codes)**
 
 ## Quick start
 
