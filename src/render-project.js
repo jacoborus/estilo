@@ -8,6 +8,8 @@ const renderColorscheme = require('./render-colorscheme.js')
 const checkPalette = require('./check-palette.js')
 const renderAirline = require('./render-airline.js')
 const renderLightline = require('./render-lightline.js')
+const chalk = require('chalk')
+const { log } = console
 
 module.exports = function (project) {
   return new Promise((resolve, reject) => {
@@ -44,7 +46,7 @@ module.exports = function (project) {
       mkdirp.sync(path.resolve(project.path, 'colors'))
       info.colorschemes.forEach(c => {
         fs.writeFileSync(path.resolve(project.path, 'colors', c.name + '.vim'), c.rendered)
-        console.log('Vim colorscheme', c.name, 'rendered')
+        log(chalk.cyan('Rendering colorscheme:'), c.name + ' ...', chalk.green.bold('OK'))
       })
     }
 
@@ -77,7 +79,7 @@ module.exports = function (project) {
       mkdirp.sync(path.resolve(project.path, 'plugin'))
       info.airline.forEach(t => {
         fs.writeFileSync(path.resolve(project.path, 'plugin', t.name + '-airline.vim'), t.rendered)
-        console.log('Airline theme', t.name, 'rendered')
+        log(chalk.cyan('Rendering Airline theme:'), t.name + ' ...', chalk.green.bold('OK'))
       })
     }
 
@@ -110,7 +112,7 @@ module.exports = function (project) {
       mkdirp.sync(path.resolve(project.path, 'plugin'))
       info.lightline.forEach(t => {
         fs.writeFileSync(path.resolve(project.path, 'plugin', t.name + '-lightline.vim'), t.rendered)
-        console.log('lightline theme', t.name, 'rendered')
+        log(chalk.cyan('Rendering Lightline theme:'), t.name + ' ...', chalk.green.bold('OK'))
       })
     }
 
