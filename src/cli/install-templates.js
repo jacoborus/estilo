@@ -1,6 +1,6 @@
 'use strict'
 
-const fs = require('../src/super-fs')
+const fs = require('../super-fs')
 const path = require('path')
 const chalk = require('chalk')
 const { log } = console
@@ -15,7 +15,7 @@ module.exports = function (templateNames) {
     return names.map(n => {
       return {
         name: n,
-        origin: path.resolve(__dirname, '..', 'templates/syntax', n),
+        origin: path.resolve(__dirname, '../..', 'templates/syntax', n),
         destination: path.resolve('estilo/syntax', n)
       }
     })
@@ -50,7 +50,7 @@ module.exports = function (templateNames) {
   // success message
   .then(templates => {
     log(chalk.blue.bold('\nNew syntax templates:'))
-    templates.forEach(t => log(chalk.green(t.name)))
+    templates.forEach(t => log(chalk.green(t.name.slice(0, -4))))
   })
   .catch(err => {
     log(chalk.red.bold('Aborting due an error while adding templates'))

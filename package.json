@@ -1,6 +1,6 @@
 {
   "name": "estilo",
-  "version": "0.13.5",
+  "version": "0.14.0",
   "description": "Generate vim color schemes without the hassle",
   "main": "estilo.js",
   "directories": {
@@ -15,7 +15,7 @@
     "mkdirp": "^0.5.1"
   },
   "bin": {
-    "estilo": "./src/estilo.js"
+    "estilo": "./src/cli/estilo.js"
   },
   "devDependencies": {
     "gitbook-cli": "^2.3.0",

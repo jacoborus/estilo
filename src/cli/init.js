@@ -4,7 +4,7 @@ const path = require('path')
 const inquirer = require('inquirer')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
-const addTemplate = require('./add-template.js')
+const installTemplates = require('./install-templates.js')
 const chalk = require('chalk')
 const { log } = console
 
@@ -12,7 +12,7 @@ const defaultPalette = 'myblue: \'#99ccff\''
 
 module.exports = function (projectPath, auto) {
   const folderName = path.basename(projectPath)
-  const templateFiles = fs.readdirSync(path.resolve(__dirname, '..', 'templates/syntax'))
+  const templateFiles = fs.readdirSync(path.resolve(__dirname, '../..', 'templates/syntax'))
   const indexBase = templateFiles.indexOf('base.yml')
   templateFiles.splice(indexBase, 1)
   let templateChoices = templateFiles.map(f => {
@@ -127,6 +127,6 @@ lightline:
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'syntax'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
-  addTemplate(options.templates.concat('base.yml'), true)
+  installTemplates(options.templates.concat('base.yml'), true)
   log(chalk.green.bold('\nYour project is ready'))
 }
