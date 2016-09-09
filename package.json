@@ -1,6 +1,6 @@
 {
   "name": "estilo",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "Generate vim color schemes without the hassle",
   "main": "estilo.js",
   "directories": {
