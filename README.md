@@ -20,7 +20,7 @@ npm install -g estilo
 Initialize your project and follow the instructions:
 
 ```sh
-estilo init my-project-folder
+mkdir myproject && cd myproject && estilo init
 ```
 
 **Next: [create some color palettes](http://estilo.jacoborus.codes/color-palettes.html)**
