@@ -14,4 +14,6 @@ text: '#eeeeee'
 bg: '#282828'
 ```
 
-**Next: [Syntax highlighting](http://estilo.jacoborus.codes/syntax-highlighting.html)**
+---
+
+**Next: [Colorschemes](colorschemes.md)**

@@ -58,8 +58,6 @@ Go to the first definition and fill its value inside the quotes (`''`), write th
 normal1: 'myblue mydark'
 ```
 
-Then set the rest of the properties. When you are done, you can render your color scheme as usually (`npm run build`), and **Estilo** will create so many lightline themes as color templates you created in `estilo/themes`.
-
 ### Activating the theme
 
 Open your vim config file and add the next lines:
@@ -68,9 +66,14 @@ Open your vim config file and add the next lines:
 " enable lighline theme
 let g:PKG_NAME_lightline = 1
 " set lighline theme (in yor lightline config)
-let g:lightline = { 'colorscheme': 'MY_COLOR_SCHEME_NAME' }
+let g:lightline = { 'colorscheme': 'MY_THEME_NAME' }
 ```
 
-Replace `PKG_NAME` with the name of your package (the name from `package.json`), and `MY_COLOR_SCHEME_NAME` with the name of the colorscheme you want to activate.
+Replace `PKG_NAME` with the name of your project (the name from `estilo.yml`), and `MY_THEME_NAME` with the name of the Lightline theme you want to activate.
 
 Remember to add instructions to the `README` of your project before publishing it.
+
+
+---
+
+**Next: [Command line interface overview](cli.md)**

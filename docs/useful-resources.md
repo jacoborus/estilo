@@ -5,3 +5,7 @@
 - Preview colors inline: [vim-css-color](https://github.com/skammer/vim-css-color)
 - [yaml language elements](https://en.wikipedia.org/wiki/YAML#Language_elements<Paste>)
 
+
+---
+
+**Next: [Projects created with Estilo](created-with-estilo.md)**

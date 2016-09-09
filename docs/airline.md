@@ -38,17 +38,20 @@ Go to the first definition and fill its value inside the quotes (`''`), write th
 normal1: 'myblue mydark'
 ```
 
-Then set the rest of the properties. When you are done, you can render your color scheme as usually (`npm run build`), and **Estilo** will create so many airline themes as color templates you created in `estilo/themes`.
-
 ## Activating the theme
 
 Open your vim config file and add the next lines:
 
 ```vim
 let g:PKG_NAME_airline = 1
-let g:airline_theme = 'MY_COLOR_SCHEME_NAME'
+let g:airline_theme = 'MY_THEME_NAME'
 ```
 
-Replace `PKG_NAME` with the name of your package (the name from `package.json`), and `MY_COLOR_SCHEME_NAME` with the name of the colorscheme you want to activate.
+Replace `PKG_NAME` with the name of your project (the name from `estilo.yml`), and `MY_THEME_NAME` with the name of the Airline theme you want to activate.
 
 Remember to add instructions to the `README` of your project before you publish it.
+
+
+---
+
+**Next: [Lightline themes](lightline.md)**

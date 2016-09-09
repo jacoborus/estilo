@@ -1,6 +1,8 @@
-Syntax highlighting
-===================
+Colorschemes
+============
 
+
+## Define syntax highlighting
 
 Open `estilo/syntax/base.yml` (and then the other templates inside the folder) with vim and fill its definitions with these rules:
 
@@ -62,3 +64,6 @@ Estilo bundles a pack of templates for common language syntaxes and plugins, you
 
 See [full list of syntax templates](https://github.com/jacoborus/estilo/tree/master/templates/syntax)
 
+---
+
+**Next: [Airline themes](airline.md)**
