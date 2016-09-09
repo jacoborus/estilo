@@ -54,11 +54,11 @@ Example:
 ```yml
 airline:
   - name: 'awesome-night'
-    background: 'dark'
-    palette: 'night'
+    palette: 'awesome'
+    style: 'night'
   - name: 'awesome-day'
-    background: 'light'
-    palette: 'day'
+    palette: 'awesome'
+    style: 'day'
 ```
 
 
