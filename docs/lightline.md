@@ -111,4 +111,4 @@ Remember to add instructions to the `README` of your project before publishing i
 
 ---
 
-**Next: [Command line interface overview](cli.md)**
+**Next: [Useful resources](useful-resources.md)**
