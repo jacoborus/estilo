@@ -26,6 +26,18 @@ Initialize your project and follow the instructions:
 mkdir myproject && cd myproject && estilo init
 ```
 
+## CLI
+
+Usage: `estilo [command]`
+
+Commands:
+
+- **init**: Initialize an estilo project in current folder
+- **render**: Render all the colorschemes and themes
+- **add-syntax**: Opens dialog for adding more syntax templates
+- **add-airline**: Opens dialog for adding a new Airline style
+- **add-lightline**: Opens dialog for adding a new Lightline style
+
 
 ## Created with Estilo
 
