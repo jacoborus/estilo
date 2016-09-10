@@ -4,8 +4,7 @@
 
 const { resolve } = require('path')
 const convert = require('../convert.js')
-const minimist = require('minimist')
-const argv = minimist(process.argv.slice(2))
+const argv = require('minimist')(process.argv.slice(2))
 const selectSyntax = require('./select-syntax.js')
 const init = require('./init.js')
 const path = require('path')
@@ -39,8 +38,25 @@ if (command === 'render') {
   installAirline(projectPath)
 } else if (command === 'add-lightline') {
   installLightline(projectPath)
+} else {
+  showHelp()
 }
 
 function showHelp () {
-  console.log('Usage: estilo command options')
+  console.log(`
+  Usage: estilo [command]
+
+  Commands:
+
+    init                Initialize an estilo project in current folder
+
+    render              Render all the colorschemes and themes
+
+    add-syntax          Opens dialog for adding more syntax templates
+
+    add-airline         Opens dialog for adding a new Airline style
+
+    add-lightline       Opens dialog for adding a new Lightline style
+`)
 }
+
