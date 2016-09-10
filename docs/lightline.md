@@ -108,7 +108,3 @@ Replace `PKG_NAME` with the name of your project (the name from `estilo.yml`), a
 
 Remember to add instructions to the `README` of your project before publishing it.
 
-
----
-
-**Next: [Useful resources](useful-resources.md)**

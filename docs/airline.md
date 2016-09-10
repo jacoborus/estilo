@@ -85,8 +85,3 @@ let g:airline_theme = 'MY_THEME_NAME'
 Replace `PKG_NAME` with the name of your project (the name from `estilo.yml`), and `MY_THEME_NAME` with the name of the Airline theme you want to activate.
 
 Remember to add instructions to the `README` of your project before you publish it.
-
-
----
-
-**Next: [Lightline themes](lightline.md)**
