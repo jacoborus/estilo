@@ -13,6 +13,15 @@ const installAirline = require('./install-airline.js')
 const installLightline = require('./install-lightline.js')
 const projectPath = resolve('.')
 
+const updateNotifier = require('update-notifier')
+const pkg = require('../../package.json')
+
+updateNotifier({
+  pkg,
+  // updateCheckInterval: 1000 * 60 * 60 * 24 * 7 // 1 week
+  updateCheckInterval: 10000// ten seconds
+}).notify()
+
 if (!argv._.length) {
   console.log('No command found')
   showHelp()
