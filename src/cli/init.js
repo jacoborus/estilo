@@ -47,7 +47,7 @@ module.exports = function (projectPath, auto) {
     },
     {
       type: 'input',
-      name: 'website',
+      name: 'url',
       message: 'Project url:'
     },
     {
@@ -68,7 +68,7 @@ module.exports = function (projectPath, auto) {
       name: folderName,
       author: '',
       version: '1.0.0',
-      website: '',
+      url: '',
       license: 'MIT',
       airline: true,
       lightline: true,
