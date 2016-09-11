@@ -1,0 +1,361 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <title>Airline themes · Create vim colorschemes with Estilo</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.0.0">
+        <meta name="author" content="Jacobo Tabernero">
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="lightline.html" />
+    
+    
+    <link rel="prev" href="colorschemes.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="color-palettes.html">
+            
+                <a href="color-palettes.html">
+            
+                    
+                    Color palettes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="colorschemes.html">
+            
+                <a href="colorschemes.html">
+            
+                    
+                    Colorschemes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="airline.html">
+            
+                <a href="airline.html">
+            
+                    
+                    Airline themes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="lightline.html">
+            
+                <a href="lightline.html">
+            
+                    
+                    Lightline themes
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="divider"></li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" >
+            
+                <a target="_blank" href="http://jacoborus.codes">
+            
+                    
+                    more open source
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Airline themes</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="airline-themes">Airline themes</h1>
+<h2 id="creating-styles">Creating styles</h2>
+<p>Before creating the airline theme you need at least one color palette in <code>estilo/themes</code> folder. Then proceed to add the blank airline template from the command line:</p>
+<pre><code class="lang-sh">estilo add-airline
+</code></pre>
+<p>This command will create a style file in <code>estilo/airline</code> directory of your project. Open it, it will look like this:</p>
+<pre><code class="lang-yml"><span class="hljs-attr">normal1:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">normal2:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">normal3:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">inactive1:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">inactive2:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">inactive3:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">insert1:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">insert2:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">insert3:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">replace1:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">replace2:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">replace3:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">visual1:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">visual2:</span> <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-attr">visual3:</span> <span class="hljs-string">&apos;&apos;</span>
+</code></pre>
+<p>Every property in the template is composed by a name and a number, they represents how a part of the status line will look in a particular vim mode. That means the first line defines the style of the part 1 of the bar in normal mode, and so on.</p>
+<p>Part 1 represents the first and the last block of the status bar, part 2 the second and fourth, and the part 3 is for the center block (the third one).</p>
+<p><img src="https://cloud.githubusercontent.com/assets/829859/16402004/55f3682c-3ce9-11e6-8bd9-eaafbaaccb2e.png" alt="airline blocks"></p>
+<p>Go to the first definition and fill its value inside the quotes (<code>&apos;&apos;</code>), write the foreground and the background color names separated by a space (these ones should be in your color template). It should look something like this:</p>
+<pre><code class="lang-yml"><span class="hljs-attr">normal1:</span> <span class="hljs-string">&apos;myblue mydark&apos;</span>
+</code></pre>
+<h2 id="add-theme-to-estiloyml">Add theme to <code>estilo.yml</code></h2>
+<p>Open <code>estilo.yml</code> file and add an object for each theme with its parameters inside <code>airline</code> list. Every one has 3 parameters:</p>
+<ul>
+<li>name: the name of the airline theme (should have not spaces)</li>
+<li>palette: the name of the color palette. It&apos;s the same as the file inside <code>palettes</code> folder without the <code>.yml</code> extension</li>
+<li>style: It&apos;s the same as the file inside <code>airline</code> folder without the <code>.yml</code> extension</li>
+</ul>
+<p>Example:</p>
+<pre><code class="lang-yml"><span class="hljs-attr">airline:</span>
+<span class="hljs-attr">  - name:</span> <span class="hljs-string">&apos;awesome-night&apos;</span>
+<span class="hljs-attr">    palette:</span> <span class="hljs-string">&apos;awesome&apos;</span>
+<span class="hljs-attr">    style:</span> <span class="hljs-string">&apos;night&apos;</span>
+<span class="hljs-attr">  - name:</span> <span class="hljs-string">&apos;awesome-day&apos;</span>
+<span class="hljs-attr">    palette:</span> <span class="hljs-string">&apos;awesome&apos;</span>
+<span class="hljs-attr">    style:</span> <span class="hljs-string">&apos;day&apos;</span>
+</code></pre>
+<h2 id="render">Render</h2>
+<p>With the command line in the project folder:</p>
+<pre><code class="lang-sh">estilo render
+</code></pre>
+<p>Rendered files are in <code>plugins</code> folder of your project</p>
+<h2 id="activating-the-theme">Activating the theme</h2>
+<p>Open your vim config file and add the next lines:</p>
+<pre><code class="lang-vim"><span class="hljs-keyword">let</span> <span class="hljs-variable">g:PKG_NAME_airline</span> = <span class="hljs-number">1</span>
+<span class="hljs-keyword">let</span> <span class="hljs-variable">g:airline_theme</span> = <span class="hljs-string">&apos;MY_THEME_NAME&apos;</span>
+</code></pre>
+<p>Replace <code>PKG_NAME</code> with the name of your project (the name from <code>estilo.yml</code>), and <code>MY_THEME_NAME</code> with the name of the Airline theme you want to activate.</p>
+<p>Remember to add instructions to the <code>README</code> of your project before you publish it.</p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="colorschemes.html" class="navigation navigation-prev " aria-label="Previous page: Colorschemes">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="lightline.html" class="navigation navigation-next " aria-label="Next page: Lightline themes">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Airline themes","level":"1.4","depth":1,"next":{"title":"Lightline themes","level":"1.5","depth":1,"path":"lightline.md","ref":"lightline.md","articles":[]},"previous":{"title":"Colorschemes","level":"1.3","depth":1,"path":"colorschemes.md","ref":"colorschemes.md","articles":[]},"dir":"ltr"},"config":{"plugins":["github"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/jacoborus/estilo"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Jacobo Tabernero","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Create vim colorschemes with Estilo","language":"en","gitbook":"*"},"file":{"path":"airline.md","mtime":"2016-09-10T03:13:07.709Z","type":"markdown"},"gitbook":{"version":"3.0.0","time":"2016-09-11T19:12:00.293Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,332 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <title>Introduction · Create vim colorschemes with Estilo</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.0.0">
+        <meta name="author" content="Jacobo Tabernero">
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="color-palettes.html" />
+    
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter active" data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="color-palettes.html">
+            
+                <a href="color-palettes.html">
+            
+                    
+                    Color palettes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="colorschemes.html">
+            
+                <a href="colorschemes.html">
+            
+                    
+                    Colorschemes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="airline.html">
+            
+                <a href="airline.html">
+            
+                    
+                    Airline themes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="lightline.html">
+            
+                <a href="lightline.html">
+            
+                    
+                    Lightline themes
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="divider"></li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" >
+            
+                <a target="_blank" href="http://jacoborus.codes">
+            
+                    
+                    more open source
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Introduction</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="estilo">Estilo</h1>
+<p><strong>Estilo</strong> makes easy creating, maintaining and versioning colorschemes for vim, airline and lightline.</p>
+<p><a href="https://travis-ci.org/jacoborus/estilo" _target="blank"><img src="https://travis-ci.org/jacoborus/estilo.svg?branch=master" alt="Build Status"></a> <a href="https://www.npmjs.com/package/estilo" _target="blank"><img src="https://badge.fury.io/js/estilo.svg" alt="npm version"></a> <img src="https://david-dm.org/jacoborus/estilo.svg" alt="npm dependencies"> <a href="http://standardjs.com/" _target="blank"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="js-standard-style"></a></p>
+<p><strong><a href="http://estilo.jacoborus.codes" _target="blank">See documentation</a></strong> - <strong><a href="https://github.com/jacoborus/estilo" _target="blank">see repository</a></strong></p>
+<p><img src="https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif" alt="estilo-demo"></p>
+<h2 id="installation">Installation</h2>
+<p>Estilo is written in pure javascript, so you will need <a href="https://nodejs.org" _target="blank">node.js</a> installed in your computer, then install with <a href="https://www.npmjs.com/package/estilo" _target="blank">npm</a>:</p>
+<pre><code class="lang-sh">npm install -g estilo
+</code></pre>
+<h2 id="quick-start">Quick start</h2>
+<p>Initialize your project and follow the instructions:</p>
+<pre><code class="lang-sh">mkdir myproject &amp;&amp; <span class="hljs-built_in">cd</span> myproject &amp;&amp; estilo init
+</code></pre>
+<p>Next: <a href="http://estilo.jacoborus.codes/color-palettes.html" _target="blank">Color palettes</a></p>
+<h2 id="cli">CLI</h2>
+<p>Usage: <code>estilo [command]</code></p>
+<p>Commands:</p>
+<ul>
+<li><strong><code>init</code></strong>: Initialize an estilo project in current folder</li>
+<li><strong><code>render</code></strong>: Render all the colorschemes and themes</li>
+<li><strong><code>add-syntax</code></strong>: Opens dialog for adding more syntax templates</li>
+<li><strong><code>add-airline</code></strong>: Opens dialog for adding a new Airline style</li>
+<li><strong><code>add-lightline</code></strong>: Opens dialog for adding a new Lightline style</li>
+<li><strong><code>help</code></strong>: Show help</li>
+</ul>
+<h2 id="colorschemes-created-with-estilo">Colorschemes created with Estilo</h2>
+<ul>
+<li><a href="https://github.com/jacoborus/tender.vim" _target="blank">Tender</a></li>
+<li><a href="https://github.com/jacoborus/estilo/issues/new" _target="blank">add yours</a></li>
+</ul>
+<p><br><br></p>
+<hr>
+<p>&#xA9; 2016 <a href="http://jacoborus.codes" _target="blank">Jacobo Tabernero</a> - Released under <a href="https://raw.github.com/jacoborus/estilo/master/LICENSE" _target="blank">MIT License</a></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                
+                <a href="color-palettes.html" class="navigation navigation-next navigation-unique" aria-label="Next page: Color palettes">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"Color palettes","level":"1.2","depth":1,"path":"color-palettes.md","ref":"color-palettes.md","articles":[]},"dir":"ltr"},"config":{"plugins":["github"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/jacoborus/estilo"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Jacobo Tabernero","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Create vim colorschemes with Estilo","language":"en","gitbook":"*"},"file":{"path":"README.md","mtime":"2016-09-11T19:11:59.105Z","type":"markdown"},"gitbook":{"version":"3.0.0","time":"2016-09-11T19:12:00.293Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+

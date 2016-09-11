@@ -1,0 +1,363 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+    <head>
+        <title>Colorschemes · Create vim colorschemes with Estilo</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.0.0">
+        <meta name="author" content="Jacobo Tabernero">
+        
+        
+    
+    <link rel="stylesheet" href="gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="airline.html" />
+    
+    
+    <link rel="prev" href="color-palettes.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="color-palettes.html">
+            
+                <a href="color-palettes.html">
+            
+                    
+                    Color palettes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="colorschemes.html">
+            
+                <a href="colorschemes.html">
+            
+                    
+                    Colorschemes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="airline.html">
+            
+                <a href="airline.html">
+            
+                    
+                    Airline themes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="lightline.html">
+            
+                <a href="lightline.html">
+            
+                    
+                    Lightline themes
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+        
+        <li class="divider"></li>
+        
+        
+    
+        <li class="chapter " data-level="2.1" >
+            
+                <a target="_blank" href="http://jacoborus.codes">
+            
+                    
+                    more open source
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="." >Colorschemes</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="colorschemes">Colorschemes</h1>
+<h2 id="define-syntax-highlighting">Define syntax highlighting</h2>
+<p>Open <code>estilo/syntax/base.yml</code> (and then the other templates inside the folder) with vim and fill its definitions with these rules:</p>
+<ul>
+<li>first value is the foreground</li>
+<li>second value is the background</li>
+<li>the third value is for text styles, and you should write just the first letter of every style (b: bold, r: reverse, u: underline, i: italic)</li>
+<li>a hyphen (<code>-</code>) or an ommited value will be rendered as <code>NONE</code></li>
+<li>a dot (<code>.</code>) will not render this foreground/background/style</li>
+</ul>
+<p><img src="https://cloud.githubusercontent.com/assets/829859/18372714/f7bb7f44-763e-11e6-93e0-5d240244b108.png" alt="syntax-help"></p>
+<p>Examples (template - result):</p>
+<p>Omitting values:</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">Comment:</span> <span class="hljs-string">&apos;sky&apos;</span>
+</code></pre>
+<pre><code class="lang-vim"><span class="hljs-keyword">hi</span> Comment guifg=#bbddff ctermfg=<span class="hljs-number">153</span> guibg=NONE ctermbg=NONE <span class="hljs-keyword">gui</span>=NONE cterm=NONE
+</code></pre>
+<p>Omitting values with dashes:</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">Title:</span> <span class="hljs-string">&apos;- cherry bu&apos;</span>
+</code></pre>
+<pre><code class="lang-vim"><span class="hljs-keyword">hi</span> Title guifg=NONE ctermfg=NONE guibg=ffbbcc ctermbg=<span class="hljs-number">218</span> <span class="hljs-keyword">gui</span>=bold,underline cterm=bold,underline
+</code></pre>
+<p>Prevent to print style with dots</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">Other:</span> <span class="hljs-string">&apos;. . ri&apos;</span>
+</code></pre>
+<pre><code class="lang-vim"><span class="hljs-keyword">hi</span> Other <span class="hljs-keyword">gui</span>=<span class="hljs-built_in">reverse</span>,italic cterm=<span class="hljs-built_in">reverse</span>,italic
+</code></pre>
+<p>Link to other definition:</p>
+<pre><code class="lang-yaml"><span class="hljs-attr">WarningMsg:</span> <span class="hljs-string">&apos;link Title&apos;</span>
+</code></pre>
+<pre><code class="lang-vim"><span class="hljs-keyword">hi</span> link WarningMsg Title
+</code></pre>
+<h2 id="add-more-syntax-highlighting-templates">Add more syntax highlighting templates</h2>
+<p>Estilo bundles a pack of templates for common language syntaxes and plugins, you can add this templates by running <code>estilo add-syntax</code> on your terminal.</p>
+<p>See <a href="https://github.com/jacoborus/estilo/tree/master/templates/syntax" _target="blank">list of available syntax templates</a></p>
+<h2 id="add-colorschemes-to-estiloyml">Add colorschemes to <code>estilo.yml</code></h2>
+<p>Open <code>estilo.yml</code> file and add an object for each colorcheme with its parameters inside <code>colorschemes</code> list. Every one has 3 parameters:</p>
+<ul>
+<li>name: the name of the colorscheme (should have not spaces)</li>
+<li>background: &apos;dark&apos; or &apos;light&apos; (&apos;dark&apos; by default)</li>
+<li>palette: the name of the color palette. It&apos;s the same as the file inside <code>palettes</code> folder without the <code>.yml</code> extension</li>
+</ul>
+<p>Example:</p>
+<pre><code class="lang-yml"><span class="hljs-attr">colorschemes:</span>
+<span class="hljs-attr">  - name:</span> <span class="hljs-string">&apos;awesome-night&apos;</span>
+<span class="hljs-attr">    background:</span> <span class="hljs-string">&apos;dark&apos;</span>
+<span class="hljs-attr">    palette:</span> <span class="hljs-string">&apos;night&apos;</span>
+<span class="hljs-attr">  - name:</span> <span class="hljs-string">&apos;awesome-day&apos;</span>
+<span class="hljs-attr">    background:</span> <span class="hljs-string">&apos;light&apos;</span>
+<span class="hljs-attr">    palette:</span> <span class="hljs-string">&apos;day&apos;</span>
+</code></pre>
+<h2 id="render">Render</h2>
+<p>With the command line in the project folder:</p>
+<pre><code class="lang-sh">estilo render
+</code></pre>
+<p>Rendered files are in <code>colors</code> folder of your project</p>
+<hr>
+<p><strong>Next: <a href="airline.html">Airline themes</a></strong></p>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="color-palettes.html" class="navigation navigation-prev " aria-label="Previous page: Color palettes">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="airline.html" class="navigation navigation-next " aria-label="Next page: Airline themes">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Colorschemes","level":"1.3","depth":1,"next":{"title":"Airline themes","level":"1.4","depth":1,"path":"airline.md","ref":"airline.md","articles":[]},"previous":{"title":"Color palettes","level":"1.2","depth":1,"path":"color-palettes.md","ref":"color-palettes.md","articles":[]},"dir":"ltr"},"config":{"plugins":["github"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"github":{"url":"https://github.com/jacoborus/estilo"},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","author":"Jacobo Tabernero","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Create vim colorschemes with Estilo","language":"en","gitbook":"*"},"file":{"path":"colorschemes.md","mtime":"2016-09-09T18:46:09.206Z","type":"markdown"},"gitbook":{"version":"3.0.0","time":"2016-09-11T19:12:00.293Z"},"basePath":".","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="gitbook/gitbook.js"></script>
+    <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="gitbook/gitbook-plugin-fontsettings/buttons.js"></script>
+        
+    
+
+    </body>
+</html>
+
