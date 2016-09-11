@@ -27,7 +27,7 @@ Initialize your project and follow the instructions:
 mkdir myproject && cd myproject && estilo init
 ```
 
-Next: [Color palettes](docs/color-palettes.html)
+Next: [Color palettes](docs/color-palettes.md)
 
 
 ## CLI
