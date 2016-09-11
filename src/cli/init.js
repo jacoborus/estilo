@@ -5,8 +5,6 @@ const inquirer = require('inquirer')
 const mkdirp = require('mkdirp')
 const fs = require('fs')
 const installTemplates = require('./install-templates.js')
-const installAirline = require('./install-airline.js')
-const installLightline = require('./install-lightline.js')
 const chalk = require('chalk')
 const { log } = console
 
@@ -104,10 +102,6 @@ colorschemes:
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
 
   installTemplates(options.templates.concat('base.yml'), function () {
-    installAirline(projectPath, function () {
-      installLightline(projectPath, function () {
-        log(chalk.green.bold('\nYour project is ready'))
-      })
-    })
+    log(chalk.green.bold('\nYour project is ready'))
   })
 }

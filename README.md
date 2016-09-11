@@ -26,20 +26,23 @@ Initialize your project and follow the instructions:
 mkdir myproject && cd myproject && estilo init
 ```
 
+Next: [Color palettes](http://estilo.jacoborus.codes/color-palettes.html)
+
+
 ## CLI
 
 Usage: `estilo [command]`
 
 Commands:
 
-- **init**: Initialize an estilo project in current folder
-- **render**: Render all the colorschemes and themes
-- **add-syntax**: Opens dialog for adding more syntax templates
-- **add-airline**: Opens dialog for adding a new Airline style
-- **add-lightline**: Opens dialog for adding a new Lightline style
+- **`init`**: Initialize an estilo project in current folder
+- **`render`**: Render all the colorschemes and themes
+- **`add-syntax`**: Opens dialog for adding more syntax templates
+- **`add-airline`**: Opens dialog for adding a new Airline style
+- **`add-lightline`**: Opens dialog for adding a new Lightline style
 
 
-## Created with Estilo
+## Colorschemes created with Estilo
 
 - [Tender](https://github.com/jacoborus/tender.vim)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
