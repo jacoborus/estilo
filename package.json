@@ -1,7 +1,7 @@
 {
   "name": "estilo",
-  "version": "0.16.7",
-  "description": "Generate vim color schemes without the hassle",
+  "version": "1.0.0",
+  "description": "Generate vim color schemes, airline and lightline themes",
   "main": "estilo.js",
   "directories": {
     "test": "test"
@@ -19,16 +19,13 @@
     "estilo": "./src/cli/estilo.js"
   },
   "devDependencies": {
-    "gitbook-cli": "^2.3.0",
-    "gitbook-plugin-github": "^2.0.0",
     "rimraf": "^2.5.2",
     "standard": "^7.1.2",
     "tape": "^4.6.0"
   },
   "scripts": {
     "test": "node test/index.js",
-    "linter": "standard src/*.js estilo.js test/*.js",
-    "docs:publish": "rimraf _book && cp -f README.md docs/README.md && gitbook build && cp CNAME _book && cd _book && git init && git commit --allow-empty -m 'update book' && git checkout -b gh-pages && git add . && git commit -am 'update book' && git push git@github.com:jacoborus/estilo gh-pages --force && rm -f ../docs/README.md"
+    "linter": "standard src/*.js estilo.js test/*.js"
   },
   "repository": {
     "type": "git",

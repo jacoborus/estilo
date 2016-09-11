@@ -6,15 +6,13 @@ Estilo
 
 [![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
-**[See documentation](http://estilo.jacoborus.codes)** - **[see repository](https://github.com/jacoborus/estilo)**
-
 
 ![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
 
 
 ## Installation
 
-Estilo is written in pure javascript, so you will need [node.js](https://nodejs.org) installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
+Estilo is written in pure javascript, so you need [node.js](https://nodejs.org) installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
 
 ```sh
 npm install -g estilo
@@ -29,7 +27,7 @@ Initialize your project and follow the instructions:
 mkdir myproject && cd myproject && estilo init
 ```
 
-Next: [Color palettes](http://estilo.jacoborus.codes/color-palettes.html)
+Next: [Color palettes](docs/color-palettes.html)
 
 
 ## CLI
@@ -44,6 +42,14 @@ Commands:
 - **`add-airline`**: Opens dialog for adding a new Airline style
 - **`add-lightline`**: Opens dialog for adding a new Lightline style
 - **`help`**: Show help
+
+
+## Documentation
+
+* [Color palettes](docs/color-palettes.md)
+* [Colorschemes](docs/colorschemes.md)
+* [Airline themes](docs/airline.md)
+* [Lightline themes](docs/lightline.md)
 
 
 ## Colorschemes created with Estilo
