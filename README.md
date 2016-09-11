@@ -9,6 +9,9 @@ Estilo
 **[See documentation](http://estilo.jacoborus.codes)** - **[see repository](https://github.com/jacoborus/estilo)**
 
 
+![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
+
+
 ## Installation
 
 Estilo is written in pure javascript, so you will need [node.js](https://nodejs.org) installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
