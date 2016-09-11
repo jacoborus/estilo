@@ -11,15 +11,6 @@ const defaultPalette = 'myblue: \'#99ccff\''
 
 module.exports = function (projectPath, auto) {
   const folderName = path.basename(projectPath)
-  const templateFiles = fs.readdirSync(path.resolve(__dirname, '../..', 'templates/syntax'))
-  const indexBase = templateFiles.indexOf('base.yml')
-  templateFiles.splice(indexBase, 1)
-  let templateChoices = templateFiles.map(f => {
-    return {
-      name: f.slice(0, -4),
-      value: f
-    }
-  })
 
   const questions = [
     {
@@ -54,12 +45,6 @@ module.exports = function (projectPath, auto) {
       type: 'input',
       name: 'description',
       message: 'Short description:'
-    },
-    {
-      type: 'checkbox',
-      message: 'Select some syntax templates',
-      name: 'templates',
-      choices: templateChoices
     }
   ]
 
@@ -72,8 +57,7 @@ module.exports = function (projectPath, auto) {
       license: 'MIT',
       airline: true,
       lightline: true,
-      description: '',
-      templates: []
+      description: ''
     })
   } else {
     inquirer.prompt(questions).then(function (answers) {
@@ -100,7 +84,7 @@ colorschemes:
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
 
-  installTemplates(options.templates.concat('base.yml'), function () {
+  installTemplates(['base.yml'], function () {
     console.log(chalk.green.bold('\nYour project is ready'))
   })
 }
