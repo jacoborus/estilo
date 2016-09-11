@@ -20,15 +20,11 @@ updateNotifier({
   updateCheckInterval: 1000 * 60 * 60 * 24 // 1 day
 }).notify()
 
-if (!argv._.length) {
-  console.log('No command found')
-  showHelp()
-  process.exit(0)
-}
-
 const command = argv._[0]
 
-if (command === 'render') {
+if (!command || command === 'help') {
+  showHelp()
+} else if (command === 'render') {
   convert(projectPath)
 } else if (command === 'add-syntax') {
   selectSyntax(projectPath)
@@ -39,6 +35,7 @@ if (command === 'render') {
 } else if (command === 'add-lightline') {
   installLightline(projectPath)
 } else {
+  console.log('Command not found')
   showHelp()
 }
 

@@ -40,6 +40,7 @@ Commands:
 - **`add-syntax`**: Opens dialog for adding more syntax templates
 - **`add-airline`**: Opens dialog for adding a new Airline style
 - **`add-lightline`**: Opens dialog for adding a new Lightline style
+- **`help`**: Show help
 
 
 ## Colorschemes created with Estilo
