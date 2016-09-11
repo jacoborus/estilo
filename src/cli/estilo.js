@@ -46,14 +46,11 @@ function showHelp () {
   Commands:
 
     init                Initialize an estilo project in current folder
-
     render              Render all the colorschemes and themes
-
     add-syntax          Opens dialog for adding more syntax templates
-
     add-airline         Opens dialog for adding a new Airline style
-
     add-lightline       Opens dialog for adding a new Lightline style
+    help                Show this help
 `)
 }
 
