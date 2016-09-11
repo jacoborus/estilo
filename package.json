@@ -19,13 +19,12 @@
     "estilo": "./src/cli/estilo.js"
   },
   "devDependencies": {
-    "rimraf": "^2.5.2",
-    "standard": "^7.1.2",
+    "standard": "^8.0.0",
     "tape": "^4.6.0"
   },
   "scripts": {
-    "test": "node test/index.js",
-    "linter": "standard src/*.js estilo.js test/*.js"
+    "test": "npm run linter && node test/index.js",
+    "linter": "standard src/*.js src/cli/*.js test/*.js"
   },
   "repository": {
     "type": "git",
