@@ -6,6 +6,7 @@ const renderInfo = require('../src/print-info.js')
 const expected = `"
 " schemeTest v2.1.0
 " description d
+" url u
 " author: author a
 " license: MIT
 "

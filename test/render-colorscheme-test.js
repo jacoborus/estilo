@@ -6,6 +6,7 @@ const renderColorscheme = require('../src/render-colorscheme.js')
 const testStr = `"
 " Aname v2.1.0
 " description d
+" url u
 " author: author a
 " license: MIT
 "

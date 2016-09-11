@@ -6,7 +6,6 @@ const mkdirp = require('mkdirp')
 const fs = require('fs')
 const installTemplates = require('./install-templates.js')
 const chalk = require('chalk')
-const { log } = console
 
 const defaultPalette = 'myblue: \'#99ccff\''
 
@@ -102,6 +101,6 @@ colorschemes:
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
 
   installTemplates(options.templates.concat('base.yml'), function () {
-    log(chalk.green.bold('\nYour project is ready'))
+    console.log(chalk.green.bold('\nYour project is ready'))
   })
 }
