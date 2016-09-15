@@ -8,7 +8,7 @@ Open `estilo/syntax/base.yml` (and then the other templates inside the folder) w
 
 - first value is the foreground
 - second value is the background
-- the third value is for text styles, and you should write just the first letter of every style (b: bold, r: reverse, u: underline, i: italic)
+- the third value is for text styles, and you should write just the key letter of every style (b: **b**old, r: **r**everse, u: **u**nderline, i: **i**talic, c: under**c**url)
 - a hyphen (`-`) or an ommited value will be rendered as `NONE`
 - a dot (`.`) will not render this foreground/background/style
 
