@@ -17,5 +17,4 @@ elmAlias: '' # Keyword
 elmOperator: '' # Operator
 elmType: '' # Type
 elmNumberType: '' # Type
-elmDelimiter: '' # Delimiter
 elmBraces: '' # Delimiter
