@@ -16,14 +16,14 @@ test('getHilinks: throws on missing data', t => {
 
 test('getHilinks: format hilinks', t => {
   const templates = {
-    normal: '#bbddff . biruc'
+    normal: '#bbddff . birucs'
   }
   const hilinks = compileColorscheme(templates, palette)
 
   const normal = hilinks.normal
   t.is(normal.fore, '#bbddff', 'foreground')
   t.is(normal.back, '.', 'background')
-  t.is(normal.ui, 'bold,italic,reverse,underline, undercurl', 'ui')
+  t.is(normal.ui, 'bold,italic,reverse,underline,undercurl,standout', 'ui')
 
   t.end()
 })
