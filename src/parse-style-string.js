@@ -1,7 +1,7 @@
 'use strict'
 
 const isHexColor = require('./is-hex-color.js')
-const uis = new Set(['u', 'b', 'r', 'i'])
+const uis = new Set(['u', 'b', 'r', 'i', 'c'])
 
 function getColorCode (color, colors, part, hiName) {
   // return false if color is `NONE`

@@ -5,7 +5,8 @@ const uis = {
   u: 'underline',
   b: 'bold',
   i: 'italic',
-  r: 'reverse'
+  r: 'reverse',
+  c: 'undercurl'
 }
 
 function parseui (raw, hiName) {
