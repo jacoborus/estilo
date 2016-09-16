@@ -12,7 +12,7 @@ Estilo
 
 ## Installation
 
-Estilo is written in pure javascript, so you need [node.js](https://nodejs.org) installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
+Estilo is written in pure javascript, so you need [node.js v6](https://nodejs.org) or higher installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
 
 ```sh
 npm install -g estilo
