@@ -1,6 +1,6 @@
 {
   "name": "estilo",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Generate vim color schemes, airline and lightline themes",
   "main": "estilo.js",
   "directories": {

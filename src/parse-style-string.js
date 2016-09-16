@@ -61,7 +61,8 @@ function parseStyleString (str, palette, name) {
   return {
     fore: getColorCode(first, palette, 'foreground', name),
     back: getColorCode(props[1], palette, 'background', name),
-    ui: getUI(props[2], name)
+    ui: getUI(props[2], name),
+    curlcolor: getColorCode(props[3], palette, 'guisp', name)
   }
 }
 

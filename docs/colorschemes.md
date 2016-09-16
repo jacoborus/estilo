@@ -6,9 +6,10 @@ Colorschemes
 
 Open `estilo/syntax/base.yml` (and then the other templates inside the folder) with vim and fill its definitions with these rules:
 
-- first value is the foreground
-- second value is the background
+- first value is the foreground (`guifg`)
+- second value is the background (`guibg`)
 - the third value is for text styles, and you should write just the key letter of every style (b: **b**old, r: **r**everse, u: **u**nderline, i: **i**talic, c: under**c**url)
+- fourth value is the undercurl color (`guisp`, only for gVim)
 - a hyphen (`-`) or an ommited value will be rendered as `NONE`
 - a dot (`.`) will not render this foreground/background/style
 

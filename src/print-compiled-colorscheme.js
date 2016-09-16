@@ -24,6 +24,11 @@ function printTextStyle (ui) {
   return ` gui=${ui} cterm=${ui}`
 }
 
+function printCurlColor (color) {
+  if (!color || color === '.') return ''
+  return ` guisp=${color}`
+}
+
 module.exports = function (hilinks) {
   let out = ''
   Object.keys(hilinks).forEach(k => {
@@ -36,6 +41,7 @@ module.exports = function (hilinks) {
         printForeground(hi.fore) +
         printBackground(hi.back) +
         printTextStyle(hi.ui) +
+        printCurlColor(hi.curlcolor) +
         '\n'
     }
   })
