@@ -1,4 +1,4 @@
-#!/usr/bin/node --harmony
+#!/usr/bin/node
 
 
 'use strict'
