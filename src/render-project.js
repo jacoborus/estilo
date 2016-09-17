@@ -114,6 +114,6 @@ function renderStatusBars (project, statusName) {
     const fileName = t.name + '.vim'
     const filePath = path.resolve(project.path, paths[statusName], fileName)
     fs.writeFileSync(filePath, rendered)
-    log(chalk.cyan(statusName, fileName), '...', chalk.green.bold('OK'))
+    log(statusName, chalk.cyan(fileName), '...', chalk.green.bold('OK'))
   })
 }

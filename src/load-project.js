@@ -30,10 +30,10 @@ module.exports = function (folder, cb) {
     info: pkg
   }))
   .then(joinTemplates)
-  // load palettes
   .then(loadPalettes)
   .then(loadStatusStyles('airline'))
   .then(loadStatusStyles('lightline'))
+  .then(loadMustaches)
   // success message
   .then(project => { cb(project) })
   .catch(err => {
@@ -88,6 +88,24 @@ function joinTemplates (project) {
   })
   project.syntax = syntax
   return project
+}
+
+function loadMustaches (project) {
+  const folder = path.resolve(__dirname, '../templates/mustaches')
+  const mustaches = project.mustaches = {}
+  project.palettes = {}
+  return new Promise((resolve, reject) => {
+    fs.readdir(folder, (err, names) => {
+      if (err) reject('Error loading mustaches folder')
+      else {
+        names.forEach(n => {
+          const id = path.basename(n, '.hbs')
+          mustaches[id] = fs.readFileSync(path.resolve(folder, n))
+        })
+        resolve(project)
+      }
+    })
+  })
 }
 
 function loadPalettes (project) {
