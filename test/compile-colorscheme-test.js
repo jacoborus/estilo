@@ -6,7 +6,7 @@ const palette = {
   azul: '#bbddff'
 }
 
-test('getHilinks: throws on missing data', t => {
+test('compile colorscheme: throws on missing data', t => {
   t.throws(
     () => compileColorscheme(),
     /wrong highlights object/
@@ -14,21 +14,22 @@ test('getHilinks: throws on missing data', t => {
   t.end()
 })
 
-test('getHilinks: format hilinks', t => {
+test('compile colorscheme: format hilinks', t => {
   const templates = {
     normal: '#bbddff . birucs'
   }
   const hilinks = compileColorscheme(templates, palette)
 
   const normal = hilinks.normal
-  t.is(normal.fore, '#bbddff', 'foreground')
-  t.is(normal.back, '.', 'background')
+  t.is(normal.fore[0], '#bbddff', 'hex foreground')
+  t.is(normal.fore[1], 153, 'term foreground')
+  t.is(normal.back, false, 'background')
   t.is(normal.ui, 'bold,italic,reverse,underline,undercurl,standout', 'ui')
 
   t.end()
 })
 
-test('getHilinks: link styles', t => {
+test('compile colorscheme: link styles', t => {
   const templates = {
     normal: '@other'
   }

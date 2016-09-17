@@ -1,22 +1,31 @@
 'use strict'
 
 const test = require('tape')
-const pss = require('../src/parse-style-string.js')
-const gcc = pss.getColorCode
-const getUI = pss.getUI
+const ccs = require('../src/compile-colorscheme.js')
+const gcc = ccs.getColorCode
+const getUI = ccs.getUI
+const pss = ccs.parseStyleString
 
 test('getColorCode:', t => {
-  const colors = {
-    azul: '#bbddff'
+  const palette = {
+    azul: ['#bbddff', 333]
   }
 
-  t.is(gcc(''), false, 'NONE')
-  t.is(gcc('-'), false, 'NONE')
-  t.is(gcc('.'), '.', 'empty')
-  t.is(gcc('azul', colors), '#bbddff', 'from colors archive')
-  t.is('#aabbcc', '#aabbcc', 'real hexadecimal color')
+  t.is(gcc(), false, 'empty')
+
+  t.is(gcc('-')[0], 'NONE', 'ommited (hex)')
+  t.is(gcc('-')[1], 'NONE', 'ommited (term)')
+
+  t.is(gcc('.'), false, 'empty dot (.)')
+
+  t.is(gcc('azul', palette)[0], '#bbddff', 'hex from palette')
+  t.is(gcc('azul', palette)[1], 333, 'term from palette')
+
+  t.is(gcc('#aabbcc', palette)[0], '#aabbcc', 'hex from hex value')
+  t.is(gcc('#aabbcc', palette)[1], 146, 'term from hex value')
+
   t.throws(
-    () => gcc(3, colors, 'part', 'schemaName'),
+    () => gcc(3, palette, 'part', 'schemaName'),
     /wrong part in schemaName/,
     'throws on not valid color'
   )
@@ -24,19 +33,19 @@ test('getColorCode:', t => {
 })
 
 test('getUI', t => {
-  t.is(getUI(''), false, 'empty value')
-  t.is(getUI(false), false, 'false value')
+  t.is(getUI(), false, 'empty value (undefined)')
+  t.is(getUI('.'), false, 'empty value (dot)')
   t.throws(
     () => getUI(1, 'schemaName'),
     /wrong ui in schemaName/,
     'throws on bad type'
   )
   t.is(getUI('NONE'), 'NONE', 'NONE')
-  t.is(getUI('br'), 'br', 'valid formatted')
-  t.is(getUI('bu'), 'bu', 'valid formatted')
-  t.is(getUI('uir'), 'uir', 'valid formatted')
-  t.is(getUI('ubri'), 'ubri', 'valid formatted')
-  t.is(getUI('.'), '.', 'skip style')
+  t.is(getUI('br'), 'bold,reverse', 'valid formatted')
+  t.is(getUI('bu'), 'bold,underline', 'valid formatted')
+  t.is(getUI('uir'), 'underline,italic,reverse', 'valid formatted')
+  t.is(getUI('c'), 'undercurl', 'valid formatted')
+
   t.throws(
     () => getUI('aui', 'schemaName'),
     /wrong ui in schemaName/,
@@ -46,29 +55,35 @@ test('getUI', t => {
 })
 
 test('parseString:', t => {
-  let colors = {
-    rojo: '#ff5555'
+  let palette = {
+    rojo: ['#ff5555', 203]
   }
 
   let noValue = pss('     ')
   t.is(Object.keys(noValue).length, 0, 'empty schema')
 
-  let full = pss('#bbddff rojo bi', colors)
-  t.is(full.fore, '#bbddff', 'full foreground')
-  t.is(full.back, '#ff5555', 'full background')
-  t.is(full.ui, 'bi', 'full gui')
+  let full = pss('#bbddff rojo bi', palette)
+  t.is(full.fore[0], '#bbddff', 'full hex foreground')
+  t.is(full.fore[1], 153, 'full term foreground')
+  t.is(full.back[0], '#ff5555', 'full hex background')
+  t.is(full.back[1], 203, 'full term background')
+  t.is(full.ui, 'bold,italic', 'full gui')
+  t.is(full.guisp, false, 'full guisp')
 
-  let two = pss('- rojo', colors)
-  t.is(two.fore, false, 'two foreground')
-  t.is(two.back, '#ff5555', 'two background')
+  let two = pss('- rojo', palette)
+  t.is(two.fore[0], 'NONE', 'two hex foreground')
+  t.is(two.fore[1], 'NONE', 'two hex foreground')
+  t.is(two.back[0], '#ff5555', 'two hex background')
+  t.is(two.back[1], 203, 'two hex background')
   t.is(two.ui, false, 'two gui')
+  t.is(two.guisp, false, 'two guisp')
 
-  let empty = pss('. . bu', colors)
-  t.is(empty.fore, '.', 'empty foreground')
-  t.is(empty.back, '.', 'empty background')
-  t.is(empty.ui, 'bu', 'two gui')
+  let empty = pss('. . bu', palette)
+  t.is(empty.fore, false, 'empty with foreground')
+  t.is(empty.back, false, 'empty with background')
+  t.is(empty.ui, 'bold,underline', 'empty with gui')
 
-  let linked = pss('@other', colors)
+  let linked = pss('@other', palette)
   t.is(linked.link, 'other', 'linked link')
   t.notOk(linked.fore, 'linked foreground')
   t.notOk(linked.back, 'linked background')
