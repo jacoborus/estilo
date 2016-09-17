@@ -1,6 +1,7 @@
 'use strict'
 
 const isHexColor = require('./is-hex-color.js')
+const hexterm = require('hexterm')
 
 /**
  * Convert all string values from a given
@@ -9,27 +10,16 @@ const isHexColor = require('./is-hex-color.js')
  * @param {Object} template raw airline template
  * @returns {Object} transformed airline template
  */
-module.exports = function (template, colors) {
+module.exports = function (template, colors, statusName) {
   const out = {}
   Object.keys(template).forEach(k => {
     let arr = template[k].split(' ').filter(x => x.trim())
-    out[k] = useHexColors(arr, colors)
+    out[k] = arr.map(c => {
+      if (isHexColor(c)) return [c, hexterm(c)]
+      let code = colors[c]
+      if (!code) throw new Error(`Wrong color in ${statusName} template: ${c}`)
+      return code
+    })
   })
   return out
-}
-
-/**
- * useHexColors
- *
- * @param {Array} codes list of two color names
- * @param {Object} colors dictionary with colors
- * @returns {Array} colors transformed to hex values
- */
-function useHexColors (codes, colors) {
-  return codes.map(c => {
-    if (isHexColor(c)) return c
-    let code = colors[c]
-    if (!code) throw new Error(`Wrong color in lightline template: ${c}`)
-    return code
-  })
 }

@@ -2,7 +2,7 @@
 
 const test = require('tape')
 const fs = require('../src/super-fs')
-const { resolve } = require('path')
+const resolve = require('path').resolve
 const convert = require('../src/convert.js')
 
 function testStr (opts) {

@@ -5,7 +5,7 @@ const inquirer = require('inquirer')
 const fs = require('fs')
 const mkdirp = require('mkdirp')
 const chalk = require('chalk')
-const { log } = console
+const log = console.log
 
 const emptyTemplate = `normal1: ''
 normal2: ''

@@ -1,0 +1,28 @@
+if exists('g:{{pkgName}}_airline') && g:{{pkgName}}_airline
+  let g:airline#themes#{{schemeName}}#palette = {}
+
+  let s:normal1 = [ "{{normal1[0][0]}}", "{{normal1[1][0]}}", {{normal1[0][1]}}, {{normal1[1][1]}} ]
+  let s:normal2 = [ "{{normal2[0][0]}}", "{{normal2[1][0]}}", {{normal2[0][1]}}, {{normal2[1][1]}} ]
+  let s:normal3 = [ "{{normal3[0][0]}}", "{{normal3[1][0]}}", {{normal3[0][1]}}, {{normal3[1][1]}} ]
+  let g:airline#themes#{{schemeName}}#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)
+
+  let s:insert1 = [ "{{insert1[0][0]}}", "{{insert1[1][0]}}", {{insert1[0][1]}}, {{insert1[1][1]}} ]
+  let s:insert2 = [ "{{insert2[0][0]}}", "{{insert2[1][0]}}", {{insert2[0][1]}}, {{insert2[1][1]}} ]
+  let s:insert3 = [ "{{insert3[0][0]}}", "{{insert3[1][0]}}", {{insert3[0][1]}}, {{insert3[1][1]}} ]
+  let g:airline#themes#{{schemeName}}#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)
+
+  let s:replace1 = [ "{{replace1[0][0]}}", "{{replace1[1][0]}}", {{replace1[0][1]}}, {{replace1[1][1]}} ]
+  let s:replace2 = [ "{{replace2[0][0]}}", "{{replace2[1][0]}}", {{replace2[0][1]}}, {{replace2[1][1]}} ]
+  let s:replace3 = [ "{{replace3[0][0]}}", "{{replace3[1][0]}}", {{replace3[0][1]}}, {{replace3[1][1]}} ]
+  let g:airline#themes#{{schemeName}}#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)
+
+  let s:visual1 = [ "{{visual1[0][0]}}", "{{visual1[1][0]}}", {{visual1[0][1]}}, {{visual1[1][1]}} ]
+  let s:visual2 = [ "{{visual2[0][0]}}", "{{visual2[1][0]}}", {{visual2[0][1]}}, {{visual2[1][1]}} ]
+  let s:visual3 = [ "{{visual3[0][0]}}", "{{visual3[1][0]}}", {{visual3[0][1]}}, {{visual3[1][1]}} ]
+  let g:airline#themes#{{schemeName}}#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)
+
+  let s:inactive1 = [ "{{inactive1[0][0]}}", "{{inactive1[1][0]}}", {{inactive1[0][1]}}, {{inactive1[1][1]}} ]
+  let s:inactive2 = [ "{{inactive2[0][0]}}", "{{inactive2[1][0]}}", {{inactive2[0][1]}}, {{inactive2[1][1]}} ]
+  let s:inactive3 = [ "{{inactive3[0][0]}}", "{{inactive3[1][0]}}", {{inactive3[0][1]}}, {{inactive3[1][1]}} ]
+  let g:airline#themes#{{schemeName}}#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)
+endif

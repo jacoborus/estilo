@@ -3,7 +3,7 @@
 const fs = require('../super-fs')
 const path = require('path')
 const chalk = require('chalk')
-const { log } = console
+const log = console.log
 
 module.exports = function (templateNames, callback) {
   new Promise((resolve, reject) => {
