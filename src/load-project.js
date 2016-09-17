@@ -100,7 +100,7 @@ function loadMustaches (project) {
       else {
         names.forEach(n => {
           const id = path.basename(n, '.hbs')
-          mustaches[id] = fs.readFileSync(path.resolve(folder, n))
+          mustaches[id] = fs.readFileSync(path.resolve(folder, n), 'utf8')
         })
         resolve(project)
       }
@@ -110,7 +110,7 @@ function loadMustaches (project) {
 
 function loadPalettes (project) {
   const palettesFolder = path.resolve(project.path, 'estilo', 'palettes')
-  project.palettes = {}
+  project.rawPalettes = {}
   return new Promise((resolve, reject) => {
     fs.readdir(palettesFolder, (err, names) => {
       if (err) reject('Error loading palettes folder')
@@ -118,7 +118,7 @@ function loadPalettes (project) {
         names.forEach(n => {
           const id = path.basename(n, '.yml')
           const raw = fs.readFileSync(path.resolve(palettesFolder, n))
-          project.palettes[id] = yaml.safeLoad(raw)
+          project.rawPalettes[id] = yaml.safeLoad(raw)
         })
         resolve(project)
       }
@@ -126,10 +126,11 @@ function loadPalettes (project) {
   })
 }
 
-function loadStatusStyles (status) {
+function loadStatusStyles (statusName) {
   return function (project) {
-    const folder = path.resolve(project.path, 'estilo', status)
-    project.airlineStyles = {}
+    const folder = path.resolve(project.path, 'estilo', statusName)
+    project.statusStyles = project.statusStyles || {}
+    const styles = project.statusStyles[statusName] = {}
     return new Promise((resolve, reject) => {
       fs.readdir(folder, (err, names) => {
         if (err) resolve(project)
@@ -137,7 +138,7 @@ function loadStatusStyles (status) {
           names.forEach(n => {
             const id = path.basename(n, '.yml')
             const raw = fs.readFileSync(path.resolve(folder, n))
-            project.statusStyles[status][id] = yaml.safeLoad(raw)
+            styles[id] = yaml.safeLoad(raw)
           })
           resolve(project)
         }

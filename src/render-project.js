@@ -18,31 +18,28 @@ const paths = {
 }
 
 module.exports = function (project) {
-  return new Promise((resolve, reject) => {
-    const info = project.info
-    const rawPalettes = project.rawPalettes
-    const colorschemes = info.colorschemes
+  const info = project.info
+  const rawPalettes = project.rawPalettes
+  const colorschemes = info.colorschemes
 
-    // compile color palettes
-    const palettes = project.palettes = {}
-    Object.keys(rawPalettes).forEach(k => {
-      palettes[k] = compilePalette(rawPalettes[k], k)
-    })
-
-    if (colorschemes && colorschemes.length) {
-      renderColorschemes(project)
-    }
-
-    if (info.airline && info.airline.length) {
-      renderStatusBars(project, 'airline')
-    }
-
-    if (info.lightline && info.lightline.length) {
-      renderStatusBars(project, 'lightline')
-    }
-
-    resolve(project)
+  // compile color palettes
+  const palettes = project.palettes = {}
+  Object.keys(rawPalettes).forEach(k => {
+    palettes[k] = compilePalette(rawPalettes[k], k)
   })
+
+  if (colorschemes && colorschemes.length) {
+    renderColorschemes(project)
+  }
+
+  if (info.airline && info.airline.length) {
+    renderStatusBars(project, 'airline')
+  }
+
+  if (info.lightline && info.lightline.length) {
+    renderStatusBars(project, 'lightline')
+  }
+  console.log('okok')
 }
 
 function renderColorschemes (project) {
@@ -71,7 +68,13 @@ function renderColorschemes (project) {
   mkdirp.sync(path.resolve(project.path, 'colors'))
   // compile colorschemes
   colorschemes.forEach(c => {
-    const data = compileColorscheme(project.syntax, palettes[c.palette])
+    const data = {
+      c: compileColorscheme(project.syntax, palettes[c.palette]),
+      date: new Date(),
+      theme: c,
+      pkg: project.pkg
+    }
+
     const rendered = render(data)
     // write colorschemes to disk
     const fileName = c.name + '.vim'
@@ -103,14 +106,14 @@ function renderStatusBars (project, statusName) {
     }
   })
 
-  // render colorschemes
+  // render
   let render = handlebars.compile(project.mustaches[statusName])
   mkdirp.sync(path.resolve(project.path, 'plugin'))
   themes.forEach(t => {
     const palette = palettes[t.palette]
     const data = compileStatus(styles[t.style], palette, statusName)
     const rendered = render(data)
-    // write colorschemes to disk
+    // write themes to disk
     const fileName = t.name + '.vim'
     const filePath = path.resolve(project.path, paths[statusName], fileName)
     fs.writeFileSync(filePath, rendered)

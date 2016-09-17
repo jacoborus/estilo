@@ -27,7 +27,7 @@ const command = argv._[0]
 if (!command || command === 'help') {
   showHelp()
 } else if (command === 'render') {
-  loadProject(projectPath, project => renderProject(project))
+  loadProject(projectPath, renderProject)
 } else if (command === 'add-syntax') {
   selectSyntax(projectPath)
 } else if (command === 'init') {
