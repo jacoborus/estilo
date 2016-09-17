@@ -12,6 +12,11 @@ const compileColorscheme = require('./compile-colorscheme.js')
 const compilePalette = require('./compile-palette.js')
 const compileStatus = require('./compile-status.js')
 
+const paths = {
+  airline: 'autoload/airline/themes',
+  lightline: 'autoload/lightline/colorscheme'
+}
+
 module.exports = function (project) {
   return new Promise((resolve, reject) => {
     const info = project.info
@@ -19,7 +24,7 @@ module.exports = function (project) {
     const colorschemes = info.colorschemes
 
     // compile color palettes
-    const palettes = {}
+    const palettes = project.palettes = {}
     Object.keys(rawPalettes).forEach(k => {
       palettes[k] = compilePalette(rawPalettes[k], k)
     })
@@ -58,7 +63,7 @@ function renderColorschemes (project) {
       throw new Error(c.name + ' colorscheme has not a color palette')
     }
     if (!palettes[c.palette]) {
-      throw new Error('Colorscheme: ' + c.name + ' missing palette: ' + c.palette)
+      throw new Error('Missing palette: ' + c.name + ' - ' + c.palette)
     }
   })
 
@@ -66,10 +71,12 @@ function renderColorschemes (project) {
   mkdirp.sync(path.resolve(project.path, 'colors'))
   // compile colorschemes
   colorschemes.forEach(c => {
-    const rendered = render(compileColorscheme(project.syntax, palettes[c.palette]))
+    const data = compileColorscheme(project.syntax, palettes[c.palette])
+    const rendered = render(data)
     // write colorschemes to disk
-    fs.writeFileSync(path.resolve(project.path, 'colors', c.name + '.vim'), rendered)
-    log(chalk.cyan(c.name, 'colorscheme'), ' ...', chalk.green.bold('OK'))
+    const fileName = c.name + '.vim'
+    fs.writeFileSync(path.resolve(project.path, 'colors', fileName), rendered)
+    log('colorscheme:', chalk.cyan(fileName), '...', chalk.green.bold('OK'))
   })
 }
 
@@ -92,7 +99,7 @@ function renderStatusBars (project, statusName) {
       throw new Error(t.name + ' lightline theme has not a color palette')
     }
     if (!palettes[t.palette]) {
-      throw new Error(t.name + 'lightline theme, missing palette: ' + t.palette)
+      throw new Error('Missing palette: ' + statusName + ' - ' + t.name)
     }
   })
 
@@ -100,10 +107,13 @@ function renderStatusBars (project, statusName) {
   let render = handlebars.compile(project.mustaches[statusName])
   mkdirp.sync(path.resolve(project.path, 'plugin'))
   themes.forEach(t => {
-    const rendered = render(compileStatus(styles[t.style], palettes[t.palette], statusName))
+    const palette = palettes[t.palette]
+    const data = compileStatus(styles[t.style], palette, statusName)
+    const rendered = render(data)
     // write colorschemes to disk
-    const filePath = path.resolve(project.path, 'plugin', t.name + '-' + statusName + '.vim')
+    const fileName = t.name + '.vim'
+    const filePath = path.resolve(project.path, paths[statusName], fileName)
     fs.writeFileSync(filePath, rendered)
-    log(chalk.cyan(t.name, statusName, 'theme'), '...', chalk.green.bold('OK'))
+    log(chalk.cyan(statusName, fileName), '...', chalk.green.bold('OK'))
   })
 }
