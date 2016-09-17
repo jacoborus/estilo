@@ -33,7 +33,7 @@ test('getColorCode:', t => {
 })
 
 test('getUI', t => {
-  t.is(getUI(), false, 'empty value (undefined)')
+  t.is(getUI(), 'NONE', 'empty value (undefined)')
   t.is(getUI('.'), false, 'empty value (dot)')
   t.throws(
     () => getUI(1, 'schemaName'),
@@ -75,7 +75,7 @@ test('parseString:', t => {
   t.is(two.fore[1], 'NONE', 'two hex foreground')
   t.is(two.back[0], '#ff5555', 'two hex background')
   t.is(two.back[1], 203, 'two hex background')
-  t.is(two.ui, false, 'two gui')
+  t.is(two.ui, 'NONE', 'two gui')
   t.is(two.guisp, false, 'two guisp')
 
   let empty = pss('. . bu', palette)

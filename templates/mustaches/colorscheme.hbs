@@ -16,8 +16,8 @@ if has("gui_running")
   set background={{ theme.background }}
 endif
 
-{{#each c}}
-  {{#if link}}hi link {{@key}} {{link}}
+{{#each c~}}
+  {{#if link}}hi link {{@key}} {{link~}}
   {{~^~}}hi {{ @key }}
     {{~#if fore}} guifg={{fore.[0]}} ctermfg={{fore.[1]}}{{/if}}
     {{~#if back}} guibg={{back.[0]}} ctermbg={{back.[1]}}{{/if}}

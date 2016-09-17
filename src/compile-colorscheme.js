@@ -44,7 +44,8 @@ function getColorCode (color, palette, part, hiName) {
 
 function getUI (ui, hiName) {
   // no defined gui
-  if (!ui || ui === '.') return false
+  if (ui === '.') return false
+  if (!ui) return 'NONE'
   // bad formatted gui
   if (typeof ui !== 'string') {
     throw new Error('wrong ui in ' + hiName)
