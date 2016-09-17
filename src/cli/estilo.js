@@ -4,7 +4,8 @@
 'use strict'
 
 const resolve = require('path').resolve
-const convert = require('../convert.js')
+const loadProject = require('../load-project.js')
+const renderProject = require('../render-project.js')
 const argv = require('minimist')(process.argv.slice(2))
 const selectSyntax = require('./select-syntax.js')
 const init = require('./init.js')
@@ -26,7 +27,7 @@ const command = argv._[0]
 if (!command || command === 'help') {
   showHelp()
 } else if (command === 'render') {
-  convert(projectPath)
+  loadProject(projectPath, project => renderProject(project))
 } else if (command === 'add-syntax') {
   selectSyntax(projectPath)
 } else if (command === 'init') {
