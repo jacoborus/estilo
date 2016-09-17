@@ -72,7 +72,7 @@ function renderColorschemes (project) {
       c: compileColorscheme(project.syntax, palettes[c.palette]),
       date: new Date(),
       theme: c,
-      pkg: project.pkg
+      pkg: project.info
     }
 
     const rendered = render(data)
@@ -108,10 +108,15 @@ function renderStatusBars (project, statusName) {
 
   // render
   let render = handlebars.compile(project.mustaches[statusName])
-  mkdirp.sync(path.resolve(project.path, 'plugin'))
+  mkdirp.sync(path.resolve(project.path, paths[statusName]))
   themes.forEach(t => {
     const palette = palettes[t.palette]
-    const data = compileStatus(styles[t.style], palette, statusName)
+    const compiledData = compileStatus(styles[t.style], palette, statusName)
+    const data = Object.assign(compiledData, {
+      date: new Date(),
+      theme: t,
+      pkg: project.info
+    })
     const rendered = render(data)
     // write themes to disk
     const fileName = t.name + '.vim'
