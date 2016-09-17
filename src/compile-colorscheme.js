@@ -28,9 +28,9 @@ function parseui (raw, hiName) {
 
 function getColorCode (color, palette, part, hiName) {
   // return false if empty color
-  if (!color || color === '.') return false
+  if (color === '.') return false
   // return false if color is `NONE`
-  if (color === '-') return ['NONE', 'NONE']
+  if (!color || color === '-') return ['NONE', 'NONE']
   // return custom color if colorname is in palette
   const c = palette[color]
   if (c) return c

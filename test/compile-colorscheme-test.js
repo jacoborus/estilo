@@ -11,7 +11,7 @@ test('getColorCode:', t => {
     azul: ['#bbddff', 333]
   }
 
-  t.is(gcc(), false, 'empty')
+  t.is(gcc()[0], 'NONE', 'empty')
 
   t.is(gcc('-')[0], 'NONE', 'ommited (hex)')
   t.is(gcc('-')[1], 'NONE', 'ommited (term)')
