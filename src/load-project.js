@@ -2,7 +2,6 @@
 
 const path = require('path')
 const fs = require('./super-fs')
-const renderProject = require('./render-project.js')
 const yaml = require('js-yaml')
 
 /**
@@ -31,14 +30,12 @@ module.exports = function (folder, cb) {
     info: pkg
   }))
   .then(joinTemplates)
-  // load palettes
   .then(loadPalettes)
-  .then(loadAirlineStyles)
-  .then(loadLightlineStyles)
-  // render schemes
-  .then(renderProject)
+  .then(loadStatusStyles('airline'))
+  .then(loadStatusStyles('lightline'))
+  .then(loadMustaches)
   // success message
-  .then(cb)
+  .then(project => { cb(project) })
   .catch(err => {
     console.log('Error:\n')
     console.log(err)
@@ -53,8 +50,9 @@ module.exports = function (folder, cb) {
  */
 function getYmlsInsideFolder (folderPath) {
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(folderPath)) reject('Cant\' find syntax templates folder: ' + folderPath)
-    else {
+    if (!fs.existsSync(folderPath)) {
+      reject('Cant\' find syntax templates folder: ' + folderPath)
+    } else {
       fs.readdir(folderPath, (err, data) => {
         if (err) reject('Error reading syntax templates folder: ' + folderPath)
         else {
@@ -92,9 +90,27 @@ function joinTemplates (project) {
   return project
 }
 
+function loadMustaches (project) {
+  const folder = path.resolve(__dirname, '../templates/mustaches')
+  const mustaches = project.mustaches = {}
+  project.palettes = {}
+  return new Promise((resolve, reject) => {
+    fs.readdir(folder, (err, names) => {
+      if (err) reject('Error loading mustaches folder')
+      else {
+        names.forEach(n => {
+          const id = path.basename(n, '.hbs')
+          mustaches[id] = fs.readFileSync(path.resolve(folder, n), 'utf8')
+        })
+        resolve(project)
+      }
+    })
+  })
+}
+
 function loadPalettes (project) {
   const palettesFolder = path.resolve(project.path, 'estilo', 'palettes')
-  project.palettes = {}
+  project.rawPalettes = {}
   return new Promise((resolve, reject) => {
     fs.readdir(palettesFolder, (err, names) => {
       if (err) reject('Error loading palettes folder')
@@ -102,7 +118,7 @@ function loadPalettes (project) {
         names.forEach(n => {
           const id = path.basename(n, '.yml')
           const raw = fs.readFileSync(path.resolve(palettesFolder, n))
-          project.palettes[id] = yaml.safeLoad(raw)
+          project.rawPalettes[id] = yaml.safeLoad(raw)
         })
         resolve(project)
       }
@@ -110,38 +126,23 @@ function loadPalettes (project) {
   })
 }
 
-function loadAirlineStyles (project) {
-  const airlineFolder = path.resolve(project.path, 'estilo', 'airline')
-  project.airlineStyles = {}
-  return new Promise((resolve, reject) => {
-    fs.readdir(airlineFolder, (err, names) => {
-      if (err) resolve(project)
-      else {
-        names.forEach(n => {
-          const id = path.basename(n, '.yml')
-          const raw = fs.readFileSync(path.resolve(airlineFolder, n))
-          project.airlineStyles[id] = yaml.safeLoad(raw)
-        })
-        resolve(project)
-      }
+function loadStatusStyles (statusName) {
+  return function (project) {
+    const folder = path.resolve(project.path, 'estilo', statusName)
+    project.statusStyles = project.statusStyles || {}
+    const styles = project.statusStyles[statusName] = {}
+    return new Promise((resolve, reject) => {
+      fs.readdir(folder, (err, names) => {
+        if (err) resolve(project)
+        else {
+          names.forEach(n => {
+            const id = path.basename(n, '.yml')
+            const raw = fs.readFileSync(path.resolve(folder, n))
+            styles[id] = yaml.safeLoad(raw)
+          })
+          resolve(project)
+        }
+      })
     })
-  })
-}
-
-function loadLightlineStyles (project) {
-  const llFolder = path.resolve(project.path, 'estilo', 'lightline')
-  project.lightlineStyles = {}
-  return new Promise((resolve, reject) => {
-    fs.readdir(llFolder, (err, names) => {
-      if (err) resolve(project)
-      else {
-        names.forEach(n => {
-          const id = path.basename(n, '.yml')
-          const raw = fs.readFileSync(path.resolve(llFolder, n))
-          project.lightlineStyles[id] = yaml.safeLoad(raw)
-        })
-        resolve(project)
-      }
-    })
-  })
+  }
 }
