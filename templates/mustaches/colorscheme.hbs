@@ -12,9 +12,7 @@ hi clear
 if exists("syntax_on")
   syntax reset
 endif
-if has("gui_running")
-  set background={{ theme.background }}
-endif
+set background={{ theme.background }}
 
 {{#each c~}}
   {{#if link}}hi link {{@key}} {{link~}}
