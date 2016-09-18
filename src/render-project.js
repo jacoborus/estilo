@@ -13,6 +13,7 @@ const compilePalette = require('./compile-palette.js')
 const compileStatus = require('./compile-status.js')
 const dateFormat = require('date-format')
 const now = dateFormat('yyyy/MM/dd hh:mm', new Date())
+const estiloVersion = require(path.resolve(__dirname, '../package.json')).version
 
 const paths = {
   airline: 'autoload/airline/themes',
@@ -74,7 +75,8 @@ function renderColorschemes (project) {
       c: compileColorscheme(project.syntax, palettes[c.palette]),
       date: now,
       theme: c,
-      pkg: project.info
+      pkg: project.info,
+      estiloVersion: estiloVersion
     }
 
     const rendered = render(data)
@@ -117,7 +119,8 @@ function renderStatusBars (project, statusName) {
     const data = Object.assign(compiledData, {
       date: now,
       theme: t,
-      pkg: project.info
+      pkg: project.info,
+      estiloVersion: estiloVersion
     })
     const rendered = render(data)
     // write themes to disk
