@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "chalk": "^1.1.3",
+    "date-format": "0.0.2",
     "handlebars": "^4.0.5",
     "hexterm": "^1.2.0",
     "inquirer": "^1.1.3",

@@ -11,6 +11,8 @@ const chalk = require('chalk')
 const compileColorscheme = require('./compile-colorscheme.js')
 const compilePalette = require('./compile-palette.js')
 const compileStatus = require('./compile-status.js')
+const dateFormat = require('date-format')
+const now = dateFormat('yyyy/MM/dd hh:mm', new Date())
 
 const paths = {
   airline: 'autoload/airline/themes',
@@ -70,7 +72,7 @@ function renderColorschemes (project) {
   colorschemes.forEach(c => {
     const data = {
       c: compileColorscheme(project.syntax, palettes[c.palette]),
-      date: new Date(),
+      date: now,
       theme: c,
       pkg: project.info
     }
@@ -113,7 +115,7 @@ function renderStatusBars (project, statusName) {
     const palette = palettes[t.palette]
     const compiledData = compileStatus(styles[t.style], palette, statusName)
     const data = Object.assign(compiledData, {
-      date: new Date(),
+      date: now,
       theme: t,
       pkg: project.info
     })
