@@ -42,7 +42,6 @@ module.exports = function (project) {
   if (info.lightline && info.lightline.length) {
     renderStatusBars(project, 'lightline')
   }
-  console.log('okok')
 }
 
 function renderColorschemes (project) {
