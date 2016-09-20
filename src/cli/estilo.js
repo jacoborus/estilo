@@ -35,6 +35,8 @@ if (!command || command === 'help') {
   installAirline(projectPath)
 } else if (command === 'add-lightline') {
   installLightline(projectPath)
+} else if (command === 'version' || argv.v) {
+  console.log(pkg.version)
 } else {
   console.log('Command not found')
   showHelp()
@@ -46,12 +48,13 @@ function showHelp () {
 
   Commands:
 
-    init                Initialize an estilo project in current folder
-    render              Render all the colorschemes and themes
-    add-syntax          Opens dialog for adding more syntax templates
-    add-airline         Opens dialog for adding a new Airline style
-    add-lightline       Opens dialog for adding a new Lightline style
-    help                Show this help
+    init                initialize an estilo project in current folder
+    render              render all the colorschemes and themes
+    add-syntax          open dialog: add more syntax templates
+    add-airline         open dialog: add a new Airline style
+    add-lightline       open dialog: add a new Lightline style
+    version             output version number
+    help                show this help
 `)
 }
 
