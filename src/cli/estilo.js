@@ -16,6 +16,20 @@ const projectPath = resolve('.')
 const updateNotifier = require('update-notifier')
 const pkg = require('../../package.json')
 
+const help = `
+  Usage: estilo [command]
+
+  Commands:
+
+    init                initialize an estilo project in current folder
+    render              render all the colorschemes and themes
+    add-syntax          open dialog: add more syntax templates
+    add-airline         open dialog: add a new Airline style
+    add-lightline       open dialog: add a new Lightline style
+    version             output version number
+    help                show this help
+`
+
 updateNotifier({
   pkg,
   updateCheckInterval: 1000 * 60 * 60 * 24 // 1 day
@@ -24,7 +38,7 @@ updateNotifier({
 const command = argv._[0]
 
 if (!command || command === 'help') {
-  showHelp()
+  console.log(help)
 } else if (command === 'render') {
   loadProject(projectPath, renderProject)
 } else if (command === 'add-syntax') {
@@ -39,22 +53,5 @@ if (!command || command === 'help') {
   console.log(pkg.version)
 } else {
   console.log('Command not found')
-  showHelp()
+  console.log(help)
 }
-
-function showHelp () {
-  console.log(`
-  Usage: estilo [command]
-
-  Commands:
-
-    init                initialize an estilo project in current folder
-    render              render all the colorschemes and themes
-    add-syntax          open dialog: add more syntax templates
-    add-airline         open dialog: add a new Airline style
-    add-lightline       open dialog: add a new Lightline style
-    version             output version number
-    help                show this help
-`)
-}
-
