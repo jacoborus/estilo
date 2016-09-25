@@ -33,6 +33,10 @@ module.exports = function (projectPath) {
   ]
 
   inquirer.prompt(questions).then(function (answers) {
-    installTemplates(answers.templates)
+    if (!answers.templates.length) {
+      console.log('0 selected, skipping...')
+    } else {
+      installTemplates(answers.templates)
+    }
   })
 }
