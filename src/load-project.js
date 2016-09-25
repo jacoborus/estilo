@@ -31,6 +31,7 @@ module.exports = function (folder, cb) {
   }))
   .then(joinTemplates)
   .then(loadPalettes)
+  .then(loadNterm)
   .then(loadStatusStyles('airline'))
   .then(loadStatusStyles('lightline'))
   .then(loadMustaches)
@@ -124,6 +125,17 @@ function loadPalettes (project) {
       }
     })
   })
+}
+
+// load nvim term template
+function loadNterm (project) {
+  const templatePath = path.resolve(project.path, 'estilo/addons/nvim-term.yml')
+  if (!fs.existsSync(templatePath)) {
+    project.nterm = false
+  } else {
+    project.nterm = yaml.safeLoad(fs.readFileSync(templatePath))
+  }
+  return project
 }
 
 function loadStatusStyles (statusName) {
