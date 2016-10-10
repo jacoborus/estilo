@@ -21,7 +21,10 @@ replace2: ''
 replace3: ''
 visual1: ''
 visual2: ''
-visual3: ''`
+visual3: ''
+ctrlp1: ''
+ctrlp2: ''
+ctrlp3: ''`
 
 module.exports = function (projectPath, callback) {
   const airlinePath = path.resolve(projectPath, 'estilo/airline')
