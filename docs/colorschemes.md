@@ -50,7 +50,7 @@ hi Other gui=reverse,italic cterm=reverse,italic
 Link to other definition:
 
 ```yaml
-WarningMsg: 'link Title'
+WarningMsg: '@Title'
 ```
 
 ```vim
