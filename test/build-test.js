@@ -25,9 +25,9 @@ if has("gui_running")
   set background=${opts.background}
 endif
 
-hi ColorColumn guifg=#${opts.hex} ctermfg=${opts.xterm} guibg=#${opts.hex} ctermbg=${opts.xterm} gui=bold,italic,reverse,underline cterm=bold,italic,reverse,underline
-hi Comment guifg=#${opts.hex} ctermfg=${opts.xterm} guibg=#${opts.hex} ctermbg=${opts.xterm} gui=bold,italic,reverse,underline cterm=bold,italic,reverse,underline
-hi jsonPadding guifg=#${opts.hex} ctermfg=${opts.xterm} guibg=#${opts.hex} ctermbg=${opts.xterm} gui=bold,italic,reverse,underline cterm=bold,italic,reverse,underline\n`
+hi ColorColumn guifg=#${opts.hex} ctermfg=${opts.xterm} guibg=#${opts.hex} ctermbg=${opts.xterm} gui=Bold,Italic,reverse,underline cterm=Bold,Italic,reverse,underline
+hi Comment guifg=#${opts.hex} ctermfg=${opts.xterm} guibg=#${opts.hex} ctermbg=${opts.xterm} gui=Bold,Italic,reverse,underline cterm=Bold,Italic,reverse,underline
+hi jsonPadding guifg=#${opts.hex} ctermfg=${opts.xterm} guibg=#${opts.hex} ctermbg=${opts.xterm} gui=Bold,Italic,reverse,underline cterm=Bold,Italic,reverse,underline\n`
 }
 
 const first = {
