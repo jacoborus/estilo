@@ -14,6 +14,19 @@ if exists("syntax_on")
 endif
 let g:colors_name="{{ theme.name }}"
 
+
+let Italic = ""
+if exists('g:{{theme.name}}_italic')
+  let Italic = "italic"
+endif
+let g:{{theme.name}}_italic = get(g:, '{{theme.name}}_italic', 0)
+
+let Bold = ""
+if exists('g:{{theme.name}}_bold')
+  let Bold = "bold"
+endif
+
+let g:{{theme.name}}_bold = get(g:, '{{theme.name}}_bold', 0)
 {{#each c~}}
   {{#if link}}hi link {{@key}} {{link~}}
   {{~^~}}hi {{ @key }}

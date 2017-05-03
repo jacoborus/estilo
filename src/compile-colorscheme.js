@@ -6,8 +6,8 @@ const uis = new Set(['u', 'b', 'r', 'i', 'c', 's'])
 
 const uiValues = {
   u: 'underline',
-  b: 'bold',
-  i: 'italic',
+  b: 'Bold',
+  i: 'Italic',
   r: 'reverse',
   c: 'undercurl',
   s: 'standout'
