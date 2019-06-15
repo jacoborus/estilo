@@ -55,8 +55,9 @@ Commands:
 ## Colorschemes created with Estilo
 
 - [Tender](https://github.com/jacoborus/tender.vim) by [@jacoborus](https://github.com/jacoborus)
-- [Github](https://github.com/albertorestifo/github.vim) by [@albertorestifo](https://github.com/albertorestifo)
+- [Oceanic Next](https://github.com/mhartington/oceanic-next) by [@mhartington](https://github.com/mhartington)
 - [Falcon](https://github.com/fenetikm/falcon) by [@fenetikm](https://github.com/fenetikm)
+- [Github](https://github.com/albertorestifo/github.vim) by [@albertorestifo](https://github.com/albertorestifo)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
 
 
