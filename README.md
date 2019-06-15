@@ -56,6 +56,7 @@ Commands:
 
 - [Tender](https://github.com/jacoborus/tender.vim) by [@jacoborus](https://github.com/jacoborus)
 - [Github](https://github.com/albertorestifo/github.vim) by [@albertorestifo](https://github.com/albertorestifo)
+- [Falcon](https://github.com/fenetikm/falcon) by [@fenetikm](https://github.com/fenetikm)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
 
 
