@@ -1,0 +1,12 @@
+# mhinz/vim-signify
+SignifyLineAdd: ''
+SignifyLineDelete: ''
+SignifyLineDeleteFirstLine: ''
+SignifyLineChange: ''
+SignifyLineChangeDelete: ''
+
+SignifySignAdd: ''
+SignifySignDelete: ''
+SignifySignDeleteFirstLine: ''
+SignifySignChange: ''
+SignifySignChangeDelete: ''
