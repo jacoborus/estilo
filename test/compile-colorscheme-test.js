@@ -41,9 +41,9 @@ test('getUI', t => {
     'throws on bad type'
   )
   t.is(getUI('NONE'), 'NONE', 'NONE')
-  t.is(getUI('br'), 'bold,reverse', 'valid formatted')
-  t.is(getUI('bu'), 'bold,underline', 'valid formatted')
-  t.is(getUI('uir'), 'underline,italic,reverse', 'valid formatted')
+  t.is(getUI('br'), 'Bold,reverse', 'valid formatted')
+  t.is(getUI('bu'), 'Bold,underline', 'valid formatted')
+  t.is(getUI('uir'), 'underline,Italic,reverse', 'valid formatted')
   t.is(getUI('c'), 'undercurl', 'valid formatted')
 
   t.throws(
@@ -67,7 +67,7 @@ test('parseString:', t => {
   t.is(full.fore[1], 153, 'full term foreground')
   t.is(full.back[0], '#ff5555', 'full hex background')
   t.is(full.back[1], 203, 'full term background')
-  t.is(full.ui, 'bold,italic', 'full gui')
+  t.is(full.ui, 'Bold,Italic', 'full gui')
   t.is(full.guisp, false, 'full guisp')
 
   let two = pss('- rojo', palette)
@@ -81,7 +81,7 @@ test('parseString:', t => {
   let empty = pss('. . bu', palette)
   t.is(empty.fore, false, 'empty with foreground')
   t.is(empty.back, false, 'empty with background')
-  t.is(empty.ui, 'bold,underline', 'empty with gui')
+  t.is(empty.ui, 'Bold,underline', 'empty with gui')
 
   let linked = pss('@other', palette)
   t.is(linked.link, 'other', 'linked link')
@@ -114,7 +114,7 @@ test('compile colorscheme: format hilinks', t => {
   t.is(normal.fore[0], '#bbddff', 'hex foreground')
   t.is(normal.fore[1], 153, 'term foreground')
   t.is(normal.back, false, 'background')
-  t.is(normal.ui, 'bold,italic,reverse,underline,undercurl,standout', 'ui')
+  t.is(normal.ui, 'Bold,Italic,reverse,underline,undercurl,standout', 'ui')
 
   t.end()
 })

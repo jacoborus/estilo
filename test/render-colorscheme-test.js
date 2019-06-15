@@ -24,7 +24,7 @@ if has("gui_running")
 endif
 
 hi hitest guifg=#bbddff ctermfg=153 guibg=#ffffff ctermbg=15 gui=NONE cterm=NONE
-hi other guifg=#ff0000 ctermfg=9 guibg=NONE ctermbg=NONE gui=bold,underline,italic cterm=bold,underline,italic
+hi other guifg=#ff0000 ctermfg=9 guibg=NONE ctermbg=NONE gui=Bold,underline,Italic cterm=Bold,underline,Italic
 hi link linked other\n`
 
 test('renderColorscheme', t => {
