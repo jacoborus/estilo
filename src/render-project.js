@@ -11,7 +11,7 @@ const chalk = require('chalk')
 const compileColorscheme = require('./compile-colorscheme.js')
 const compilePalette = require('./compile-palette.js')
 const compileStatus = require('./compile-status.js')
-const compileNterm = require('./compile-nvim-terminal.js')
+const compileterm = require('./compile-terminal.js')
 const dateFormat = require('date-format')
 const now = dateFormat('yyyy/MM/dd hh:mm', new Date())
 const estiloVersion = require(path.resolve(__dirname, '../package.json')).version
@@ -72,14 +72,14 @@ function renderColorschemes (project) {
   // compile colorschemes
   colorschemes.forEach(c => {
     const palette = palettes[c.palette]
-    const nterm = project.nterm ? compileNterm(project.nterm, palette) : {}
+    const term = project.term ? compileterm(project.term, palette) : {}
     const data = {
       c: compileColorscheme(project.syntax, palette),
       date: now,
       theme: c,
       pkg: project.info,
       estiloVersion: estiloVersion,
-      nterm: nterm
+      term: term
     }
 
     const rendered = render(data)

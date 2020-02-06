@@ -66,9 +66,9 @@ Estilo bundles a pack of templates for common language syntaxes and plugins, you
 See [list of available syntax templates](https://github.com/jacoborus/estilo/tree/master/templates/syntax)
 
 
-## Add colors to neovim terminal
+## Add colors to terminal
 
-Open `estilo/addons/nvim-term.yml` and fill each value with a color from your palette.
+Open `estilo/addons/term.yml` and fill each value with a color from your palette.
 
 
 ## Add colorschemes to `estilo.yml`
