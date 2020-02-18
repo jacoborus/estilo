@@ -7,7 +7,7 @@ const fs = require('fs')
 const installTemplates = require('./install-templates.js')
 const chalk = require('chalk')
 
-const blankNterm = `color_foreground: ''
+const blankterm = `color_foreground: ''
 color_background: ''
 color_0: ''
 color_1: ''
@@ -87,7 +87,7 @@ module.exports = function (projectPath, auto) {
 
 function createBoilerplate (projectPath, options) {
   const addonsFolder = path.resolve(projectPath, 'estilo/addons')
-  const ntermPath = path.resolve(addonsFolder, 'nvim-term.yml')
+  const termPath = path.resolve(addonsFolder, 'term.yml')
   let estiloStr = `name: '${options.name}'
 version: '${options.version || ''}'
 license: '${options.license || ''}'
@@ -105,7 +105,7 @@ colorschemes:
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   mkdirp.sync(addonsFolder)
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
-  fs.writeFileSync(ntermPath, blankNterm)
+  fs.writeFileSync(termPath, blankterm)
 
   installTemplates(['base.yml'], () => {
     console.log(chalk.green.bold('\nYour project is ready'))
