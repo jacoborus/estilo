@@ -10,45 +10,45 @@
 set background={{ theme.background }}
 hi clear
 if exists("syntax_on")
-  syntax reset
+syntax reset
 endif
 let g:colors_name="{{ theme.name }}"
 
 
 let Italic = ""
 if exists('g:{{theme.name}}_italic')
-  let Italic = "italic"
+let Italic = "italic"
 endif
 let g:{{theme.name}}_italic = get(g:, '{{theme.name}}_italic', 0)
 
 let Bold = ""
 if exists('g:{{theme.name}}_bold')
-  let Bold = "bold"
+let Bold = "bold"
 endif
 
 let g:{{theme.name}}_bold = get(g:, '{{theme.name}}_bold', 0)
 {{#each c~}}
-  {{#if link}}hi link {{@key}} {{link~}}
-  {{~^~}}hi {{ @key }}
-    {{~#if fore}} guifg={{fore.[0]}} ctermfg={{fore.[1]}}{{/if}}
-    {{~#if back}} guibg={{back.[0]}} ctermbg={{back.[1]}}{{/if}}
-    {{~#if ui}} gui={{ui}} cterm={{ui}}{{/if}}
-    {{~#if guisp}} guisp={{guisp.[0]}}{{/if}}
-  {{~/if}}
+{{#if link}}hi link {{@key}} {{link~}}
+{{~^~}}hi {{ @key }}
+{{~#if fore}} guifg={{fore.[0]}} ctermfg={{fore.[1]}}{{/if}}
+{{~#if back}} guibg={{back.[0]}} ctermbg={{back.[1]}}{{/if}}
+{{~#if ui}} gui={{ui}} cterm={{ui}}{{/if}}
+{{~#if guisp}} guisp={{guisp.[0]}}{{/if}}
+{{~/if}}
 
 {{/each}}
 
 if exists('*term_setansicolors')
-  let g:terminal_ansi_colors = repeat([0], 16)
-
+let g:terminal_ansi_colors = [
 {{#each term}}
-  let g:terminal_ansi_colors[{{@key}}] = '{{this}}'
+\ '{{this}}',
 {{/each}}
+\ ]
 endif
 
 if has('nvim')
 {{#each term}}
-  let g:terminal_color_{{@key}} = '{{this}}'
+let g:terminal_color_{{@key}} = '{{this}}'
 {{/each}}
 endif
 
