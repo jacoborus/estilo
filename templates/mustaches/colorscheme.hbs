@@ -40,9 +40,7 @@ let g:{{theme.name}}_bold = get(g:, '{{theme.name}}_bold', 0)
 
 if exists('*term_setansicolors')
 let g:terminal_ansi_colors = [
-{{#each term}}
-\ '{{this}}',
-{{/each}}
+\ {{#each term}}'{{this}}', {{/each}}
 \ ]
 endif
 
