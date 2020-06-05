@@ -7,26 +7,34 @@
     "test": "test"
   },
   "dependencies": {
-    "chalk": "^1.1.3",
-    "date-format": "0.0.2",
+    "chalk": "4.0.0",
+    "date-format": "3.0.0",
     "handlebars": "^4.0.5",
     "hexterm": "^1.2.0",
-    "inquirer": "^1.1.3",
+    "inquirer": "7.1.0",
     "js-yaml": "^3.6.0",
     "minimist": "^1.2.0",
-    "mkdirp": "^0.5.1",
-    "update-notifier": "^1.0.2"
+    "mkdirp": "1.0.4",
+    "update-notifier": "4.1.0"
   },
   "bin": {
     "estilo": "./src/cli/estilo.js"
   },
   "devDependencies": {
-    "standard": "^8.0.0",
-    "tape": "^4.6.0"
+    "@typescript-eslint/eslint-plugin": "^3.1.0",
+    "@typescript-eslint/parser": "^3.1.0",
+    "eslint": "^7.1.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "tape": "5.0.1",
+    "typescript": "^3.9.5"
   },
   "scripts": {
-    "test": "npm run linter && node test/index.js",
-    "linter": "standard src/*.js src/cli/*.js test/*.js"
+    "test": "node test/index.js",
+    "linter": "eslint src/*.js src/cli/*.js test/*.js"
   },
   "repository": {
     "type": "git",

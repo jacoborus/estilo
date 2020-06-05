@@ -49,7 +49,7 @@ test('renderColorscheme', t => {
     linked: '@other'
   }
 
-  let result = renderColorscheme(info, colorscheme, palette, templates)
+  const result = renderColorscheme(info, colorscheme, palette, templates)
   t.is(result, testStr)
   t.end()
 })

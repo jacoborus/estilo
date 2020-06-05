@@ -18,8 +18,8 @@ function parseui (raw, hiName) {
   const out = []
   let i = 0
   while (i < l) {
-    let c = raw.charAt(i++)
-    let str = uiValues[c]
+    const c = raw.charAt(i++)
+    const str = uiValues[c]
     if (!str) throw new Error('wrong ui in ' + hiName)
     out.push(str)
   }
@@ -55,7 +55,7 @@ function getUI (ui, hiName) {
   // formatted gui, just check for valid value
   let len = ui.length
   while (len) {
-    let res = ui.charAt(--len)
+    const res = ui.charAt(--len)
     if (!uis.has(res)) {
       throw new Error('wrong ui in ' + hiName)
     }
@@ -65,17 +65,17 @@ function getUI (ui, hiName) {
 
 function parseStyleString (str, palette, name) {
   str = str.trim()
-  let props = str.split(' ').reduce((arr, el) => {
+  const props = str.split(' ').reduce((arr, el) => {
     el = el.trim()
     if (el) return arr.concat(el)
     return arr
   }, [])
 
-  let len = props.length
+  const len = props.length
   if (!len) return {}
 
   // whether is link to other hilink
-  let first = props[0]
+  const first = props[0]
   if (first.startsWith('@')) {
     return {
       link: first.slice(1)
@@ -105,7 +105,7 @@ module.exports = function (templates, palette) {
   if (!templates || typeof templates !== 'object') {
     throw new Error('wrong highlights object')
   }
-  let links = {}
+  const links = {}
   Object.keys(templates).forEach(name => {
     const raw = templates[name]
     if (typeof raw !== 'string') {

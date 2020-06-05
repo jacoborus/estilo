@@ -9,7 +9,7 @@ module.exports = function (projectPath) {
   const templateFiles = fs.readdirSync(path.resolve(__dirname, '../..', 'templates/syntax'))
   const installedSyntax = fs.readdirSync(path.resolve(projectPath, 'estilo/syntax'))
 
-  let templateChoices = templateFiles.map(f => {
+  const templateChoices = templateFiles.map(f => {
     const isDisabled = installedSyntax.indexOf(f) > -1
     let tName = f.slice(0, -4)
     if (isDisabled) {

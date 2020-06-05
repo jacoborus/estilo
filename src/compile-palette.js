@@ -8,7 +8,7 @@ module.exports = function (colors, paletteName) {
   Object.keys(colors).forEach(c => {
     const str = colors[c].trim()
 
-    let props = str.split(' ').reduce((arr, el) => {
+    const props = str.split(' ').reduce((arr, el) => {
       el = el.trim()
       if (el) return arr.concat(el)
       return arr
@@ -21,4 +21,3 @@ module.exports = function (colors, paletteName) {
   })
   return palette
 }
-

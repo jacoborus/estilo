@@ -55,14 +55,14 @@ test('getUI', t => {
 })
 
 test('parseString:', t => {
-  let palette = {
+  const palette = {
     rojo: ['#ff5555', 203]
   }
 
-  let noValue = pss('     ')
+  const noValue = pss('     ')
   t.is(Object.keys(noValue).length, 0, 'empty schema')
 
-  let full = pss('#bbddff rojo bi', palette)
+  const full = pss('#bbddff rojo bi', palette)
   t.is(full.fore[0], '#bbddff', 'full hex foreground')
   t.is(full.fore[1], 153, 'full term foreground')
   t.is(full.back[0], '#ff5555', 'full hex background')
@@ -70,7 +70,7 @@ test('parseString:', t => {
   t.is(full.ui, 'Bold,Italic', 'full gui')
   t.is(full.guisp, false, 'full guisp')
 
-  let two = pss('- rojo', palette)
+  const two = pss('- rojo', palette)
   t.is(two.fore[0], 'NONE', 'two hex foreground')
   t.is(two.fore[1], 'NONE', 'two hex foreground')
   t.is(two.back[0], '#ff5555', 'two hex background')
@@ -78,12 +78,12 @@ test('parseString:', t => {
   t.is(two.ui, 'NONE', 'two gui')
   t.is(two.guisp, false, 'two guisp')
 
-  let empty = pss('. . bu', palette)
+  const empty = pss('. . bu', palette)
   t.is(empty.fore, false, 'empty with foreground')
   t.is(empty.back, false, 'empty with background')
   t.is(empty.ui, 'Bold,underline', 'empty with gui')
 
-  let linked = pss('@other', palette)
+  const linked = pss('@other', palette)
   t.is(linked.link, 'other', 'linked link')
   t.notOk(linked.fore, 'linked foreground')
   t.notOk(linked.back, 'linked background')

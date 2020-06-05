@@ -13,10 +13,10 @@ const hexterm = require('hexterm')
 module.exports = function (template, colors, statusName) {
   const out = {}
   Object.keys(template).forEach(k => {
-    let arr = template[k].split(' ').filter(x => x.trim())
+    const arr = template[k].split(' ').filter(x => x.trim())
     out[k] = arr.map(c => {
       if (isHexColor(c)) return [c, hexterm(c)]
-      let code = colors[c]
+      const code = colors[c]
       if (!code) throw new Error(`Wrong color in ${statusName} template: ${c}`)
       return code
     })

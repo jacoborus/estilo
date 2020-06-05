@@ -67,7 +67,7 @@ function renderColorschemes (project) {
     }
   })
 
-  let render = handlebars.compile(mustaches.colorscheme)
+  const render = handlebars.compile(mustaches.colorscheme)
   mkdirp.sync(path.resolve(project.path, 'colors'))
   // compile colorschemes
   colorschemes.forEach(c => {
@@ -114,7 +114,7 @@ function renderStatusBars (project, statusName) {
   })
 
   // render
-  let render = handlebars.compile(project.mustaches[statusName])
+  const render = handlebars.compile(project.mustaches[statusName])
   mkdirp.sync(path.resolve(project.path, paths[statusName]))
   themes.forEach(t => {
     const palette = palettes[t.palette]

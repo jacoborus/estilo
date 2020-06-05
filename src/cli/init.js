@@ -88,7 +88,7 @@ module.exports = function (projectPath, auto) {
 function createBoilerplate (projectPath, options) {
   const addonsFolder = path.resolve(projectPath, 'estilo/addons')
   const termPath = path.resolve(addonsFolder, 'term.yml')
-  let estiloStr = `name: '${options.name}'
+  const estiloStr = `name: '${options.name}'
 version: '${options.version || ''}'
 license: '${options.license || ''}'
 author: '${options.author || ''}'

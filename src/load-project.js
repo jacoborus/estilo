@@ -22,25 +22,25 @@ module.exports = function (folder, cb) {
 
   getYmlsInsideFolder(estiloFolder + '/syntax')
   // load template files
-  .then((paths) => Promise.all(paths.map(p => loadTemplate(p))))
+    .then((paths) => Promise.all(paths.map(p => loadTemplate(p))))
   // create project with templates and empty info
-  .then(templates => ({
-    templates,
-    path: folder,
-    info: pkg
-  }))
-  .then(joinTemplates)
-  .then(loadPalettes)
-  .then(loadterm)
-  .then(loadStatusStyles('airline'))
-  .then(loadStatusStyles('lightline'))
-  .then(loadMustaches)
+    .then(templates => ({
+      templates,
+      path: folder,
+      info: pkg
+    }))
+    .then(joinTemplates)
+    .then(loadPalettes)
+    .then(loadterm)
+    .then(loadStatusStyles('airline'))
+    .then(loadStatusStyles('lightline'))
+    .then(loadMustaches)
   // success message
-  .then(project => { cb(project) })
-  .catch(err => {
-    console.log('Error:\n')
-    console.log(err)
-  })
+    .then(project => { cb(project) })
+    .catch(err => {
+      console.log('Error:\n')
+      console.log(err)
+    })
 }
 
 /**
@@ -59,8 +59,8 @@ function getYmlsInsideFolder (folderPath) {
         else {
           resolve(
             data
-            .filter(i => path.basename(i) !== path.basename(i, '.yml'))
-            .map(i => path.resolve(folderPath, i))
+              .filter(i => path.basename(i) !== path.basename(i, '.yml'))
+              .map(i => path.resolve(folderPath, i))
           )
         }
       })
@@ -81,7 +81,7 @@ function joinTemplates (project) {
   const syntax = {}
   project.templates.forEach(template => {
     Object.keys(template).forEach(k => {
-      let hi = template[k]
+      const hi = template[k]
       if (hi) {
         syntax[k] = hi
       }
