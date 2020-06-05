@@ -6,35 +6,39 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-    "chalk": "4.0.0",
-    "date-format": "3.0.0",
-    "handlebars": "^4.0.5",
-    "hexterm": "^1.2.0",
-    "inquirer": "7.1.0",
-    "js-yaml": "^3.6.0",
-    "minimist": "^1.2.0",
-    "mkdirp": "1.0.4",
-    "update-notifier": "4.1.0"
-  },
   "bin": {
     "estilo": "./src/cli/estilo.js"
   },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^3.1.0",
-    "@typescript-eslint/parser": "^3.1.0",
-    "eslint": "^7.1.0",
-    "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "tape": "5.0.1",
-    "typescript": "^3.9.5"
-  },
   "scripts": {
-    "test": "node test/index.js",
+    "test": "jest",
     "linter": "eslint src/*.js src/cli/*.js test/*.js"
+  },
+  "dependencies": {
+    "chalk": "4.0.0",
+    "date-format": "3.0.0",
+    "handlebars": "4.0.5",
+    "hexterm": "1.2.0",
+    "inquirer": "7.1.0",
+    "js-yaml": "3.6.0",
+    "minimist": "1.2.0",
+    "mkdirp": "1.0.4",
+    "update-notifier": "4.1.0"
+  },
+  "devDependencies": {
+    "@types/jest": "25.2.3",
+    "@typescript-eslint/eslint-plugin": "3.1.0",
+    "@typescript-eslint/parser": "3.1.0",
+    "eslint": "7.1.0",
+    "eslint-config-standard": "14.1.1",
+    "eslint-plugin-import": "2.20.2",
+    "eslint-plugin-jest": "23.13.2",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-standard": "4.0.1",
+    "jest": "26.0.1",
+    "tape": "5.0.1",
+    "ts-jest": "26.1.0",
+    "typescript": "3.9.5"
   },
   "repository": {
     "type": "git",
@@ -45,7 +49,7 @@
   },
   "homepage": "https://github.com/jacoborus/estilo",
   "engines": {
-    "node": ">=5.9.0"
+    "node": ">=10.0.0"
   },
   "keywords": [
     "vim",
