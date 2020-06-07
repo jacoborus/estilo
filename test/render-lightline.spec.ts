@@ -1,7 +1,4 @@
-'use strict'
-
-const test = require('tape')
-const render = require('../src/render-lightline.js')
+import render from '../src/render-lightline'
 
 const result = `if exists('g:pkgName_lightline') && g:pkgName_lightline
   let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}
@@ -70,8 +67,7 @@ const colors = {
   nine: '#999999'
 }
 
-test('printLightline', t => {
+test('printLightline', () => {
   const rendered = render('pkgName', 'testing', tmpl, colors)
-  t.is(rendered, result)
-  t.end()
+  expect(rendered).toBe(result)
 })
