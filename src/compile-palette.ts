@@ -16,11 +16,13 @@ export default function (file: YmlFile): Palette {
   } as Palette
 
   Object.keys(content).forEach(name => {
-    const hexcolor = content[name].trim()
+    const value = content[name]
 
-    if (typeof hexcolor !== 'string') {
+    if (typeof value !== 'string') {
       throw new Error(`Wrong type: ${filepath}: ${name}`)
     }
+
+    const hexcolor = value.trim()
     if (!isHexColor(hexcolor)) {
       throw new Error(`Wrong color: ${filepath}: ${name}`)
     }
