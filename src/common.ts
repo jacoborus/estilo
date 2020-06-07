@@ -9,6 +9,13 @@ export interface Palette {
   }
 }
 
+export interface TerminalStyle {
+  path: string
+  styles: {
+    [index: string]: string
+  }
+}
+
 export interface StatusStyle {
   name: string
   path: string
