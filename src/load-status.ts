@@ -6,7 +6,7 @@ import { StatusStyle } from './common'
  * Convert all string values from a given
  * object (`template`) to arrays with hex colors
  */
-export default function (filepath: string): StatusStyle {
+export function loadStatus (filepath: string): StatusStyle {
   const { content } = loadYml(filepath)
 
   const statusStyle = {
