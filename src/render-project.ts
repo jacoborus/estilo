@@ -1,18 +1,13 @@
-'use strict'
+import mkdirp from 'mkdirp'
+import fs from 'fs'
+import path from 'path'
+import chalk from 'chalk'
 
-const mkdirp = require('mkdirp')
-const fs = require('fs')
-const path = require('path')
-const log = console.log
-
-const handlebars = require('handlebars')
-const chalk = require('chalk')
-
-const compileColorscheme = require('./compile-colorscheme.js')
-const compilePalette = require('./compile-palette.js')
-const compileStatus = require('./compile-status.js')
-const compileterm = require('./compile-terminal.js')
-const dateFormat = require('date-format')
+import compileColorscheme from './compile-colorscheme.js'
+import compilePalette from './compile-palette.js'
+import compileStatus from './compile-status.js'
+import compileterm from './compile-terminal.js'
+import dateFormat from 'date-format'
 const now = dateFormat('yyyy/MM/dd hh:mm', new Date())
 const estiloVersion = require(path.resolve(__dirname, '../package.json')).version
 
