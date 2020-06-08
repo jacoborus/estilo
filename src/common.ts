@@ -57,7 +57,7 @@ interface Config {
   lightline?: StatusLineConfig[]
 }
 
-interface SyntaxFile {
+export interface SyntaxFile {
   filepath: string
   definitions: {
     [index: string]: [string, string, string]
