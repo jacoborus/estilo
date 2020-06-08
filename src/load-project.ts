@@ -2,12 +2,13 @@ import fs from 'fs'
 import path from 'path'
 import { loadYml } from './load-yml'
 import { loadStatus } from './load-status'
+import { loadSyntax } from './load-syntax'
 import { loadTerminal } from './load-terminal'
 import { loadPalette } from './load-palette'
 import {
   Palettes,
   Project,
-  SyntaxFile,
+  SyntaxRule,
   StatusStyle
 } from './common'
 
@@ -44,9 +45,9 @@ function loadPalettes (folderPath: string): Palettes {
   return palettes
 }
 
-function loadAllSyntax (folderPath: string): SyntaxFile[] {
+function loadAllSyntax (folderPath: string): SyntaxRule[] {
   const filepaths = ymlsInFolder(folderPath)
-  return filepaths.map(loadSyntax)
+  return filepaths.flatMap(loadSyntax)
 }
 
 type StatusStyles = Record<string, StatusStyle>

@@ -1,31 +1,20 @@
 import hexterm from 'hexterm'
 import isHexColor from './is-hex-color.js'
 import { loadYml } from './load-yml'
-import { SyntaxFile } from './common'
+import { SyntaxRule } from './common'
+
+export function loadSyntax (filepath: string): SyntaxRule[] {
+  const { content } = loadYml(filepath)
+
+  return Object.keys(content)
+    .map(name => {
+      const rule = content[name].trim()
+      return { filepath, name, rule }
+    })
+    .filter(rule => rule.rule)
+}
 
 const uis = new Set(['u', 'b', 'r', 'i', 'c', 's'])
-
-export function loadSyntax (filepath: string): SyntaxFile {
-  const { content } = loadYml(filepath)
-  const syntaxFile = {
-    filepath: filepath,
-    definitions: []
-  } as SyntaxFile
-
-  Object.keys(content).forEach(name => {
-    const value = content[name]
-
-    if (typeof value !== 'string') {
-      throw new Error(`Wrong type: ${filepath}: ${name}`)
-    }
-
-    syntaxFile.colors[name] = {
-      hex: hexcolor.startsWith('#') ? hexcolor : '#' + hexcolor,
-      xterm: hexterm(hexcolor)
-    }
-  })
-  return syntaxFile
-}
 
 const uiValues = {
   u: 'underline',

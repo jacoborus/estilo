@@ -5,7 +5,7 @@ export type YmlFile = {
 
 export interface Palette {
   name: string
-  path: string
+  filepath: string
   colors: {
     [index: string]: {
       hex: string
@@ -15,7 +15,7 @@ export interface Palette {
 }
 
 export interface TerminalStyle {
-  path: string
+  filepath: string
   styles: {
     [index: string]: string
   }
@@ -23,7 +23,7 @@ export interface TerminalStyle {
 
 export interface StatusStyle {
   name: string
-  path: string
+  filepath: string
   styles: {
     [index: string]: string[]
   }
@@ -57,17 +57,16 @@ interface Config {
   lightline?: StatusLineConfig[]
 }
 
-export interface SyntaxFile {
+export interface SyntaxRule {
   filepath: string
-  definitions: {
-    [index: string]: [string, string, string]
-  }
+  name: string
+  rule: string
 }
 
 export interface Project {
   config: Config
   projectPath: string
-  syntax: SyntaxFile[]
+  syntax: SyntaxRule[]
   palettes: Palettes
   terminalStyle?: TerminalStyle
   airlineStyles: Record<string, StatusStyle>
