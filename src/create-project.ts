@@ -1,3 +1,5 @@
+import path from 'path'
+
 import {
   loadYml,
   ymlsInFolder
@@ -13,19 +15,26 @@ import {
 import {
   Palettes,
   Project,
-  StatusStyles
+  StatusStyles,
+  Config
 } from './common'
 
 export function createProject (folderPath: string): Project {
   return {
-    config: loadYml(folderPath, 'estilo.yml').content,
-    projectPath: folderPath,
+    folderPath,
+    config: getConfig(folderPath),
     palettes: loadPalettes(folderPath),
     syntax: ymlsInFolder(folderPath, 'syntax').flatMap(loadSyntax),
     terminalStyle: loadTerminal(folderPath),
     airlineStyles: loadAllStatus(folderPath, 'airline'),
     lightlineStyles: loadAllStatus(folderPath, 'lightline')
   }
+}
+
+function getConfig (folderPath: string): Config {
+  const estiloVersion = require(path.resolve(__dirname, '../package.json')).version
+  const fileData = loadYml(folderPath, 'estilo.yml').content
+  return Object.assign({}, fileData, { estiloVersion })
 }
 
 function loadPalettes (folderPath: string): Palettes {

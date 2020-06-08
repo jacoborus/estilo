@@ -1,4 +1,4 @@
-export default function (theme, pkg, date: string, c, estiloVersion): string {
+export function renderAirline (theme, pkg, date: string, c, estiloVersion): string {
   return `
 " ============================================================
 " ${theme.name}

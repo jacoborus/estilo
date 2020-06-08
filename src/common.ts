@@ -46,16 +46,17 @@ interface StatusLineConfig {
   description?: string
 }
 
-interface Config {
+export interface Config {
+  estiloVersion: string
   version?: string
   author?: string
   name?: string
   url?: string
   license?: string
   description?: string
-  colorschemes?: ColorSchemeConfig[]
-  airline?: StatusLineConfig[]
-  lightline?: StatusLineConfig[]
+  colorschemes: ColorSchemeConfig[]
+  airlines: StatusLineConfig[]
+  lightlines: StatusLineConfig[]
 }
 
 export interface SyntaxRule {
@@ -66,7 +67,7 @@ export interface SyntaxRule {
 
 export interface Project {
   config: Config
-  projectPath: string
+  folderPath: string
   syntax: SyntaxRule[]
   palettes: Palettes
   terminalStyle?: TerminalStyle

@@ -1,4 +1,4 @@
-export default function (theme, pkg, c, estiloVersion): string {
+export function renderLightline (theme, pkg, c, estiloVersion): string {
   return `" ============================================================
 " ${theme.name}
 " ${theme.description}
