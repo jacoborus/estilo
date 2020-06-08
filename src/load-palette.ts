@@ -7,9 +7,6 @@ import { loadYml } from './load-yml'
 export function loadPalette (filepath: string): Palette {
   const file = loadYml(filepath)
   const { content } = file
-  if (typeof content !== 'object') {
-    throw new Error(`Content of palette (${filepath}) is not an object`)
-  }
 
   const palette = {
     name: path.basename(filepath, '.yml'),
