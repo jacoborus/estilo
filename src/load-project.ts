@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { loadYml } from './load-yml'
+import { loadYml } from './util'
 import { loadStatus } from './load-status'
 import { loadSyntax } from './load-syntax'
 import { loadTerminal } from './load-terminal'
@@ -24,9 +24,9 @@ export function createProject (folderPath: string): Project {
   }
 }
 
-function ymlsInFolder (folderPath: string, secondFolder?: string): string[] {
-  const finalPath = secondFolder
-    ? path.resolve(folderPath, secondFolder)
+function ymlsInFolder (folderPath: string, folder2?: string): string[] {
+  const finalPath = folder2
+    ? path.resolve(folderPath, folder2)
     : folderPath
   if (!fs.existsSync(finalPath)) {
     throw new Error('folder doesn\'t exists: ' + finalPath)

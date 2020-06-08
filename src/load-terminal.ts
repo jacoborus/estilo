@@ -1,5 +1,5 @@
 import path from 'path'
-import { loadYml } from './load-yml'
+import { loadYml } from './util'
 import { TerminalStyle } from './common'
 
 export function loadTerminal (folderPath: string): TerminalStyle {
@@ -7,7 +7,7 @@ export function loadTerminal (folderPath: string): TerminalStyle {
   const { content } = loadYml(filepath)
 
   const terminalStyle = {
-    path: filepath,
+    filepath: filepath,
     styles: {}
   } as TerminalStyle
 

@@ -1,6 +1,5 @@
 import hexterm from 'hexterm'
-import isHexColor from './is-hex-color.js'
-import { loadYml } from './load-yml'
+import { loadYml, isHexColor } from './util'
 import { SyntaxRule } from './common'
 
 export function loadSyntax (filepath: string): SyntaxRule[] {

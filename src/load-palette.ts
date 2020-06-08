@@ -1,8 +1,7 @@
 import path from 'path'
 import hexterm from 'hexterm'
 import { Palette } from './common'
-import isHexColor from './is-hex-color'
-import { loadYml } from './load-yml'
+import { loadYml, isHexColor } from './util'
 
 export function loadPalette (filepath: string): Palette {
   const { content } = loadYml(filepath)

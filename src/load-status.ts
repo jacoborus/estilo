@@ -1,5 +1,5 @@
 import path from 'path'
-import { loadYml } from './load-yml'
+import { loadYml } from './util'
 import { StatusStyle } from './common'
 
 export function loadStatus (filepath: string): StatusStyle {
