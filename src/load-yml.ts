@@ -3,8 +3,8 @@ import fs from 'fs'
 import yaml from 'yaml'
 import { YmlFile } from './common'
 
-export function loadYml (folderPath: string, filename: string): YmlFile {
-  const filepath = path.resolve(folderPath, filename)
+export function loadYml (folderPath: string, filename?: string): YmlFile {
+  const filepath = filename ? path.resolve(folderPath, filename) : folderPath
   const content = yaml.parse(fs.readFileSync(filepath, 'utf8'))
 
   if (typeof content !== 'object') {
