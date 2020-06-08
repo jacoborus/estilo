@@ -28,3 +28,14 @@ export function loadYml (folderPath: string, filename?: string): YmlFile {
     content
   }
 }
+
+export function ymlsInFolder (folderPath: string, folder2?: string): string[] {
+  const finalPath = folder2
+    ? path.resolve(folderPath, folder2)
+    : folderPath
+  if (!fs.existsSync(finalPath)) {
+    throw new Error('folder doesn\'t exists: ' + finalPath)
+  }
+  return fs.readdirSync(finalPath, 'utf8')
+    .filter(filename => filename.endsWith('.yml'))
+}

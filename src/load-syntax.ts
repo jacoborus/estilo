@@ -1,17 +1,5 @@
 import hexterm from 'hexterm'
-import { loadYml, isHexColor } from './util'
-import { SyntaxRule } from './common'
-
-export function loadSyntax (filepath: string): SyntaxRule[] {
-  const { content } = loadYml(filepath)
-
-  return Object.keys(content)
-    .map(name => {
-      const rule = content[name].trim()
-      return { filepath, name, rule }
-    })
-    .filter(rule => rule.rule)
-}
+import { isHexColor } from './util'
 
 const uis = new Set(['u', 'b', 'r', 'i', 'c', 's'])
 

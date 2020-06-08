@@ -1,10 +1,14 @@
-import fs from 'fs'
-import path from 'path'
-import { loadYml } from './util'
-import { loadStatus } from './load-status'
-import { loadSyntax } from './load-syntax'
-import { loadTerminal } from './load-terminal'
-import { loadPalette } from './load-palette'
+import {
+  loadYml,
+  ymlsInFolder
+} from './util'
+import {
+  loadStatus,
+  loadSyntax,
+  loadTerminal,
+  loadPalette
+} from './loaders'
+
 import {
   Palettes,
   Project,
@@ -22,17 +26,6 @@ export function createProject (folderPath: string): Project {
     airlineStyles: loadAllStatusStyles(folderPath, 'airline'),
     lightlineStyles: loadAllStatusStyles(folderPath, 'lightline')
   }
-}
-
-function ymlsInFolder (folderPath: string, folder2?: string): string[] {
-  const finalPath = folder2
-    ? path.resolve(folderPath, folder2)
-    : folderPath
-  if (!fs.existsSync(finalPath)) {
-    throw new Error('folder doesn\'t exists: ' + finalPath)
-  }
-  return fs.readdirSync(finalPath, 'utf8')
-    .filter(filename => filename.endsWith('.yml'))
 }
 
 function loadPalettes (folderPath: string): Palettes {
