@@ -5,12 +5,11 @@ import isHexColor from './is-hex-color'
 import { loadYml } from './load-yml'
 
 export function loadPalette (filepath: string): Palette {
-  const file = loadYml(filepath)
-  const { content } = file
+  const { content } = loadYml(filepath)
 
   const palette = {
+    filepath,
     name: path.basename(filepath, '.yml'),
-    path: filepath,
     colors: {}
   } as Palette
 
