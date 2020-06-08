@@ -39,7 +39,7 @@ interface ColorSchemeConfig {
   description?: string
 }
 
-interface StatusLineConfig {
+export interface StatusLineConfig {
   name: string
   palette: string
   style: string
@@ -47,7 +47,6 @@ interface StatusLineConfig {
 }
 
 export interface Config {
-  estiloVersion: string
   version?: string
   author?: string
   name?: string
@@ -67,6 +66,7 @@ export interface SyntaxRule {
 
 export interface Project {
   config: Config
+  estiloVersion: string
   folderPath: string
   syntax: SyntaxRule[]
   palettes: Palettes
