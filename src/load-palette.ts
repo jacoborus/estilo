@@ -17,10 +17,6 @@ export function loadPalette (filepath: string): Palette {
   Object.keys(content).forEach(name => {
     const value = content[name]
 
-    if (typeof value !== 'string') {
-      throw new Error(`Wrong type: ${filepath}: ${name}`)
-    }
-
     const hexcolor = value.trim()
     if (!isHexColor(hexcolor)) {
       throw new Error(`Wrong color: ${filepath}: ${name}`)

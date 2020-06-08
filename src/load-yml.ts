@@ -11,6 +11,14 @@ export function loadYml (folderPath: string, filename?: string): YmlFile {
     throw new Error(`Content of file (${filepath}) is not an object`)
   }
 
+  Object.keys(content).forEach(name => {
+    const value = content[name]
+
+    if (typeof value !== 'string') {
+      throw new Error(`Wrong type: ${filepath}: ${name}`)
+    }
+  })
+
   return {
     filepath,
     content

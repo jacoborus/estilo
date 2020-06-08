@@ -1,8 +1,31 @@
-'use strict'
+import hexterm from 'hexterm'
+import isHexColor from './is-hex-color.js'
+import { loadYml } from './load-yml'
+import { SyntaxFile } from './common'
 
-const hexterm = require('hexterm')
-const isHexColor = require('./is-hex-color.js')
 const uis = new Set(['u', 'b', 'r', 'i', 'c', 's'])
+
+export function loadSyntax (filepath: string): SyntaxFile {
+  const { content } = loadYml(filepath)
+  const syntaxFile = {
+    filepath: filepath,
+    definitions: []
+  } as SyntaxFile
+
+  Object.keys(content).forEach(name => {
+    const value = content[name]
+
+    if (typeof value !== 'string') {
+      throw new Error(`Wrong type: ${filepath}: ${name}`)
+    }
+
+    syntaxFile.colors[name] = {
+      hex: hexcolor.startsWith('#') ? hexcolor : '#' + hexcolor,
+      xterm: hexterm(hexcolor)
+    }
+  })
+  return syntaxFile
+}
 
 const uiValues = {
   u: 'underline',
@@ -13,7 +36,7 @@ const uiValues = {
   s: 'standout'
 }
 
-function parseui (raw, hiName) {
+function parseui (raw: string, hiName: string) {
   const l = raw.length
   const out = []
   let i = 0

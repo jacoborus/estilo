@@ -12,14 +12,10 @@ export function loadTerminal (folderPath: string): TerminalStyle {
   } as TerminalStyle
 
   Object.keys(content).forEach(prop => {
-    const colorname = content[prop]
-
-    if (typeof colorname !== 'string') {
-      throw new Error(`Wrong type: ${filepath}: ${prop}`)
-    }
-    if (!colorname.trim()) return
-
-    terminalStyle.styles[prop] = colorname.trim()
+    const colorname = content[prop].trim()
+    if (!colorname) return
+    terminalStyle.styles[prop] = colorname
   })
+
   return terminalStyle
 }
