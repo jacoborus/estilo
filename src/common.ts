@@ -21,6 +21,7 @@ export interface TerminalStyle {
   }
 }
 
+export type StatusStyles = Record<string, StatusStyle>
 export interface StatusStyle {
   name: string
   filepath: string
