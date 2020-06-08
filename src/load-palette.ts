@@ -1,10 +1,12 @@
 import path from 'path'
 import hexterm from 'hexterm'
-import { Palette, YmlFile } from './common'
+import { Palette } from './common'
 import isHexColor from './is-hex-color'
+import { loadYml } from './load-yml'
 
-export default function (file: YmlFile): Palette {
-  const { content, filepath } = file
+export function loadPalette (filepath: string): Palette {
+  const file = loadYml(filepath)
+  const { content } = file
   if (typeof content !== 'object') {
     throw new Error(`Content of palette (${filepath}) is not an object`)
   }
