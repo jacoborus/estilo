@@ -1,15 +1,13 @@
 import path from 'path'
-import { StatusStyle, YmlFile } from './common'
+import { loadYml } from './load-yml'
+import { StatusStyle } from './common'
 
 /*
  * Convert all string values from a given
  * object (`template`) to arrays with hex colors
  */
-export default function (file: YmlFile): StatusStyle {
-  const { content, filepath } = file
-  if (typeof content !== 'object') {
-    throw new Error(`Content of palette (${filepath}) is not an object`)
-  }
+export default function (filepath: string): StatusStyle {
+  const { content } = loadYml(filepath)
 
   const statusStyle = {
     name: path.basename(filepath, '.yml'),
