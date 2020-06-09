@@ -43,7 +43,44 @@ export function loadSyntax (filepath: string): SyntaxRule[] {
     .filter(rule => rule.rule)
 }
 
-export function loadStatus (filepath: string): StatusStyle {
+const statusParts = {
+  airline: [
+    'normal1',
+    'normal2',
+    'normal3',
+    'insert1',
+    'insert2',
+    'insert3',
+    'replace1',
+    'replace2',
+    'replace3',
+    'visual1',
+    'visual2',
+    'visual3',
+    'inactive1',
+    'inactive2',
+    'inactive3'
+  ],
+  lightline: [
+    'normal1',
+    'normal2',
+    'normal3',
+    'insert1',
+    'insert2',
+    'insert3',
+    'replace1',
+    'replace2',
+    'replace3',
+    'visual1',
+    'visual2',
+    'visual3',
+    'inactive1',
+    'inactive2',
+    'inactive3'
+  ]
+} // , ctrlp
+
+export function loadStatus (filepath: string, kind: 'airline' | 'lightline'): StatusStyle {
   const { content } = loadYml(filepath)
 
   const statusStyle = {
@@ -55,6 +92,13 @@ export function loadStatus (filepath: string): StatusStyle {
   Object.keys(content).forEach(name => {
     const txt = content[name].trim()
     statusStyle.styles[name] = txt.split(/\s+/)
+  })
+  // validate
+  statusParts[kind].forEach(part => {
+    const block = statusStyle.styles[part]
+    if (!block) throw new Error(`Missing ${kind} block: ${[part]} in ${filepath}`)
+    if (!block[0]) throw new Error(`Missing foreground ${part} in ${filepath}`)
+    if (!block[1]) throw new Error(`Missing background ${part} in ${filepath}`)
   })
   return statusStyle
 }

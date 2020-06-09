@@ -41,11 +41,11 @@ function loadPalettes (folderPath: string): Palettes {
   return palettes
 }
 
-function loadAllStatus (folderPath: string, kind: string): StatusStyles {
+function loadAllStatus (folderPath: string, kind: 'airline' | 'lightline'): StatusStyles {
   const filepaths = ymlsInFolder(folderPath, kind)
   const statusStyle = {} as StatusStyles
   filepaths.forEach(filepath => {
-    const style = loadStatus(filepath)
+    const style = loadStatus(filepath, kind)
     statusStyle[style.name] = style
   })
   return statusStyle
