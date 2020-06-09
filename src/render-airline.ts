@@ -3,26 +3,22 @@ import {
   Project,
   StatusSyntax,
   Palette,
-  ColorCode
+  DataRenderStatus
 } from './common'
 
-type DataRenderAirline = Record<string, [ColorCode, ColorCode]>
-
-function parseStatusColors (syntax: StatusSyntax, palette: Palette): DataRenderAirline {
-  const out = {} as DataRenderAirline
+function parseStatusColors (syntax: StatusSyntax, palette: Palette): DataRenderStatus {
+  const out = {} as DataRenderStatus
   Object.keys(syntax).forEach(partName => {
     const [fgName, bgName] = syntax[partName]
     const fg = palette.colors[fgName]
     const bg = palette.colors[bgName]
     if (!fg) throw new Error(`Missing color (${fgName}) in palette ${palette.name}`)
     if (!bg) throw new Error(`Missing color (${bgName}) in palette ${palette.name}`)
-    out[partName] = [fg, bg]
+    out[partName] = { fg, bg }
   })
   return out
 }
 
-/* Convert all string values from a given
- * object (`template`) to arrays with hex colors */
 export function renderAirline (config: StatusLineConfig, project: Project): string {
   const palette = project.palettes[config.palette]
   if (!palette) {
@@ -37,7 +33,7 @@ export function renderAirline (config: StatusLineConfig, project: Project): stri
   return printAirline(c, config, project)
 }
 
-export function printAirline (c: DataRenderAirline, theme: StatusLineConfig, pkg: Project): string {
+export function printAirline (c: DataRenderStatus, theme: StatusLineConfig, pkg: Project): string {
   return `
 " ============================================================
 " ${theme.name}
@@ -49,29 +45,29 @@ export function printAirline (c: DataRenderAirline, theme: StatusLineConfig, pkg
 
 let g:airline#themes#${theme.name}#palette = {}
 
-let s:normal1 = [ "${c.normal1[0].hex}", "${c.normal1[1].hex}", ${c.normal1[0].xterm}, ${c.normal1[1].xterm} ]
-let s:normal2 = [ "${c.normal2[0].hex}", "${c.normal2[1].hex}", ${c.normal2[0].xterm}, ${c.normal2[1].xterm} ]
-let s:normal3 = [ "${c.normal3[0].hex}", "${c.normal3[1].hex}", ${c.normal3[0].xterm}, ${c.normal3[1].xterm} ]
+let s:normal1 = [ "${c.normal1.fg.hex}", "${c.normal1.bg.hex}", ${c.normal1.fg.xterm}, ${c.normal1.bg.xterm} ]
+let s:normal2 = [ "${c.normal2.fg.hex}", "${c.normal2.bg.hex}", ${c.normal2.fg.xterm}, ${c.normal2.bg.xterm} ]
+let s:normal3 = [ "${c.normal3.fg.hex}", "${c.normal3.bg.hex}", ${c.normal3.fg.xterm}, ${c.normal3.bg.xterm} ]
 let g:airline#themes#${theme.name}#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)
 
-let s:insert1 = [ "${c.insert1[0].hex}", "${c.insert1[1].hex}", ${c.insert1[0].xterm}, ${c.insert1[1].xterm} ]
-let s:insert2 = [ "${c.insert2[0].hex}", "${c.insert2[1].hex}", ${c.insert2[0].xterm}, ${c.insert2[1].xterm} ]
-let s:insert3 = [ "${c.insert3[0].hex}", "${c.insert3[1].hex}", ${c.insert3[0].xterm}, ${c.insert3[1].xterm} ]
+let s:insert1 = [ "${c.insert1.fg.hex}", "${c.insert1.bg.hex}", ${c.insert1.fg.xterm}, ${c.insert1.bg.xterm} ]
+let s:insert2 = [ "${c.insert2.fg.hex}", "${c.insert2.bg.hex}", ${c.insert2.fg.xterm}, ${c.insert2.bg.xterm} ]
+let s:insert3 = [ "${c.insert3.fg.hex}", "${c.insert3.bg.hex}", ${c.insert3.fg.xterm}, ${c.insert3.bg.xterm} ]
 let g:airline#themes#${theme.name}#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)
 
-let s:replace1 = [ "${c.replace1[0].hex}", "${c.replace1[1].hex}", ${c.replace1[0].xterm}, ${c.replace1[1].xterm} ]
-let s:replace2 = [ "${c.replace2[0].hex}", "${c.replace2[1].hex}", ${c.replace2[0].xterm}, ${c.replace2[1].xterm} ]
-let s:replace3 = [ "${c.replace3[0].hex}", "${c.replace3[1].hex}", ${c.replace3[0].xterm}, ${c.replace3[1].xterm} ]
+let s:replace1 = [ "${c.replace1.fg.hex}", "${c.replace1.bg.hex}", ${c.replace1.fg.xterm}, ${c.replace1.bg.xterm} ]
+let s:replace2 = [ "${c.replace2.fg.hex}", "${c.replace2.bg.hex}", ${c.replace2.fg.xterm}, ${c.replace2.bg.xterm} ]
+let s:replace3 = [ "${c.replace3.fg.hex}", "${c.replace3.bg.hex}", ${c.replace3.fg.xterm}, ${c.replace3.bg.xterm} ]
 let g:airline#themes#${theme.name}#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)
 
-let s:visual1 = [ "${c.visual1[0].hex}", "${c.visual1[1].hex}", ${c.visual1[0].xterm}, ${c.visual1[1].xterm} ]
-let s:visual2 = [ "${c.visual2[0].hex}", "${c.visual2[1].hex}", ${c.visual2[0].xterm}, ${c.visual2[1].xterm} ]
-let s:visual3 = [ "${c.visual3[0].hex}", "${c.visual3[1].hex}", ${c.visual3[0].xterm}, ${c.visual3[1].xterm} ]
+let s:visual1 = [ "${c.visual1.fg.hex}", "${c.visual1.bg.hex}", ${c.visual1.fg.xterm}, ${c.visual1.bg.xterm} ]
+let s:visual2 = [ "${c.visual2.fg.hex}", "${c.visual2.bg.hex}", ${c.visual2.fg.xterm}, ${c.visual2.bg.xterm} ]
+let s:visual3 = [ "${c.visual3.fg.hex}", "${c.visual3.bg.hex}", ${c.visual3.fg.xterm}, ${c.visual3.bg.xterm} ]
 let g:airline#themes#${theme.name}#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)
 
-let s:inactive1 = [ "${c.inactive1[0].hex}", "${c.inactive1[1].hex}", ${c.inactive1[0].xterm}, ${c.inactive1[1].xterm} ]
-let s:inactive2 = [ "${c.inactive2[0].hex}", "${c.inactive2[1].hex}", ${c.inactive2[0].xterm}, ${c.inactive2[1].xterm} ]
-let s:inactive3 = [ "${c.inactive3[0].hex}", "${c.inactive3[1].hex}", ${c.inactive3[0].xterm}, ${c.inactive3[1].xterm} ]
+let s:inactive1 = [ "${c.inactive1.fg.hex}", "${c.inactive1.bg.hex}", ${c.inactive1.fg.xterm}, ${c.inactive1.bg.xterm} ]
+let s:inactive2 = [ "${c.inactive2.fg.hex}", "${c.inactive2.bg.hex}", ${c.inactive2.fg.xterm}, ${c.inactive2.bg.xterm} ]
+let s:inactive3 = [ "${c.inactive3.fg.hex}", "${c.inactive3.bg.hex}", ${c.inactive3.fg.xterm}, ${c.inactive3.bg.xterm} ]
 let g:airline#themes#${theme.name}#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)
 
 ${c.ctrlp1 ? `
@@ -79,9 +75,9 @@ if !get(g:, 'loaded_ctrlp', 0)
   finish
 endif
 
-let s:CP1 = [ "${c.ctrlp1[0].hex}", "${c.ctrlp1[1].hex}", ${c.ctrlp1[0].xterm}, ${c.ctrlp1[1].xterm} ]
-let s:CP2 = [ "${c.ctrlp2[0].hex}", "${c.ctrlp2[1].hex}", ${c.ctrlp2[0].xterm}, ${c.ctrlp2[1].xterm} ]
-let s:CP3 = [ "${c.ctrlp3[0].hex}", "${c.ctrlp3[1].hex}", ${c.ctrlp3[0].xterm}, ${c.ctrlp3[1].xterm} ]
+let s:CP1 = [ "${c.ctrlp1.fg.hex}", "${c.ctrlp1.bg.hex}", ${c.ctrlp1.fg.xterm}, ${c.ctrlp1.bg.xterm} ]
+let s:CP2 = [ "${c.ctrlp2.fg.hex}", "${c.ctrlp2.bg.hex}", ${c.ctrlp2.fg.xterm}, ${c.ctrlp2.bg.xterm} ]
+let s:CP3 = [ "${c.ctrlp3.fg.hex}", "${c.ctrlp3.bg.hex}", ${c.ctrlp3.fg.xterm}, ${c.ctrlp3.bg.xterm} ]
 
 let g:airline#themes#${theme.name}#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)
 ` : ''}

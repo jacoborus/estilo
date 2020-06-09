@@ -3,27 +3,25 @@ import {
   Project,
   StatusSyntax,
   Palette,
-  ColorCode
+  DataRenderStatus
 } from './common'
 
-type DataRenderAirline = Record<string, [ColorCode, ColorCode]>
-
-function parseStatusColors (syntax: StatusSyntax, palette: Palette): DataRenderAirline {
-  const out = {} as DataRenderAirline
+function parseStatusColors (syntax: StatusSyntax, palette: Palette): DataRenderStatus {
+  const out = {} as DataRenderStatus
   Object.keys(syntax).forEach(partName => {
     const [fgName, bgName] = syntax[partName]
     const fg = palette.colors[fgName]
     const bg = palette.colors[bgName]
     if (!fg) throw new Error(`Missing color (${fgName}) in palette ${palette.name}`)
     if (!bg) throw new Error(`Missing color (${bgName}) in palette ${palette.name}`)
-    out[partName] = [fg, bg]
+    out[partName] = { fg, bg }
   })
   return out
 }
 
 /* Convert all string values from a given
  * object (`template`) to arrays with hex colors */
-export function renderLighline (config: StatusLineConfig, project: Project): string {
+export function renderLightline (config: StatusLineConfig, project: Project): string {
   const palette = project.palettes[config.palette]
   if (!palette) {
     throw new Error(`Airline ${config.name} palette (${config.palette}) doesn't exist`)
@@ -37,7 +35,7 @@ export function renderLighline (config: StatusLineConfig, project: Project): str
   return printLightline(c, config, project)
 }
 
-export function printLightline (c: DataRenderAirline, theme: StatusLineConfig, pkg: Project): string {
+export function printLightline (c: DataRenderStatus, theme: StatusLineConfig, pkg: Project): string {
   return `" ============================================================
 " ${theme.name}
 " ${theme.description}
@@ -48,32 +46,32 @@ export function printLightline (c: DataRenderAirline, theme: StatusLineConfig, p
 
 let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {} }
 
-let s:p.normal.left = [[["${c.normal1[0].hex}", ${c.normal1[0].xterm}], ["${c.normal1[1].hex}", ${c.normal1[1].xterm}]], [["${c.normal2[0].hex}", ${c.normal2[0].xterm}], ["${c.normal2[1].hex}", ${c.normal2[1].xterm}]]]
-let s:p.normal.middle = [[["${c.normal3[0].hex}", ${c.normal3[0].xterm}], ["${c.normal3[1].hex}", ${c.normal3[1].xterm}]]]
-let s:p.normal.right = [[["${c.normal4[0].hex}", ${c.normal4[0].xterm}], ["${c.normal4[1].hex}", ${c.normal4[1].xterm}]], [["${c.normal5[0].hex}", ${c.normal5[0].xterm}], ["${c.normal5[1].hex}", ${c.normal5[1].xterm}]]]
-let s:p.normal.error = [[["${c.normalError[0].hex}", ${c.normalError[0].xterm}], ["${c.normalError[1].hex}", ${c.normalError[1].xterm}]]]
-let s:p.normal.warning = [[["${c.normalWarning[0].hex}", ${c.normalWarning[0].xterm}], ["${c.normalWarning[1].hex}", ${c.normalWarning[1].xterm}]]]
+let s:p.normal.left = [[["${c.normal1.fg.hex}", ${c.normal1.fg.xterm}], ["${c.normal1.bg.hex}", ${c.normal1.bg.xterm}]], [["${c.normal2.fg.hex}", ${c.normal2.fg.xterm}], ["${c.normal2.bg.hex}", ${c.normal2.bg.xterm}]]]
+let s:p.normal.middle = [[["${c.normal3.fg.hex}", ${c.normal3.fg.xterm}], ["${c.normal3.bg.hex}", ${c.normal3.bg.xterm}]]]
+let s:p.normal.right = [[["${c.normal4.fg.hex}", ${c.normal4.fg.xterm}], ["${c.normal4.bg.hex}", ${c.normal4.bg.xterm}]], [["${c.normal5.fg.hex}", ${c.normal5.fg.xterm}], ["${c.normal5.bg.hex}", ${c.normal5.bg.xterm}]]]
+let s:p.normal.error = [[["${c.normalError.fg.hex}", ${c.normalError.fg.xterm}], ["${c.normalError.bg.hex}", ${c.normalError.bg.xterm}]]]
+let s:p.normal.warning = [[["${c.normalWarning.fg.hex}", ${c.normalWarning.fg.xterm}], ["${c.normalWarning.bg.hex}", ${c.normalWarning.bg.xterm}]]]
 
-let s:p.inactive.left = [[["${c.inactive1[0].hex}", ${c.inactive1[0].xterm}], ["${c.inactive1[1].hex}", ${c.inactive1[1].xterm}]], [["${c.inactive2[0].hex}", ${c.inactive2[0].xterm}], ["${c.inactive2[1].hex}", ${c.inactive2[1].xterm}]]]
-let s:p.inactive.middle = [[["${c.inactive3[0].hex}", ${c.inactive3[0].xterm}], ["${c.inactive3[1].hex}", ${c.inactive3[1].xterm}]]]
-let s:p.inactive.right = [[["${c.inactive4[0].hex}", ${c.inactive4[0].xterm}], ["${c.inactive4[1].hex}", ${c.inactive4[1].xterm}]], [["${c.inactive5[0].hex}", ${c.inactive5[0].xterm}], ["${c.inactive5[1].hex}", ${c.inactive5[1].xterm}]]]
+let s:p.inactive.left = [[["${c.inactive1.fg.hex}", ${c.inactive1.fg.xterm}], ["${c.inactive1.bg.hex}", ${c.inactive1.bg.xterm}]], [["${c.inactive2.fg.hex}", ${c.inactive2.fg.xterm}], ["${c.inactive2.bg.hex}", ${c.inactive2.bg.xterm}]]]
+let s:p.inactive.middle = [[["${c.inactive3.fg.hex}", ${c.inactive3.fg.xterm}], ["${c.inactive3.bg.hex}", ${c.inactive3.bg.xterm}]]]
+let s:p.inactive.right = [[["${c.inactive4.fg.hex}", ${c.inactive4.fg.xterm}], ["${c.inactive4.bg.hex}", ${c.inactive4.bg.xterm}]], [["${c.inactive5.fg.hex}", ${c.inactive5.fg.xterm}], ["${c.inactive5.bg.hex}", ${c.inactive5.bg.xterm}]]]
 
-let s:p.insert.left = [[["${c.insert1[0].hex}", ${c.insert1[0].xterm}], ["${c.insert1[1].hex}", ${c.insert1[1].xterm}]], [["${c.insert2[0].hex}", ${c.insert2[0].xterm}], ["${c.insert2[1].hex}", ${c.insert2[1].xterm}]]]
-let s:p.insert.middle = [[["${c.insert3[0].hex}", ${c.insert3[0].xterm}], ["${c.insert3[1].hex}", ${c.insert3[1].xterm}]]]
-let s:p.insert.right = [[["${c.insert4[0].hex}", ${c.insert4[0].xterm}], ["${c.insert4[1].hex}", ${c.insert4[1].xterm}]], [["${c.insert5[0].hex}", ${c.insert5[0].xterm}], ["${c.insert5[1].hex}", ${c.insert5[1].xterm}]]]
+let s:p.insert.left = [[["${c.insert1.fg.hex}", ${c.insert1.fg.xterm}], ["${c.insert1.bg.hex}", ${c.insert1.bg.xterm}]], [["${c.insert2.fg.hex}", ${c.insert2.fg.xterm}], ["${c.insert2.bg.hex}", ${c.insert2.bg.xterm}]]]
+let s:p.insert.middle = [[["${c.insert3.fg.hex}", ${c.insert3.fg.xterm}], ["${c.insert3.bg.hex}", ${c.insert3.bg.xterm}]]]
+let s:p.insert.right = [[["${c.insert4.fg.hex}", ${c.insert4.fg.xterm}], ["${c.insert4.bg.hex}", ${c.insert4.bg.xterm}]], [["${c.insert5.fg.hex}", ${c.insert5.fg.xterm}], ["${c.insert5.bg.hex}", ${c.insert5.bg.xterm}]]]
 
-let s:p.replace.left = [[["${c.replace1[0].hex}", ${c.replace1[0].xterm}], ["${c.replace1[1].hex}", ${c.replace1[1].xterm}]], [["${c.replace2[0].hex}", ${c.replace2[0].xterm}], ["${c.replace2[1].hex}", ${c.replace2[1].xterm}]]]
-let s:p.replace.middle = [[["${c.replace3[0].hex}", ${c.replace3[0].xterm}], ["${c.replace3[1].hex}", ${c.replace3[1].xterm}]]]
-let s:p.replace.right = [[["${c.replace4[0].hex}", ${c.replace4[0].xterm}], ["${c.replace4[1].hex}", ${c.replace4[1].xterm}]], [["${c.replace5[0].hex}", ${c.replace5[0].xterm}], ["${c.replace5[1].hex}", ${c.replace5[1].xterm}]]]
+let s:p.replace.left = [[["${c.replace1.fg.hex}", ${c.replace1.fg.xterm}], ["${c.replace1.bg.hex}", ${c.replace1.bg.xterm}]], [["${c.replace2.fg.hex}", ${c.replace2.fg.xterm}], ["${c.replace2.bg.hex}", ${c.replace2.bg.xterm}]]]
+let s:p.replace.middle = [[["${c.replace3.fg.hex}", ${c.replace3.fg.xterm}], ["${c.replace3.bg.hex}", ${c.replace3.bg.xterm}]]]
+let s:p.replace.right = [[["${c.replace4.fg.hex}", ${c.replace4.fg.xterm}], ["${c.replace4.bg.hex}", ${c.replace4.bg.xterm}]], [["${c.replace5.fg.hex}", ${c.replace5.fg.xterm}], ["${c.replace5.bg.hex}", ${c.replace5.bg.xterm}]]]
 
-let s:p.visual.left = [[["${c.visual1[0].hex}", ${c.visual1[0].xterm}], ["${c.visual1[1].hex}", ${c.visual1[1].xterm}]], [["${c.visual2[0].hex}", ${c.visual2[0].xterm}], ["${c.visual2[1].hex}", ${c.visual2[1].xterm}]]]
-let s:p.visual.middle = [[["${c.visual3[0].hex}", ${c.visual3[0].xterm}], ["${c.visual3[1].hex}", ${c.visual3[1].xterm}]]]
-let s:p.visual.right = [[["${c.visual4[0].hex}", ${c.visual4[0].xterm}], ["${c.visual4[1].hex}", ${c.visual4[1].xterm}]], [["${c.visual5[0].hex}", ${c.visual5[0].xterm}], ["${c.visual5[1].hex}", ${c.visual5[1].xterm}]]]
+let s:p.visual.left = [[["${c.visual1.fg.hex}", ${c.visual1.fg.xterm}], ["${c.visual1.bg.hex}", ${c.visual1.bg.xterm}]], [["${c.visual2.fg.hex}", ${c.visual2.fg.xterm}], ["${c.visual2.bg.hex}", ${c.visual2.bg.xterm}]]]
+let s:p.visual.middle = [[["${c.visual3.fg.hex}", ${c.visual3.fg.xterm}], ["${c.visual3.bg.hex}", ${c.visual3.bg.xterm}]]]
+let s:p.visual.right = [[["${c.visual4.fg.hex}", ${c.visual4.fg.xterm}], ["${c.visual4.bg.hex}", ${c.visual4.bg.xterm}]], [["${c.visual5.fg.hex}", ${c.visual5.fg.xterm}], ["${c.visual5.bg.hex}", ${c.visual5.bg.xterm}]]]
 
-let s:p.tabline.left = [[["${c.tablineLeft[0].hex}", ${c.tablineLeft[0].xterm}], ["${c.tablineLeft[1].hex}", ${c.tablineLeft[1].xterm}]]]
-let s:p.tabline.tabsel = [[["${c.tablineSelected[0].hex}", ${c.tablineSelected[0].xterm}], ["${c.tablineSelected[1].hex}", ${c.tablineSelected[1].xterm}]]]
-let s:p.tabline.middle = [[["${c.tablineMiddle[0].hex}", ${c.tablineMiddle[0].xterm}], ["${c.tablineMiddle[1].hex}", ${c.tablineMiddle[1].xterm}]]]
-let s:p.tabline.right = [[["${c.tablineRight[0].hex}", ${c.tablineRight[0].xterm}], ["${c.tablineRight[1].hex}", ${c.tablineRight[1].xterm}]]]
+let s:p.tabline.left = [[["${c.tablineLeft.fg.hex}", ${c.tablineLeft.fg.xterm}], ["${c.tablineLeft.bg.hex}", ${c.tablineLeft.bg.xterm}]]]
+let s:p.tabline.tabsel = [[["${c.tablineSelected.fg.hex}", ${c.tablineSelected.fg.xterm}], ["${c.tablineSelected.bg.hex}", ${c.tablineSelected.bg.xterm}]]]
+let s:p.tabline.middle = [[["${c.tablineMiddle.fg.hex}", ${c.tablineMiddle.fg.xterm}], ["${c.tablineMiddle.bg.hex}", ${c.tablineMiddle.bg.xterm}]]]
+let s:p.tabline.right = [[["${c.tablineRight.fg.hex}", ${c.tablineRight.fg.xterm}], ["${c.tablineRight.bg.hex}", ${c.tablineRight.bg.xterm}]]]
 
 let g:lightline#colorscheme#${theme.name}#palette = lightline#colorscheme#flatten(s:p)
 

@@ -23,6 +23,11 @@ export interface TerminalStyle {
   }
 }
 
+export type DataRenderStatus = Record<string, {
+  fg: ColorCode,
+  bg: ColorCode
+}>
+
 export type StatusStyles = Record<string, StatusStyle>
 export interface StatusSyntax {
     [index: string]: [string, string]
