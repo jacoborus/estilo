@@ -1,4 +1,4 @@
-import render from '../src/render-lightline'
+import { renderLightline } from '../src/render-lightline'
 
 const result = `if exists('g:pkgName_lightline') && g:pkgName_lightline
   let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}
@@ -67,7 +67,7 @@ const colors = {
   nine: '#999999'
 }
 
-test('printLightline', () => {
-  const rendered = render('pkgName', 'testing', tmpl, colors)
+test.skip('printLightline', () => {
+  const rendered = renderLightline('pkgName', 'testing', tmpl, colors)
   expect(rendered).toBe(result)
 })
