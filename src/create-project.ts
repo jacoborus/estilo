@@ -9,7 +9,8 @@ import {
   loadStatus,
   loadSyntax,
   loadTerminal,
-  loadPalette
+  loadPalette,
+  loadMustaches
 } from './loaders'
 
 import {
@@ -27,7 +28,8 @@ export function createProject (folderPath: string): Project {
     syntax: ymlsInFolder(folderPath, 'syntax').flatMap(loadSyntax),
     terminalStyle: loadTerminal(folderPath),
     airlineStyles: loadAllStatus(folderPath, 'airline'),
-    lightlineStyles: loadAllStatus(folderPath, 'lightline')
+    lightlineStyles: loadAllStatus(folderPath, 'lightline'),
+    mustaches: loadMustaches()
   }
 }
 

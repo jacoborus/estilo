@@ -1,3 +1,7 @@
+export interface Mustaches {
+  [index: string] : string
+}
+
 export type YmlFile = {
   filepath: string
   content: any
@@ -81,4 +85,5 @@ export interface Project {
   terminalStyle?: TerminalStyle
   airlineStyles: Record<string, StatusStyle>
   lightlineStyles: Record<string, StatusStyle>
+  mustaches: Mustaches
 }

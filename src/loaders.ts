@@ -1,11 +1,13 @@
 import path from 'path'
+import fs from 'fs'
 import hexterm from 'hexterm'
 import { loadYml, isHexColor } from './util'
 import {
   Palette,
   SyntaxRule,
   StatusStyle,
-  TerminalStyle
+  TerminalStyle,
+  Mustaches
 } from './common'
 
 export function loadPalette (filepath: string): Palette {
@@ -119,4 +121,16 @@ export function loadTerminal (folderPath: string): TerminalStyle {
   })
 
   return terminalStyle
+}
+
+export function loadMustaches (): Mustaches {
+  const folder = path.resolve(__dirname, '../templates/mustaches')
+  const filenames = ['colorscheme', 'airline', 'lightline']
+  const mustaches = {} as Mustaches
+  filenames.forEach(filename => {
+    const filepath = path.resolve(folder, filename + '.hbs')
+    const txt = fs.readFileSync(filepath, 'utf8')
+    mustaches[filename] = txt
+  })
+  return mustaches
 }
