@@ -3,14 +3,16 @@ export type YmlFile = {
   content: any
 }
 
+export interface ColorCode {
+  hex: string
+  xterm: number
+}
+
 export interface Palette {
   name: string
   filepath: string
   colors: {
-    [index: string]: {
-      hex: string
-      xterm: number
-    }
+    [index: string]: ColorCode
   }
 }
 
@@ -22,12 +24,13 @@ export interface TerminalStyle {
 }
 
 export type StatusStyles = Record<string, StatusStyle>
+export interface StatusSyntax {
+    [index: string]: [string, string]
+}
 export interface StatusStyle {
   name: string
   filepath: string
-  styles: {
-    [index: string]: string[]
-  }
+  syntax: StatusSyntax
 }
 
 export type Palettes = Record<string, Palette>
@@ -46,7 +49,7 @@ export interface StatusLineConfig {
   description?: string
 }
 
-export interface Config {
+export interface ProjectConfig {
   version?: string
   author?: string
   name?: string
@@ -65,7 +68,7 @@ export interface SyntaxRule {
 }
 
 export interface Project {
-  config: Config
+  config: ProjectConfig
   estiloVersion: string
   folderPath: string
   syntax: SyntaxRule[]

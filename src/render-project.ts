@@ -10,18 +10,18 @@ import { renderLightline } from './render-lightline'
 
 export function renderProject (project: Project): void {
   const { config } = project
-  config.colorschemes.forEach(scheme => {
-    const rendered = renderColorscheme(scheme, project)
-    writeScheme(rendered, scheme.name, project)
+  config.colorschemes.forEach(config => {
+    const rendered = renderColorscheme(config, project)
+    writeScheme(rendered, config.name, project.folderPath)
   })
 
-  config.airlines.forEach(status => {
-    const rendered = renderAirline(status, project)
-    writeStatus('airline', rendered, status.name, project.folderPath)
+  config.airlines.forEach(config => {
+    const rendered = renderAirline(config, project)
+    writeStatus('airline', rendered, config.name, project.folderPath)
   })
 
-  config.lightlines.forEach(status => {
-    const rendered = renderLightline(status, project)
-    writeStatus('lightline', rendered, status.name, project.folderPath)
+  config.lightlines.forEach(config => {
+    const rendered = renderLightline(config, project)
+    writeStatus('lightline', rendered, config.name, project.folderPath)
   })
 }
