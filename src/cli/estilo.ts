@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import path from 'path'
 import minimist from 'minimist'
 import updateNotifier from 'update-notifier'

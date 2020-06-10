@@ -7,7 +7,7 @@
     "test": "test"
   },
   "bin": {
-    "estilo": "./src/cli/estilo.js"
+    "estilo": "./bin/estilo.js"
   },
   "scripts": {
     "test": "jest",
