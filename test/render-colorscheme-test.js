@@ -2,7 +2,7 @@
 
 const test = require('tape')
 const renderColorscheme = require('../src/render-colorscheme.js')
-const estiloVersion = require('../package.json').version
+import { estiloVersion } from '../util'
 
 const testStr = `"
 " Aname 2.1.0

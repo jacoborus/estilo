@@ -34,3 +34,8 @@ export function ymlsInFolder (folderPath: string, folder2?: string): string[] {
   return fs.readdirSync(finalPath, 'utf8')
     .filter(filename => filename.endsWith('.yml'))
 }
+
+const pkgpath = path.resolve(__dirname, '../package.json')
+const raw = fs.readFileSync(pkgpath, 'utf8')
+export const pkg = JSON.parse(raw)
+export const estiloVersion = pkg.version

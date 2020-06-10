@@ -1,8 +1,7 @@
-import pkg from '../package.json'
-
 import {
   loadYml,
-  ymlsInFolder
+  ymlsInFolder,
+  estiloVersion
 } from './util'
 
 import {
@@ -23,7 +22,7 @@ import {
 export function createProject (folderPath: string): Project {
   return {
     folderPath,
-    estiloVersion: pkg.version,
+    estiloVersion,
     config: loadYml(folderPath, 'estilo.yml').content,
     palettes: loadPalettes(folderPath),
     syntax: ymlsInFolder(folderPath, 'syntax').flatMap(loadSyntax),

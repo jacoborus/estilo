@@ -1,4 +1,4 @@
-import { renderLightline } from '../src/render-lightline'
+import { renderStatus } from '../src/render-status'
 
 const result = `if exists('g:pkgName_lightline') && g:pkgName_lightline
   let s:p = {"normal": {}, "inactive": {}, "insert": {}, "replace": {}, "visual": {}, "tabline": {}}
@@ -68,6 +68,7 @@ const colors = {
 }
 
 test.skip('printLightline', () => {
-  const rendered = renderLightline('pkgName', 'testing', tmpl, colors)
+  renderStatus()
+  const rendered = renderStatus(config, project, 'lightline')
   expect(rendered).toBe(result)
 })

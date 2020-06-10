@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "jest",
-    "linter": "eslint src/*.ts src/cli/*.js test/*.js"
+    "linter": "eslint src/*.ts src/cli/*.js test/*.js",
+    "build": "rm -rf lib && tsc"
   },
   "dependencies": {
     "@types/update-notifier": "^4.1.0",

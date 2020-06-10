@@ -5,10 +5,10 @@ import minimist from 'minimist'
 import updateNotifier from 'update-notifier'
 import { createProject } from '../create-project'
 import { renderProject } from '../render-project'
-import selectSyntax from './select-syntax.js'
+import { selectSyntax } from './select-syntax.js'
 import { init } from './init'
 import { installStatus } from './install-status'
-import pkg from '../../package.json'
+import { pkg } from '../util'
 
 const argv = minimist(process.argv.slice(2))
 const projectPath = path.resolve('.')
@@ -42,7 +42,7 @@ const actions = {
   'add-syntax': () => selectSyntax(projectPath),
   'add-airline': () => installStatus(projectPath, 'airline'),
   'add-lightline': () => installStatus(projectPath, 'lightline')
-}
+} as Record<string, () => void>
 
 if (!command) actions.help()
 else {
