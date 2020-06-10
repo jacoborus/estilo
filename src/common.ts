@@ -27,6 +27,7 @@ export interface TerminalStyle {
   }
 }
 
+export type StatusBrand = 'airline' | 'lightline'
 export type DataRenderStatus = Record<string, {
   fg: ColorCode,
   bg: ColorCode
@@ -51,7 +52,7 @@ export interface ColorSchemeConfig {
   description?: string
 }
 
-export interface StatusLineConfig {
+export interface StatusConfig {
   name: string
   palette: string
   style: string
@@ -66,8 +67,8 @@ export interface ProjectConfig {
   license?: string
   description?: string
   colorschemes: ColorSchemeConfig[]
-  airlines: StatusLineConfig[]
-  lightlines: StatusLineConfig[]
+  airlines: StatusConfig[]
+  lightlines: StatusConfig[]
 }
 
 export interface SyntaxRule {

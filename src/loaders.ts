@@ -8,7 +8,8 @@ import {
   SyntaxRule,
   StatusStyle,
   TerminalStyle,
-  Mustaches
+  Mustaches,
+  StatusBrand
 } from './common'
 
 export function loadPalette (filepath: string): Palette {
@@ -22,11 +23,7 @@ export function loadPalette (filepath: string): Palette {
 
   Object.keys(content).forEach(name => {
     const hexcolor = content[name].trim()
-
-    if (!isHexColor(hexcolor)) {
-      crack('Wrong color', { filepath, name })
-    }
-
+    if (!isHexColor(hexcolor)) crack('Wrong color', { filepath, name })
     palette.colors[name] = {
       hex: hexcolor.startsWith('#') ? hexcolor : '#' + hexcolor,
       xterm: hexterm(hexcolor)
@@ -37,7 +34,6 @@ export function loadPalette (filepath: string): Palette {
 
 export function loadSyntax (filepath: string): SyntaxRule[] {
   const { content } = loadYml(filepath)
-
   return Object.keys(content)
     .map(name => ({
       filepath,
@@ -84,7 +80,7 @@ const statusParts = {
   ]
 } // , ctrlp
 
-export function loadStatus (filepath: string, kind: 'airline' | 'lightline'): StatusStyle {
+export function loadStatus (filepath: string, brand: StatusBrand): StatusStyle {
   const { content } = loadYml(filepath)
 
   const statusStyle = {
@@ -97,8 +93,8 @@ export function loadStatus (filepath: string, kind: 'airline' | 'lightline'): St
     const txt = content[name].trim()
     statusStyle.syntax[name] = txt.split(/\s+/)
   })
-  // validate
-  statusParts[kind].forEach(part => {
+
+  statusParts[brand].forEach(part => {
     const block = statusStyle.syntax[part]
     if (!block) crack('Missing block in status', { filepath, block: part })
     if (!block[0]) crack('Missing foreground in status block', { filepath, block: part })

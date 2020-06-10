@@ -16,7 +16,8 @@ import {
 import {
   Palettes,
   Project,
-  StatusStyles
+  StatusStyles,
+  StatusBrand
 } from './common'
 
 export function createProject (folderPath: string): Project {
@@ -43,11 +44,11 @@ function loadPalettes (folderPath: string): Palettes {
   return palettes
 }
 
-function loadAllStatus (folderPath: string, kind: 'airline' | 'lightline'): StatusStyles {
-  const filepaths = ymlsInFolder(folderPath, kind)
+function loadAllStatus (folderPath: string, brand: StatusBrand): StatusStyles {
+  const filepaths = ymlsInFolder(folderPath, brand)
   const statusStyle = {} as StatusStyles
   filepaths.forEach(filepath => {
-    const style = loadStatus(filepath, kind)
+    const style = loadStatus(filepath, brand)
     statusStyle[style.name] = style
   })
   return statusStyle

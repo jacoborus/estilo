@@ -9,7 +9,7 @@ export function isHexColor (color: string): boolean {
 }
 
 export function loadYml (folderPath: string, filename?: string): YmlFile {
-  const filepath = filename ? path.resolve(folderPath, filename) : folderPath
+  const filepath = path.resolve(folderPath, filename || '')
   const content = yaml.parse(fs.readFileSync(filepath, 'utf8'))
 
   if (typeof content !== 'object') {
@@ -22,16 +22,12 @@ export function loadYml (folderPath: string, filename?: string): YmlFile {
     }
   })
 
-  return {
-    filepath,
-    content
-  }
+  return { filepath, content }
 }
 
+// returns a list of all the `.yml` filepaths contained inside folderpath
 export function ymlsInFolder (folderPath: string, folder2?: string): string[] {
-  const finalPath = folder2
-    ? path.resolve(folderPath, folder2)
-    : folderPath
+  const finalPath = path.resolve(folderPath, folder2 || '')
   if (!fs.existsSync(finalPath)) {
     crack('Folder does not exist', { finalPath })
   }
