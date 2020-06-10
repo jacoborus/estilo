@@ -1,13 +1,13 @@
-'use strict'
+import path from 'path'
+import inquirer from 'inquirer'
+import fs from 'fs'
+import { installTemplates } from './install-templates'
 
-const path = require('path')
-const inquirer = require('inquirer')
-const fs = require('fs')
-const installTemplates = require('./install-templates.js')
-
-module.exports = function (projectPath) {
-  const templateFiles = fs.readdirSync(path.resolve(__dirname, '../..', 'templates/syntax'))
-  const installedSyntax = fs.readdirSync(path.resolve(projectPath, 'estilo/syntax'))
+export function selectSyntax (projectPath: string) {
+  const syntaxFolder = path.resolve(__dirname, '../..', 'templates/syntax')
+  const syntaxDestFolder = path.resolve(projectPath, 'estilo/syntax')
+  const templateFiles = fs.readdirSync(syntaxFolder)
+  const installedSyntax = fs.readdirSync(syntaxDestFolder)
 
   const templateChoices = templateFiles.map(f => {
     const isDisabled = installedSyntax.indexOf(f) > -1
@@ -33,10 +33,6 @@ module.exports = function (projectPath) {
   ]
 
   inquirer.prompt(questions).then(function (answers) {
-    if (!answers.templates.length) {
-      console.log('0 selected, skipping...')
-    } else {
-      installTemplates(answers.templates)
-    }
+    installTemplates(answers.templates as string[])
   })
 }
