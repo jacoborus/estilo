@@ -2,6 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import hexterm from 'hexterm'
 import { loadYml, isHexColor } from './util'
+import { crack } from './crack'
 import {
   Palette,
   SyntaxRule,
@@ -23,7 +24,7 @@ export function loadPalette (filepath: string): Palette {
     const hexcolor = content[name].trim()
 
     if (!isHexColor(hexcolor)) {
-      throw new Error(`Wrong color: ${filepath}: ${name}`)
+      crack('Wrong color', { filepath, name })
     }
 
     palette.colors[name] = {
@@ -99,9 +100,9 @@ export function loadStatus (filepath: string, kind: 'airline' | 'lightline'): St
   // validate
   statusParts[kind].forEach(part => {
     const block = statusStyle.syntax[part]
-    if (!block) throw new Error(`Missing ${kind} block: ${[part]} in ${filepath}`)
-    if (!block[0]) throw new Error(`Missing foreground ${part} in ${filepath}`)
-    if (!block[1]) throw new Error(`Missing background ${part} in ${filepath}`)
+    if (!block) crack('Missing block in status', { filepath, block: part })
+    if (!block[0]) crack('Missing foreground in status block', { filepath, block: part })
+    if (!block[1]) crack('Missing background in status block', { filepath, block: part })
   })
   return statusStyle
 }

@@ -1,5 +1,6 @@
 import handlebars from 'handlebars'
 import hexterm from 'hexterm'
+import { crack } from './crack'
 import { isHexColor } from './util'
 import {
   ColorSchemeConfig,
@@ -11,7 +12,7 @@ import {
 export function renderColorscheme (config: ColorSchemeConfig, project: Project): string {
   const palette = project.palettes[config.palette]
   if (!palette) {
-    throw new Error(`Palette (${config.palette}) doesn't exist`)
+    crack('Palette does not exist', { palette: config.palette })
   }
   const syntax = project.syntax
   const c = parseSyntaxColors(syntax, palette)
@@ -29,15 +30,15 @@ function parseSyntaxColors (syntax: SyntaxRule[], palette: Palette) {
       }
     }
     return {
-      fore: getColorCode(fgColor, palette, 'foreground', filepath),
-      back: getColorCode(bgColor, palette, 'background', filepath),
+      fore: getColorCode(fgColor, palette, filepath),
+      back: getColorCode(bgColor, palette, filepath),
       ui: getUI(ui),
       guisp: getCurlColor(curlColor, palette, filepath)
     }
   })
 }
 
-function getColorCode (color: string, palette: Palette, part: string, filepath: string) {
+function getColorCode (color: string, palette: Palette, filepath: string) {
   // return false if empty color
   if (color === '.') return false
   // return false if color is `NONE`
@@ -54,7 +55,7 @@ function getColorCode (color: string, palette: Palette, part: string, filepath: 
     }
   }
   // not valid color
-  throw new Error(`${part} color ${color} doesn't exists in ${filepath}`)
+  crack('Color does not exist', { filepath, color })
 }
 
 function getUI (ui: string) {
@@ -67,7 +68,7 @@ function getUI (ui: string) {
 }
 
 function getCurlColor (cColor: string, palette: Palette, filepath: string) {
-  const curlParsed = getColorCode(cColor, palette, 'guisp', filepath)
+  const curlParsed = getColorCode(cColor, palette, filepath)
   let curlColor
   if (!curlParsed || curlParsed.hex === 'NONE') {
     curlColor = false
