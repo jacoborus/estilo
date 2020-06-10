@@ -65,18 +65,34 @@ const statusParts = {
     'normal1',
     'normal2',
     'normal3',
+    'normal4',
+    'normal5',
+    'normalError',
+    'normalWarning',
+    'inactive1',
+    'inactive2',
+    'inactive3',
+    'inactive4',
+    'inactive5',
     'insert1',
     'insert2',
     'insert3',
+    'insert4',
+    'insert5',
     'replace1',
     'replace2',
     'replace3',
+    'replace4',
+    'replace5',
     'visual1',
     'visual2',
     'visual3',
-    'inactive1',
-    'inactive2',
-    'inactive3'
+    'visual4',
+    'visual5',
+    'tablineLeft',
+    'tablineSelected',
+    'tablineMiddle',
+    'tablineRight'
   ]
 } // , ctrlp
 
@@ -97,8 +113,12 @@ export function loadStatus (filepath: string, brand: StatusBrand): StatusStyle {
   statusParts[brand].forEach(part => {
     const block = statusStyle.syntax[part]
     if (!block) crack('Missing block in status', { filepath, block: part })
-    if (!block[0]) crack('Missing foreground in status block', { filepath, block: part })
-    if (!block[1]) crack('Missing background in status block', { filepath, block: part })
+    if (!block[0]) {
+      crack('Missing foreground in status block', { filepath, block: part })
+    }
+    if (!block[1]) {
+      crack('Missing background in status block', { filepath, block: part })
+    }
   })
   return statusStyle
 }
