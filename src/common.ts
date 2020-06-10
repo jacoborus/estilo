@@ -67,8 +67,8 @@ export interface ProjectConfig {
   license?: string
   description?: string
   colorschemes: ColorSchemeConfig[]
-  airlines: StatusConfig[]
-  lightlines: StatusConfig[]
+  airline: StatusConfig[]
+  lightline: StatusConfig[]
 }
 
 export interface SyntaxRule {

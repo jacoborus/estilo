@@ -27,7 +27,7 @@ export function renderStatus (config: StatusConfig, project: Project, brand: Sta
   if (!palette) {
     crack('Palette does not exist', { palette: config.palette, brand, style: config.style })
   }
-  const syntaxFile = project.airlineStyles[config.name]
+  const syntaxFile = project.airlineStyles[config.style]
   if (!syntaxFile) crack('Cannot find status style file', { name: config.name })
   const syntax = syntaxFile.syntax
   const c = parseStatusColors(syntax, palette)

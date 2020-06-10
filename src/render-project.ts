@@ -13,13 +13,14 @@ export function renderProject (project: Project): void {
     writeScheme(rendered, config.name, project.folderPath)
   })
 
-  config.airlines.forEach(config => {
+  config.airline.forEach(config => {
     const rendered = renderStatus(config, project, 'airline')
     writeStatus('airline', rendered, config.name, project.folderPath)
   })
 
-  config.lightlines.forEach(config => {
+  config.lightline.forEach(config => {
     const rendered = renderStatus(config, project, 'lightline')
     writeStatus('lightline', rendered, config.name, project.folderPath)
   })
+  console.log('done')
 }

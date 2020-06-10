@@ -142,7 +142,7 @@ export function loadTerminal (folderPath: string): TerminalStyle {
 }
 
 export function loadMustaches (): Mustaches {
-  const folder = path.resolve(__dirname, '../templates/mustaches')
+  const folder = path.resolve(__dirname, '../mustaches')
   const filenames = ['colorscheme', 'airline', 'lightline']
   const mustaches = {} as Mustaches
   filenames.forEach(filename => {
