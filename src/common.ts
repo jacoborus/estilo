@@ -44,7 +44,7 @@ export interface StatusStyle {
 
 export type Palettes = Record<string, Palette>
 
-interface ColorSchemeConfig {
+export interface ColorSchemeConfig {
   name: string
   background: string
   palette: string

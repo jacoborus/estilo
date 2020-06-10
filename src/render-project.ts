@@ -9,7 +9,7 @@ import { renderStatus } from './render-status'
 export function renderProject (project: Project): void {
   const { config } = project
   config.colorschemes.forEach(config => {
-    const rendered = renderColorscheme(config, project, 'airline')
+    const rendered = renderColorscheme(config, project)
     writeScheme(rendered, config.name, project.folderPath)
   })
 
