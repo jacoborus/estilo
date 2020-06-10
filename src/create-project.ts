@@ -1,3 +1,5 @@
+import path from 'path'
+
 import {
   loadYml,
   ymlsInFolder,
@@ -25,7 +27,7 @@ export function createProject (folderPath: string): Project {
     estiloVersion,
     config: loadYml(folderPath, 'estilo.yml').content,
     palettes: loadPalettes(folderPath),
-    syntax: ymlsInFolder(folderPath, 'syntax').flatMap(loadSyntax),
+    syntax: ymlsInFolder(folderPath, 'estilo/syntax').flatMap(loadSyntax),
     terminalStyle: loadTerminal(folderPath),
     airlineStyles: loadAllStatus(folderPath, 'airline'),
     lightlineStyles: loadAllStatus(folderPath, 'lightline'),
@@ -34,7 +36,7 @@ export function createProject (folderPath: string): Project {
 }
 
 function loadPalettes (folderPath: string): Palettes {
-  const filepaths = ymlsInFolder(folderPath, 'palettes')
+  const filepaths = ymlsInFolder(folderPath, 'estilo/palettes')
   const palettes = {} as Palettes
   filepaths.forEach(file => {
     const palette = loadPalette(file)
@@ -44,7 +46,8 @@ function loadPalettes (folderPath: string): Palettes {
 }
 
 function loadAllStatus (folderPath: string, brand: StatusBrand): StatusStyles {
-  const filepaths = ymlsInFolder(folderPath, brand)
+  const brandpath = path.resolve(folderPath, 'estilo')
+  const filepaths = ymlsInFolder(brandpath, brand)
   const statusStyle = {} as StatusStyles
   filepaths.forEach(filepath => {
     const style = loadStatus(filepath, brand)

@@ -124,7 +124,7 @@ export function loadStatus (filepath: string, brand: StatusBrand): StatusStyle {
 }
 
 export function loadTerminal (folderPath: string): TerminalStyle {
-  const filepath = path.resolve(folderPath, 'addons', 'nvim-term.yml')
+  const filepath = path.resolve(folderPath, 'estilo/addons/nvim-term.yml')
   const { content } = loadYml(filepath)
 
   const terminalStyle = {

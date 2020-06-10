@@ -16,11 +16,11 @@ export function loadYml (folderPath: string, filename?: string): YmlFile {
     crack('Content of file is not an object', { filepath })
   }
 
-  Object.keys(content).forEach(name => {
-    if (typeof content[name] !== 'string') {
-      crack('Wrong type', { name, filepath })
-    }
-  })
+  // Object.keys(content).forEach(name => {
+  //   if (typeof content[name] !== 'string') {
+  //     crack('Wrong typeasdfasdfasdf', { name, filepath })
+  //   }
+  // })
 
   return { filepath, content }
 }
@@ -33,6 +33,7 @@ export function ymlsInFolder (folderPath: string, folder2?: string): string[] {
   }
   return fs.readdirSync(finalPath, 'utf8')
     .filter(filename => filename.endsWith('.yml'))
+    .map(name => path.resolve(finalPath, name))
 }
 
 const pkgpath = path.resolve(__dirname, '../package.json')
