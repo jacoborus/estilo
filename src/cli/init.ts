@@ -1,11 +1,11 @@
 'use strict'
 
-const path = require('path')
-const inquirer = require('inquirer')
-const mkdirp = require('mkdirp')
-const fs = require('fs')
-const installTemplates = require('./install-templates.js')
-const chalk = require('chalk')
+import path from 'path'
+import inquirer from 'inquirer'
+import mkdirp from 'mkdirp'
+import fs from 'fs'
+import { installTemplates } from './install-templates'
+import chalk from 'chalk'
 
 const blankterm = `color_foreground: ''
 color_background: ''
@@ -28,8 +28,32 @@ color_15: ''
 `
 const defaultPalette = 'myblue: \'#99ccff\''
 
-module.exports = function (projectPath, auto) {
+interface Options {
+  name: string
+  author: string
+  version: string
+  url: string
+  license: string
+  airline: boolean
+  lightline: boolean
+  description: string
+}
+
+export function init (projectPath: string, noQuestions: boolean) {
   const folderName = path.basename(projectPath)
+
+  if (noQuestions) {
+    return createBoilerplate(projectPath, {
+      name: folderName,
+      author: '',
+      version: '1.0.0',
+      url: '',
+      license: 'MIT',
+      airline: true,
+      lightline: true,
+      description: ''
+    })
+  }
 
   const questions = [
     {
@@ -67,25 +91,12 @@ module.exports = function (projectPath, auto) {
     }
   ]
 
-  if (auto) {
-    createBoilerplate(projectPath, {
-      name: folderName,
-      author: '',
-      version: '1.0.0',
-      url: '',
-      license: 'MIT',
-      airline: true,
-      lightline: true,
-      description: ''
-    })
-  } else {
-    inquirer.prompt(questions).then(function (answers) {
-      createBoilerplate(projectPath, answers)
-    })
-  }
+  inquirer.prompt(questions).then(function (answers) {
+    createBoilerplate(projectPath, answers as unknown as Options)
+  })
 }
 
-function createBoilerplate (projectPath, options) {
+function createBoilerplate (projectPath: string, options: Options) {
   const addonsFolder = path.resolve(projectPath, 'estilo/addons')
   const termPath = path.resolve(addonsFolder, 'term.yml')
   const estiloStr = `name: '${options.name}'
@@ -106,8 +117,6 @@ colorschemes:
   mkdirp.sync(addonsFolder)
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
   fs.writeFileSync(termPath, blankterm)
-
-  installTemplates(['base.yml'], () => {
-    console.log(chalk.green.bold('\nYour project is ready'))
-  })
+  installTemplates(['base.yml'])
+  console.log(chalk.green.bold('\nYour project is ready'))
 }
