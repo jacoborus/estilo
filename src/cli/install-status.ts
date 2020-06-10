@@ -1,10 +1,16 @@
 import path from 'path'
 import inquirer from 'inquirer'
 import fs from 'fs'
+import cpFile from 'cp-file'
 import mkdirp from 'mkdirp'
 import chalk from 'chalk'
 import { StatusBrand } from '../common'
 const log = console.log
+
+const templatePaths = {
+  airline: 'templates/status/airline.yml',
+  lightline: 'templates/status/lightline.yml'
+}
 
 export function installStatus (projectPath: string, brand: StatusBrand) {
   const statusFolderPath = path.resolve(projectPath, paths[brand])
@@ -28,9 +34,10 @@ export function installStatus (projectPath: string, brand: StatusBrand) {
     }
   ]
 
-  inquirer.prompt(questions).then(function (answers) {
+  inquirer.prompt(questions).then(async function (answers) {
+    const templatePath = path.resolve(__dirname, '..', templatePaths[brand])
     const filepath = path.resolve(statusFolderPath, answers.stylename + '.yml')
-    fs.writeFileSync(filepath, templates[brand])
+    await cpFile(templatePath, filepath)
     log(chalk.green(`New ${brand} style: ${(answers.stylename as string).trim()}`))
   })
 }
@@ -38,57 +45,4 @@ export function installStatus (projectPath: string, brand: StatusBrand) {
 const paths = {
   airline: 'estilo/airline',
   lightline: 'estilo/lightline'
-}
-
-const templates = {
-  airline: `normal1: ''
-normal2: ''
-normal3: ''
-inactive1: ''
-inactive2: ''
-inactive3: ''
-insert1: ''
-insert2: ''
-insert3: ''
-replace1: ''
-replace2: ''
-replace3: ''
-visual1: ''
-visual2: ''
-visual3: ''
-ctrlp1: ''
-ctrlp2: ''
-ctrlp3: ''`,
-  lightline: `normal1: ''
-normal2: ''
-normal3: ''
-normal4: ''
-normal5: ''
-normalError: ''
-normalWarning: ''
-inactive1: ''
-inactive2: ''
-inactive3: ''
-inactive4: ''
-inactive5: ''
-insert1: ''
-insert2: ''
-insert3: ''
-insert4: ''
-insert5: ''
-replace1: ''
-replace2: ''
-replace3: ''
-replace4: ''
-replace5: ''
-visual1: ''
-visual2: ''
-visual3: ''
-visual4: ''
-visual5: ''
-tablineLeft: ''
-tablineSelected: ''
-tablineMiddle: ''
-tablineRight: ''
-`
 }
