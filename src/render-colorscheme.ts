@@ -13,12 +13,14 @@ import {
 export function renderColorscheme (config: ColorSchemeConfig, project: Project): string {
   const palette = project.palettes[config.palette]
   if (!palette) {
-    crack('Palette does not exist', { palette: config.palette })
+    crack('Colorscheme palette does not exist', {
+      colorscheme: config.name,
+      palette: config.palette
+    })
   }
   const syntax = project.syntax
   const c = parseSyntaxColors(syntax, palette)
   const render = handlebars.compile(project.mustaches.colorscheme)
-  console.dir(c)
   return render({ c, theme: config, pkg: project })
 }
 

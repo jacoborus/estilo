@@ -1,32 +1,10 @@
-'use strict'
-
+import fs from 'fs'
 import path from 'path'
 import inquirer from 'inquirer'
 import mkdirp from 'mkdirp'
-import fs from 'fs'
-import { installTemplates } from './install-templates'
+import cpFile from 'cp-file'
 import chalk from 'chalk'
-
-const blankterm = `color_foreground: ''
-color_background: ''
-color_0: ''
-color_1: ''
-color_2: ''
-color_3: ''
-color_4: ''
-color_5: ''
-color_6: ''
-color_7: ''
-color_8: ''
-color_9: ''
-color_10: ''
-color_11: ''
-color_12: ''
-color_13: ''
-color_14: ''
-color_15: ''
-`
-const defaultPalette = 'myblue: \'#99ccff\''
+import { installTemplates } from './install-templates'
 
 interface Options {
   name: string
@@ -38,6 +16,9 @@ interface Options {
   lightline: boolean
   description: string
 }
+
+const blankTermOrigin = path.resolve(__dirname, '../../templates/terminal.yml')
+const defaultPalette = 'myblue: \'#99ccff\''
 
 export function init (projectPath: string, noQuestions: boolean) {
   const folderName = path.basename(projectPath)
@@ -96,7 +77,7 @@ export function init (projectPath: string, noQuestions: boolean) {
   })
 }
 
-function createBoilerplate (projectPath: string, options: Options) {
+async function createBoilerplate (projectPath: string, options: Options) {
   const addonsFolder = path.resolve(projectPath, 'estilo/addons')
   const termPath = path.resolve(addonsFolder, 'term.yml')
   const estiloStr = `name: '${options.name}'
@@ -116,7 +97,7 @@ colorschemes:
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   mkdirp.sync(addonsFolder)
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
-  fs.writeFileSync(termPath, blankterm)
+  await cpFile(termPath, blankTermOrigin)
   installTemplates(['base.yml'])
   console.log(chalk.green.bold('\nYour project is ready'))
 }
