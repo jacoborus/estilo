@@ -9,7 +9,7 @@ export type YmlFile = {
 
 export interface ColorCode {
   hex: string
-  xterm: number
+  xterm: string
 }
 
 export interface Palette {

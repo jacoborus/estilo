@@ -26,7 +26,7 @@ export function loadPalette (filepath: string): Palette {
     if (!isHexColor(hexcolor)) crack('Wrong color', { filepath, name })
     palette.colors[name] = {
       hex: hexcolor.startsWith('#') ? hexcolor : '#' + hexcolor,
-      xterm: hexterm(hexcolor)
+      xterm: hexterm(hexcolor).toString()
     }
   })
   return palette

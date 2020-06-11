@@ -6,7 +6,8 @@ import {
   ColorSchemeConfig,
   Project,
   Palette,
-  SyntaxRule
+  SyntaxRule,
+  ColorCode
 } from './common'
 
 export function renderColorscheme (config: ColorSchemeConfig, project: Project): string {
@@ -17,11 +18,21 @@ export function renderColorscheme (config: ColorSchemeConfig, project: Project):
   const syntax = project.syntax
   const c = parseSyntaxColors(syntax, palette)
   const render = handlebars.compile(project.mustaches.colorscheme)
+  console.dir(c)
   return render({ c, theme: config, pkg: project })
 }
 
-function parseSyntaxColors (syntax: SyntaxRule[], palette: Palette) {
-  return syntax.map(rule => {
+type SyntaxValues = Record<string, SyntaxValue>
+interface SyntaxValue {
+    fore: false | ColorCode
+    back: false | ColorCode
+    ui: false | string
+    guisp: boolean | ColorCode
+}
+
+function parseSyntaxColors (syntax: SyntaxRule[], palette: Palette): SyntaxValues {
+  const values = {} as SyntaxValues
+  syntax.forEach(rule => {
     const [fgColor, bgColor, ui, curlColor] = rule.rule.split(/\s+/)
     const filepath = rule.filepath
     if (fgColor.startsWith('@')) {
@@ -29,16 +40,17 @@ function parseSyntaxColors (syntax: SyntaxRule[], palette: Palette) {
         link: fgColor.slice(1)
       }
     }
-    return {
+    values[rule.name] = {
       fore: getColorCode(fgColor, palette, filepath),
       back: getColorCode(bgColor, palette, filepath),
       ui: getUI(ui),
       guisp: getCurlColor(curlColor, palette, filepath)
     }
   })
+  return values
 }
 
-function getColorCode (color: string, palette: Palette, filepath: string) {
+function getColorCode (color: string, palette: Palette, filepath: string): false | ColorCode {
   // return false if empty color
   if (color === '.') return false
   // return false if color is `NONE`
@@ -51,14 +63,14 @@ function getColorCode (color: string, palette: Palette, filepath: string) {
     const finalcolor = color.startsWith('#') ? color : color.slice(1)
     return {
       hex: finalcolor,
-      xterm: hexterm(color)
+      xterm: hexterm(color).toString()
     }
   }
   // not valid color
   crack('Color does not exist', { filepath, color })
 }
 
-function getUI (ui: string) {
+function getUI (ui: string): false | string {
   // no defined gui
   if (ui === '.') return false
   if (!ui) return 'NONE'
@@ -67,7 +79,7 @@ function getUI (ui: string) {
   return ui
 }
 
-function getCurlColor (cColor: string, palette: Palette, filepath: string) {
+function getCurlColor (cColor: string, palette: Palette, filepath: string): boolean | ColorCode {
   const curlParsed = getColorCode(cColor, palette, filepath)
   let curlColor
   if (!curlParsed || curlParsed.hex === 'NONE') {
