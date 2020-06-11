@@ -1,5 +1,6 @@
 import handlebars from 'handlebars'
 import { crack } from './crack'
+import { estiloVersion } from './util'
 import {
   StatusConfig,
   Project,
@@ -27,10 +28,23 @@ export function renderStatus (config: StatusConfig, project: Project, brand: Sta
   if (!palette) {
     crack('Palette does not exist', { palette: config.palette, brand, style: config.style })
   }
-  const syntaxFile = project.airlineStyles[config.style]
+  const brandStyles = {
+    airline: project.airlineStyles,
+    lightline: project.lightlineStyles
+  }
+  const syntaxFile = brandStyles[brand][config.style]
   if (!syntaxFile) crack('Cannot find status style file', { name: config.name })
   const syntax = syntaxFile.syntax
   const c = parseStatusColors(syntax, palette)
   const render = handlebars.compile(project.mustaches[brand])
-  return render({ c, theme: config, pkg: project })
+  const info = {
+    name: config.name,
+    description: config.description,
+    url: project.config.url,
+    author: project.config.author,
+    license: project.config.license,
+    estiloVersion
+  }
+  const context = Object.assign(c, { info })
+  return render(context)
 }
