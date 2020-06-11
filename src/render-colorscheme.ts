@@ -24,12 +24,15 @@ export function renderColorscheme (config: ColorSchemeConfig, project: Project):
   return render({ c, theme: config, pkg: project })
 }
 
-type SyntaxValues = Record<string, SyntaxValue>
+type SyntaxValues = Record<string, SyntaxValue | LinkValue>
 interface SyntaxValue {
     fore: false | ColorCode
     back: false | ColorCode
     ui: false | string
     guisp: boolean | ColorCode
+}
+interface LinkValue {
+  link: string
 }
 
 function parseSyntaxColors (syntax: SyntaxRule[], palette: Palette): SyntaxValues {
@@ -38,15 +41,16 @@ function parseSyntaxColors (syntax: SyntaxRule[], palette: Palette): SyntaxValue
     const [fgColor, bgColor, ui, curlColor] = rule.rule.split(/\s+/)
     const filepath = rule.filepath
     if (fgColor.startsWith('@')) {
-      return {
+      values[rule.name] = {
         link: fgColor.slice(1)
       }
-    }
-    values[rule.name] = {
-      fore: getColorCode(fgColor, palette, filepath),
-      back: getColorCode(bgColor, palette, filepath),
-      ui: getUI(ui),
-      guisp: getCurlColor(curlColor, palette, filepath)
+    } else {
+      values[rule.name] = {
+        fore: getColorCode(fgColor, palette, filepath),
+        back: getColorCode(bgColor, palette, filepath),
+        ui: getUI(ui),
+        guisp: getCurlColor(curlColor, palette, filepath)
+      }
     }
   })
   return values
