@@ -1,10 +1,14 @@
-" ============================================================
-" {{ info.name }}
-" {{ info.description }}
-" URL: {{ info.url }}
-" Author: {{ info.author }}
-" License: {{ info.license }}
-" ============================================================
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Airline theme: {{ info.name }}
+{{#if info.description}}" Description: {{ info.description }}
+{{/if~}}
+{{#if info.url}}" URL: {{ info.url }}
+{{/if~}}
+{{#if info.author}}" Author: {{ info.author }}
+{{/if~}}
+{{#if info.license}}" License: {{ info.license }}
+{{/if~}}
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:airline#themes#{{info.name}}#palette = {}
 
