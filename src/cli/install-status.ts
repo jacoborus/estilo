@@ -5,15 +5,14 @@ import cpFile from 'cp-file'
 import mkdirp from 'mkdirp'
 import chalk from 'chalk'
 import { StatusBrand } from '../common'
-const log = console.log
 
-const templatePaths = {
+const originPaths = {
   airline: 'templates/status/airline.yml',
   lightline: 'templates/status/lightline.yml'
 }
 
 export function installStatus (projectPath: string, brand: StatusBrand) {
-  const statusFolderPath = path.resolve(projectPath, paths[brand])
+  const statusFolderPath = path.resolve(projectPath, 'estilo', brand)
   mkdirp.sync(statusFolderPath)
   const installedStyles = fs.readdirSync(statusFolderPath)
     .map(n => n.slice(0, -4))
@@ -24,8 +23,9 @@ export function installStatus (projectPath: string, brand: StatusBrand) {
       message: 'Enter style name:',
       name: 'stylename',
       validate: (input: string) => {
-        if (!input.trim()) return 'That\'s not a name'
-        if (installedStyles.indexOf(input.trim()) > -1) {
+        const stylename = input.trim()
+        if (!stylename) return 'That\'s not a name'
+        if (installedStyles.includes(stylename)) {
           return 'That style already exists'
         } else {
           return true
@@ -35,14 +35,11 @@ export function installStatus (projectPath: string, brand: StatusBrand) {
   ]
 
   inquirer.prompt(questions).then(async function (answers) {
-    const templatePath = path.resolve(__dirname, '..', templatePaths[brand])
+    const templatePath = path.resolve(__dirname, '..', originPaths[brand])
     const filepath = path.resolve(statusFolderPath, answers.stylename + '.yml')
     await cpFile(templatePath, filepath)
-    log(chalk.green(`New ${brand} style: ${(answers.stylename as string).trim()}`))
+    const stylename = (answers.stylename as string).trim()
+    console.log(chalk.green(`New ${brand} style: ${stylename}`))
+    console.log(`==> ${filepath}`)
   })
-}
-
-const paths = {
-  airline: 'estilo/airline',
-  lightline: 'estilo/lightline'
 }
