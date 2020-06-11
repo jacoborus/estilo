@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "jest",
-    "linter": "eslint src/*.ts src/cli/*.js test/*.js",
+    "linter": "eslint src/*.ts src/cli/*.ts test/*.js",
     "build": "rm -rf lib && tsc"
   },
   "dependencies": {
