@@ -28,7 +28,7 @@ export function createProject (folderPath: string): Project {
     config: loadYml(folderPath, 'estilo.yml').content,
     palettes: loadPalettes(folderPath),
     syntax: ymlsInFolder(folderPath, 'estilo/syntax').flatMap(loadSyntax),
-    terminalStyle: loadTerminal(folderPath),
+    terminalSyntax: loadTerminal(folderPath),
     airlineStyles: loadAllStatus(folderPath, 'airline'),
     lightlineStyles: loadAllStatus(folderPath, 'lightline'),
     mustaches: loadMustaches()

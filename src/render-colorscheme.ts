@@ -1,13 +1,14 @@
 import handlebars from 'handlebars'
 import hexterm from 'hexterm'
 import { crack } from './crack'
-import { isHexColor } from './util'
+import { isHexColor, estiloVersion } from './util'
 import {
   ColorSchemeConfig,
   Project,
   Palette,
   SyntaxRule,
-  ColorCode
+  ColorCode,
+  TerminalSyntax
 } from './common'
 
 export function renderColorscheme (config: ColorSchemeConfig, project: Project): string {
@@ -21,7 +22,17 @@ export function renderColorscheme (config: ColorSchemeConfig, project: Project):
   const syntax = project.syntax
   const c = parseSyntaxColors(syntax, palette)
   const render = handlebars.compile(project.mustaches.colorscheme)
-  return render({ c, theme: config, pkg: project })
+  const info = {
+    name: config.name,
+    description: config.description,
+    url: project.config.url,
+    author: project.config.author,
+    license: project.config.license,
+    background: config.background,
+    estiloVersion
+  }
+  const term = parseTermColors(project.terminalSyntax, palette)
+  return render({ c, info, term })
 }
 
 type SyntaxValues = Record<string, SyntaxValue | LinkValue>
@@ -33,6 +44,23 @@ interface SyntaxValue {
 }
 interface LinkValue {
   link: string
+}
+
+function parseTermColors (termSyntax: TerminalSyntax, palette: Palette) {
+  const values = {} as Record<string, string>
+  Object.keys(termSyntax).forEach(prop => {
+    const colorName = termSyntax[prop]
+    const value = palette.colors[colorName]
+    if (!value) {
+      crack('Missing terminal color', {
+        colorName,
+        property: prop,
+        palette: palette.filepath
+      })
+    }
+    values[prop] = value.hex
+  })
+  return values
 }
 
 function parseSyntaxColors (syntax: SyntaxRule[], palette: Palette): SyntaxValues {

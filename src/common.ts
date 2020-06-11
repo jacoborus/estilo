@@ -20,11 +20,8 @@ export interface Palette {
   }
 }
 
-export interface TerminalStyle {
-  filepath: string
-  styles: {
-    [index: string]: string
-  }
+export interface TerminalSyntax {
+  [index: string]: string
 }
 
 export type StatusBrand = 'airline' | 'lightline'
@@ -83,7 +80,7 @@ export interface Project {
   folderPath: string
   syntax: SyntaxRule[]
   palettes: Palettes
-  terminalStyle?: TerminalStyle
+  terminalSyntax: TerminalSyntax
   airlineStyles: Record<string, StatusStyle>
   lightlineStyles: Record<string, StatusStyle>
   mustaches: Mustaches

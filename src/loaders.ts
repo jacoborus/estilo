@@ -7,7 +7,7 @@ import {
   Palette,
   SyntaxRule,
   StatusStyle,
-  TerminalStyle,
+  TerminalSyntax,
   Mustaches,
   StatusBrand
 } from './common'
@@ -41,6 +41,58 @@ export function loadSyntax (filepath: string): SyntaxRule[] {
       rule: content[name].trim()
     }))
     .filter(rule => rule.rule)
+}
+
+export function loadTerminal (folderPath: string): TerminalSyntax {
+  const filepath = path.resolve(folderPath, 'estilo/addons/nvim-term.yml')
+  const { content } = loadYml(filepath)
+  const terminalSyntax = {} as TerminalSyntax
+  Object.keys(content).forEach(prop => {
+    const colorname = content[prop].trim()
+    if (!colorname) return
+    terminalSyntax[prop] = colorname
+  })
+  return terminalSyntax
+}
+
+export function loadMustaches (): Mustaches {
+  const folder = path.resolve(__dirname, '../mustaches')
+  const filenames = ['colorscheme', 'airline', 'lightline']
+  const mustaches = {} as Mustaches
+
+  filenames.forEach(filename => {
+    const filepath = path.resolve(folder, filename + '.hbs')
+    const txt = fs.readFileSync(filepath, 'utf8')
+    mustaches[filename] = txt
+  })
+  return mustaches
+}
+
+export function loadStatus (filepath: string, brand: StatusBrand): StatusStyle {
+  const { content } = loadYml(filepath)
+
+  const statusStyle = {
+    name: path.basename(filepath, '.yml'),
+    filepath: filepath,
+    syntax: {}
+  } as StatusStyle
+
+  Object.keys(content).forEach(name => {
+    const txt = content[name].trim()
+    statusStyle.syntax[name] = txt.split(/\s+/)
+  })
+
+  statusParts[brand].forEach(part => {
+    const block = statusStyle.syntax[part]
+    if (!block) crack('Missing block in status', { filepath, block: part })
+    if (!block[0]) {
+      crack('Missing foreground in status block', { filepath, block: part })
+    }
+    if (!block[1]) {
+      crack('Missing background in status block', { filepath, block: part })
+    }
+  })
+  return statusStyle
 }
 
 const statusParts = {
@@ -95,60 +147,3 @@ const statusParts = {
     'tablineRight'
   ]
 } // , ctrlp
-
-export function loadStatus (filepath: string, brand: StatusBrand): StatusStyle {
-  const { content } = loadYml(filepath)
-
-  const statusStyle = {
-    name: path.basename(filepath, '.yml'),
-    filepath: filepath,
-    syntax: {}
-  } as StatusStyle
-
-  Object.keys(content).forEach(name => {
-    const txt = content[name].trim()
-    statusStyle.syntax[name] = txt.split(/\s+/)
-  })
-
-  statusParts[brand].forEach(part => {
-    const block = statusStyle.syntax[part]
-    if (!block) crack('Missing block in status', { filepath, block: part })
-    if (!block[0]) {
-      crack('Missing foreground in status block', { filepath, block: part })
-    }
-    if (!block[1]) {
-      crack('Missing background in status block', { filepath, block: part })
-    }
-  })
-  return statusStyle
-}
-
-export function loadTerminal (folderPath: string): TerminalStyle {
-  const filepath = path.resolve(folderPath, 'estilo/addons/nvim-term.yml')
-  const { content } = loadYml(filepath)
-
-  const terminalStyle = {
-    filepath: filepath,
-    styles: {}
-  } as TerminalStyle
-
-  Object.keys(content).forEach(prop => {
-    const colorname = content[prop].trim()
-    if (!colorname) return
-    terminalStyle.styles[prop] = colorname
-  })
-
-  return terminalStyle
-}
-
-export function loadMustaches (): Mustaches {
-  const folder = path.resolve(__dirname, '../mustaches')
-  const filenames = ['colorscheme', 'airline', 'lightline']
-  const mustaches = {} as Mustaches
-  filenames.forEach(filename => {
-    const filepath = path.resolve(folder, filename + '.hbs')
-    const txt = fs.readFileSync(filepath, 'utf8')
-    mustaches[filename] = txt
-  })
-  return mustaches
-}
