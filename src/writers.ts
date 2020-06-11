@@ -8,8 +8,8 @@ const paths = {
 }
 
 export function writeScheme (txt: string, name: string, projectPath: string) {
-  const folderPath = path.resolve(projectPath, '..', 'colors')
-  const filepath = path.resolve(folderPath, name + '.yml')
+  const folderPath = path.resolve(projectPath, 'colors')
+  const filepath = path.resolve(folderPath, name + '.vim')
   mkdirp(folderPath)
   fs.writeFileSync(filepath, txt)
 }
