@@ -44,7 +44,7 @@ export function loadSyntax (filepath: string): SyntaxRule[] {
 }
 
 export function loadTerminal (folderPath: string): TerminalSyntax {
-  const filepath = path.resolve(folderPath, 'estilo/addons/nvim-term.yml')
+  const filepath = path.resolve(folderPath, 'estilo/addons/terminal.yml')
   const { content } = loadYml(filepath)
   const terminalSyntax = {} as TerminalSyntax
   Object.keys(content).forEach(prop => {
