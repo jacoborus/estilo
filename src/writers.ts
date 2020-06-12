@@ -10,13 +10,13 @@ const paths = {
 export function writeScheme (txt: string, name: string, projectPath: string) {
   const folderPath = path.resolve(projectPath, 'colors')
   const filepath = path.resolve(folderPath, name + '.vim')
-  mkdirp(folderPath)
+  mkdirp.sync(folderPath)
   fs.writeFileSync(filepath, txt)
 }
 
 export function writeStatus (kind: 'airline' | 'lightline', txt: string, name: string, projectPath: string) {
   const folderPath = path.resolve(projectPath, paths[kind])
   const filepath = path.resolve(folderPath, name + '.vim')
-  mkdirp(folderPath)
+  mkdirp.sync(folderPath)
   fs.writeFileSync(filepath, txt)
 }
