@@ -79,7 +79,7 @@ export function init (projectPath: string, noQuestions: boolean) {
 
 async function createBoilerplate (projectPath: string, options: Options) {
   const addonsFolder = path.resolve(projectPath, 'estilo/addons')
-  const termPath = path.resolve(addonsFolder, 'term.yml')
+  const termPath = path.resolve(addonsFolder, 'terminal.yml')
   const estiloStr = `name: '${options.name}'
 version: '${options.version || ''}'
 license: '${options.license || ''}'
@@ -97,7 +97,7 @@ colorschemes:
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
   mkdirp.sync(addonsFolder)
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
-  await cpFile(termPath, blankTermOrigin)
+  await cpFile(blankTermOrigin, termPath)
   installTemplates(['base.yml'])
   console.log(chalk.green.bold('\nYour project is ready'))
 }
