@@ -3,7 +3,12 @@ import hexterm from 'hexterm'
 import { crack } from './crack'
 import { isHexColor, estiloVersion } from './util'
 import {
-  ColorSchemeConfig,
+  isLegacyUi,
+  parseUi
+} from './legacy-ui'
+
+import {
+  SchemeConfig,
   Project,
   Palette,
   SyntaxRule,
@@ -11,7 +16,7 @@ import {
   TerminalSyntax
 } from './common'
 
-export function renderColorscheme (config: ColorSchemeConfig, project: Project): string {
+export function renderColorscheme (config: SchemeConfig, project: Project): string {
   const palette = project.palettes[config.palette]
   if (!palette) {
     crack('Colorscheme palette does not exist', {
@@ -110,11 +115,13 @@ function getUI (ui: string): false | string {
   if (!ui) return 'NONE'
   // 'NONE' or empty value
   if (ui === 'NONE') return 'NONE'
+  if (isLegacyUi(ui)) return parseUi(ui)
+  // validate(ui)
   return ui
 }
 
-function getCurlColor (cColor: string, palette: Palette, filepath: string): boolean | ColorCode {
-  const curlParsed = getColorCode(cColor, palette, filepath)
+function getCurlColor (color: string, palette: Palette, filepath: string): boolean | ColorCode {
+  const curlParsed = getColorCode(color, palette, filepath)
   let curlColor
   if (!curlParsed || curlParsed.hex === 'NONE') {
     curlColor = false

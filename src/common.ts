@@ -42,7 +42,7 @@ export interface StatusStyle {
 
 export type Palettes = Record<string, Palette>
 
-export interface ColorSchemeConfig {
+export interface SchemeConfig {
   name: string
   background: string
   palette: string
@@ -63,7 +63,7 @@ export interface ProjectConfig {
   url?: string
   license?: string
   description?: string
-  colorschemes: ColorSchemeConfig[]
+  colorschemes: SchemeConfig[]
   airline: StatusConfig[]
   lightline: StatusConfig[]
 }
