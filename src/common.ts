@@ -81,7 +81,8 @@ export interface Project {
   syntax: SyntaxRule[]
   palettes: Palettes
   terminalSyntax: TerminalSyntax
-  airlineStyles: Record<string, StatusStyle>
-  lightlineStyles: Record<string, StatusStyle>
+  airlineStyles: StatusStyles
+  lightlineStyles: StatusStyles
   mustaches: Mustaches
 }
+
