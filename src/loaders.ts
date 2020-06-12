@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import hexterm from 'hexterm'
 import { loadYml, isHexColor } from './util'
-import { crack } from './crack'
+import { crash } from './crash'
 import {
   Palette,
   SyntaxRule,
@@ -23,7 +23,7 @@ export function loadPalette (filepath: string): Palette {
 
   Object.keys(content).forEach(name => {
     const hexcolor = content[name].trim()
-    if (!isHexColor(hexcolor)) crack('Wrong color', { filepath, name })
+    if (!isHexColor(hexcolor)) crash('Wrong color', { filepath, name })
     palette.colors[name] = {
       hex: hexcolor.startsWith('#') ? hexcolor : '#' + hexcolor,
       xterm: hexterm(hexcolor).toString()
@@ -84,12 +84,12 @@ export function loadStatus (filepath: string, brand: StatusBrand): StatusStyle {
 
   statusParts[brand].forEach(part => {
     const block = statusStyle.syntax[part]
-    if (!block) crack('Missing block in status', { filepath, block: part })
+    if (!block) crash('Missing block in status', { filepath, block: part })
     if (!block[0]) {
-      crack('Missing foreground in status block', { filepath, block: part })
+      crash('Missing foreground in status block', { filepath, block: part })
     }
     if (!block[1]) {
-      crack('Missing background in status block', { filepath, block: part })
+      crash('Missing background in status block', { filepath, block: part })
     }
   })
   return statusStyle

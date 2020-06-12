@@ -1,5 +1,5 @@
 import handlebars from 'handlebars'
-import { crack } from './crack'
+import { crash } from './crash'
 import { estiloVersion } from './util'
 import {
   StatusConfig,
@@ -16,8 +16,8 @@ function parseStatusColors (syntax: StatusSyntax, palette: Palette): DataRenderS
     const [fgName, bgName] = syntax[partName]
     const fg = palette.colors[fgName]
     const bg = palette.colors[bgName]
-    if (!fg) crack('Missing foreground color', { palette: palette.filepath, color: fgName })
-    if (!bg) crack('Missing background color', { palette: palette.filepath, color: bgName })
+    if (!fg) crash('Missing foreground color', { palette: palette.filepath, color: fgName })
+    if (!bg) crash('Missing background color', { palette: palette.filepath, color: bgName })
     out[partName] = { fg, bg }
   })
   return out
@@ -26,14 +26,14 @@ function parseStatusColors (syntax: StatusSyntax, palette: Palette): DataRenderS
 export function renderStatus (config: StatusConfig, project: Project, brand: StatusBrand): string {
   const palette = project.palettes[config.palette]
   if (!palette) {
-    crack('Palette does not exist', { palette: config.palette, brand, style: config.style })
+    crash('Palette does not exist', { palette: config.palette, brand, style: config.style })
   }
   const brandStyles = {
     airline: project.airlineStyles,
     lightline: project.lightlineStyles
   }
   const syntaxFile = brandStyles[brand][config.style]
-  if (!syntaxFile) crack('Cannot find status style file', { name: config.name })
+  if (!syntaxFile) crash('Cannot find status style file', { name: config.name })
   const syntax = syntaxFile.syntax
   const c = parseStatusColors(syntax, palette)
   const render = handlebars.compile(project.mustaches[brand])

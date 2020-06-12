@@ -1,6 +1,6 @@
 import handlebars from 'handlebars'
 import hexterm from 'hexterm'
-import { crack } from './crack'
+import { crash } from './crash'
 import { isHexColor, estiloVersion } from './util'
 import {
   isLegacyUi,
@@ -19,7 +19,7 @@ import {
 export function renderColorscheme (config: SchemeConfig, project: Project): string {
   const palette = project.palettes[config.palette]
   if (!palette) {
-    crack('Colorscheme palette does not exist', {
+    crash('Colorscheme palette does not exist', {
       colorscheme: config.name,
       palette: config.palette
     })
@@ -57,7 +57,7 @@ function parseTermColors (termSyntax: TerminalSyntax, palette: Palette) {
     const colorName = termSyntax[prop]
     const value = palette.colors[colorName]
     if (!value) {
-      crack('Missing terminal color', {
+      crash('Missing terminal color', {
         colorName,
         property: prop,
         palette: palette.filepath
@@ -106,7 +106,7 @@ function getColorCode (color: string, palette: Palette, filepath: string): false
     }
   }
   // not valid color
-  crack('Color does not exist', { filepath, color })
+  crash('Color does not exist', { filepath, color })
 }
 
 function getUI (ui: string): false | string {
