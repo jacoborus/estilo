@@ -1,8 +1,8 @@
 'use strict'
 
+import { estiloVersion } from '../util'
 const test = require('tape')
 const renderColorscheme = require('../src/render-colorscheme.js')
-import { estiloVersion } from '../util'
 
 const testStr = `"
 " Aname 2.1.0
