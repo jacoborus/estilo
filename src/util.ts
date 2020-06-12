@@ -16,21 +16,13 @@ export function loadYml (folderPath: string, filename?: string): YmlFile {
     crash('Content of file is not an object', { filepath })
   }
 
-  // Object.keys(content).forEach(name => {
-  //   if (typeof content[name] !== 'string') {
-  //     crash('Wrong typeasdfasdfasdf', { name, filepath })
-  //   }
-  // })
-
   return { filepath, content }
 }
 
 // returns a list of all the `.yml` filepaths contained inside folderpath
 export function ymlsInFolder (folderPath: string, folder2?: string): string[] {
   const finalPath = path.resolve(folderPath, folder2 || '')
-  if (!fs.existsSync(finalPath)) {
-    crash('Folder does not exist', { finalPath })
-  }
+  if (!fs.existsSync(finalPath)) return []
   return fs.readdirSync(finalPath, 'utf8')
     .filter(filename => filename.endsWith('.yml'))
     .map(name => path.resolve(finalPath, name))
