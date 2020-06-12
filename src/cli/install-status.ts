@@ -35,7 +35,7 @@ export function installStatus (projectPath: string, brand: StatusBrand) {
   ]
 
   inquirer.prompt(questions).then(async function (answers) {
-    const templatePath = path.resolve(__dirname, '..', originPaths[brand])
+    const templatePath = path.resolve(__dirname, '../..', originPaths[brand])
     const filepath = path.resolve(statusFolderPath, answers.stylename + '.yml')
     await cpFile(templatePath, filepath)
     const stylename = (answers.stylename as string).trim()
