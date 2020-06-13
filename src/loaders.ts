@@ -3,6 +3,7 @@ import fs from 'fs'
 import hexterm from 'hexterm'
 import { loadYml, isHexColor } from './util'
 import { crash } from './crash'
+import chalk from 'chalk'
 import {
   Palette,
   SyntaxRule,
@@ -43,8 +44,21 @@ export function loadSyntax (filepath: string): SyntaxRule[] {
     .filter(rule => rule.rule)
 }
 
+function getTerminalTemplatePath (folderPath: string) {
+  const addonsPath = path.resolve(folderPath, 'estilo/addons')
+  const legacyPath = path.resolve(addonsPath, 'nvim-term.yml')
+  const newPath = path.resolve(addonsPath, 'terminal.yml')
+  if (fs.existsSync(legacyPath) && !fs.existsSync(newPath)) {
+    console.log(chalk.yellow.bold('⚠  Warning: Legacy terminal config path'))
+    console.log(chalk.yellow(`Please rename ${legacyPath} to ${newPath}\n`))
+    return legacyPath
+  } else {
+    return path.resolve(addonsPath, 'terminal.yml')
+  }
+}
+
 export function loadTerminal (folderPath: string): TerminalSyntax {
-  const filepath = path.resolve(folderPath, 'estilo/addons/terminal.yml')
+  const filepath = getTerminalTemplatePath(folderPath)
   const { content } = loadYml(filepath)
   const terminalSyntax = {} as TerminalSyntax
   Object.keys(content).forEach(prop => {

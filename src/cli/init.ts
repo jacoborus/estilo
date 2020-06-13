@@ -99,5 +99,5 @@ colorschemes:
   fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
   await cpFile(blankTermOrigin, termPath)
   installTemplates(['base.yml'])
-  console.log(chalk.green.bold('\nYour project is ready'))
+  console.log(chalk.green.bold('✓  Your project is ready\n'))
 }
