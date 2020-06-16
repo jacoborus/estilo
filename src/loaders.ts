@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import hexterm from 'hexterm'
+import { hexterm } from 'hexterm'
 import { loadYml, isHexColor } from './util'
 import { crash } from './crash'
 import chalk from 'chalk'
