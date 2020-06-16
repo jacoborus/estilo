@@ -25,10 +25,12 @@ export interface TerminalSyntax {
 }
 
 export type StatusBrand = 'airline' | 'lightline'
-export type DataRenderStatus = Record<string, {
-  fg: ColorCode,
-  bg: ColorCode
-}>
+export type DataRenderStatus = Record<
+  string, {
+    fg: ColorCode,
+    bg: ColorCode
+  }
+>
 
 export type StatusStyles = Record<string, StatusStyle>
 export interface StatusSyntax {

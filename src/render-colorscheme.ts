@@ -1,7 +1,8 @@
 import handlebars from 'handlebars'
 import { hexterm } from 'hexterm'
 import { crash } from './crash'
-import { isHexColor, estiloVersion } from './util'
+import { isHexColor } from './util'
+import { estiloVersion } from './pkg'
 import {
   isLegacyUi,
   parseUi

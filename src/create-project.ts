@@ -1,9 +1,9 @@
 import path from 'path'
+import { estiloVersion } from './pkg'
 
 import {
   loadYml,
-  ymlsInFolder,
-  estiloVersion
+  ymlsInFolder
 } from './util'
 
 import {

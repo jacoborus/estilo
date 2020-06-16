@@ -1,6 +1,6 @@
 import handlebars from 'handlebars'
 import { crash } from './crash'
-import { estiloVersion } from './util'
+import { estiloVersion } from './pkg'
 import {
   StatusConfig,
   Project,
