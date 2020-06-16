@@ -1,5 +1,5 @@
 import handlebars from 'handlebars'
-import hexterm from 'hexterm'
+import { hexterm } from 'hexterm'
 import { crash } from './crash'
 import { isHexColor, estiloVersion } from './util'
 import {
