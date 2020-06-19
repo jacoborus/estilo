@@ -92,11 +92,12 @@ colorschemes:
     palette: ${options.name}`
 
   fs.writeFileSync(path.resolve(projectPath, 'estilo.yml'), estiloStr)
+  const palettesPath = path.resolve(projectPath, 'estilo', 'palettes')
   mkdirp.sync(path.resolve(projectPath, 'estilo'))
   mkdirp.sync(path.resolve(projectPath, 'estilo', 'syntax'))
-  mkdirp.sync(path.resolve(projectPath, 'estilo', 'palettes'))
+  mkdirp.sync(palettesPath)
   mkdirp.sync(addonsFolder)
-  fs.writeFileSync(path.resolve(projectPath, 'estilo/palettes', options.name + '.yml'), defaultPalette)
+  fs.writeFileSync(path.resolve(palettesPath, options.name + '.yml'), defaultPalette)
   await cpFile(blankTermOrigin, termPath)
   installTemplates(['base.yml'])
   console.log(chalk.green.bold('✓  Your project is ready\n'))
