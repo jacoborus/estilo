@@ -1,10 +1,10 @@
-import chalk from 'chalk'
+import kleur from 'kleur'
 
 type ErrorOpts = Record<string, string>
 
 export function crash (message: string, data?: ErrorOpts): never {
-  console.log(chalk.red('Error: ' + message))
-  if (data) console.log(chalk.red(dataToText(data)))
+  console.log(kleur.red('Error: ' + message))
+  if (data) console.log(kleur.red(dataToText(data)))
   process.exit(1)
 }
 

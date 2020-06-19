@@ -6,7 +6,7 @@ import { renderProject } from '../render-project'
 import { selectSyntax } from './select-syntax.js'
 import { init } from './init'
 import { installStatus } from './install-status'
-import { pkg } from '../util'
+import { pkg } from '../pkg'
 
 const argv = minimist(process.argv.slice(2))
 const projectPath = path.resolve('.')

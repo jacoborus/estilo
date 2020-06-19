@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@types/update-notifier": "^4.1.0",
-    "chalk": "4.1.0",
     "cp-file": "^9.0.0",
     "handlebars": "4.7.6",
     "hexterm": "2.0.0",
     "inquirer": "7.2.0",
+    "kleur": "^4.0.1",
     "minimist": "1.2.5",
     "mkdirp": "1.0.4",
     "update-notifier": "4.1.0",

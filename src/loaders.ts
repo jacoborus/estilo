@@ -3,7 +3,7 @@ import fs from 'fs'
 import { hexterm } from 'hexterm'
 import { loadYml, isHexColor } from './util'
 import { crash } from './crash'
-import chalk from 'chalk'
+import kleur from 'kleur'
 import {
   Palette,
   SyntaxRule,
@@ -49,8 +49,8 @@ function getTerminalTemplatePath (folderPath: string) {
   const legacyPath = path.resolve(addonsPath, 'nvim-term.yml')
   const newPath = path.resolve(addonsPath, 'terminal.yml')
   if (fs.existsSync(legacyPath) && !fs.existsSync(newPath)) {
-    console.log(chalk.yellow.bold('⚠  Warning: Legacy terminal config path'))
-    console.log(chalk.yellow(`Please rename ${legacyPath} to ${newPath}\n`))
+    console.log(kleur.yellow().bold('⚠  Warning: Legacy terminal config path'))
+    console.log(kleur.yellow(`Please rename ${legacyPath} to ${newPath}\n`))
     return legacyPath
   } else {
     return path.resolve(addonsPath, 'terminal.yml')

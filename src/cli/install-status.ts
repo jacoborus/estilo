@@ -3,7 +3,7 @@ import inquirer from 'inquirer'
 import fs from 'fs'
 import cpFile from 'cp-file'
 import mkdirp from 'mkdirp'
-import chalk from 'chalk'
+import kleur from 'kleur'
 import { StatusBrand } from '../common'
 
 const originPaths = {
@@ -39,7 +39,7 @@ export function installStatus (projectPath: string, brand: StatusBrand) {
     const filepath = path.resolve(statusFolderPath, answers.stylename + '.yml')
     await cpFile(templatePath, filepath)
     const stylename = (answers.stylename as string).trim()
-    console.log(chalk.green(`New ${brand} style: ${stylename}`))
+    console.log(kleur.green(`New ${brand} style: ${stylename}`))
     console.log(`==> ${filepath}`)
   })
 }

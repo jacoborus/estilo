@@ -3,7 +3,7 @@ import path from 'path'
 import inquirer from 'inquirer'
 import mkdirp from 'mkdirp'
 import cpFile from 'cp-file'
-import chalk from 'chalk'
+import kleur from 'kleur'
 import { installTemplates } from './install-templates'
 
 interface Options {
@@ -100,5 +100,5 @@ colorschemes:
   fs.writeFileSync(path.resolve(palettesPath, options.name + '.yml'), defaultPalette)
   await cpFile(blankTermOrigin, termPath)
   installTemplates(['base.yml'])
-  console.log(chalk.green.bold('✓  Your project is ready\n'))
+  console.log(kleur.green().bold('✓  Your project is ready\n'))
 }

@@ -1,4 +1,4 @@
-import chalk from 'chalk'
+import kleur from 'kleur'
 import { Project } from './common'
 import {
   writeScheme,
@@ -27,5 +27,5 @@ export function renderProject (project: Project): void {
       writeStatus('lightline', rendered, config.name, project.folderPath)
     })
   }
-  console.log(chalk.green('✓  Done, your theme is ready\n'))
+  console.log(kleur.green('✓  Done, your theme is ready\n'))
 }
