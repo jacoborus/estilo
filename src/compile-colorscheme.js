@@ -36,7 +36,7 @@ function getColorCode (color, palette, part, hiName) {
   if (c) return c
   // return direct hex color
   if (isHexColor(color)) {
-    return [color, hexterm(color)]
+    return [color, hexterm.default(color)]
   }
   // not valid color
   throw new Error('wrong ' + part + ' in ' + hiName)
