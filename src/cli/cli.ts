@@ -28,7 +28,7 @@ const result = await estiloCommand
   .reset()
 
   .command("add-syntax")
-  .description("Add syntax templates. Leave blank for interactive mode")
+  .description("Add syntax templates.")
   .option(
     "-s, --syntax [...templateNames:string]",
     "List of syntax templates to add"

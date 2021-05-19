@@ -88,9 +88,9 @@ author: '${options.author || ""}'
 url: '${options.url || ""}'
 description: '${options.description || ""}'
 colorschemes:
-  - name: ${options.name}
+  - name: '${options.name}'
     background: 'dark'
-    palette: ${options.name}`;
+    palette: '${options.name}'`;
 
   const dir = resolve(projectPath, "estilo.yml");
   ensureDirSync(resolve(projectPath));
