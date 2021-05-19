@@ -21,7 +21,7 @@ interface ProjectOptions {
   description: string;
 }
 
-const blankTermOrigin = resolve(__dirname, "../../templates/terminal.yml");
+const blankTermOrigin = resolve(__dirname, "templates/terminal.yml");
 const defaultPalette = "myblue: '#99ccff'";
 
 export async function createProject(projectPath: string, noQuestions = false) {
@@ -75,7 +75,6 @@ export async function createProject(projectPath: string, noQuestions = false) {
     },
   ]);
 
-  console.log(answers);
   createBoilerplate(projectPath, answers as ProjectOptions);
 }
 
@@ -94,7 +93,6 @@ colorschemes:
     palette: ${options.name}`;
 
   const dir = resolve(projectPath, "estilo.yml");
-  console.log(dir);
   ensureDirSync(resolve(projectPath));
   Deno.writeTextFileSync(dir, estiloStr);
   const palettesPath = resolve(projectPath, "estilo", "palettes");

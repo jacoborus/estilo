@@ -15,7 +15,7 @@ const result = await estiloCommand
   .description("Initialize an estilo project in [folder] or current folder")
   .option("-y, --yes", "Skip questions")
   .option("-a, --all", "Skip questions and add all syntax templates")
-  .action((options: Record<string, boolean>, folder: ".") => {
+  .action((options: Record<string, boolean>, folder = ".") => {
     createProject(resolve(folder), !!options.yes);
   })
   .reset()
@@ -34,8 +34,6 @@ const result = await estiloCommand
     "List of syntax templates to add"
   )
   .action((options: Record<string, []>) => {
-    console.log("options:");
-    console.log(options);
     selectSyntax(".", options.syntax);
   })
   .reset()
@@ -55,9 +53,10 @@ const result = await estiloCommand
   .reset()
   .parse(Deno.args);
 
-if (!Object.entries(result.options).length) estiloCommand.showHelp();
+if (!Object.entries(result.options).length && result.cmd._name === "estilo") {
+  estiloCommand.showHelp();
+}
 
 // render: () => renderProject(createProject(projectPath)),
-// "add-syntax": () => selectSyntax(projectPath),
 // "add-airline": () => installStatus(projectPath, "airline"),
 // "add-lightline": () => installStatus(projectPath, "lightline"),

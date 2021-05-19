@@ -14,6 +14,9 @@ export async function selectSyntax(
   const templateFiles = Array.from(Deno.readDirSync(syntaxFolder)).map(
     (file) => file.name
   );
+  console.log("=========");
+  console.log(syntaxDestFolder);
+  console.log("^^^^^^^^^");
   const installedSyntax = Array.from(Deno.readDirSync(syntaxDestFolder)).map(
     (file) => file.name
   );
