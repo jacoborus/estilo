@@ -1,9 +1,0 @@
-node_modules
-.tern-port
-test
-npm-debug.log
-src
-jest.config.js
-tsconfig.json
-.eslintrc.json
-.travis.yml

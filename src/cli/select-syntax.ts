@@ -1,34 +1,42 @@
-import path from 'path'
-import inquirer from 'inquirer'
-import fs from 'fs'
-import { installTemplates } from './install-templates'
+import { Checkbox, prompt, resolve, __dirname } from "../../deps.ts";
+import { installTemplates } from "./install-templates.ts";
 
-export function selectSyntax (projectPath: string) {
-  const syntaxFolder = path.resolve(__dirname, '../../templates/syntax')
-  const syntaxDestFolder = path.resolve(projectPath, 'estilo/syntax')
-  const templateFiles = fs.readdirSync(syntaxFolder)
-  const installedSyntax = fs.readdirSync(syntaxDestFolder)
+// TODO: check if the folder contains a estilo project
+export async function selectSyntax(
+  projectPath: string,
+  syntax = [] as string[]
+) {
+  if (syntax.length) {
+    return console.log(syntax);
+  }
+  const syntaxFolder = resolve(__dirname, "templates/syntax");
+  const syntaxDestFolder = resolve(projectPath, "estilo/syntax");
+  const templateFiles = Array.from(Deno.readDirSync(syntaxFolder)).map(
+    (file) => file.name
+  );
+  const installedSyntax = Array.from(Deno.readDirSync(syntaxDestFolder)).map(
+    (file) => file.name
+  );
 
-  const templateChoices = templateFiles.map(filename => {
-    const isDisabled = installedSyntax.includes(filename)
-    let syntaxName = filename.slice(0, -4)
-    if (isDisabled) {
-      syntaxName += ' (installed)'
-    }
+  const templateChoices = templateFiles.map((file) => {
+    const isDisabled = installedSyntax.includes(file);
+    let syntaxName = file.slice(0, -4);
+    if (isDisabled) syntaxName += " (installed)";
     return {
       name: syntaxName,
-      value: filename,
-      disabled: isDisabled
-    }
-  })
+      value: file,
+      disabled: isDisabled,
+    };
+  });
 
-  const questions = [{
-    type: 'checkbox',
-    message: 'Select some extra syntax templates',
-    name: 'templates',
-    choices: templateChoices
-  }]
+  const answers = await prompt([
+    {
+      type: Checkbox,
+      message: "Select some extra syntax templates",
+      name: "templates",
+      options: templateChoices,
+    },
+  ]);
 
-  inquirer.prompt(questions)
-    .then(answers => installTemplates(answers.templates as string[]))
+  installTemplates(projectPath, answers.templates as string[]);
 }

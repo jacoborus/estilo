@@ -1,45 +1,50 @@
-import path from 'path'
-import inquirer from 'inquirer'
-import fs from 'fs'
-import cpFile from 'cp-file'
-import mkdirp from 'mkdirp'
-import kleur from 'kleur'
-import { StatusBrand } from '../common'
+import {
+  resolve,
+  ensureDirSync,
+  Input,
+  prompt,
+  green,
+  __dirname,
+} from "../../deps.ts";
+import { StatusBrand } from "../common.ts";
+import { ValidateResult } from "https://deno.land/x/cliffy/prompt/mod.ts";
 
 const originPaths = {
-  airline: 'templates/status/airline.yml',
-  lightline: 'templates/status/lightline.yml'
-}
+  airline: "templates/status/airline.yml",
+  lightline: "templates/status/lightline.yml",
+};
 
-export function installStatus (projectPath: string, brand: StatusBrand) {
-  const statusFolderPath = path.resolve(projectPath, 'estilo', brand)
-  mkdirp.sync(statusFolderPath)
-  const installedStyles = fs.readdirSync(statusFolderPath)
-    .map(n => n.slice(0, -4))
+export async function installStatus(projectPath: string, brand: StatusBrand) {
+  const statusFolderPath = resolve(projectPath, "estilo", brand);
+  ensureDirSync(statusFolderPath);
+  const installedStyles = Array.from(
+    Deno.readDirSync(statusFolderPath)
+  ).map((n) => n.name.slice(0, -4));
 
-  const questions = [
+  const answers = await prompt([
     {
-      type: 'input',
-      message: 'Enter style name:',
-      name: 'stylename',
-      validate: (input: string) => {
-        const stylename = input.trim()
-        if (!stylename) return 'That\'s not a name'
-        if (installedStyles.includes(stylename)) {
-          return 'That style already exists'
-        } else {
-          return true
-        }
-      }
-    }
-  ]
+      type: Input,
+      message: "Enter style name:",
+      name: "stylename",
+      validate: (input: string): ValidateResult => {
+        const stylename = input.trim();
+        if (!stylename) return "That's not a name";
+        return installedStyles.includes(stylename)
+          ? "That style already exists"
+          : true;
+      },
+    },
+  ]);
 
-  inquirer.prompt(questions).then(async function (answers) {
-    const templatePath = path.resolve(__dirname, '../..', originPaths[brand])
-    const filepath = path.resolve(statusFolderPath, answers.stylename + '.yml')
-    await cpFile(templatePath, filepath)
-    const stylename = (answers.stylename as string).trim()
-    console.log(kleur.green(`New ${brand} style: ${stylename}`))
-    console.log(`==> ${filepath}`)
-  })
+  const templatePath = resolve(__dirname, "../..", originPaths[brand]);
+  const filepath = resolve(statusFolderPath, answers.stylename + ".yml");
+  // TODO handle this error
+  try {
+    await Deno.copyFile(templatePath, filepath);
+  } catch (err) {
+    console.error(err);
+  }
+  const stylename = (answers.stylename as string).trim();
+  console.log(green(`New ${brand} style: ${stylename}`));
+  console.log(`==> ${filepath}`);
 }
