@@ -1,6 +1,8 @@
 import { resolve, Command, version, HelpCommand } from "../../deps.ts";
 import { createProject } from "./create.ts";
+import { loadProject } from "../load-project.ts";
 import { selectSyntax } from "./select-syntax.ts";
+import { renderProject } from "../render-project.ts";
 
 const estiloCommand = new Command();
 
@@ -16,14 +18,15 @@ const result = await estiloCommand
   .option("-y, --yes", "Skip questions")
   .option("-a, --all", "Skip questions and add all syntax templates")
   .action((options: Record<string, boolean>, folder = ".") => {
-    createProject(resolve(folder), !!options.yes);
+    createProject(resolve(folder), !!options.yes, !!options.all);
   })
   .reset()
 
   .command("render [folder]")
   .description("Render project")
   .action((_: unknown, folder = ".") => {
-    console.log("Rendering:", folder);
+    const projectData = loadProject(resolve(folder));
+    renderProject(projectData);
   })
   .reset()
 

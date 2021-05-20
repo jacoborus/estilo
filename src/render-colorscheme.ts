@@ -1,4 +1,4 @@
-import { handlebars, hexterm } from "../deps.ts";
+import { handlebars, mustaches, hexterm, version } from "../deps.ts";
 
 import { crash } from "./crash.ts";
 import { isHexColor } from "./util.ts";
@@ -13,12 +13,10 @@ import {
   TerminalSyntax,
 } from "./common.ts";
 
-const version = Deno.readTextFileSync("./version");
-
-export function renderColorscheme(
+export async function renderColorscheme(
   config: SchemeConfig,
   project: Project
-): string {
+): Promise<string> {
   const palette = project.palettes[config.palette];
   if (!palette) {
     crash("Colorscheme palette does not exist", {
@@ -28,7 +26,6 @@ export function renderColorscheme(
   }
   const syntax = project.syntax;
   const c = parseSyntaxColors(syntax, palette);
-  handlebars.render();
   const info = {
     name: config.name,
     description: config.description,
@@ -39,8 +36,11 @@ export function renderColorscheme(
     estiloVersion: version,
   };
   const term = parseTermColors(project.terminalSyntax, palette);
-  handlebars.render(project.mustaches.colorscheme);
-  return render({ c, info, term });
+  return await handlebars.render(mustaches.colorscheme, {
+    c,
+    info,
+    term,
+  });
 }
 
 type SyntaxValues = Record<string, SyntaxValue | LinkValue>;
@@ -117,6 +117,8 @@ function getColorCode(
   }
   // not valid color
   crash("Color does not exist", { filepath, color });
+  // this is here just to comply with typescript
+  return false;
 }
 
 function getUI(ui: string): false | string {

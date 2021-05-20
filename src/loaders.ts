@@ -6,8 +6,6 @@ import {
   existsSync,
   __dirname,
 } from "../deps.ts";
-import { loadYml, isHexColor } from "./util.ts";
-import { crash } from "./crash.ts";
 import {
   Palette,
   SyntaxRule,
@@ -16,6 +14,8 @@ import {
   Mustaches,
   StatusBrand,
 } from "./common.ts";
+import { loadYml, isHexColor } from "./util.ts";
+import { crash } from "./crash.ts";
 
 export function loadPalette(filepath: string): Palette {
   const { content } = loadYml(filepath);
@@ -74,13 +74,13 @@ export function loadTerminal(folderPath: string): TerminalSyntax {
 }
 
 export function loadMustaches(): Mustaches {
-  const folder = resolve(__dirname, "../mustaches");
+  const folder = resolve(__dirname, "mustaches");
   const filenames = ["colorscheme", "airline", "lightline"];
   const mustaches = {} as Mustaches;
 
   filenames.forEach((filename) => {
-    const filepath = path.resolve(folder, filename + ".hbs");
-    const txt = fs.readFileSync(filepath, "utf8");
+    const filepath = resolve(folder, filename + ".hbs");
+    const txt = Deno.readTextFileSync(filepath);
     mustaches[filename] = txt;
   });
   return mustaches;
@@ -143,7 +143,7 @@ export function loadStatus(filepath: string, brand: StatusBrand): StatusStyle {
   const { content } = loadYml(filepath);
 
   const statusStyle = {
-    name: path.basename(filepath, ".yml"),
+    name: basename(filepath, ".yml"),
     filepath: filepath,
     syntax: {},
   } as StatusStyle;

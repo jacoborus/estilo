@@ -24,7 +24,11 @@ interface ProjectOptions {
 const blankTermOrigin = resolve(__dirname, "templates/terminal.yml");
 const defaultPalette = "myblue: '#99ccff'";
 
-export async function createProject(projectPath: string, noQuestions = false) {
+export async function createProject(
+  projectPath: string,
+  noQuestions: boolean,
+  all: boolean
+) {
   const folderName = basename(projectPath);
   if (noQuestions) {
     return createBoilerplate(projectPath, {

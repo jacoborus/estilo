@@ -9,9 +9,7 @@ import {
   StatusBrand,
 } from "./common.ts";
 
-import { handlebars } from "../deps.ts";
-
-const version = Deno.readTextFileSync("./version");
+import { handlebars, version, mustaches } from "../deps.ts";
 
 function parseStatusColors(
   syntax: StatusSyntax,
@@ -37,11 +35,11 @@ function parseStatusColors(
   return out;
 }
 
-export function renderStatus(
+export async function renderStatus(
   config: StatusConfig,
   project: Project,
   brand: StatusBrand
-): string {
+): Promise<string> {
   const palette = project.palettes[config.palette];
   if (!palette) {
     crash("Palette does not exist", {
@@ -59,7 +57,6 @@ export function renderStatus(
     crash("Cannot find status style file", { name: config.name });
   const syntax = syntaxFile.syntax;
   const c = parseStatusColors(syntax, palette);
-  const render = handlebars.compile(project.mustaches[brand]);
   const info = {
     name: config.name,
     description: config.description,
@@ -69,5 +66,5 @@ export function renderStatus(
     estiloVersion: version,
   };
   const context = Object.assign(c, { info });
-  return render(context);
+  return await handlebars.render(mustaches[brand], context);
 }

@@ -12,7 +12,7 @@ import {
 
 import { Palettes, Project, StatusStyles, StatusBrand } from "./common.ts";
 
-export function createProject(folderPath: string): Project {
+export function loadProject(folderPath: string): Project {
   return {
     folderPath,
     estiloVersion: version,

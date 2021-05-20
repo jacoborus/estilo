@@ -21,8 +21,7 @@ export function loadYml(folderPath: string, filename?: string): YmlFile {
 export function ymlsInFolder(folderPath: string, folder2?: string): string[] {
   const finalPath = resolve(folderPath, folder2 || "");
   if (!existsSync(finalPath)) return [];
-  return fs
-    .readdirSync(finalPath, "utf8")
-    .filter((filename) => filename.endsWith(".yml"))
-    .map((name) => path.resolve(finalPath, name));
+  return Array.from(Deno.readDirSync(finalPath))
+    .filter((file) => file.name.endsWith(".yml"))
+    .map((file) => resolve(finalPath, file.name));
 }
