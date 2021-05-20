@@ -57,6 +57,5 @@ if (!Object.entries(result.options).length && result.cmd._name === "estilo") {
   estiloCommand.showHelp();
 }
 
-// render: () => renderProject(createProject(projectPath)),
 // "add-airline": () => installStatus(projectPath, "airline"),
 // "add-lightline": () => installStatus(projectPath, "lightline"),

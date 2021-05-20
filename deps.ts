@@ -24,7 +24,9 @@ export { hexterm } from "https://raw.githubusercontent.com/jacoborus/hexterm/mas
 export const handlebars = new Handlebars();
 
 export const __dirname = new URL(".", import.meta.url).pathname;
-export const version = Deno.readTextFileSync(resolve(__dirname, "version"));
+export const version = Deno.readTextFileSync(
+  resolve(__dirname, "version")
+).trim();
 
 export const mustaches = {
   colorscheme: resolve(__dirname, "mustaches/colorscheme.hbs"),
