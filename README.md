@@ -24,7 +24,7 @@ TODO
 Initialize your project and follow the instructions:
 
 ```sh
-mkdir myproject && cd myproject && estilo init
+mkdir myproject && cd myproject && estilo create
 ```
 
 Next: [Color palettes](docs/color-palettes.md)
@@ -69,14 +69,14 @@ Estilo is written in pure Typescript, so you need [deno.js 1.7](https://deno.lan
 
 ## TODO
 
-[] Migrate cli to deno
-[] Migrate old render to deno
-[] Palettes can import colors from a main palette
-[] Move terminal.yml down to estilo folder (remove addons folder)
-[] Refactor and clean code
-[] Update documentation
-[] Add update notifier
-[] Different OS builds
+- [] Migrate cli to deno
+- [] Migrate old render to deno
+- [] Palettes can import colors from a main palette
+- [] Move terminal.yml down to estilo folder (remove addons folder)
+- [] Refactor and clean code
+- [] Update documentation
+- [] Add update notifier
+- [] Different OS builds
 
 <br>
 
