@@ -6,19 +6,41 @@ export async function selectSyntax(projectPath: string, all = false) {
   const libFolder = resolve(__dirname, "templates/syntax");
   const destFolder = resolve(projectPath, "estilo/syntax");
 
-  const templateFiles = Array.from(Deno.readDirSync(libFolder)).map(
-    (file) => file.name
-  );
-  const installedSyntax = Array.from(Deno.readDirSync(destFolder)).map(
-    (file) => file.name
-  );
+  const libFiles = getFileNamesFromFolder(libFolder);
+  const destFiles = getFileNamesFromFolder(destFolder);
 
-  if (all) {
-    const templates = getMissingTemplates(templateFiles, installedSyntax);
-    return installTemplates(projectPath, templates as string[]);
-  }
+  if (all) addMissingTemplates(projectPath, libFiles, destFiles);
+  else await askAndAddTemplates(projectPath, libFiles, destFiles);
+}
 
-  const options = getOptions(templateFiles, installedSyntax);
+function getFileNamesFromFolder(folder: string) {
+  return Array.from(Deno.readDirSync(folder)).map((file) => file.name);
+}
+
+function addMissingTemplates(
+  projectPath: string,
+  libFiles: string[],
+  destFiles: string[]
+) {
+  const missing = libFiles.filter((template) => !destFiles.includes(template));
+  installTemplates(projectPath, missing);
+}
+
+async function askAndAddTemplates(
+  projectPath: string,
+  libFiles: string[],
+  destFiles: string[]
+) {
+  const options = libFiles.map((value) => {
+    const disabled = destFiles.includes(value);
+    const name = value.slice(0, -4);
+    return {
+      name: name + (disabled ? " (installed)" : ""),
+      value,
+      disabled,
+    };
+  });
+
   const answers = await prompt([
     {
       type: Checkbox,
@@ -29,20 +51,4 @@ export async function selectSyntax(projectPath: string, all = false) {
   ]);
 
   installTemplates(projectPath, answers.templates as string[]);
-}
-
-function getOptions(templates: string[], installed: string[]) {
-  return templates.map((value) => {
-    const disabled = installed.includes(value);
-    const name = value.slice(0, -4);
-    return {
-      name: name + (disabled ? " (installed)" : ""),
-      value,
-      disabled,
-    };
-  });
-}
-
-function getMissingTemplates(origin: string[], destination: string[]) {
-  return origin.filter((template) => !destination.includes(template));
 }
