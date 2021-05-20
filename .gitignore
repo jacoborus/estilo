@@ -4,3 +4,4 @@ test/sandbox/colors
 npm-debug.log
 _book
 lib
+.vim
