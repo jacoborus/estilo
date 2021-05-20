@@ -17,7 +17,7 @@ module.exports = function (colors, paletteName) {
     if (!props[0] || !isHexColor(props[0])) {
       throw new Error(`color ${c} is invalid. Palette: ` + paletteName)
     }
-    palette[c] = [props[0], props[1] || hexterm(props[0])]
+    palette[c] = [props[0], props[1] || hexterm.default(props[0])]
   })
   return palette
 }
