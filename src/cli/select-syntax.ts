@@ -9,28 +9,22 @@ export async function selectSyntax(projectPath: string, all = false) {
   const libFiles = getFileNamesFromFolder(libFolder);
   const destFiles = getFileNamesFromFolder(destFolder);
 
-  if (all) addMissingTemplates(projectPath, libFiles, destFiles);
-  else await askAndAddTemplates(projectPath, libFiles, destFiles);
+  const templates = all
+    ? getMissingTemplates(libFiles, destFiles)
+    : (await askForTemplates(libFiles, destFiles)).templates;
+
+  installTemplates(projectPath, templates as string[]);
 }
 
 function getFileNamesFromFolder(folder: string) {
   return Array.from(Deno.readDirSync(folder)).map((file) => file.name);
 }
 
-function addMissingTemplates(
-  projectPath: string,
-  libFiles: string[],
-  destFiles: string[]
-) {
-  const missing = libFiles.filter((template) => !destFiles.includes(template));
-  installTemplates(projectPath, missing);
+function getMissingTemplates(libFiles: string[], destFiles: string[]) {
+  return libFiles.filter((template) => !destFiles.includes(template));
 }
 
-async function askAndAddTemplates(
-  projectPath: string,
-  libFiles: string[],
-  destFiles: string[]
-) {
+async function askForTemplates(libFiles: string[], destFiles: string[]) {
   const options = libFiles.map((value) => {
     const disabled = destFiles.includes(value);
     const name = value.slice(0, -4);
@@ -41,7 +35,7 @@ async function askAndAddTemplates(
     };
   });
 
-  const answers = await prompt([
+  return await prompt([
     {
       type: Checkbox,
       message: "Select some extra syntax templates",
@@ -49,6 +43,4 @@ async function askAndAddTemplates(
       options,
     },
   ]);
-
-  installTemplates(projectPath, answers.templates as string[]);
 }

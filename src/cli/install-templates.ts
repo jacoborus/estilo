@@ -1,7 +1,7 @@
-import { resolve, __dirname } from "../../deps.ts";
+import { resolve, __dirname, green } from "../../deps.ts";
 
-export function installTemplates(projectPath: string, templateNames: string[]) {
-  templateNames.forEach(async (name) => {
+export function installTemplates(projectPath: string, templates: string[]) {
+  templates.forEach(async (name) => {
     const origin = resolve(__dirname, "templates/syntax", name);
     const destination = resolve(projectPath, "estilo/syntax", name);
     // TODO handle this error
@@ -11,7 +11,7 @@ export function installTemplates(projectPath: string, templateNames: string[]) {
       console.error(err);
     }
   });
-  console.log(
-    `Added ${templateNames.length} templates: ${templateNames.join(", ")}`
-  );
+  const nameList = templates.map((name) => `- ${name}\n`).join("");
+  console.log(green(`✓ Added ${templates.length} templates:`));
+  console.log(nameList);
 }
