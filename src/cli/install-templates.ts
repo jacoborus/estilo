@@ -1,5 +1,7 @@
 import { resolve, __dirname, green } from "../../deps.ts";
 
+const tick = green("✓");
+
 export function installTemplates(projectPath: string, templates: string[]) {
   templates.forEach(async (name) => {
     const origin = resolve(__dirname, "templates/syntax", name);
@@ -11,7 +13,12 @@ export function installTemplates(projectPath: string, templates: string[]) {
       console.error(err);
     }
   });
-  const nameList = templates.map((name) => `- ${name}\n`).join("");
-  console.log(green(`✓ Added ${templates.length} templates:`));
-  console.log(nameList);
+
+  console.log(green(`Added ${templates.length} templates:`));
+  console.log(
+    templates
+      .map((name) => name.slice(0, -4))
+      .map((name) => `${tick} ${name}\n`)
+      .join("")
+  );
 }
