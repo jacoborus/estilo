@@ -9,14 +9,18 @@ import {
 import { StatusBrand } from "../common.ts";
 import { ValidateResult } from "https://deno.land/x/cliffy/prompt/mod.ts";
 
-const originPaths = {
-  airline: "templates/status/airline.yml",
-  lightline: "templates/status/lightline.yml",
-};
-
-export async function installStatus(projectPath: string, brand: StatusBrand) {
+export async function installStatus(
+  projectPath: string,
+  brand: StatusBrand,
+  styleName?: string
+) {
   const statusFolderPath = resolve(projectPath, "estilo", brand);
   ensureDirSync(statusFolderPath);
+
+  if (styleName) {
+    return addStatus(projectPath, brand, styleName);
+  }
+
   const installedStyles = Array.from(
     Deno.readDirSync(statusFolderPath)
   ).map((n) => n.name.slice(0, -4));
@@ -24,7 +28,7 @@ export async function installStatus(projectPath: string, brand: StatusBrand) {
   const answers = await prompt([
     {
       type: Input,
-      message: "Enter style name:",
+      message: `Enter ${brand} style name:`,
       name: "stylename",
       validate: (input: string): ValidateResult => {
         const stylename = input.trim();
@@ -36,15 +40,21 @@ export async function installStatus(projectPath: string, brand: StatusBrand) {
     },
   ]);
 
-  const templatePath = resolve(__dirname, "../..", originPaths[brand]);
-  const filepath = resolve(statusFolderPath, answers.stylename + ".yml");
-  // TODO handle this error
+  addStatus(projectPath, brand, answers.stylename as string);
+}
+
+async function addStatus(
+  projectPath: string,
+  brand: StatusBrand,
+  styleName: string
+) {
+  const templatePath = resolve(__dirname, "templates/status", `${brand}.yml`);
+  const filepath = resolve(projectPath, "estilo", brand, styleName + ".yml");
   try {
     await Deno.copyFile(templatePath, filepath);
   } catch (err) {
     console.error(err);
   }
-  const stylename = (answers.stylename as string).trim();
-  console.log(green(`New ${brand} style: ${stylename}`));
+  console.log(green(`New ${brand} style: ${styleName}`));
   console.log(`==> ${filepath}`);
 }

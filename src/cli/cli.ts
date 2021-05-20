@@ -3,6 +3,7 @@ import { createProject } from "./create.ts";
 import { loadProject } from "../load-project.ts";
 import { selectSyntax } from "./select-syntax.ts";
 import { renderProject } from "../render-project.ts";
+import { installStatus } from "./install-status.ts";
 
 const estiloCommand = new Command();
 
@@ -40,15 +41,15 @@ const result = await estiloCommand
 
   .command("add-lightline [styleName]")
   .description("Add new Lightline style")
-  .action((_: unknown, styleName = [] as string[]) => {
-    console.log("Adding lightline style:", styleName);
+  .action((_: unknown, styleName: string) => {
+    installStatus(".", "lightline", styleName);
   })
   .reset()
 
   .command("add-airline [styleName]")
   .description("Add new Airline style")
-  .action((_: unknown, styleName = [] as string[]) => {
-    console.log("Adding lightline style:", styleName);
+  .action((_: unknown, styleName: string) => {
+    installStatus(".", "airline", styleName);
   })
   .reset()
   .parse(Deno.args);

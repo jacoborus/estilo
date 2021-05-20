@@ -11,7 +11,7 @@ Estilo
 
 ---
 
-:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (`deno`). If you're looking for Estilo 1, [please check out `1.0` branch (`master`)](https://github.com/jacoborus/estilo/tree/master).
+:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (alpha version). If you're looking for Estilo 1, [please check out `1.0` branch (`master`)](https://github.com/jacoborus/estilo/tree/master).
 
 ---
 
@@ -77,6 +77,7 @@ Estilo is written in pure Typescript, so you need [deno.js 1.7](https://deno.lan
 - [ ] Update documentation
 - [ ] Add update notifier
 - [ ] Different OS builds
+- [ ] Enable theming other terminal tools (Alacritty, Tmux, ...)
 
 <br>
 
