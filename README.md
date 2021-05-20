@@ -9,15 +9,15 @@ Estilo
 
 ![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
 
+---
+
+:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (`deno`). If you're looking for Estilo 1, [please check out `1.0` branch (`master`)](https://github.com/jacoborus/estilo/tree/master).
+
+---
 
 ## Installation
 
-Estilo is written in pure javascript, so you need [node.js v6](https://nodejs.org) or higher installed in your computer, then install with [npm](https://www.npmjs.com/package/estilo):
-
-```sh
-npm install -g estilo
-```
-
+TODO
 
 ## Quick start
 
@@ -36,12 +36,13 @@ Usage: `estilo [command]`
 
 Commands:
 
-- **`init`**: Initialize an estilo project in current folder
-- **`render`**: Render all the colorschemes and themes
+- **`create [folder]`**: Create an estilo project in [folder] or current folder
+- **`render [folder]`**: Render project in [folder] or current folder
 - **`add-syntax`**: Add more syntax templates
-- **`add-airline`**: Add a new Airline style
-- **`add-lightline`**: Add a new Lightline style
-- **`help`**: Show help
+- **`add-airline [styleName]`**: Add a new Airline style
+- **`add-lightline [styleName]`**: Add a new Lightline style
+- **`help [command]`**: Show this help or the help of a sub-command.
+- **`--version`**: Show the version number.
 
 
 ## Documentation
@@ -61,8 +62,24 @@ Commands:
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
 
 
-<br><br>
+## Development
+
+Estilo is written in pure Typescript, so you need [deno.js 1.7](https://deno.land/) or higher installed in your computer
+
+
+## TODO
+
+[] Migrate cli to deno
+[] Migrate old render to deno
+[] Palettes can import colors from a main palette
+[] Move terminal.yml down to estilo folder (remove addons folder)
+[] Refactor and clean code
+[] Update documentation
+[] Add update notifier
+[] Different OS builds
+
+<br>
 
 ---
 
-© 2016 [Jacobo Tabernero](http://jacoborus.codes) - Released under [MIT License](https://raw.github.com/jacoborus/estilo/master/LICENSE)
+© 2016-2021 [Jacobo Tabernero Rey](http://jacoborus.codes) - Released under [MIT License](https://raw.github.com/jacoborus/estilo/master/LICENSE)
