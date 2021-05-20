@@ -29,12 +29,9 @@ const result = await estiloCommand
 
   .command("add-syntax")
   .description("Add syntax templates.")
-  .option(
-    "-s, --syntax [...templateNames:string]",
-    "List of syntax templates to add"
-  )
+  .option("-a, --all [all:boolean]", "Add add available syntax templates")
   .action((options: Record<string, []>) => {
-    selectSyntax(".", options.syntax);
+    selectSyntax(".", !!options.all);
   })
   .reset()
 

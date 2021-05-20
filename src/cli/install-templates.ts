@@ -1,10 +1,8 @@
-import { resolve } from "https://deno.land/std/path/mod.ts";
-
-const __dirname = new URL(".", import.meta.url).pathname;
+import { resolve, __dirname } from "../../deps.ts";
 
 export function installTemplates(projectPath: string, templateNames: string[]) {
   templateNames.forEach(async (name) => {
-    const origin = resolve(__dirname, "../..", "templates/syntax", name);
+    const origin = resolve(__dirname, "templates/syntax", name);
     const destination = resolve(projectPath, "estilo/syntax", name);
     // TODO handle this error
     try {
@@ -13,4 +11,7 @@ export function installTemplates(projectPath: string, templateNames: string[]) {
       console.error(err);
     }
   });
+  console.log(
+    `Added ${templateNames.length} templates: ${templateNames.join(", ")}`
+  );
 }
