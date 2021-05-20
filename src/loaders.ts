@@ -11,7 +11,6 @@ import {
   SyntaxRule,
   StatusStyle,
   TerminalSyntax,
-  Mustaches,
   StatusBrand,
 } from "./common.ts";
 import { loadYml, isHexColor } from "./util.ts";
@@ -71,19 +70,6 @@ export function loadTerminal(folderPath: string): TerminalSyntax {
     terminalSyntax[prop] = colorname;
   });
   return terminalSyntax;
-}
-
-export function loadMustaches(): Mustaches {
-  const folder = resolve(__dirname, "mustaches");
-  const filenames = ["colorscheme", "airline", "lightline"];
-  const mustaches = {} as Mustaches;
-
-  filenames.forEach((filename) => {
-    const filepath = resolve(folder, filename + ".hbs");
-    const txt = Deno.readTextFileSync(filepath);
-    mustaches[filename] = txt;
-  });
-  return mustaches;
 }
 
 const statusParts = {

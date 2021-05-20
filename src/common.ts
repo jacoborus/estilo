@@ -1,7 +1,3 @@
-export interface Mustaches {
-  [index: string]: string;
-}
-
 export type YmlFile = {
   filepath: string;
   content: any;
@@ -86,5 +82,4 @@ export interface Project {
   terminalSyntax: TerminalSyntax;
   airlineStyles: StatusStyles;
   lightlineStyles: StatusStyles;
-  mustaches: Mustaches;
 }

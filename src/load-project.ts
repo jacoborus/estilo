@@ -7,7 +7,6 @@ import {
   loadSyntax,
   loadTerminal,
   loadPalette,
-  loadMustaches,
 } from "./loaders.ts";
 
 import { Palettes, Project, StatusStyles, StatusBrand } from "./common.ts";
@@ -22,7 +21,6 @@ export function loadProject(folderPath: string): Project {
     terminalSyntax: loadTerminal(folderPath),
     airlineStyles: loadAllStatus(folderPath, "airline"),
     lightlineStyles: loadAllStatus(folderPath, "lightline"),
-    mustaches: loadMustaches(),
   };
 }
 
