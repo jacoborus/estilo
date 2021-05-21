@@ -59,6 +59,7 @@ Commands:
 - [Oceanic Next](https://github.com/mhartington/oceanic-next) by [@mhartington](https://github.com/mhartington)
 - [Falcon](https://github.com/fenetikm/falcon) by [@fenetikm](https://github.com/fenetikm)
 - [Github](https://github.com/albertorestifo/github.vim) by [@albertorestifo](https://github.com/albertorestifo)
+- [vim-framer-syntax](https://github.com/balanceiskey/vim-framer-syntax) by [@balanceiskey](https://github.com/balanceiskey)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
 
 
