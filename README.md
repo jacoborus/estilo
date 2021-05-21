@@ -72,8 +72,10 @@ Estilo is written in pure Typescript, so you need [deno.js 1.7](https://deno.lan
 - [x] Migrate cli to deno
 - [x] Migrate old render to deno
 - [ ] Palettes can import colors from a main palette
-- [ ] Move terminal.yml down to estilo folder (remove addons folder)
+- [x] Move terminal.yml down to estilo folder (remove addons folder)
 - [ ] Refactor and clean code
+- [ ] Allow to create projects and adding all the available templates
+- [ ] Do not print terminal colors id terminal template is not complete
 - [ ] Update documentation
 - [ ] Add update notifier
 - [ ] Different OS builds

@@ -83,7 +83,7 @@ export async function createProject(
 }
 
 async function createBoilerplate(projectPath: string, options: ProjectOptions) {
-  const addonsFolder = resolve(projectPath, "estilo/addons");
+  const addonsFolder = resolve(projectPath, "estilo");
   const termPath = resolve(addonsFolder, "terminal.yml");
   const estiloStr = `name: '${options.name}'
 version: '${options.version || ""}'

@@ -48,7 +48,7 @@ export function loadSyntax(filepath: string): SyntaxRule[] {
 }
 
 function getTerminalTemplatePath(folderPath: string) {
-  const addonsPath = resolve(folderPath, "estilo/addons");
+  const addonsPath = resolve(folderPath, "estilo");
   const legacyPath = resolve(addonsPath, "nvim-term.yml");
   const newPath = resolve(addonsPath, "terminal.yml");
   if (existsSync(legacyPath) && !existsSync(newPath)) {
