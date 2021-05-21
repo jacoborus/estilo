@@ -47,21 +47,20 @@ export function loadSyntax(filepath: string): SyntaxRule[] {
     .filter((rule) => rule.rule);
 }
 
-function getTerminalTemplatePath(folderPath: string) {
-  const addonsPath = resolve(folderPath, "estilo");
-  const legacyPath = resolve(addonsPath, "nvim-term.yml");
-  const newPath = resolve(addonsPath, "terminal.yml");
-  if (existsSync(legacyPath) && !existsSync(newPath)) {
+function getTerminalTemplatePath(projectPath: string) {
+  const oldPath = resolve(projectPath, "estilo/addons/nvim-term.yml");
+  const newPath = resolve(projectPath, "estilo/terminal.yml");
+  if (existsSync(oldPath) && !existsSync(newPath)) {
     console.log(yellow("⚠  Warning: Legacy terminal config path"));
-    console.log(yellow(`Please rename ${legacyPath} to ${newPath}\n`));
-    return legacyPath;
+    console.log(yellow(`Please rename ${oldPath} to ${newPath}\n`));
+    return oldPath;
   } else {
-    return resolve(addonsPath, "terminal.yml");
+    return newPath;
   }
 }
 
-export function loadTerminal(folderPath: string): TerminalSyntax {
-  const filepath = getTerminalTemplatePath(folderPath);
+export function loadTerminal(projectPath: string): TerminalSyntax {
+  const filepath = getTerminalTemplatePath(projectPath);
   const { content } = loadYml(filepath);
   const terminalSyntax = {} as TerminalSyntax;
   Object.keys(content).forEach((prop) => {

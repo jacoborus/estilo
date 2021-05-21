@@ -1,8 +1,8 @@
 import { green } from "../deps.ts";
 import { Project } from "./common.ts";
-import { writeScheme, writeStatus } from "./writers.ts";
 import { renderColorscheme } from "./render-colorscheme.ts";
 import { renderStatus } from "./render-status.ts";
+import { writeScheme, writeStatus } from "./writers.ts";
 
 export function renderProject(project: Project): void {
   const { config } = project;
