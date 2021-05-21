@@ -1,7 +1,7 @@
 import { resolve } from "https://deno.land/std/path/mod.ts";
 import { Handlebars } from "https://deno.land/x/handlebars/mod.ts";
 
-export * as version from "./version.ts";
+export { default as version } from "./version.ts";
 
 export { resolve, basename } from "https://deno.land/std/path/mod.ts";
 export { ensureDirSync, existsSync } from "https://deno.land/std/fs/mod.ts";
