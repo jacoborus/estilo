@@ -3,17 +3,16 @@ Estilo
 
 **Estilo** makes easy to create and maintain colorschemes for vim, airline and lightline.
 
-
-[![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-
-
-![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
-
 ---
 
 :fire: **HEADS UP!** You're currently looking at Estilo 2 branch (alpha version). If you're looking for Estilo 1, [please check out `1.0` branch (`master`)](https://github.com/jacoborus/estilo/tree/master).
 
 ---
+
+[![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+
+
+![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
 
 ## Installation
 
@@ -72,14 +71,22 @@ Estilo is written in pure Typescript, so you need [deno.js 1.7](https://deno.lan
 
 - [x] Migrate cli to deno
 - [x] Migrate old render to deno
-- [ ] Palettes can import colors from a main palette
 - [x] Move terminal.yml down to estilo folder (remove addons folder)
-- [ ] Refactor and clean code
-- [ ] Allow to create projects and adding all the available templates
-- [ ] Do not print terminal colors id terminal template is not complete
-- [ ] Update documentation
+- [ ] Allow to create projects adding all the available templates at once
+- [ ] Palettes can import colors from a main palette
+- [ ] Do not print terminal colors if terminal template is not complete
 - [ ] Add update notifier
-- [ ] Different OS builds
+- [ ] Update documentation
+- [ ] Build scripts:
+  - [ ] Linux bin
+  - [ ] OSX bin
+  - [ ] Win bin
+  - [ ] .deb
+  - [ ] .rpm
+  - [ ] .dmg
+  - [ ] .whatever windows uses
+- [ ] Add install instructions
+- [ ] Refactor and clean code
 - [ ] Enable theming other terminal tools (Alacritty, Tmux, ...)
 
 <br>
