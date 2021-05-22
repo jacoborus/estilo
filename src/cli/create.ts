@@ -92,7 +92,6 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   ensureDirSync(resolve(projectPath));
   Deno.writeTextFileSync(dir, estiloStr);
   const palettesPath = resolve(projectPath, "estilo", "palettes");
-  ensureDirSync(resolve(projectPath, "estilo"));
   ensureDirSync(resolve(projectPath, "estilo", "syntax"));
   ensureDirSync(palettesPath);
   ensureDirSync(addonsFolder);
