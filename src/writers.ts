@@ -1,5 +1,5 @@
 import { StatusBrand } from "./common.ts";
-import { resolve, ensureDirSync } from "../deps.ts";
+import { ensureDirSync, resolve } from "../deps.ts";
 
 const paths = {
   airline: "autoload/airline/themes",
@@ -17,7 +17,7 @@ export function writeStatus(
   kind: StatusBrand,
   txt: string,
   name: string,
-  projectPath: string
+  projectPath: string,
 ) {
   const folderPath = resolve(projectPath, paths[kind]);
   const filepath = resolve(folderPath, name + ".vim");

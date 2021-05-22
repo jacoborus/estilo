@@ -1,14 +1,14 @@
+import HandlebarsJS from "https://dev.jspm.io/handlebars@4.7.6";
+import { Leaf as LeafMain } from "https://raw.githubusercontent.com/ulthuan/leaf/main/mod.ts";
 import { resolve } from "https://deno.land/std/path/mod.ts";
-import { Handlebars } from "https://deno.land/x/handlebars/mod.ts";
-
 export { default as version } from "./version.ts";
 
-export { resolve, basename } from "https://deno.land/std/path/mod.ts";
+export { basename, resolve } from "https://deno.land/std/path/mod.ts";
 export { ensureDirSync, existsSync } from "https://deno.land/std/fs/mod.ts";
 
 export {
-  Input,
   Checkbox,
+  Input,
   prompt,
 } from "https://deno.land/x/cliffy/prompt/mod.ts";
 export {
@@ -22,15 +22,25 @@ export {
   stringify as yamlStringify,
 } from "https://deno.land/std@0.97.0/encoding/yaml.ts";
 
-export { green, yellow, red } from "https://deno.land/std/fmt/colors.ts";
+export { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
 
 export { hexterm } from "https://raw.githubusercontent.com/jacoborus/hexterm/master/src/hexterm.ts";
 
 export const __dirname = new URL(".", import.meta.url).pathname;
-export const handlebars = new Handlebars();
+interface HH {
+  compile: (t: string) => (x: Record<string, unknown>) => string;
+}
+export const handlebars = HandlebarsJS as HH;
 
 export const mustaches = {
-  colorscheme: resolve(__dirname, "mustaches/colorscheme.hbs"),
-  airline: resolve(__dirname, "mustaches/airline.hbs"),
-  lightline: resolve(__dirname, "mustaches/lightline.hbs"),
+  colorscheme: LeafMain.readTextFileSync(
+    resolve(__dirname, "mustaches/colorscheme.hbs")
+  ),
+  airline: LeafMain.readTextFileSync(
+    resolve(__dirname, "mustaches/airline.hbs")
+  ),
+  lightline: LeafMain.readTextFileSync(
+    resolve(__dirname, "mustaches/lightline.hbs")
+  ),
 };
+export const Leaf = LeafMain;

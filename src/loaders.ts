@@ -1,19 +1,19 @@
 import {
-  hexterm,
+  __dirname,
   basename,
+  existsSync,
+  hexterm,
   resolve,
   yellow,
-  existsSync,
-  __dirname,
 } from "../deps.ts";
 import {
   Palette,
-  SyntaxRule,
-  StatusStyle,
-  TerminalSyntax,
   StatusBrand,
+  StatusStyle,
+  SyntaxRule,
+  TerminalSyntax,
 } from "./common.ts";
-import { loadYml, isHexColor } from "./util.ts";
+import { isHexColor, loadYml } from "./util.ts";
 import { crash } from "./crash.ts";
 
 export function loadPalette(filepath: string): Palette {

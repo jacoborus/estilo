@@ -1,15 +1,14 @@
+import { __dirname, resolve, handlebars, Leaf, version } from "../deps.ts";
 import { crash } from "./crash.ts";
 
 import {
-  StatusConfig,
-  Project,
-  StatusSyntax,
-  Palette,
   DataRenderStatus,
+  Palette,
+  Project,
   StatusBrand,
+  StatusConfig,
+  StatusSyntax,
 } from "./common.ts";
-
-import { handlebars, version, mustaches } from "../deps.ts";
 
 function parseStatusColors(
   syntax: StatusSyntax,
@@ -20,26 +19,28 @@ function parseStatusColors(
     const [fgName, bgName] = syntax[partName];
     const fg = palette.colors[fgName];
     const bg = palette.colors[bgName];
-    if (!fg)
+    if (!fg) {
       crash("Missing foreground color", {
         palette: palette.filepath,
         color: fgName,
       });
-    if (!bg)
+    }
+    if (!bg) {
       crash("Missing background color", {
         palette: palette.filepath,
         color: bgName,
       });
+    }
     out[partName] = { fg, bg };
   });
   return out;
 }
 
-export async function renderStatus(
+export function renderStatus(
   config: StatusConfig,
   project: Project,
   brand: StatusBrand
-): Promise<string> {
+): string {
   const palette = project.palettes[config.palette];
   if (!palette) {
     crash("Palette does not exist", {
@@ -53,8 +54,9 @@ export async function renderStatus(
     lightline: project.lightlineStyles,
   };
   const syntaxFile = brandStyles[brand][config.style];
-  if (!syntaxFile)
+  if (!syntaxFile) {
     crash("Cannot find status style file", { name: config.name });
+  }
   const syntax = syntaxFile.syntax;
   const c = parseStatusColors(syntax, palette);
   const info = {
@@ -66,5 +68,8 @@ export async function renderStatus(
     estiloVersion: version,
   };
   const context = Object.assign(c, { info });
-  return await handlebars.render(mustaches[brand], context);
+  const mustachePath = resolve(__dirname, `mustaches/${brand}.hbs`);
+  const mustacheString = Leaf.readTextFileSync(mustachePath);
+  const render = handlebars.compile(mustacheString);
+  return render(context);
 }

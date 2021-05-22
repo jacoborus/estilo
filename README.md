@@ -1,16 +1,21 @@
-Estilo
-======
+# Estilo
 
-**Estilo** makes easy to create and maintain colorschemes for vim, airline and lightline.
-
----
-
-:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (alpha version). If you're looking for Estilo 1, [please check out `1.0` branch (`master`)](https://github.com/jacoborus/estilo/tree/master).
+**Estilo** makes easy to create and maintain colorschemes for vim, airline and
+lightline.
 
 ---
 
-[![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo) [![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo) ![npm dependencies](https://david-dm.org/jacoborus/estilo.svg) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (alpha
+version). If you're looking for Estilo 1,
+[please check out `1.0` branch
+(`master`)](https://github.com/jacoborus/estilo/tree/master).
 
+---
+
+[![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo)
+[![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo)
+![npm dependencies](https://david-dm.org/jacoborus/estilo.svg)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 ![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
 
@@ -28,7 +33,6 @@ mkdir myproject && cd myproject && estilo create
 
 Next: [Color palettes](docs/color-palettes.md)
 
-
 ## CLI
 
 Usage: `estilo [command]`
@@ -43,29 +47,31 @@ Commands:
 - **`help [command]`**: Show this help or the help of a sub-command.
 - **`--version`**: Show the version number.
 
-
 ## Documentation
 
-* [Color palettes](docs/color-palettes.md)
-* [Colorschemes](docs/colorschemes.md)
-* [Airline themes](docs/airline.md)
-* [Lightline themes](docs/lightline.md)
-
+- [Color palettes](docs/color-palettes.md)
+- [Colorschemes](docs/colorschemes.md)
+- [Airline themes](docs/airline.md)
+- [Lightline themes](docs/lightline.md)
 
 ## Colorschemes created with Estilo
 
-- [Tender](https://github.com/jacoborus/tender.vim) by [@jacoborus](https://github.com/jacoborus)
-- [Oceanic Next](https://github.com/mhartington/oceanic-next) by [@mhartington](https://github.com/mhartington)
-- [Falcon](https://github.com/fenetikm/falcon) by [@fenetikm](https://github.com/fenetikm)
-- [Github](https://github.com/albertorestifo/github.vim) by [@albertorestifo](https://github.com/albertorestifo)
-- [vim-framer-syntax](https://github.com/balanceiskey/vim-framer-syntax) by [@balanceiskey](https://github.com/balanceiskey)
+- [Tender](https://github.com/jacoborus/tender.vim) by
+  [@jacoborus](https://github.com/jacoborus)
+- [Oceanic Next](https://github.com/mhartington/oceanic-next) by
+  [@mhartington](https://github.com/mhartington)
+- [Falcon](https://github.com/fenetikm/falcon) by
+  [@fenetikm](https://github.com/fenetikm)
+- [Github](https://github.com/albertorestifo/github.vim) by
+  [@albertorestifo](https://github.com/albertorestifo)
+- [vim-framer-syntax](https://github.com/balanceiskey/vim-framer-syntax) by
+  [@balanceiskey](https://github.com/balanceiskey)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
-
 
 ## Development
 
-Estilo is written in pure Typescript, so you need [deno.js 1.7](https://deno.land/) or higher installed in your computer
-
+Estilo is written in pure Typescript, so you need
+[deno.js 1.7](https://deno.land/) or higher installed in your computer
 
 ## TODO
 
@@ -93,4 +99,5 @@ Estilo is written in pure Typescript, so you need [deno.js 1.7](https://deno.lan
 
 ---
 
-© 2016-2021 [Jacobo Tabernero Rey](http://jacoborus.codes) - Released under [MIT License](https://raw.github.com/jacoborus/estilo/master/LICENSE)
+© 2016-2021 [Jacobo Tabernero Rey](http://jacoborus.codes) - Released under
+[MIT License](https://raw.github.com/jacoborus/estilo/master/LICENSE)

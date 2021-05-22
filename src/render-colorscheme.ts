@@ -1,22 +1,22 @@
-import { handlebars, mustaches, hexterm, version } from "../deps.ts";
+import { handlebars, hexterm, mustaches, version } from "../deps.ts";
 
 import { crash } from "./crash.ts";
 import { isHexColor } from "./util.ts";
 import { isLegacyUi, parseUi } from "./legacy-ui.ts";
 
 import {
-  SchemeConfig,
-  Project,
-  Palette,
-  SyntaxRule,
   ColorCode,
+  Palette,
+  Project,
+  SchemeConfig,
+  SyntaxRule,
   TerminalSyntax,
 } from "./common.ts";
 
-export async function renderColorscheme(
+export function renderColorscheme(
   config: SchemeConfig,
   project: Project
-): Promise<string> {
+): string {
   const palette = project.palettes[config.palette];
   if (!palette) {
     crash("Colorscheme palette does not exist", {
@@ -36,7 +36,8 @@ export async function renderColorscheme(
     estiloVersion: version,
   };
   const term = parseTermColors(project.terminalSyntax, palette);
-  return await handlebars.render(mustaches.colorscheme, {
+  const render = handlebars.compile(mustaches.colorscheme);
+  return render({
     c,
     info,
     term,

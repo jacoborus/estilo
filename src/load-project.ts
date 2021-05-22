@@ -1,15 +1,15 @@
-import { version, resolve } from "../deps.ts";
+import { resolve, version } from "../deps.ts";
 
 import { loadYml, ymlsInFolder } from "./util.ts";
 
 import {
+  loadPalette,
   loadStatus,
   loadSyntax,
   loadTerminal,
-  loadPalette,
 } from "./loaders.ts";
 
-import { Palettes, Project, StatusStyles, StatusBrand } from "./common.ts";
+import { Palettes, Project, StatusBrand, StatusStyles } from "./common.ts";
 
 export function loadProject(folderPath: string): Project {
   return {
