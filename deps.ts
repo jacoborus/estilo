@@ -28,6 +28,7 @@ export { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
 export { hexterm } from "https://raw.githubusercontent.com/jacoborus/hexterm/master/src/hexterm.ts";
 
 export const __dirname = new URL(".", import.meta.url).pathname;
+export const Leaf = LeafMain;
 
 export const handlebars = HandlebarsJS as {
   compile: (t: string) => (x: Record<string, unknown>) => string;
