@@ -1,4 +1,4 @@
-import { __dirname, resolve, handlebars, Leaf, version } from "../deps.ts";
+import { __dirname, mustaches, handlebars, version } from "../deps.ts";
 import { crash } from "./crash.ts";
 
 import {
@@ -68,8 +68,6 @@ export function renderStatus(
     estiloVersion: version,
   };
   const context = Object.assign(c, { info });
-  const mustachePath = resolve(__dirname, `mustaches/${brand}.hbs`);
-  const mustacheString = Leaf.readTextFileSync(mustachePath);
-  const render = handlebars.compile(mustacheString);
+  const render = handlebars.compile(mustaches.status(brand));
   return render(context);
 }

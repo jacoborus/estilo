@@ -1,3 +1,4 @@
+import { StatusBrand } from "./src/common.ts";
 import HandlebarsJS from "https://dev.jspm.io/handlebars@4.7.6";
 import { Leaf as LeafMain } from "https://raw.githubusercontent.com/ulthuan/leaf/main/mod.ts";
 import { resolve } from "https://deno.land/std/path/mod.ts";
@@ -33,14 +34,11 @@ interface HH {
 export const handlebars = HandlebarsJS as HH;
 
 export const mustaches = {
-  colorscheme: LeafMain.readTextFileSync(
-    resolve(__dirname, "mustaches/colorscheme.hbs")
-  ),
-  airline: LeafMain.readTextFileSync(
-    resolve(__dirname, "mustaches/airline.hbs")
-  ),
-  lightline: LeafMain.readTextFileSync(
-    resolve(__dirname, "mustaches/lightline.hbs")
-  ),
+  project: () =>
+    LeafMain.readTextFileSync(resolve(__dirname, "mustaches/project.hbs")),
+  colorscheme: () =>
+    LeafMain.readTextFileSync(resolve(__dirname, "mustaches/colorscheme.hbs")),
+  status: (brand: StatusBrand) =>
+    LeafMain.readTextFileSync(resolve(__dirname, `mustaches/${brand}.hbs`)),
 };
 export const Leaf = LeafMain;

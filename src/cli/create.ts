@@ -6,7 +6,7 @@ import {
   basename,
   ensureDirSync,
   handlebars,
-  Leaf,
+  mustaches,
   __dirname,
 } from "../../deps.ts";
 
@@ -102,8 +102,6 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
 }
 
 function renderConfigFile(options: ProjectOptions) {
-  const mustachePath = resolve(__dirname, `mustaches/project.hbs`);
-  const mustacheString = Leaf.readTextFileSync(mustachePath);
-  const render = handlebars.compile(mustacheString);
+  const render = handlebars.compile(mustaches.project());
   return render((options as unknown) as Record<string, string>);
 }

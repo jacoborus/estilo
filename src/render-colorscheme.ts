@@ -36,7 +36,7 @@ export function renderColorscheme(
     estiloVersion: version,
   };
   const term = parseTermColors(project.terminalSyntax, palette);
-  const render = handlebars.compile(mustaches.colorscheme);
+  const render = handlebars.compile(mustaches.colorscheme());
   return render({
     c,
     info,
