@@ -5,6 +5,8 @@ import {
   resolve,
   basename,
   ensureDirSync,
+  handlebars,
+  Leaf,
   __dirname,
 } from "../../deps.ts";
 
@@ -85,17 +87,7 @@ export async function createProject(
 async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   const addonsFolder = resolve(projectPath, "estilo");
   const termPath = resolve(addonsFolder, "terminal.yml");
-  const estiloStr = `name: '${options.name}'
-version: '${options.version || ""}'
-license: '${options.license || ""}'
-author: '${options.author || ""}'
-url: '${options.url || ""}'
-description: '${options.description || ""}'
-colorschemes:
-  - name: '${options.name}'
-    background: 'dark'
-    palette: '${options.name}'`;
-
+  const estiloStr = renderConfigFile(options);
   const dir = resolve(projectPath, "estilo.yml");
   ensureDirSync(resolve(projectPath));
   Deno.writeTextFileSync(dir, estiloStr);
@@ -111,4 +103,11 @@ colorschemes:
   await Deno.copyFile(blankTermOrigin, termPath);
   installTemplates(projectPath, ["base.yml"]);
   console.log(green("✓  Your project is ready\n"));
+}
+
+function renderConfigFile(options: ProjectOptions) {
+  const mustachePath = resolve(__dirname, `mustaches/project.hbs`);
+  const mustacheString = Leaf.readTextFileSync(mustachePath);
+  const render = handlebars.compile(mustacheString);
+  return render((options as unknown) as Record<string, string>);
 }

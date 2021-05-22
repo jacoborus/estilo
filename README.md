@@ -78,9 +78,11 @@ Estilo is written in pure Typescript, so you need
 - [x] Migrate cli to deno
 - [x] Migrate old render to deno
 - [x] Move terminal.yml down to estilo folder (remove addons folder)
+- [x] Render estilo.yml from a .hbs
+- [ ] Rename estilo folder
 - [ ] Allow to create projects adding all the available templates at once
-- [ ] Palettes can import colors from a main palette
 - [ ] Do not print terminal colors if terminal template is not complete
+- [ ] Palettes can import colors from a main palette
 - [ ] Add update notifier
 - [ ] Update documentation
 - [ ] Build scripts:
