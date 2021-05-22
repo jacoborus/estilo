@@ -7,9 +7,7 @@ const fs = require('fs')
 const installTemplates = require('./install-templates.js')
 const chalk = require('chalk')
 
-const blankterm = `color_foreground: ''
-color_background: ''
-color_0: ''
+const blankterm = `color_0: ''
 color_1: ''
 color_2: ''
 color_3: ''
@@ -25,6 +23,8 @@ color_12: ''
 color_13: ''
 color_14: ''
 color_15: ''
+color_foreground: ''
+color_background: ''
 `
 const defaultPalette = 'myblue: \'#99ccff\''
 
@@ -85,7 +85,7 @@ module.exports = function (projectPath, auto) {
   }
 }
 
-function createBoilerplate (projectPath, options) {
+function createBoilerplate(projectPath, options) {
   const addonsFolder = path.resolve(projectPath, 'estilo/addons')
   const termPath = path.resolve(addonsFolder, 'term.yml')
   let estiloStr = `name: '${options.name}'
