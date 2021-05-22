@@ -13,6 +13,19 @@ import {
   TerminalSyntax,
 } from "./common.ts";
 
+type SyntaxValues = Record<string, SyntaxValue | LinkValue>;
+
+interface SyntaxValue {
+  fore: false | ColorCode;
+  back: false | ColorCode;
+  ui: false | string;
+  guisp: boolean | ColorCode;
+}
+
+interface LinkValue {
+  link: string;
+}
+
 export function renderColorscheme(
   config: SchemeConfig,
   project: Project
@@ -24,40 +37,24 @@ export function renderColorscheme(
       palette: config.palette,
     });
   }
-  const syntax = project.syntax;
-  const c = parseSyntaxColors(syntax, palette);
-  const info = {
-    name: config.name,
-    description: config.description,
-    url: project.config.url,
-    author: project.config.author,
-    license: project.config.license,
-    background: config.background,
-    estiloVersion: version,
-  };
-  const term = parseTermColors(project.terminalSyntax, palette);
   const render = handlebars.compile(mustaches.colorscheme());
   return render({
-    c,
-    info,
-    term,
+    info: {
+      name: config.name,
+      description: config.description,
+      url: project.config.url,
+      author: project.config.author,
+      license: project.config.license,
+      background: config.background,
+      estiloVersion: version,
+    },
+    stacks: parseSyntaxColors(project.syntax, palette),
+    term: parseTermColors(project.terminalSyntax, palette),
   });
 }
 
-type SyntaxValues = Record<string, SyntaxValue | LinkValue>;
-interface SyntaxValue {
-  fore: false | ColorCode;
-  back: false | ColorCode;
-  ui: false | string;
-  guisp: boolean | ColorCode;
-}
-interface LinkValue {
-  link: string;
-}
-
 function parseTermColors(termSyntax: TerminalSyntax, palette: Palette) {
-  const values = {} as Record<string, string>;
-  Object.keys(termSyntax).forEach((prop) => {
+  const values = Object.keys(termSyntax).map((prop) => {
     const colorName = termSyntax[prop];
     const value = palette.colors[colorName];
     if (!value) {
@@ -67,9 +64,9 @@ function parseTermColors(termSyntax: TerminalSyntax, palette: Palette) {
         palette: palette.filepath,
       });
     }
-    values[prop] = value.hex;
+    return [prop, value.hex];
   });
-  return values;
+  return Object.fromEntries(values);
 }
 
 function parseSyntaxColors(

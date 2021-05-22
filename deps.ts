@@ -28,10 +28,10 @@ export { green, red, yellow } from "https://deno.land/std/fmt/colors.ts";
 export { hexterm } from "https://raw.githubusercontent.com/jacoborus/hexterm/master/src/hexterm.ts";
 
 export const __dirname = new URL(".", import.meta.url).pathname;
-interface HH {
+
+export const handlebars = HandlebarsJS as {
   compile: (t: string) => (x: Record<string, unknown>) => string;
-}
-export const handlebars = HandlebarsJS as HH;
+};
 
 export const mustaches = {
   project: () =>
@@ -41,4 +41,3 @@ export const mustaches = {
   status: (brand: StatusBrand) =>
     LeafMain.readTextFileSync(resolve(__dirname, `mustaches/${brand}.hbs`)),
 };
-export const Leaf = LeafMain;
