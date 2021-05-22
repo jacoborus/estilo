@@ -80,7 +80,7 @@ Estilo is written in pure Typescript, so you need
 - [x] Move terminal.yml down to estilo folder (remove addons folder)
 - [x] Render estilo.yml from a .hbs
 - [ ] Rename estilo folder
-- [ ] Do not print terminal colors if terminal template is not complete
+- [x] Do not print terminal colors if terminal template has no colors
 - [ ] Palettes can import colors from a main palette
 - [ ] Add update notifier
 - [ ] Update documentation
