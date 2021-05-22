@@ -18,34 +18,33 @@ interface ProjectOptions {
   version: string;
   url: string;
   license: string;
-  airline: boolean;
-  lightline: boolean;
   description: string;
 }
 
 const blankTermOrigin = resolve(__dirname, "templates/terminal.yml");
 const defaultPalette = "myblue: '#99ccff'";
 
-export async function createProject(
-  projectPath: string,
-  noQuestions: boolean,
-  all: boolean
-) {
-  const folderName = basename(projectPath);
-  if (noQuestions) {
-    return createBoilerplate(projectPath, {
-      name: folderName,
-      author: "",
-      version: "1.0.0",
-      url: "",
-      license: "MIT",
-      airline: true,
-      lightline: true,
-      description: "A (neo)vim colorscheme",
-    });
-  }
+export async function createProject(projectPath: string, noQuestions: boolean) {
+  const options = noQuestions
+    ? getDefaultConfig(projectPath)
+    : await askConfig(projectPath);
+  createBoilerplate(projectPath, options as ProjectOptions);
+}
 
-  const answers = await prompt([
+function getDefaultConfig(projectPath: string): ProjectOptions {
+  return {
+    name: basename(projectPath),
+    author: "",
+    version: "1.0.0",
+    url: "",
+    license: "MIT",
+    description: "A (neo)vim colorscheme",
+  };
+}
+
+async function askConfig(projectPath: string) {
+  const folderName = basename(projectPath);
+  return await prompt([
     {
       type: Input,
       name: "name",
@@ -80,19 +79,17 @@ export async function createProject(
       message: "Short description:",
     },
   ]);
-
-  createBoilerplate(projectPath, answers as ProjectOptions);
 }
 
 async function createBoilerplate(projectPath: string, options: ProjectOptions) {
+  const estiloStr = renderConfigFile(options);
   const addonsFolder = resolve(projectPath, "estilo");
   const termPath = resolve(addonsFolder, "terminal.yml");
-  const estiloStr = renderConfigFile(options);
-  const dir = resolve(projectPath, "estilo.yml");
+  const confPath = resolve(projectPath, "estilo.yml");
   ensureDirSync(resolve(projectPath));
-  Deno.writeTextFileSync(dir, estiloStr);
-  const palettesPath = resolve(projectPath, "estilo", "palettes");
-  ensureDirSync(resolve(projectPath, "estilo", "syntax"));
+  Deno.writeTextFileSync(confPath, estiloStr);
+  const palettesPath = resolve(projectPath, "estilo/palettes");
+  ensureDirSync(resolve(projectPath, "estilo/syntax"));
   ensureDirSync(palettesPath);
   ensureDirSync(addonsFolder);
   Deno.writeTextFileSync(

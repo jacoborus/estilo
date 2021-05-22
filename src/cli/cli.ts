@@ -17,9 +17,8 @@ const result = await estiloCommand
   .command("create [folder]")
   .description("Initialize an estilo project in [folder] or current folder")
   .option("-y, --yes", "Skip questions")
-  .option("-a, --all", "Skip questions and add all syntax templates")
   .action((options: Record<string, boolean>, folder = ".") => {
-    createProject(resolve(folder), !!options.yes, !!options.all);
+    createProject(resolve(folder), !!options.yes);
   })
   .reset()
 
@@ -57,6 +56,3 @@ const result = await estiloCommand
 if (!Object.entries(result.options).length && result.cmd._name === "estilo") {
   estiloCommand.showHelp();
 }
-
-// "add-airline": () => installStatus(projectPath, "airline"),
-// "add-lightline": () => installStatus(projectPath, "lightline"),
