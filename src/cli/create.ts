@@ -6,8 +6,7 @@ import {
   basename,
   ensureDirSync,
   handlebars,
-  mustaches,
-  __dirname,
+  buckets,
 } from "../../deps.ts";
 
 import { installTemplates } from "./install-templates.ts";
@@ -21,7 +20,6 @@ interface ProjectOptions {
   description: string;
 }
 
-const blankTermOrigin = resolve(__dirname, "templates/terminal.yml");
 const defaultPalette = "myblue: '#99ccff'";
 
 export async function createProject(projectPath: string, noQuestions: boolean) {
@@ -81,7 +79,7 @@ async function askConfig(projectPath: string) {
   ]);
 }
 
-async function createBoilerplate(projectPath: string, options: ProjectOptions) {
+function createBoilerplate(projectPath: string, options: ProjectOptions) {
   const estiloStr = renderConfigFile(options);
   const addonsFolder = resolve(projectPath, "estilo");
   const termPath = resolve(addonsFolder, "terminal.yml");
@@ -96,12 +94,12 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
     resolve(palettesPath, options.name + ".yml"),
     defaultPalette
   );
-  await Deno.copyFile(blankTermOrigin, termPath);
+  Deno.writeTextFileSync(termPath, buckets.terminal["terminal.yml"]);
   installTemplates(projectPath, ["base.yml"]);
   console.log(green("✓  Your project is ready\n"));
 }
 
 function renderConfigFile(options: ProjectOptions) {
-  const render = handlebars.compile(mustaches.project());
+  const render = handlebars.compile(buckets.mustaches["project.hbs"]);
   return render((options as unknown) as Record<string, string>);
 }

@@ -1,5 +1,4 @@
 import {
-  __dirname,
   basename,
   existsSync,
   hexterm,

@@ -4,7 +4,7 @@ import {
   Input,
   prompt,
   green,
-  __dirname,
+  buckets,
 } from "../../deps.ts";
 import { StatusBrand } from "../common.ts";
 import { ValidateResult } from "https://deno.land/x/cliffy/prompt/mod.ts";
@@ -43,18 +43,10 @@ export async function installStatus(
   addStatus(projectPath, brand, answers.stylename as string);
 }
 
-async function addStatus(
-  projectPath: string,
-  brand: StatusBrand,
-  styleName: string
-) {
-  const templatePath = resolve(__dirname, "templates/status", `${brand}.yml`);
+function addStatus(projectPath: string, brand: StatusBrand, styleName: string) {
   const filepath = resolve(projectPath, "estilo", brand, styleName + ".yml");
-  try {
-    await Deno.copyFile(templatePath, filepath);
-  } catch (err) {
-    console.error(err);
-  }
+  // TODO: handle error
+  Deno.writeTextFileSync(filepath, buckets.status[brand + ".yml"]);
   console.log(green(`New ${brand} style: ${styleName}`));
   console.log(`==> ${filepath}`);
 }

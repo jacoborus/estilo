@@ -1,14 +1,13 @@
-import { resolve, __dirname, green } from "../../deps.ts";
+import { resolve, green, buckets } from "../../deps.ts";
 
 const tick = green("✓");
 
 export function installTemplates(projectPath: string, templates: string[]) {
-  templates.forEach(async (name) => {
-    const origin = resolve(__dirname, "templates/syntax", name);
+  templates.forEach((name) => {
     const destination = resolve(projectPath, "estilo/syntax", name);
     // TODO handle this error
     try {
-      await Deno.copyFile(origin, destination);
+      Deno.writeTextFileSync(destination, buckets.syntax[name]);
     } catch (err) {
       console.error(err);
     }

@@ -1,4 +1,4 @@
-import { __dirname, mustaches, handlebars, version } from "../deps.ts";
+import { buckets, handlebars, version } from "../deps.ts";
 import { crash } from "./crash.ts";
 
 import {
@@ -68,6 +68,6 @@ export function renderStatus(
     estiloVersion: version,
   };
   const context = Object.assign(c, { info });
-  const render = handlebars.compile(mustaches.status(brand));
+  const render = handlebars.compile(buckets.mustaches[brand + ".hbs"]);
   return render(context);
 }

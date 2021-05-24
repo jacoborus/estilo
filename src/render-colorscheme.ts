@@ -1,4 +1,4 @@
-import { handlebars, hexterm, mustaches, version } from "../deps.ts";
+import { handlebars, hexterm, version, buckets } from "../deps.ts";
 
 import { crash } from "./crash.ts";
 import { isHexColor } from "./util.ts";
@@ -37,7 +37,8 @@ export function renderColorscheme(
       palette: config.palette,
     });
   }
-  const render = handlebars.compile(mustaches.colorscheme());
+
+  const render = handlebars.compile(buckets.mustaches["colorscheme.hbs"]);
   return render({
     info: {
       name: config.name,

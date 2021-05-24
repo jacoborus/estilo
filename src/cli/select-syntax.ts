@@ -1,12 +1,11 @@
-import { Checkbox, prompt, resolve, __dirname } from "../../deps.ts";
+import { Checkbox, prompt, resolve, buckets } from "../../deps.ts";
 import { installTemplates } from "./install-templates.ts";
 
 // TODO: check if the folder contains a estilo project
 export async function selectSyntax(projectPath: string, all = false) {
-  const libFolder = resolve(__dirname, "templates/syntax");
   const destFolder = resolve(projectPath, "estilo/syntax");
 
-  const libFiles = getFileNamesFromFolder(libFolder);
+  const libFiles = Object.keys(buckets.syntax);
   const destFiles = getFileNamesFromFolder(destFolder);
 
   const templates = all
