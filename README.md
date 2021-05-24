@@ -95,8 +95,7 @@ Estilo is written in pure Typescript, so you need
 - [x] Add upgrade instructions
 - [x] Do not print terminal colors if terminal template has no colors
 - [ ] Palettes can import colors from a main palette
-- [ ] Detect old version projects
-- [ ] Automatic theme upgrader
+- [x] Detect old version projects
 - [ ] Add update notifier
 - [ ] Update documentation
 - [ ] Build scripts:
