@@ -96,7 +96,6 @@ Estilo is written in pure Typescript, so you need
 - [x] Do not print terminal colors if terminal template has no colors
 - [ ] Palettes can import colors from a main palette
 - [x] Detect old version projects
-- [ ] Add update notifier
 - [ ] Update documentation
 - [ ] Build scripts:
   - [ ] Linux bin
@@ -106,10 +105,9 @@ Estilo is written in pure Typescript, so you need
   - [ ] .rpm
   - [ ] .dmg
   - [ ] .whatever windows uses
+- [ ] Add update notifier
 - [ ] Add install instructions
 - [ ] Refactor and clean code
-- [ ] Publish to deno.land/x
-- [ ] Publish to nest.land
 - [ ] Github actions
 
 <br>

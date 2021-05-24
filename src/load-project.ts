@@ -9,13 +9,19 @@ import {
   loadTerminal,
 } from "./loaders.ts";
 
-import { Palettes, Project, StatusBrand, StatusStyles } from "./common.ts";
+import {
+  Palettes,
+  Project,
+  ProjectConfig,
+  StatusBrand,
+  StatusStyles,
+} from "./common.ts";
 
 export function loadProject(folderPath: string): Project {
   return {
     folderPath,
     estiloVersion: version,
-    config: loadYml(folderPath, "estilo.yml").content,
+    config: loadYml(folderPath, "estilo.yml").content as ProjectConfig,
     palettes: loadPalettes(folderPath),
     syntax: ymlsInFolder(folderPath, "estilo/syntax").flatMap(loadSyntax),
     terminalSyntax: loadTerminal(folderPath),

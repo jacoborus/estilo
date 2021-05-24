@@ -1,6 +1,6 @@
 export type YmlFile = {
   filepath: string;
-  content: Record<string, string>;
+  content: unknown;
 };
 
 export interface ColorCode {
