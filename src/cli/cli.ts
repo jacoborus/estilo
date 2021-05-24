@@ -1,4 +1,11 @@
-import { resolve, Command, version, HelpCommand } from "../../deps.ts";
+import {
+  resolve,
+  Command,
+  version,
+  HelpCommand,
+  existsSync,
+} from "../../deps.ts";
+import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
 import { loadProject } from "../load-project.ts";
 import { selectSyntax } from "./select-syntax.ts";
@@ -25,7 +32,9 @@ const result = await estiloCommand
   .command("render [folder]")
   .description("Render project")
   .action((_: unknown, folder = ".") => {
-    const projectData = loadProject(resolve(folder));
+    const projectPath = resolve(folder);
+    checkProject(projectPath);
+    const projectData = loadProject(projectPath);
     renderProject(projectData);
   })
   .reset()
@@ -55,4 +64,18 @@ const result = await estiloCommand
 
 if (!Object.entries(result.options).length && result.cmd._name === "estilo") {
   estiloCommand.showHelp();
+}
+
+function checkProject(projectPath: string) {
+  const paths = [
+    "estilo.yml",
+    "estilos/syntax",
+    "estilos/palettes",
+    "estilos/terminal.yml",
+  ];
+  const notOk = paths
+    .map((path) => resolve(projectPath, path))
+    .filter((path) => !existsSync(path));
+  if (notOk.length)
+    crash(`Wrong project folder. Missing paths:\n${notOk.join("\n")}`);
 }

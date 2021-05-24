@@ -80,7 +80,7 @@ Estilo is written in pure Typescript, so you need
 - [x] Move terminal.yml down to estilo folder (remove addons folder)
 - [x] Render estilo.yml from a .hbs
 - [x] Group assets in assets folder
-- [ ] Check if folder contains a Estilo pro 
+- [x] Check if folder contains a Estilo project 
 - [x] Rename estilo folder
 - [ ] Add upgrade instructions
 - [ ] Automatic theme upgrader
