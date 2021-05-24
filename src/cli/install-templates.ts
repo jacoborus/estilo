@@ -4,7 +4,7 @@ const tick = green("✓");
 
 export function installTemplates(projectPath: string, templates: string[]) {
   templates.forEach((name) => {
-    const destination = resolve(projectPath, "estilo/syntax", name);
+    const destination = resolve(projectPath, "estilos/syntax", name);
     // TODO handle this error
     try {
       Deno.writeTextFileSync(destination, buckets.syntax[name]);

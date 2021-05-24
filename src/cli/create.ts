@@ -74,28 +74,33 @@ async function askConfig(projectPath: string) {
     {
       type: Input,
       name: "description",
-      message: "Short description:",
+      message: "Description:",
     },
   ]);
 }
 
 function createBoilerplate(projectPath: string, options: ProjectOptions) {
   const estiloStr = renderConfigFile(options);
-  const addonsFolder = resolve(projectPath, "estilo");
-  const termPath = resolve(addonsFolder, "terminal.yml");
-  const confPath = resolve(projectPath, "estilo.yml");
-  ensureDirSync(resolve(projectPath));
-  Deno.writeTextFileSync(confPath, estiloStr);
-  const palettesPath = resolve(projectPath, "estilo/palettes");
-  ensureDirSync(resolve(projectPath, "estilo/syntax"));
-  ensureDirSync(palettesPath);
-  ensureDirSync(addonsFolder);
+
+  const estilosFolder = resolve(projectPath, "estilos");
+  const syntaxFolder = resolve(estilosFolder, "syntax");
+  const palettesFolder = resolve(estilosFolder, "palettes");
+
+  ensureDirSync(estilosFolder);
+  ensureDirSync(syntaxFolder);
+  ensureDirSync(palettesFolder);
+
+  Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
-    resolve(palettesPath, options.name + ".yml"),
+    resolve(estilosFolder, "terminal.yml"),
+    buckets.addons["terminal.yml"]
+  );
+  Deno.writeTextFileSync(
+    resolve(palettesFolder, options.name + ".yml"),
     defaultPalette
   );
-  Deno.writeTextFileSync(termPath, buckets.addons["terminal.yml"]);
   installTemplates(projectPath, ["base.yml"]);
+
   console.log(green("✓  Your project is ready\n"));
 }
 

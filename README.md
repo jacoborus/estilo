@@ -81,9 +81,9 @@ Estilo is written in pure Typescript, so you need
 - [x] Render estilo.yml from a .hbs
 - [x] Group assets in assets folder
 - [ ] Check if folder contains a Estilo pro 
-- [ ] Rename estilo folder and config file
+- [x] Rename estilo folder
 - [ ] Add upgrade instructions
-- [ ] Automatic upgrader
+- [ ] Automatic theme upgrader
 - [x] Do not print terminal colors if terminal template has no colors
 - [ ] Palettes can import colors from a main palette
 - [ ] Add update notifier
@@ -98,7 +98,6 @@ Estilo is written in pure Typescript, so you need
   - [ ] .whatever windows uses
 - [ ] Add install instructions
 - [ ] Refactor and clean code
-- [ ] Enable theming other terminal tools (Alacritty, Tmux, ...)
 
 <br>
 

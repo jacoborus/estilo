@@ -25,7 +25,7 @@ export function loadProject(folderPath: string): Project {
 }
 
 function loadPalettes(folderPath: string): Palettes {
-  const filepaths = ymlsInFolder(folderPath, "estilo/palettes");
+  const filepaths = ymlsInFolder(folderPath, "estilos/palettes");
   const palettes = {} as Palettes;
   filepaths.forEach((file) => {
     const palette = loadPalette(file);
@@ -35,7 +35,7 @@ function loadPalettes(folderPath: string): Palettes {
 }
 
 function loadAllStatus(folderPath: string, brand: StatusBrand): StatusStyles {
-  const brandpath = resolve(folderPath, "estilo");
+  const brandpath = resolve(folderPath, "estilos");
   const filepaths = ymlsInFolder(brandpath, brand);
   const statusStyle = {} as StatusStyles;
   filepaths.forEach((filepath) => {

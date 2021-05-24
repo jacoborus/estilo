@@ -1,10 +1,4 @@
-import {
-  basename,
-  existsSync,
-  hexterm,
-  resolve,
-  yellow,
-} from "../deps.ts";
+import { basename, existsSync, hexterm, resolve, yellow } from "../deps.ts";
 import {
   Palette,
   StatusBrand,
@@ -46,18 +40,6 @@ export function loadSyntax(filepath: string): SyntaxRule[] {
     .filter((rule) => rule.rule);
 }
 
-function getTerminalTemplatePath(projectPath: string) {
-  const oldPath = resolve(projectPath, "estilo/addons/nvim-term.yml");
-  const newPath = resolve(projectPath, "estilo/terminal.yml");
-  if (existsSync(oldPath) && !existsSync(newPath)) {
-    console.log(yellow("⚠  Warning: Legacy terminal config path"));
-    console.log(yellow(`Please rename ${oldPath} to ${newPath}\n`));
-    return oldPath;
-  } else {
-    return newPath;
-  }
-}
-
 export function loadTerminal(projectPath: string): TerminalSyntax {
   const filepath = getTerminalTemplatePath(projectPath);
   const { content } = loadYml(filepath);
@@ -68,6 +50,18 @@ export function loadTerminal(projectPath: string): TerminalSyntax {
     terminalSyntax[prop] = colorname;
   });
   return terminalSyntax;
+}
+
+function getTerminalTemplatePath(projectPath: string) {
+  const oldPath = resolve(projectPath, "estilos/addons/nvim-term.yml");
+  const newPath = resolve(projectPath, "estilos/terminal.yml");
+  if (existsSync(oldPath) && !existsSync(newPath)) {
+    console.log(yellow("⚠  Warning: Legacy terminal config path"));
+    console.log(yellow(`Please rename ${oldPath} to ${newPath}\n`));
+    return oldPath;
+  } else {
+    return newPath;
+  }
 }
 
 const statusParts = {
