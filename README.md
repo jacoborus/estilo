@@ -54,6 +54,16 @@ Commands:
 - [Airline themes](docs/airline.md)
 - [Lightline themes](docs/lightline.md)
 
+
+## Upgrading from v1.x
+
+Estilo v2.x uses a different folder structure than previous versions. Rename your
+`estilo` folder to `estilos` and move `nvim-term.yml` from `addons` subfolder to `estilos` folder
+
+```sh
+mv estilo estilos && mv estilos/addons/nvim-term.yml estilos
+```
+
 ## Colorschemes created with Estilo
 
 - [Tender](https://github.com/jacoborus/tender.vim) by
@@ -80,9 +90,9 @@ Estilo is written in pure Typescript, so you need
 - [x] Move terminal.yml down to estilo folder (remove addons folder)
 - [x] Render estilo.yml from a .hbs
 - [x] Group assets in assets folder
-- [x] Check if folder contains a Estilo project 
+- [x] Check if folder contains a Estilo project
 - [x] Rename estilo folder
-- [ ] Add upgrade instructions
+- [x] Add upgrade instructions
 - [ ] Automatic theme upgrader
 - [x] Do not print terminal colors if terminal template has no colors
 - [ ] Palettes can import colors from a main palette
