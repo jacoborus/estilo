@@ -109,6 +109,9 @@ Estilo is written in pure Typescript, so you need
   - [ ] .whatever windows uses
 - [ ] Add install instructions
 - [ ] Refactor and clean code
+- [ ] Publish to deno.land/x
+- [ ] Publish to nest.land
+- [ ] Github actions
 
 <br>
 
