@@ -79,6 +79,7 @@ Estilo is written in pure Typescript, so you need
 - [x] Migrate old render to deno
 - [x] Move terminal.yml down to estilo folder (remove addons folder)
 - [x] Render estilo.yml from a .hbs
+- [x] Group assets in assets folder
 - [ ] Check if folder contains a Estilo pro 
 - [ ] Rename estilo folder and config file
 - [ ] Add upgrade instructions

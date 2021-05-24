@@ -46,7 +46,7 @@ export async function installStatus(
 function addStatus(projectPath: string, brand: StatusBrand, styleName: string) {
   const filepath = resolve(projectPath, "estilo", brand, styleName + ".yml");
   // TODO: handle error
-  Deno.writeTextFileSync(filepath, buckets.status[brand + ".yml"]);
+  Deno.writeTextFileSync(filepath, buckets.addons[brand + ".yml"]);
   console.log(green(`New ${brand} style: ${styleName}`));
   console.log(`==> ${filepath}`);
 }

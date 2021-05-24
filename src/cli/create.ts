@@ -94,7 +94,7 @@ function createBoilerplate(projectPath: string, options: ProjectOptions) {
     resolve(palettesPath, options.name + ".yml"),
     defaultPalette
   );
-  Deno.writeTextFileSync(termPath, buckets.terminal["terminal.yml"]);
+  Deno.writeTextFileSync(termPath, buckets.addons["terminal.yml"]);
   installTemplates(projectPath, ["base.yml"]);
   console.log(green("✓  Your project is ready\n"));
 }

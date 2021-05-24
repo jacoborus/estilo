@@ -4,24 +4,18 @@ export default {
   buckets: [
     {
       name: "mustaches",
-      folder: "mustaches",
+      folder: "assets/mustaches",
       exts: [".hbs"],
     },
     {
       name: "syntax",
-      folder: "templates/syntax",
+      folder: "assets/syntax",
       exts: [".yml"],
     },
     {
-      name: "status",
-      folder: "templates/status",
+      name: "addons",
+      folder: "assets/addons",
       exts: [".yml"],
-    },
-    {
-      name: "terminal",
-      folder: "templates",
-      exts: [".yml"],
-      maxDepth: 1,
     },
   ],
   output: "estilo.bundle.js",
