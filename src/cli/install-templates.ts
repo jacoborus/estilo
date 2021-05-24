@@ -1,4 +1,4 @@
-import { resolve, green, buckets } from "../../deps.ts";
+import { buckets, green, resolve } from "../../deps.ts";
 
 const tick = green("✓");
 
@@ -18,6 +18,6 @@ export function installTemplates(projectPath: string, templates: string[]) {
     templates
       .map((name) => name.slice(0, -4))
       .map((name) => `${tick} ${name}\n`)
-      .join("")
+      .join(""),
   );
 }

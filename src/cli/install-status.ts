@@ -1,10 +1,10 @@
 import {
-  resolve,
+  buckets,
   ensureDirSync,
+  green,
   Input,
   prompt,
-  green,
-  buckets,
+  resolve,
 } from "../../deps.ts";
 import { StatusBrand } from "../common.ts";
 import { ValidateResult } from "https://deno.land/x/cliffy/prompt/mod.ts";
@@ -12,7 +12,7 @@ import { ValidateResult } from "https://deno.land/x/cliffy/prompt/mod.ts";
 export async function installStatus(
   projectPath: string,
   brand: StatusBrand,
-  styleName?: string
+  styleName?: string,
 ) {
   const statusFolderPath = resolve(projectPath, "estilo", brand);
   ensureDirSync(statusFolderPath);
@@ -22,7 +22,7 @@ export async function installStatus(
   }
 
   const installedStyles = Array.from(
-    Deno.readDirSync(statusFolderPath)
+    Deno.readDirSync(statusFolderPath),
   ).map((n) => n.name.slice(0, -4));
 
   const answers = await prompt([

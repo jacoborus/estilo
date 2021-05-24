@@ -12,7 +12,7 @@ import {
 
 function parseStatusColors(
   syntax: StatusSyntax,
-  palette: Palette
+  palette: Palette,
 ): DataRenderStatus {
   const out = {} as DataRenderStatus;
   Object.keys(syntax).forEach((partName) => {
@@ -39,7 +39,7 @@ function parseStatusColors(
 export function renderStatus(
   config: StatusConfig,
   project: Project,
-  brand: StatusBrand
+  brand: StatusBrand,
 ): string {
   const palette = project.palettes[config.palette];
   if (!palette) {

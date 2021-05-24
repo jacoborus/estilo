@@ -1,12 +1,12 @@
 import {
+  basename,
+  buckets,
+  ensureDirSync,
   green,
+  handlebars,
   Input,
   prompt,
   resolve,
-  basename,
-  ensureDirSync,
-  handlebars,
-  buckets,
 } from "../../deps.ts";
 
 import { installTemplates } from "./install-templates.ts";
@@ -93,11 +93,11 @@ function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    buckets.addons["terminal.yml"]
+    buckets.addons["terminal.yml"],
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
-    defaultPalette
+    defaultPalette,
   );
   installTemplates(projectPath, ["base.yml"]);
 

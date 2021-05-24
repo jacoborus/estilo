@@ -1,9 +1,9 @@
 import {
-  resolve,
   Command,
-  version,
-  HelpCommand,
   existsSync,
+  HelpCommand,
+  resolve,
+  version,
 } from "../../deps.ts";
 import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
@@ -20,7 +20,6 @@ const result = await estiloCommand
   .name("estilo")
   .version(version)
   .description("Generate colorschemes for (neo)vim, airline and lightline")
-
   .command("create [folder]")
   .description("Initialize an estilo project in [folder] or current folder")
   .option("-y, --yes", "Skip questions")
@@ -28,7 +27,6 @@ const result = await estiloCommand
     createProject(resolve(folder), !!options.yes);
   })
   .reset()
-
   .command("render [folder]")
   .description("Render project")
   .action((_: unknown, folder = ".") => {
@@ -38,7 +36,6 @@ const result = await estiloCommand
     renderProject(projectData);
   })
   .reset()
-
   .command("add-syntax")
   .description("Add syntax templates.")
   .option("-a, --all [all:boolean]", "Add add available syntax templates")
@@ -46,14 +43,12 @@ const result = await estiloCommand
     selectSyntax(".", !!options.all);
   })
   .reset()
-
   .command("add-lightline [styleName]")
   .description("Add new Lightline style")
   .action((_: unknown, styleName: string) => {
     installStatus(".", "lightline", styleName);
   })
   .reset()
-
   .command("add-airline [styleName]")
   .description("Add new Airline style")
   .action((_: unknown, styleName: string) => {
@@ -76,6 +71,7 @@ function checkProject(projectPath: string) {
   const notOk = paths
     .map((path) => resolve(projectPath, path))
     .filter((path) => !existsSync(path));
-  if (notOk.length)
+  if (notOk.length) {
     crash(`Wrong project folder. Missing paths:\n${notOk.join("\n")}`);
+  }
 }
