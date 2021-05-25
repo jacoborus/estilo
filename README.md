@@ -60,6 +60,14 @@ Estilo v2.x uses a different folder structure than previous versions. Rename
 your `estilo` folder to `estilos` and move `nvim-term.yml` from `addons`
 subfolder to `estilos` folder as `terminal.yml`
 
+Git repo:
+
+```sh
+git mv estilo estilos && git mv estilos/addons/nvim-term.yml estilos/terminal.yml
+```
+
+Simple: 
+
 ```sh
 mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
 ```
