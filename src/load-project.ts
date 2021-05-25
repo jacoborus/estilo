@@ -1,6 +1,7 @@
-import { resolve, version } from "../deps.ts";
-
-import { loadYml, ymlsInFolder } from "./util.ts";
+import { hexterm, resolve, version } from "../deps.ts";
+import { isHexColor, loadYml, ymlsInFolder } from "./util.ts";
+import { crash } from "./crash.ts";
+import { ColorCode } from "./common.ts";
 
 import {
   loadPalette,
@@ -18,35 +19,52 @@ import {
 } from "./common.ts";
 
 export function loadProject(folderPath: string): Project {
+  const config = loadYml(folderPath, "estilo.yml").content as ProjectConfig;
   return {
     folderPath,
     estiloVersion: version,
-    config: loadYml(folderPath, "estilo.yml").content as ProjectConfig,
-    palettes: loadPalettes(folderPath),
-    syntax: ymlsInFolder(folderPath, "estilo/syntax").flatMap(loadSyntax),
+    config,
+    palettes: loadPalettes(folderPath, config),
+    syntax: ymlsInFolder(folderPath, "estilos/syntax").flatMap(loadSyntax),
     terminalSyntax: loadTerminal(folderPath),
     airlineStyles: loadAllStatus(folderPath, "airline"),
     lightlineStyles: loadAllStatus(folderPath, "lightline"),
   };
 }
 
-function loadPalettes(folderPath: string): Palettes {
+function loadPalettes(folderPath: string, config: ProjectConfig): Palettes {
+  const mainPalette = config.common ? parseMainPalette(config.common) : {};
   const filepaths = ymlsInFolder(folderPath, "estilos/palettes");
-  const palettes = {} as Palettes;
-  filepaths.forEach((file) => {
-    const palette = loadPalette(file);
-    palettes[palette.name] = palette;
+  return Object.fromEntries(
+    filepaths.map((file) => {
+      const palette = loadPalette(file, mainPalette);
+      return [palette.name, palette];
+    })
+  );
+}
+
+function parseMainPalette(
+  content: Record<string, string>
+): Record<string, ColorCode> {
+  const colors = {} as Record<string, ColorCode>;
+  Object.keys(content).forEach((name) => {
+    const hexcolor = content[name].trim();
+    if (!isHexColor(hexcolor)) crash("Wrong color in common palette", { name });
+    colors[name] = {
+      hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
+      xterm: hexterm(hexcolor).toString(),
+    };
   });
-  return palettes;
+  return colors;
 }
 
 function loadAllStatus(folderPath: string, brand: StatusBrand): StatusStyles {
   const brandpath = resolve(folderPath, "estilos");
   const filepaths = ymlsInFolder(brandpath, brand);
-  const statusStyle = {} as StatusStyles;
-  filepaths.forEach((filepath) => {
-    const style = loadStatus(filepath, brand);
-    statusStyle[style.name] = style;
-  });
-  return statusStyle;
+  return Object.fromEntries(
+    filepaths.map((filepath) => {
+      const style = loadStatus(filepath, brand);
+      return [style.name, style];
+    })
+  );
 }

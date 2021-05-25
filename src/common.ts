@@ -62,6 +62,7 @@ export interface ProjectConfig {
   url?: string;
   license?: string;
   description?: string;
+  common?: Record<string, string>;
   colorschemes: SchemeConfig[];
   airline: StatusConfig[];
   lightline: StatusConfig[];

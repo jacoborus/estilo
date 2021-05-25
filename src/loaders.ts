@@ -5,12 +5,17 @@ import {
   StatusStyle,
   SyntaxRule,
   TerminalSyntax,
+  ColorCode,
 } from "./common.ts";
 import { isHexColor, loadYml } from "./util.ts";
 import { crash } from "./crash.ts";
 
-export function loadPalette(filepath: string): Palette {
-  const { content } = loadYml(filepath);
+export function loadPalette(
+  filepath: string,
+  common: Record<string, ColorCode>
+): Palette {
+  const parsed = loadYml(filepath);
+  const content = parsed.content as Record<string, string>;
 
   const palette = {
     filepath,
@@ -20,6 +25,13 @@ export function loadPalette(filepath: string): Palette {
 
   Object.keys(content).forEach((name) => {
     const hexcolor = content[name].trim();
+    if (hexcolor.startsWith("@")) {
+      const propName = hexcolor.slice(1);
+      const color = common[propName];
+      if (!color) crash("Missing common color", { color });
+      palette.colors[name] = color;
+      return;
+    }
     if (!isHexColor(hexcolor)) crash("Wrong color", { filepath, name });
     palette.colors[name] = {
       hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
@@ -30,7 +42,8 @@ export function loadPalette(filepath: string): Palette {
 }
 
 export function loadSyntax(filepath: string): SyntaxRule[] {
-  const { content } = loadYml(filepath);
+  const parsed = loadYml(filepath);
+  const content = parsed.content as Record<string, string>;
   return Object.keys(content)
     .map((name) => ({
       filepath,
@@ -42,7 +55,8 @@ export function loadSyntax(filepath: string): SyntaxRule[] {
 
 export function loadTerminal(projectPath: string): TerminalSyntax {
   const filepath = getTerminalTemplatePath(projectPath);
-  const { content } = loadYml(filepath);
+  const parsed = loadYml(filepath);
+  const content = parsed.content as Record<string, string>;
   const terminalSyntax = {} as TerminalSyntax;
   Object.keys(content).forEach((prop) => {
     const colorname = content[prop].trim();
@@ -118,7 +132,8 @@ const statusParts = {
 }; // , ctrlp
 
 export function loadStatus(filepath: string, brand: StatusBrand): StatusStyle {
-  const { content } = loadYml(filepath);
+  const parsed = loadYml(filepath);
+  const content = parsed.content as Record<string, string>;
 
   const statusStyle = {
     name: basename(filepath, ".yml"),
@@ -128,7 +143,7 @@ export function loadStatus(filepath: string, brand: StatusBrand): StatusStyle {
 
   Object.keys(content).forEach((name) => {
     const txt = content[name].trim();
-    statusStyle.syntax[name] = txt.split(/\s+/);
+    statusStyle.syntax[name] = txt.split(/\s+/) as [string, string];
   });
 
   statusParts[brand].forEach((part) => {

@@ -102,7 +102,7 @@ Estilo is written in pure Typescript, so you need
 - [x] Rename estilo folder
 - [x] Add upgrade instructions
 - [x] Do not print terminal colors if terminal template has no colors
-- [ ] Palettes can import colors from a main palette
+- [x] Palettes can import colors from a main palette
 - [x] Detect old version projects
 - [ ] Update documentation
 - [ ] Build scripts:

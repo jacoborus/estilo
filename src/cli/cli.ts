@@ -73,7 +73,7 @@ function checkProject(projectPath: string) {
     .filter((path) => !existsSync(path));
   if (notOk.length) {
     if (existsSync(resolve(projectPath, "estilo"))) {
-      crash(`Wrong project folder. Please upgrade your folder`);
+      crash(`Wrong project folder. Follow upgrade instructions please`);
     } else {
       crash(`Wrong project folder. Missing paths:\n${notOk.join("\n")}`);
     }
