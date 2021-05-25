@@ -66,7 +66,7 @@ Git repo:
 git mv estilo estilos && git mv estilos/addons/nvim-term.yml estilos/terminal.yml
 ```
 
-Simple: 
+Simple:
 
 ```sh
 mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
@@ -114,6 +114,7 @@ Estilo is written in pure Typescript, so you need
   - [ ] .dmg
   - [ ] .whatever windows uses
 - [ ] Add update notifier
+- [ ] Re-implement tests in Deno
 - [ ] Add install instructions
 - [ ] Refactor and clean code
 - [ ] Github actions
