@@ -38,7 +38,7 @@ export function loadPalette(
       xterm: hexterm(hexcolor).toString(),
     };
   });
-  return palette;
+  return Object.assign({}, common, palette);
 }
 
 export function loadSyntax(filepath: string): SyntaxRule[] {
