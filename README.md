@@ -47,7 +47,7 @@ Commands:
 - **`help [command]`**: Show this help or the help of a sub-command.
 - **`--version`**: Show the version number.
 
-## Documentation
+## Guide
 
 - [Color palettes](docs/color-palettes.md)
 - [Colorschemes](docs/colorschemes.md)
@@ -104,7 +104,12 @@ Estilo is written in pure Typescript, so you need
 - [x] Do not print terminal colors if terminal template has no colors
 - [x] Palettes can import colors from a main palette
 - [x] Detect old version projects
-- [ ] Update documentation
+- [x] Update documentation
+- [ ] Do not use the project name, ask for named for every scheme
+- [ ] Improve CLI:
+  - [ ] Ask for details when adding status style
+  - [ ] Ask for extra syntax after creating project
+- [ ] Update demo gif
 - [ ] Build scripts:
   - [ ] Linux bin
   - [ ] OSX bin
