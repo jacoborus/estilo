@@ -7,7 +7,7 @@ export function installTemplates(projectPath: string, templates: string[]) {
     const destination = resolve(projectPath, "estilos/syntax", name);
     // TODO handle this error
     try {
-      Deno.writeTextFileSync(destination, buckets.syntax[name]);
+      Deno.writeTextFileSync(destination, buckets.syntax[name] as string);
     } catch (err) {
       console.error(err);
     }

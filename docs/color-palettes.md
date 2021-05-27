@@ -17,9 +17,11 @@ bg: '#282828'
 
 ## Common palette
 
-All the palettes extend a common palette, its colors should be described under `common` section in the project config file (`estilo.yml`)
+All the palettes extend a common palette, its colors should be described under
+`common` section in the project config file (`estilo.yml`)
 
-Palettes can also link colors from the common one. This is done prependind the name of the color with an `@`
+Palettes can also link colors from the common one. This is done prependind the
+name of the color with an `@`
 
 estilo.yml:
 

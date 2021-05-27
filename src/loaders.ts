@@ -1,18 +1,18 @@
 import { basename, existsSync, hexterm, resolve, yellow } from "../deps.ts";
 import {
+  ColorCode,
   Palette,
   StatusBrand,
   StatusStyle,
   SyntaxRule,
   TerminalSyntax,
-  ColorCode,
 } from "./common.ts";
 import { isHexColor, loadYml } from "./util.ts";
 import { crash } from "./crash.ts";
 
 export function loadPalette(
   filepath: string,
-  common: Record<string, ColorCode>
+  common: Record<string, ColorCode>,
 ): Palette {
   const parsed = loadYml(filepath);
   const content = parsed.content as Record<string, string>;

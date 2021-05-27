@@ -39,12 +39,12 @@ function loadPalettes(folderPath: string, config: ProjectConfig): Palettes {
     filepaths.map((file) => {
       const palette = loadPalette(file, mainPalette);
       return [palette.name, palette];
-    })
+    }),
   );
 }
 
 function parseMainPalette(
-  content: Record<string, string>
+  content: Record<string, string>,
 ): Record<string, ColorCode> {
   const colors = {} as Record<string, ColorCode>;
   Object.keys(content).forEach((name) => {
@@ -65,6 +65,6 @@ function loadAllStatus(folderPath: string, brand: StatusBrand): StatusStyles {
     filepaths.map((filepath) => {
       const style = loadStatus(filepath, brand);
       return [style.name, style];
-    })
+    }),
   );
 }

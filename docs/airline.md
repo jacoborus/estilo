@@ -3,8 +3,8 @@
 ## Creating styles
 
 Before creating the airline theme you need at least one color palette in
-`estilos/palettes` folder. Then proceed to add the blank airline template from the
-command line:
+`estilos/palettes` folder. Then proceed to add the blank airline template from
+the command line:
 
 ```sh
 estilo add-airline

@@ -68,6 +68,8 @@ export function renderStatus(
     estiloVersion: version,
   };
   const context = Object.assign(c, { info });
-  const render = handlebars.compile(buckets.mustaches[brand + ".hbs"]);
+  const render = handlebars.compile(
+    buckets.mustaches[brand + ".hbs"] as string,
+  );
   return render(context);
 }

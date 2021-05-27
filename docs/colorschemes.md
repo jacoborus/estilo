@@ -68,8 +68,7 @@ See
 
 ## Add colors to terminal
 
-Open `estilos/terminal.yml` and fill each value with a color from your
-palette.
+Open `estilos/terminal.yml` and fill each value with a color from your palette.
 
 ## Add colorschemes to `estilo.yml`
 

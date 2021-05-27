@@ -105,10 +105,6 @@ Estilo is written in pure Typescript, so you need
 - [x] Palettes can import colors from a main palette
 - [x] Detect old version projects
 - [x] Update documentation
-- [ ] Do not use the project name, ask for named for every scheme
-- [ ] Improve CLI:
-  - [ ] Ask for details when adding status style
-  - [ ] Ask for extra syntax after creating project
 - [ ] Update demo gif
 - [ ] Build scripts:
   - [ ] Linux bin
@@ -123,6 +119,7 @@ Estilo is written in pure Typescript, so you need
 - [ ] Add install instructions
 - [ ] Refactor and clean code
 - [ ] Github actions
+- [ ] Include pre and post to the colorschemes
 
 <br>
 

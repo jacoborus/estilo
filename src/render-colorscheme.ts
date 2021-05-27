@@ -28,7 +28,7 @@ interface LinkValue {
 
 export function renderColorscheme(
   config: SchemeConfig,
-  project: Project
+  project: Project,
 ): string {
   const palette = project.palettes[config.palette];
   if (!palette) {
@@ -38,7 +38,9 @@ export function renderColorscheme(
     });
   }
 
-  const render = handlebars.compile(buckets.mustaches["colorscheme.hbs"]);
+  const render = handlebars.compile(
+    buckets.mustaches["colorscheme.hbs"] as string,
+  );
   return render({
     info: {
       name: config.name,
@@ -72,7 +74,7 @@ function parseTermColors(termSyntax: TerminalSyntax, palette: Palette) {
 
 function parseSyntaxColors(
   syntax: SyntaxRule[],
-  palette: Palette
+  palette: Palette,
 ): SyntaxValues {
   const values = {} as SyntaxValues;
   syntax.forEach((rule) => {
@@ -97,7 +99,7 @@ function parseSyntaxColors(
 function getColorCode(
   color: string,
   palette: Palette,
-  filepath: string
+  filepath: string,
 ): false | ColorCode {
   // return false if empty color
   if (color === ".") return false;
@@ -134,7 +136,7 @@ function getUI(ui: string): false | string {
 function getCurlColor(
   color: string,
   palette: Palette,
-  filepath: string
+  filepath: string,
 ): boolean | ColorCode {
   const curlParsed = getColorCode(color, palette, filepath);
   let curlColor;

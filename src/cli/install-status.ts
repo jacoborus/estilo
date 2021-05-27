@@ -47,7 +47,7 @@ function addStatus(projectPath: string, brand: StatusBrand, styleName: string) {
   const folderPath = resolve(projectPath, "estilos", brand);
   ensureDirSync(folderPath);
   const filepath = resolve(folderPath, styleName + ".yml");
-  Deno.writeTextFileSync(filepath, buckets.addons[brand + ".yml"]);
+  Deno.writeTextFileSync(filepath, buckets.addons[brand + ".yml"] as string);
   console.log(green(`New ${brand} style: ${styleName}`));
   console.log(`==> ${filepath}`);
 }
