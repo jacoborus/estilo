@@ -1,4 +1,5 @@
-import { buckets, handlebars, hexterm, version } from "../deps.ts";
+import { handlebars, hexterm, version } from "../deps.ts";
+import { buckets } from "../buckets.ts";
 
 import { crash } from "./crash.ts";
 import { isHexColor } from "./util.ts";

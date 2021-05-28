@@ -1,12 +1,6 @@
-import {
-  buckets,
-  ensureDirSync,
-  green,
-  Input,
-  prompt,
-  resolve,
-} from "../../deps.ts";
+import { ensureDirSync, green, Input, prompt, resolve } from "../../deps.ts";
 import { StatusBrand } from "../common.ts";
+import { buckets } from "../../buckets.ts";
 import { ValidateResult } from "https://deno.land/x/cliffy/prompt/mod.ts";
 
 export async function installStatus(

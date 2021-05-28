@@ -1,4 +1,5 @@
-import { buckets, handlebars, version } from "../deps.ts";
+import { handlebars, version } from "../deps.ts";
+import { buckets } from "../buckets.ts";
 import { crash } from "./crash.ts";
 
 import {

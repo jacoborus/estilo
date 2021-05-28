@@ -1,4 +1,5 @@
-import { buckets, Checkbox, prompt, resolve } from "../../deps.ts";
+import { Checkbox, prompt, resolve } from "../../deps.ts";
+import { buckets } from "../../buckets.ts";
 import { installTemplates } from "./install-templates.ts";
 
 // TODO: check if the folder contains a estilo project

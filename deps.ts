@@ -1,6 +1,4 @@
 import HandlebarsJS from "https://dev.jspm.io/handlebars@4.7.6";
-import { loadBuckets } from "https://deno.land/x/buckets@0.1.0/mod.ts";
-import bucketsConf from "./buckets.ts";
 
 export { default as version } from "./version.ts";
 
@@ -30,5 +28,3 @@ export { hexterm } from "https://raw.githubusercontent.com/jacoborus/hexterm/mas
 export const handlebars = HandlebarsJS as {
   compile: (t: string) => (x: Record<string, unknown>) => string;
 };
-
-export const buckets = loadBuckets(bucketsConf);

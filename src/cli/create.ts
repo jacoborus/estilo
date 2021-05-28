@@ -1,6 +1,5 @@
 import {
   basename,
-  buckets,
   ensureDirSync,
   green,
   handlebars,
@@ -10,6 +9,7 @@ import {
 } from "../../deps.ts";
 
 import { installTemplates } from "./install-templates.ts";
+import { buckets } from "../../buckets.ts";
 
 interface ProjectOptions {
   name: string;
