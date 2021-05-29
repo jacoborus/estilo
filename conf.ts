@@ -1,6 +1,7 @@
 export default {
   key: "estilo-key",
   entry: "./estilo.ts",
+  optionsUrl: import.meta.url,
   buckets: [
     {
       name: "mustaches",

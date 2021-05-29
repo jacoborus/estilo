@@ -1,4 +1,4 @@
+import { bundle } from "https://deno.land/x/buckets@0.2.0/mod.ts";
 import conf from "./conf.ts";
-import { bundle } from "https://raw.githubusercontent.com/jacoborus/deno-buckets/main/mod.ts";
 
 bundle(conf);
