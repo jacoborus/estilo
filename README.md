@@ -12,11 +12,6 @@ version). If you're looking for Estilo 1,
 
 ---
 
-[![Build Status](https://travis-ci.org/jacoborus/estilo.svg?branch=master)](https://travis-ci.org/jacoborus/estilo)
-[![npm version](https://badge.fury.io/js/estilo.svg)](https://www.npmjs.com/package/estilo)
-![npm dependencies](https://david-dm.org/jacoborus/estilo.svg)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
-
 ![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
 
 ## Installation
@@ -105,6 +100,8 @@ Estilo is written in pure Typescript, so you need
 - [x] Palettes can import colors from a main palette
 - [x] Detect old version projects
 - [x] Update documentation
+- [ ] Re-implement tests in Deno
+- [ ] Add update notifier
 - [ ] Update demo gif
 - [ ] Build scripts:
   - [ ] Linux bin
@@ -114,8 +111,6 @@ Estilo is written in pure Typescript, so you need
   - [ ] .rpm
   - [ ] .dmg
   - [ ] .whatever windows uses
-- [ ] Add update notifier
-- [ ] Re-implement tests in Deno
 - [ ] Add install instructions
 - [ ] Refactor and clean code
 - [ ] Github actions
