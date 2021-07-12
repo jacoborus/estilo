@@ -16,6 +16,6 @@ export function isLegacyUi(value: string): boolean {
   });
 }
 
-export function parseUi(style: string) {
+export function parseLegacyUi(style: string) {
   return (style.split("") as UiStyle[]).map((val) => uiValues[val]).join(",");
 }

@@ -3,7 +3,7 @@ import { buckets } from "../buckets.ts";
 
 import { crash } from "./crash.ts";
 import { isHexColor } from "./util.ts";
-import { isLegacyUi, parseUi } from "./legacy-ui.ts";
+import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {
   ColorCode,
@@ -129,7 +129,7 @@ function getUI(ui: string): false | string {
   if (!ui) return "NONE";
   // 'NONE' or empty value
   if (ui === "NONE") return "NONE";
-  if (isLegacyUi(ui)) return parseUi(ui);
+  if (isLegacyUi(ui)) return parseLegacyUi(ui);
   // validate(ui)
   return ui;
 }
