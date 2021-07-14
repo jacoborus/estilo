@@ -1,70 +1,33 @@
-import { hexterm, resolve, version } from "../deps.ts";
-import { isHexColor, loadYml, ymlsInFolder } from "./util.ts";
-import { crash } from "./crash.ts";
-import { ColorCode } from "./common.ts";
+import { loadYml } from "./util.ts";
+import { existsSync, resolve } from "../deps.ts";
+import { ProjectFiles, ProjectConfig } from "./common.ts";
 
-import {
-  loadPalette,
-  loadStatus,
-  loadSyntax,
-  loadTerminal,
-} from "./loaders.ts";
-
-import {
-  Palettes,
-  Project,
-  ProjectConfig,
-  StatusBrand,
-  StatusStyles,
-} from "./common.ts";
-
-export function loadProject(folderPath: string): Project {
-  const config = loadYml(folderPath, "estilo.yml").content as ProjectConfig;
+export function loadProjectFiles(projectUrl: string): ProjectFiles {
   return {
-    folderPath,
-    estiloVersion: version,
-    config,
-    palettes: loadPalettes(folderPath, config),
-    syntax: ymlsInFolder(folderPath, "estilos/syntax").flatMap(loadSyntax),
-    terminalSyntax: loadTerminal(folderPath),
-    airlineStyles: loadAllStatus(folderPath, "airline"),
-    lightlineStyles: loadAllStatus(folderPath, "lightline"),
+    config: loadYml(projectUrl, "estilo.yml").content as ProjectConfig,
+    airlineFiles: loadYmlsInFolder(projectUrl, "airline"),
+    lightlineFiles: loadYmlsInFolder(projectUrl, "lightline"),
+    syntaxFiles: loadYmlsInFolder(projectUrl, "syntax"),
+    paletteFiles: loadYmlsInFolder(projectUrl, "palettes"),
   };
 }
 
-function loadPalettes(folderPath: string, config: ProjectConfig): Palettes {
-  const mainPalette = config.common ? parseMainPalette(config.common) : {};
-  const filepaths = ymlsInFolder(folderPath, "estilos/palettes");
+function loadYmlsInFolder(projectUrl: string, folder: string) {
+  const folderUrl = resolve(projectUrl, "estilos", folder);
+  const filepaths = ymlsInFolder(folderUrl);
   return Object.fromEntries(
-    filepaths.map((file) => {
-      const palette = loadPalette(file, mainPalette);
-      return [palette.name, palette];
-    }),
+    filepaths.map((filepath) => [
+      filepath,
+      loadYml(filepath) as Record<string, string>,
+    ])
   );
 }
 
-function parseMainPalette(
-  content: Record<string, string>,
-): Record<string, ColorCode> {
-  const colors = {} as Record<string, ColorCode>;
-  Object.keys(content).forEach((name) => {
-    const hexcolor = content[name].trim();
-    if (!isHexColor(hexcolor)) crash("Wrong color in common palette", { name });
-    colors[name] = {
-      hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
-      xterm: hexterm(hexcolor).toString(),
-    };
-  });
-  return colors;
-}
-
-function loadAllStatus(folderPath: string, brand: StatusBrand): StatusStyles {
-  const brandpath = resolve(folderPath, "estilos");
-  const filepaths = ymlsInFolder(brandpath, brand);
-  return Object.fromEntries(
-    filepaths.map((filepath) => {
-      const style = loadStatus(filepath, brand);
-      return [style.name, style];
-    }),
-  );
+// returns a list of all the `.yml` filepaths contained inside folderpath
+function ymlsInFolder(folderPath: string, folder2?: string): string[] {
+  const finalPath = resolve(folderPath, folder2 || "");
+  if (!existsSync(finalPath)) return [];
+  return Array.from(Deno.readDirSync(finalPath))
+    .filter((file) => file.name.endsWith(".yml"))
+    .map((file) => resolve(finalPath, file.name));
 }
