@@ -1,7 +1,7 @@
 import { existsSync, resolve } from "../deps.ts";
-import { ProjectConfig, Project, List } from "./common.ts";
+import { List, Project, ProjectConfig } from "./common.ts";
 import { loadYml } from "./util.ts";
-import { parsePalettes } from "./parse-palettes.ts";
+import { buildPalettes } from "./build-palettes.ts";
 import {
   formatStatusStyles,
   formatSyntax,
@@ -19,7 +19,7 @@ export function loadProjectFiles(projectUrl: string): Project {
   return {
     projectUrl,
     config,
-    palettes: parsePalettes(paletteFiles, config.commonPalette),
+    palettes: buildPalettes(paletteFiles, config.commonPalette),
     syntax: formatSyntax(syntaxFiles),
     terminalSyntax: formatTerminal(terminalFile.content as List),
     airlineStyles: formatStatusStyles(airlineFiles, "airline"),

@@ -3,20 +3,20 @@ import { isHexColor } from "./util.ts";
 import { ColorObj, List, Palette, Palettes, YmlFile } from "./common.ts";
 import { crash } from "./crash.ts";
 
-export function parsePalettes(
+export function buildPalettes(
   paletteFiles: YmlFile[],
   common = {} as List,
 ): Palettes {
-  const commonPalette = parseMainPalette(common);
+  const commonPalette = buildMainPalette(common);
   return Object.fromEntries(
     paletteFiles.map((paletteFile) => {
-      const palette = parsePalette(paletteFile, commonPalette);
+      const palette = buildPalette(paletteFile, commonPalette);
       return [palette.name, palette];
     }),
   );
 }
 
-function parseMainPalette(
+function buildMainPalette(
   content: Record<string, string>,
 ): Record<string, ColorObj> {
   const colors = Object.keys(content).map((name) => {
@@ -36,7 +36,7 @@ function getColorObj(hexcolor: string): ColorObj {
   };
 }
 
-export function parsePalette(
+export function buildPalette(
   paletteFile: YmlFile,
   common: Record<string, ColorObj>,
 ): Palette {
