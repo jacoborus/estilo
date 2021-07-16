@@ -1,6 +1,7 @@
 import { red } from "../deps.ts";
+import { List } from "./common.ts";
 
-type ErrorOpts = Record<string, string>;
+type ErrorOpts = List;
 
 export function crash(message: string, data?: ErrorOpts): never {
   console.log(red("Error: " + message));

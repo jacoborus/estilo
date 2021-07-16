@@ -42,7 +42,7 @@ export interface StatusStyle {
 }
 
 export type Palettes = Record<string, Palette>;
-export type PaletteConfig = Record<string, Record<string, string>>;
+export type PaletteConfig = Record<string, List>;
 
 export interface SchemeConfig {
   name: string;
@@ -65,19 +65,19 @@ export interface ProjectConfig {
   url?: string;
   license?: string;
   description?: string;
-  commonPalette?: Record<string, string>;
+  commonPalette?: List;
   colorschemes: SchemeConfig[];
   airline: StatusConfig[];
   lightline: StatusConfig[];
 }
 
-export type ListFile = Record<string, Record<string, string>>;
+export type ListFile = Record<string, List>;
 
 export interface ProjectFiles {
   projectUrl: string;
   config: ProjectConfig;
   paletteFiles: YmlFile[];
-  terminalFile: Record<string, string>;
+  terminalFile: List;
   syntaxFiles: YmlFile[];
   airlineFiles: YmlFile[];
   lightlineFiles: YmlFile[];

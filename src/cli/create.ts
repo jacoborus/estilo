@@ -8,6 +8,7 @@ import {
   resolve,
 } from "../../deps.ts";
 
+import { List } from "../common.ts";
 import { installTemplates } from "./install-templates.ts";
 import { buckets } from "../../buckets.ts";
 
@@ -93,11 +94,11 @@ function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    buckets.addons["terminal.yml"] as string,
+    buckets.addons["terminal.yml"] as string
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
-    defaultPalette,
+    defaultPalette
   );
   installTemplates(projectPath, ["base.yml"]);
 
@@ -106,5 +107,5 @@ function createBoilerplate(projectPath: string, options: ProjectOptions) {
 
 function renderConfigFile(options: ProjectOptions) {
   const render = handlebars.compile(buckets.mustaches["project.hbs"] as string);
-  return render((options as unknown) as Record<string, string>);
+  return render((options as unknown) as List);
 }

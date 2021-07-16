@@ -6,12 +6,13 @@ import {
   SyntaxRule,
   TerminalSyntax,
   YmlFile,
+  List,
 } from "./common.ts";
 import { crash } from "./crash.ts";
 
 function formatSyntaxFile(file: YmlFile): SyntaxRule[] {
   const filepath = file.filepath;
-  return Object.entries(file.content as Record<string, string>)
+  return Object.entries(file.content as List)
     .map(([name, value]) => ({
       filepath,
       name,
@@ -24,11 +25,11 @@ export function formatSyntax(syntaxFiles: YmlFile[]): SyntaxRule[] {
   return syntaxFiles.map((syntaxFile) => formatSyntaxFile(syntaxFile)).flat();
 }
 
-export function formatTerminal(data: Record<string, string>): TerminalSyntax {
+export function formatTerminal(data: List): TerminalSyntax {
   return Object.fromEntries(
     Object.keys(data)
       .map((prop) => [prop, data[prop].trim()])
-      .filter(([_, colorname]) => colorname),
+      .filter(([_, colorname]) => colorname)
   );
 }
 
@@ -85,11 +86,9 @@ const statusParts = {
   ],
 }; // , ctrlp
 
-type List = Record<string, string>;
-
 export function formatStatusStyles(
   statusFiles: YmlFile[],
-  brand: StatusBrand,
+  brand: StatusBrand
 ): StatusStyles {
   const files = statusFiles.map(({ filepath, content }) => {
     const style = formatStatusStyle(content as List, brand, filepath);
@@ -99,9 +98,9 @@ export function formatStatusStyles(
 }
 
 function formatStatusStyle(
-  content: Record<string, string>,
+  content: List,
   brand: StatusBrand,
-  filepath: string,
+  filepath: string
 ): StatusStyle {
   const statusStyle = {
     name: basename(filepath, ".yml"),

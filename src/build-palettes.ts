@@ -17,7 +17,7 @@ export function buildPalettes(
 }
 
 function buildMainPalette(
-  content: Record<string, string>,
+  content: List,
 ): Record<string, ColorObj> {
   const colors = Object.keys(content).map((name) => {
     const hexcolor = content[name].trim();
