@@ -1,8 +1,7 @@
-import { green } from "../deps.ts";
-import { Project } from "./common.ts";
+import { ensureDirSync, resolve, green } from "../deps.ts";
+import { StatusBrand, Project } from "./common.ts";
 import { renderColorscheme } from "./render-colorscheme.ts";
 import { renderStatus } from "./render-status.ts";
-import { writeScheme, writeStatus } from "./writers.ts";
 
 export function renderProject(project: Project): void {
   const { config: projectConfig } = project;
@@ -26,4 +25,28 @@ export function renderProject(project: Project): void {
   }
 
   console.log(green("✓  Done, your theme is ready\n"));
+}
+
+const paths = {
+  airline: "autoload/airline/themes",
+  lightline: "autoload/lightline/colorscheme",
+};
+
+export function writeScheme(txt: string, name: string, projectPath: string) {
+  const folderPath = resolve(projectPath, "colors");
+  const filepath = resolve(folderPath, name + ".vim");
+  ensureDirSync(folderPath);
+  Deno.writeTextFileSync(filepath, txt);
+}
+
+export function writeStatus(
+  kind: StatusBrand,
+  txt: string,
+  name: string,
+  projectPath: string
+) {
+  const folderPath = resolve(projectPath, paths[kind]);
+  const filepath = resolve(folderPath, name + ".vim");
+  ensureDirSync(folderPath);
+  Deno.writeTextFileSync(filepath, txt);
 }
