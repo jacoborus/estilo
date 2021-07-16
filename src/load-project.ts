@@ -1,19 +1,29 @@
-import { loadYml } from "./util.ts";
 import { existsSync, resolve } from "../deps.ts";
-import { ProjectConfig, ProjectFiles } from "./common.ts";
+import { ProjectConfig, Project, List } from "./common.ts";
+import { loadYml } from "./util.ts";
+import { parsePalettes } from "./parse-palettes.ts";
+import {
+  formatStatusStyles,
+  formatSyntax,
+  formatTerminal,
+} from "./format-project.ts";
 
-export function loadProjectFiles(projectUrl: string): ProjectFiles {
+export function loadProjectFiles(projectUrl: string): Project {
+  const config = loadYml(projectUrl, "estilo.yml").content as ProjectConfig;
+  const airlineFiles = loadYmlsInFolder(projectUrl, "airline");
+  const lightlineFiles = loadYmlsInFolder(projectUrl, "lightline");
+  const syntaxFiles = loadYmlsInFolder(projectUrl, "syntax");
+  const paletteFiles = loadYmlsInFolder(projectUrl, "palettes");
+  const terminalFile = loadYml(projectUrl, "estilos/terminal.yml");
+
   return {
-    projectUrl: projectUrl,
-    config: loadYml(projectUrl, "estilo.yml").content as ProjectConfig,
-    airlineFiles: loadYmlsInFolder(projectUrl, "airline"),
-    lightlineFiles: loadYmlsInFolder(projectUrl, "lightline"),
-    syntaxFiles: loadYmlsInFolder(projectUrl, "syntax"),
-    paletteFiles: loadYmlsInFolder(projectUrl, "palettes"),
-    terminalFile: loadYml(projectUrl, "estilos/terminal.yml").content as Record<
-      string,
-      string
-    >,
+    projectUrl,
+    config,
+    palettes: parsePalettes(paletteFiles, config.commonPalette),
+    syntax: formatSyntax(syntaxFiles),
+    terminalSyntax: formatTerminal(terminalFile.content as List),
+    airlineStyles: formatStatusStyles(airlineFiles, "airline"),
+    lightlineStyles: formatStatusStyles(lightlineFiles, "lightline"),
   };
 }
 

@@ -11,7 +11,6 @@ import { loadProjectFiles } from "../load-project.ts";
 import { selectSyntax } from "./select-syntax.ts";
 import { renderProject } from "../render-project.ts";
 import { installStatus } from "./install-status.ts";
-import { parseProjectData } from "../parse-project.ts";
 
 const estiloCommand = new Command();
 
@@ -33,8 +32,7 @@ const result = await estiloCommand
   .action((_: unknown, folder = ".") => {
     const projectPath = resolve(folder);
     checkProject(projectPath);
-    const projectFiles = loadProjectFiles(projectPath);
-    const project = parseProjectData(projectFiles);
+    const project = loadProjectFiles(projectPath);
     renderProject(project);
   })
   .reset()
