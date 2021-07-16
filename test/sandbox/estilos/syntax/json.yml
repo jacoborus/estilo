@@ -1,4 +1,4 @@
-jsonPadding: 'blue blue biru' # Operator
+jsonPadding: 'blue blue bold,italic,reverse,underline' # Operator
 jsonString: '' # String
 jsonTest: '' # Label
 jsonEscape: '' # Special

@@ -1,4 +1,4 @@
-ColorColumn: 'blue blue biru'
+ColorColumn: 'blue blue bold,italic,reverse,underline'
 Conceal: ''
 Cursor: ''
 CursorIM: ''
