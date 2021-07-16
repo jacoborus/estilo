@@ -1,5 +1,5 @@
-import { ensureDirSync, resolve, green } from "../deps.ts";
-import { StatusBrand, Project } from "./common.ts";
+import { ensureDirSync, green, resolve } from "../deps.ts";
+import { Project, StatusBrand } from "./common.ts";
 import { renderColorscheme } from "./render-colorscheme.ts";
 import { renderStatus } from "./render-status.ts";
 
@@ -43,7 +43,7 @@ export function writeStatus(
   kind: StatusBrand,
   txt: string,
   name: string,
-  projectPath: string
+  projectPath: string,
 ) {
   const folderPath = resolve(projectPath, paths[kind]);
   const filepath = resolve(folderPath, name + ".vim");

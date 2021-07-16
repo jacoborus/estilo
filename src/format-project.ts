@@ -1,12 +1,12 @@
 import { basename } from "../deps.ts";
 import {
+  List,
   StatusBrand,
   StatusStyle,
   StatusStyles,
   SyntaxRule,
   TerminalSyntax,
   YmlFile,
-  List,
 } from "./common.ts";
 import { crash } from "./crash.ts";
 
@@ -29,7 +29,7 @@ export function formatTerminal(data: List): TerminalSyntax {
   return Object.fromEntries(
     Object.keys(data)
       .map((prop) => [prop, data[prop].trim()])
-      .filter(([_, colorname]) => colorname)
+      .filter(([_, colorname]) => colorname),
   );
 }
 
@@ -88,7 +88,7 @@ const statusParts = {
 
 export function formatStatusStyles(
   statusFiles: YmlFile[],
-  brand: StatusBrand
+  brand: StatusBrand,
 ): StatusStyles {
   const files = statusFiles.map(({ filepath, content }) => {
     const style = formatStatusStyle(content as List, brand, filepath);
@@ -100,7 +100,7 @@ export function formatStatusStyles(
 function formatStatusStyle(
   content: List,
   brand: StatusBrand,
-  filepath: string
+  filepath: string,
 ): StatusStyle {
   const statusStyle = {
     name: basename(filepath, ".yml"),

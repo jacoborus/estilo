@@ -94,11 +94,11 @@ function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    buckets.addons["terminal.yml"] as string
+    buckets.addons["terminal.yml"] as string,
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
-    defaultPalette
+    defaultPalette,
   );
   installTemplates(projectPath, ["base.yml"]);
 

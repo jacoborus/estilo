@@ -73,16 +73,6 @@ export interface ProjectConfig {
 
 export type ListFile = Record<string, List>;
 
-export interface ProjectFiles {
-  projectUrl: string;
-  config: ProjectConfig;
-  paletteFiles: YmlFile[];
-  terminalFile: List;
-  syntaxFiles: YmlFile[];
-  airlineFiles: YmlFile[];
-  lightlineFiles: YmlFile[];
-}
-
 export interface Project {
   projectUrl: string;
   config: ProjectConfig;
