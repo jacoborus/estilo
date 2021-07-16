@@ -100,6 +100,7 @@ Estilo is written in pure Typescript, so you need
 - [x] Palettes can import colors from a main palette
 - [x] Detect old version projects
 - [x] Update documentation
+- [ ] Refactor and clean code
 - [ ] Re-implement tests in Deno
 - [ ] Add update notifier
 - [ ] Update demo gif
@@ -112,7 +113,6 @@ Estilo is written in pure Typescript, so you need
   - [ ] .dmg
   - [ ] .whatever windows uses
 - [ ] Add install instructions
-- [ ] Refactor and clean code
 - [ ] Github actions
 - [ ] Include pre and post to the colorschemes
 

@@ -5,3 +5,4 @@ npm-debug.log
 _book
 lib
 .vim
+*.bundle.js

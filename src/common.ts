@@ -1,9 +1,11 @@
+export type List = Record<string, string>;
+
 export type YmlFile = {
   filepath: string;
   content: unknown;
 };
 
-export interface ColorCode {
+export interface ColorObj {
   hex: string;
   xterm: string;
 }
@@ -12,7 +14,7 @@ export interface Palette {
   name: string;
   filepath: string;
   colors: {
-    [index: string]: ColorCode;
+    [index: string]: ColorObj;
   };
 }
 
@@ -24,8 +26,8 @@ export type StatusBrand = "airline" | "lightline";
 export type DataRenderStatus = Record<
   string,
   {
-    fg: ColorCode;
-    bg: ColorCode;
+    fg: ColorObj;
+    bg: ColorObj;
   }
 >;
 
@@ -40,6 +42,7 @@ export interface StatusStyle {
 }
 
 export type Palettes = Record<string, Palette>;
+export type PaletteConfig = Record<string, Record<string, string>>;
 
 export interface SchemeConfig {
   name: string;
@@ -62,25 +65,36 @@ export interface ProjectConfig {
   url?: string;
   license?: string;
   description?: string;
-  common?: Record<string, string>;
+  commonPalette?: Record<string, string>;
   colorschemes: SchemeConfig[];
   airline: StatusConfig[];
   lightline: StatusConfig[];
+}
+
+export type ListFile = Record<string, Record<string, string>>;
+
+export interface ProjectFiles {
+  projectUrl: string;
+  config: ProjectConfig;
+  paletteFiles: YmlFile[];
+  terminalFile: Record<string, string>;
+  syntaxFiles: YmlFile[];
+  airlineFiles: YmlFile[];
+  lightlineFiles: YmlFile[];
+}
+
+export interface Project {
+  projectUrl: string;
+  config: ProjectConfig;
+  palettes: Palettes;
+  syntax: SyntaxRule[];
+  terminalSyntax: TerminalSyntax;
+  airlineStyles: StatusStyles;
+  lightlineStyles: StatusStyles;
 }
 
 export interface SyntaxRule {
   filepath: string;
   name: string;
   rule: string;
-}
-
-export interface Project {
-  config: ProjectConfig;
-  estiloVersion: string;
-  folderPath: string;
-  syntax: SyntaxRule[];
-  palettes: Palettes;
-  terminalSyntax: TerminalSyntax;
-  airlineStyles: StatusStyles;
-  lightlineStyles: StatusStyles;
 }

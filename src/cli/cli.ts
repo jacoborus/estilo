@@ -7,10 +7,11 @@ import {
 } from "../../deps.ts";
 import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
-import { loadProject } from "../load-project.ts";
+import { loadProjectFiles } from "../load-project.ts";
 import { selectSyntax } from "./select-syntax.ts";
 import { renderProject } from "../render-project.ts";
 import { installStatus } from "./install-status.ts";
+import { parseProjectData } from "../parse-project.ts";
 
 const estiloCommand = new Command();
 
@@ -32,8 +33,9 @@ const result = await estiloCommand
   .action((_: unknown, folder = ".") => {
     const projectPath = resolve(folder);
     checkProject(projectPath);
-    const projectData = loadProject(projectPath);
-    renderProject(projectData);
+    const projectFiles = loadProjectFiles(projectPath);
+    const project = parseProjectData(projectFiles);
+    renderProject(project);
   })
   .reset()
   .command("add-syntax")
@@ -73,9 +75,9 @@ function checkProject(projectPath: string) {
     .filter((path) => !existsSync(path));
   if (notOk.length) {
     if (existsSync(resolve(projectPath, "estilo"))) {
-      crash(`Wrong project folder. Follow upgrade instructions please`);
+      crash(`⚠ Wrong project folder. Follow upgrade instructions please`);
     } else {
-      crash(`Wrong project folder. Missing paths:\n${notOk.join("\n")}`);
+      crash(`⚠ Wrong project folder. Missing paths:\n${notOk.join("\n")}`);
     }
   }
 }

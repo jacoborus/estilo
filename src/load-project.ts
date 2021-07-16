@@ -1,26 +1,25 @@
 import { loadYml } from "./util.ts";
 import { existsSync, resolve } from "../deps.ts";
-import { ProjectFiles, ProjectConfig } from "./common.ts";
+import { ProjectConfig, ProjectFiles } from "./common.ts";
 
 export function loadProjectFiles(projectUrl: string): ProjectFiles {
   return {
+    projectUrl: projectUrl,
     config: loadYml(projectUrl, "estilo.yml").content as ProjectConfig,
     airlineFiles: loadYmlsInFolder(projectUrl, "airline"),
     lightlineFiles: loadYmlsInFolder(projectUrl, "lightline"),
     syntaxFiles: loadYmlsInFolder(projectUrl, "syntax"),
     paletteFiles: loadYmlsInFolder(projectUrl, "palettes"),
+    terminalFile: loadYml(projectUrl, "estilos/terminal.yml").content as Record<
+      string,
+      string
+    >,
   };
 }
 
 function loadYmlsInFolder(projectUrl: string, folder: string) {
   const folderUrl = resolve(projectUrl, "estilos", folder);
-  const filepaths = ymlsInFolder(folderUrl);
-  return Object.fromEntries(
-    filepaths.map((filepath) => [
-      filepath,
-      loadYml(filepath) as Record<string, string>,
-    ])
-  );
+  return ymlsInFolder(folderUrl).map((filepath) => loadYml(filepath));
 }
 
 // returns a list of all the `.yml` filepaths contained inside folderpath

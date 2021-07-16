@@ -6,7 +6,7 @@ import { isHexColor } from "./util.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {
-  ColorCode,
+  ColorObj,
   Palette,
   Project,
   SchemeConfig,
@@ -17,10 +17,10 @@ import {
 type SyntaxValues = Record<string, SyntaxValue | LinkValue>;
 
 interface SyntaxValue {
-  fore: false | ColorCode;
-  back: false | ColorCode;
+  fore: false | ColorObj;
+  back: false | ColorObj;
   ui: false | string;
-  guisp: boolean | ColorCode;
+  guisp: boolean | ColorObj;
 }
 
 interface LinkValue {
@@ -97,11 +97,11 @@ function parseSyntaxColors(
   return values;
 }
 
-function getColorCode(
+export function getColorCode(
   color: string,
   palette: Palette,
   filepath: string,
-): false | ColorCode {
+): false | ColorObj {
   // return false if empty color
   if (color === ".") return false;
   // return false if color is `NONE`
@@ -119,11 +119,9 @@ function getColorCode(
   }
   // not valid color
   crash("Color does not exist", { filepath, color });
-  // this is here just to comply with typescript
-  return false;
 }
 
-function getUI(ui: string): false | string {
+export function getUI(ui: string): false | string {
   // no defined gui
   if (ui === ".") return false;
   if (!ui) return "NONE";
@@ -134,11 +132,11 @@ function getUI(ui: string): false | string {
   return ui;
 }
 
-function getCurlColor(
+export function getCurlColor(
   color: string,
   palette: Palette,
   filepath: string,
-): boolean | ColorCode {
+): boolean | ColorObj {
   const curlParsed = getColorCode(color, palette, filepath);
   let curlColor;
   if (!curlParsed || curlParsed.hex === "NONE") {
