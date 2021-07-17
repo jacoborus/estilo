@@ -13,9 +13,7 @@ export interface ColorObj {
 export interface Palette {
   name: string;
   filepath: string;
-  colors: {
-    [index: string]: ColorObj;
-  };
+  colors: Record<string, ColorObj>;
 }
 
 export interface TerminalSyntax {
