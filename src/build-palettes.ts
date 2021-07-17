@@ -8,17 +8,14 @@ export function buildPalettes(
   common = {} as List,
 ): Palettes {
   const commonPalette = buildMainPalette(common);
-  return Object.fromEntries(
-    paletteFiles.map((paletteFile) => {
-      const palette = buildPalette(paletteFile, commonPalette);
-      return [palette.name, palette];
-    }),
-  );
+  const paleteEntries = paletteFiles.map((paletteFile) => {
+    const palette = buildPalette(paletteFile, commonPalette);
+    return [palette.name, palette];
+  });
+  return Object.fromEntries(paleteEntries);
 }
 
-function buildMainPalette(
-  content: List,
-): Record<string, ColorObj> {
+function buildMainPalette(content: List): Record<string, ColorObj> {
   const colors = Object.keys(content).map((name) => {
     const hexcolor = content[name].trim();
     if (!isHexColor(hexcolor)) {
@@ -62,6 +59,6 @@ export function buildPalette(
       xterm: hexterm(hexcolor).toString(),
     };
   });
-  palette.colors = Object.assign(common, palette.colors);
+  palette.colors = Object.assign({}, common, palette.colors);
   return palette;
 }
