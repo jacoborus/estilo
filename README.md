@@ -5,10 +5,11 @@ lightline.
 
 ---
 
-:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (beta
-version). If you're looking for Estilo 1,
-[please check out `1.0` branch
-(`node`)](https://github.com/jacoborus/estilo/tree/node).
+:fire: **HEADS UP!**
+
+You're currently looking at Estilo 2 branch (beta version). If you're looking
+for Estilo 1,
+please check out [`node` branch](https://github.com/jacoborus/estilo/tree/node).
 
 ---
 
@@ -84,12 +85,19 @@ mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
 Estilo is written in pure Typescript, so you need
 [deno.js 1.7](https://deno.land/) or higher installed in your computer
 
-### Build
+### Bundle and compile
 
+Estilo needs to be bundled to a single file before being compiled.
 This command will build Estilo scripts and its assets in `dist/estilo.js`
 
 ```sh
 deno run --unstable --allow-read --allow-write --allow-net bundler.ts
+```
+
+Then compile with Deno:
+
+```sh
+deno compile --allow-read --allow-write dist/estilo.js
 ```
 
 <br>
