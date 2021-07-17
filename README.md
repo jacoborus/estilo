@@ -26,16 +26,6 @@ deno install --allow-read --allow-write -n estilo https://denopkg.com/jacoborus/
 
 TODO
 
-## Quick start
-
-Initialize your project and follow the instructions:
-
-```sh
-mkdir myproject && cd myproject && estilo create
-```
-
-Next: [Color palettes](docs/color-palettes.md)
-
 ## CLI
 
 Usage: `estilo [command]`
