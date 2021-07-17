@@ -8,7 +8,7 @@ lightline.
 :fire: **HEADS UP!** You're currently looking at Estilo 2 branch (beta
 version). If you're looking for Estilo 1,
 [please check out `1.0` branch
-(`master`)](https://github.com/jacoborus/estilo/tree/master).
+(`node`)](https://github.com/jacoborus/estilo/tree/node).
 
 ---
 
