@@ -19,5 +19,5 @@ export default {
       exts: [".yml"],
     },
   ],
-  output: "estilo.bundle.js",
+  output: "dist/estilo.js",
 };

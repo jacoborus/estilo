@@ -5,7 +5,7 @@ lightline.
 
 ---
 
-:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (alpha
+:fire: **HEADS UP!** You're currently looking at Estilo 2 branch (beta
 version). If you're looking for Estilo 1,
 [please check out `1.0` branch
 (`master`)](https://github.com/jacoborus/estilo/tree/master).
@@ -15,6 +15,14 @@ version). If you're looking for Estilo 1,
 ![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
 
 ## Installation
+
+### Deno users
+
+```sh
+deno install --allow-read --allow-write -n estilo https://denopkg.com/jacoborus/estilo/dist/estilo.js
+```
+
+### Other plaforms
 
 TODO
 
@@ -86,35 +94,13 @@ mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
 Estilo is written in pure Typescript, so you need
 [deno.js 1.7](https://deno.land/) or higher installed in your computer
 
-## TODO
+### Build
 
-- [x] Migrate cli to deno
-- [x] Migrate old render to deno
-- [x] Move terminal.yml down to estilo folder (remove addons folder)
-- [x] Render estilo.yml from a .hbs
-- [x] Group assets in assets folder
-- [x] Check if folder contains a Estilo project
-- [x] Rename estilo folder
-- [x] Add upgrade instructions
-- [x] Do not print terminal colors if terminal template has no colors
-- [x] Palettes can import colors from a main palette
-- [x] Detect old version projects
-- [x] Update documentation
-- [ ] Refactor and clean code
-- [ ] Re-implement tests in Deno
-- [ ] Add update notifier
-- [ ] Update demo gif
-- [ ] Build scripts:
-  - [ ] Linux bin
-  - [ ] OSX bin
-  - [ ] Win bin
-  - [ ] .deb
-  - [ ] .rpm
-  - [ ] .dmg
-  - [ ] .whatever windows uses
-- [ ] Add install instructions
-- [ ] Github actions
-- [ ] Include pre and post to the colorschemes
+This command will build Estilo scripts and its assets in `dist/estilo.js`
+
+```sh
+deno run --unstable --allow-read --allow-write --allow-net bundler.ts
+```
 
 <br>
 
