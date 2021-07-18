@@ -8,18 +8,18 @@ export {
   existsSync,
 } from "https://deno.land/std@0.101.0/fs/mod.ts";
 
-export type { ValidateResult } from "https://deno.land/x/cliffy@v0.19.2/prompt/mod.ts";
+export type { ValidateResult } from "https://deno.land/x/cliffy@v0.19.3/prompt/mod.ts";
 
 export {
   Checkbox,
   Input,
   prompt,
-} from "https://deno.land/x/cliffy@v0.19.2/prompt/mod.ts";
+} from "https://deno.land/x/cliffy@v0.19.3/prompt/mod.ts";
 
 export {
   Command,
   HelpCommand,
-} from "https://deno.land/x/cliffy@v0.19.2/command/mod.ts";
+} from "https://deno.land/x/cliffy@v0.19.3/command/mod.ts";
 
 export {
   parse as yamlParse,
