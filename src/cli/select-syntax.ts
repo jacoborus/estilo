@@ -4,7 +4,7 @@ import { installTemplates } from "./install-templates.ts";
 
 // TODO: check if the folder contains a estilo project
 export async function selectSyntax(projectPath: string, all = false) {
-  const destFolder = resolve(projectPath, "estilo/syntax");
+  const destFolder = resolve(projectPath, "estilos/syntax");
 
   const libFiles = Object.keys(buckets.syntax);
   const destFiles = getFileNamesFromFolder(destFolder);

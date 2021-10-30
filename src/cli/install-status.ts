@@ -14,7 +14,7 @@ export async function installStatus(
   brand: StatusBrand,
   styleName?: string,
 ) {
-  const statusFolderPath = resolve(projectPath, "estilo", brand);
+  const statusFolderPath = resolve(projectPath, "estilos", brand);
   ensureDirSync(statusFolderPath);
 
   if (styleName) {
