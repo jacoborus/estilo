@@ -5,7 +5,7 @@ import { crash } from "./crash.ts";
 
 export function buildPalettes(
   paletteFiles: YmlFile[],
-  common = {} as List,
+  common = {} as List
 ): Palettes {
   const commonPalette = buildMainPalette(common);
   const paleteEntries = paletteFiles.map((paletteFile) => {
@@ -35,7 +35,7 @@ function getColorObj(hexcolor: string): ColorObj {
 
 export function buildPalette(
   paletteFile: YmlFile,
-  common: Record<string, ColorObj>,
+  common: Record<string, ColorObj>
 ): Palette {
   const { filepath, content } = paletteFile;
   const palette = {
@@ -49,11 +49,12 @@ export function buildPalette(
     if (hexcolor.startsWith("@")) {
       const propName = hexcolor.slice(1);
       const color = common[propName];
-      if (!color) crash("Missing common color", { color });
+      if (!color) crash("Missing common color", { color: propName });
       palette.colors[name] = color;
       return;
     }
-    if (!isHexColor(hexcolor)) crash("Wrong color", { filepath, name });
+    if (!isHexColor(hexcolor))
+      crash("Wrong color", { filepath, name, hexcolor });
     palette.colors[name] = {
       hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
       xterm: hexterm(hexcolor).toString(),
