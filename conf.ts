@@ -6,7 +6,7 @@ export default {
     {
       name: "mustaches",
       folder: "assets/mustaches",
-      exts: [".hbs"],
+      exts: [".ejs"],
     },
     {
       name: "syntax",

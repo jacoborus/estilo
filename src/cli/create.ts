@@ -2,9 +2,9 @@ import {
   basename,
   ensureDirSync,
   green,
-  handlebars,
   Input,
   prompt,
+  render,
   resolve,
 } from "../../deps.ts";
 
@@ -27,7 +27,7 @@ export async function createProject(projectPath: string, noQuestions: boolean) {
   const options = noQuestions
     ? getDefaultConfig(projectPath)
     : await askConfig(projectPath);
-  createBoilerplate(projectPath, options as ProjectOptions);
+  await createBoilerplate(projectPath, options as ProjectOptions);
 }
 
 function getDefaultConfig(projectPath: string): ProjectOptions {
@@ -80,8 +80,8 @@ async function askConfig(projectPath: string) {
   ]);
 }
 
-function createBoilerplate(projectPath: string, options: ProjectOptions) {
-  const estiloStr = renderConfigFile(options);
+async function createBoilerplate(projectPath: string, options: ProjectOptions) {
+  const estiloStr = await renderConfigFile(options);
 
   const estilosFolder = resolve(projectPath, "estilos");
   const syntaxFolder = resolve(estilosFolder, "syntax");
@@ -105,7 +105,9 @@ function createBoilerplate(projectPath: string, options: ProjectOptions) {
   console.log(green("✓  Your project is ready\n"));
 }
 
-function renderConfigFile(options: ProjectOptions) {
-  const render = handlebars.compile(buckets.mustaches["project.hbs"] as string);
-  return render((options as unknown) as List);
+async function renderConfigFile(options: ProjectOptions): Promise<string> {
+  return await render(
+    buckets.mustaches["project.ejs"] as string,
+    (options as unknown) as List,
+  ) as string;
 }

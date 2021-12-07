@@ -1,4 +1,4 @@
-import HandlebarsJS from "https://dev.jspm.io/handlebars@4.7.6";
+export { render } from "https://deno.land/x/eta@v1.12.3/mod.ts";
 
 export { default as version } from "./version.ts";
 
@@ -34,7 +34,3 @@ export {
 } from "https://deno.land/std@0.101.0/fmt/colors.ts";
 
 export { hexterm } from "https://raw.githubusercontent.com/jacoborus/hexterm/master/src/hexterm.ts";
-
-export const handlebars = HandlebarsJS as {
-  compile: (t: string) => (x: Record<string, unknown>) => string;
-};

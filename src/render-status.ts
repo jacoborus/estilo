@@ -1,4 +1,4 @@
-import { handlebars, version } from "../deps.ts";
+import { render, version } from "../deps.ts";
 import { buckets } from "../buckets.ts";
 import { crash } from "./crash.ts";
 
@@ -37,11 +37,11 @@ function parseStatusColors(
   return out;
 }
 
-export function renderStatus(
+export async function renderStatus(
   config: StatusConfig,
   project: Project,
   brand: StatusBrand,
-): string {
+): Promise<string> {
   const palette = project.palettes[config.palette];
   if (!palette) {
     crash("Palette does not exist", {
@@ -69,8 +69,8 @@ export function renderStatus(
     estiloVersion: version,
   };
   const context = Object.assign(c, { info });
-  const render = handlebars.compile(
-    buckets.mustaches[brand + ".hbs"] as string,
-  );
-  return render(context);
+  return await render(
+    buckets.mustaches[brand + ".ejs"] as string,
+    context,
+  ) as string;
 }

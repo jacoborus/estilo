@@ -1,4 +1,4 @@
-import { handlebars, hexterm, version } from "../deps.ts";
+import { hexterm, render, version } from "../deps.ts";
 import { buckets } from "../buckets.ts";
 
 import { crash } from "./crash.ts";
@@ -27,10 +27,10 @@ interface LinkValue {
   link: string;
 }
 
-export function renderColorscheme(
+export async function renderColorscheme(
   config: SchemeConfig,
   project: Project,
-): string {
+): Promise<string> {
   const palette = project.palettes[config.palette];
   if (!palette) {
     crash("Colorscheme palette does not exist", {
@@ -39,10 +39,7 @@ export function renderColorscheme(
     });
   }
 
-  const render = handlebars.compile(
-    buckets.mustaches["colorscheme.hbs"] as string,
-  );
-  return render({
+  return await render(buckets.mustaches["colorscheme.ejs"] as string, {
     info: {
       name: config.name,
       description: config.description,
@@ -54,7 +51,7 @@ export function renderColorscheme(
     },
     stacks: parseSyntaxColors(project.syntax, palette),
     term: parseTermColors(project.terminalSyntax, palette),
-  });
+  }) as string;
 }
 
 function parseTermColors(termSyntax: TerminalSyntax, palette: Palette) {

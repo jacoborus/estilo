@@ -1,0 +1,73 @@
+<% const info = it.info; %>
+""
+" Colorscheme: <% info.name %>
+<% if(it.info.description) { %>" Description: <%= it.info.description %>
+<% } %>
+<% if(it.info.url){ %>" URL: <%= it.info.url %>
+<% } %>
+<% if(it.info.author){ %>" Author: <%= it.info.author %>
+<% } %>
+<% if(it.info.license){%>" License: <%= it.info.license %>
+<% } %>
+""
+
+set background=<%= it.info.background %>
+hi clear
+if exists("syntax_on")
+  syntax reset
+endif
+let g:colors_name="<%= it.info.name %>"
+
+
+let Italic = ""
+if exists('g:<%= it.info.name %>_italic')
+  let Italic = "italic"
+endif
+let g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)
+
+let Bold = ""
+if exists('g:<%= info.name %>_bold')
+  let Bold = "bold"
+endif
+
+let g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)
+
+<% Object.keys(it.stacks).forEach(function (key) {%>
+  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>
+  <% if(link){ %>hi link <%= key %> <%= link%>
+  <%- } else { -%>hi <%= key %>
+    <%- if(fore){ %> guifg=<%fore.hex%> ctermfg=<%= fore.xterm%><% } %>
+    <%- if(back){ %> guibg=<%back.hex%> ctermbg=<%= back.xterm%><% } %>
+    <%- if(ui){ %> gui=<%= ui %> cterm=<%= ui %> <% } %>
+    <%- if(guisp){ %> guisp=<%= guisp[0]%><% } %>
+  <% } %>
+<% }) %>
+
+<% if(it.term.color_0){ %>
+if has('terminal')
+  let g:terminal_ansi_colors = [
+  \ "<%= it.term.color_0 %>",
+  \ "<%= it.term.color_1 %>",
+  \ "<%= it.term.color_2 %>",
+  \ "<%= it.term.color_3 %>",
+  \ "<%= it.term.color_4 %>",
+  \ "<%= it.term.color_5 %>",
+  \ "<%= it.term.color_6 %>",
+  \ "<%= it.term.color_7 %>",
+  \ "<%= it.term.color_8 %>",
+  \ "<%= it.term.color_9 %>",
+  \ "<%= it.term.color_10 %>",
+  \ "<%= it.term.color_11 %>",
+  \ "<%= it.term.color_12 %>",
+  \ "<%= it.term.color_13 %>",
+  \ "<%= it.term.color_14 %>",
+  \ "<%= it.term.color_15 %>"
+  \ ]
+endif
+
+if has('nvim')
+<% Object.keys(it.term).forEach(function (key) { %>
+  let g:terminal_<%= key %> = "<%= it.term[key] %>"
+<% }) %>
+endif
+<% } %>

@@ -1,0 +1,56 @@
+<% const info = it.info; %>
+""
+" Airline_theme: <%= info.name %>
+
+<% if(info.description){ %>" Description: <%= info.description %>
+<% } %>
+
+<% if(info.url){%>" URL: <%= info.url %>
+<% } %>
+
+<% if(info.author){%>" Author: <%= info.author %>
+<% } %>
+
+<% if(info.license){%>" License: <%= info.license %>
+<% } %>
+
+""
+
+let g:airline#themes#<%= info.name %>#palette = {}
+
+let s:normal1 = [ "<%= it.normal1.fg.hex %>", "<%= it.normal1.bg.hex %>", <%= it.normal1.fg.xterm %>, <%= it.normal1.bg.xterm %> ]
+let s:normal2 = [ "<%= it.normal2.fg.hex %>", "<%= it.normal2.bg.hex %>", <%= it.normal2.fg.xterm %>, <%= it.normal2.bg.xterm %> ]
+let s:normal3 = [ "<%= it.normal3.fg.hex %>", "<%= it.normal3.bg.hex %>", <%= it.normal3.fg.xterm %>, <%= it.normal3.bg.xterm %> ]
+let g:airline#themes#<%= it.info.name %>#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)
+
+let s:insert1 = [ "<%= it.insert1.fg.hex %>", "<%= it.insert1.bg.hex %>", <%= it.insert1.fg.xterm %>, <%= it.insert1.bg.xterm %> ]
+let s:insert2 = [ "<%= it.insert2.fg.hex %>", "<%= it.insert2.bg.hex %>", <%= it.insert2.fg.xterm %>, <%= it.insert2.bg.xterm %> ]
+let s:insert3 = [ "<%= it.insert3.fg.hex %>", "<%= it.insert3.bg.hex %>", <%= it.insert3.fg.xterm %>, <%= it.insert3.bg.xterm %> ]
+let g:airline#themes#<%= it.info.name %>#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)
+
+let s:replace1 = [ "<%= it.replace1.fg.hex %>", "<%= it.replace1.bg.hex %>", <%= it.replace1.fg.xterm %>, <%= it.replace1.bg.xterm %> ]
+let s:replace2 = [ "<%= it.replace2.fg.hex %>", "<%= it.replace2.bg.hex %>", <%= it.replace2.fg.xterm %>, <%= it.replace2.bg.xterm %> ]
+let s:replace3 = [ "<%= it.replace3.fg.hex %>", "<%= it.replace3.bg.hex %>", <%= it.replace3.fg.xterm %>, <%= it.replace3.bg.xterm %> ]
+let g:airline#themes#<%= it.info.name %>#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)
+
+let s:visual1 = [ "<%= it.visual1.fg.hex %>", "<%= it.visual1.bg.hex %>", <%= it.visual1.fg.xterm %>, <%= it.visual1.bg.xterm %> ]
+let s:visual2 = [ "<%= it.visual2.fg.hex %>", "<%= it.visual2.bg.hex %>", <%= it.visual2.fg.xterm %>, <%= it.visual2.bg.xterm %> ]
+let s:visual3 = [ "<%= it.visual3.fg.hex %>", "<%= it.visual3.bg.hex %>", <%= it.visual3.fg.xterm %>, <%= it.visual3.bg.xterm %> ]
+let g:airline#themes#<%= it.info.name %>#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)
+
+let s:inactive1 = [ "<%= it.inactive1.fg.hex %>", "<%= it.inactive1.bg.hex %>", <%= it.inactive1.fg.xterm %>, <%= it.inactive1.bg.xterm %> ]
+let s:inactive2 = [ "<%= it.inactive2.fg.hex %>", "<%= it.inactive2.bg.hex %>", <%= it.inactive2.fg.xterm %>, <%= it.inactive2.bg.xterm %> ]
+let s:inactive3 = [ "<%= it.inactive3.fg.hex %>", "<%= it.inactive3.bg.hex %>", <%= it.inactive3.fg.xterm %>, <%= it.inactive3.bg.xterm %> ]
+let g:airline#themes#<%= it.info.name %>#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)
+
+<% if(it.ctrlp1){ %>
+if !get(g:, 'loaded_ctrlp', 0)
+  finish
+endif
+
+let s:CP1 = [ "<%= it.ctrlp1.fg.hex %>", "<%= it.ctrlp1.bg.hex %>", <%= it.ctrlp1.fg.xterm %>, <%= it.ctrlp1.bg.xterm %> ]
+let s:CP2 = [ "<%= it.ctrlp2.fg.hex %>", "<%= it.ctrlp2.bg.hex %>", <%= it.ctrlp2.fg.xterm %>, <%= it.ctrlp2.bg.xterm %> ]
+let s:CP3 = [ "<%= it.ctrlp3.fg.hex %>", "<%= it.ctrlp3.bg.hex %>", <%= it.ctrlp3.fg.xterm %>, <%= it.ctrlp3.bg.xterm %> ]
+
+let g:airline#themes#<%= it.info.name %>#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)
+<% } %>
