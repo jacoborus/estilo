@@ -39,7 +39,7 @@ let g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)
     <%- if(fore){ %> guifg=<%fore.hex%> ctermfg=<%= fore.xterm%><% } %>
     <%- if(back){ %> guibg=<%back.hex%> ctermbg=<%= back.xterm%><% } %>
     <%- if(ui){ %> gui=<%= ui %> cterm=<%= ui %> <% } %>
-    <%- if(guisp){ %> guisp=<%= guisp[0]%><% } %>
+    <%- if(guisp){ %> guisp=<%= guisp%><% } %>
   <% } %>
 <% }) %>
 
