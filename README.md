@@ -20,7 +20,7 @@ please check out [`node` branch](https://github.com/jacoborus/estilo/tree/node).
 ### Deno users
 
 ```sh
-deno install --allow-read --allow-write -n estilo https://denopkg.com/jacoborus/estilo/dist/estilo.js
+deno install --unstable --allow-read --allow-write -n estilo https://denopkg.com/jacoborus/estilo/dist/estilo.js
 ```
 
 ### Other plaforms
