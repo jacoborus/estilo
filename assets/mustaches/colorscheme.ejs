@@ -34,13 +34,16 @@ let g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)
 
 <% Object.keys(it.stacks).forEach(function (key) {%>
   <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>
-  <% if(link){ %>hi link <%= key %> <%= link%>
-  <%- } else { -%>hi <%= key %>
-    <%- if(fore){ %> guifg=<%fore.hex%> ctermfg=<%= fore.xterm%><% } %>
-    <%- if(back){ %> guibg=<%back.hex%> ctermbg=<%= back.xterm%><% } %>
-    <%- if(ui){ %> gui=<%= ui %> cterm=<%= ui %> <% } %>
-    <%- if(guisp){ %> guisp=<%= guisp%><% } %>
-  <% } %>
+<%- if(link){ -%>
+hi link <%=key%> <%=link%>
+<%- } else { -%>
+hi <%=key%>
+<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>
+<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>
+<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>
+<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>
+<% } %>
+
 <% }) %>
 
 <% if(it.term.color_0){ %>
