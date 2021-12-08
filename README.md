@@ -8,8 +8,8 @@ lightline.
 :fire: **HEADS UP!**
 
 You're currently looking at Estilo 2 branch (beta version). If you're looking
-for Estilo 1,
-please check out [`node` branch](https://github.com/jacoborus/estilo/tree/node).
+for Estilo 1, please check out
+[`node` branch](https://github.com/jacoborus/estilo/tree/node).
 
 ---
 
@@ -87,8 +87,8 @@ Estilo is written in pure Typescript, so you need
 
 ### Bundle and compile
 
-Estilo needs to be bundled to a single file before being compiled.
-This command will build Estilo scripts and its assets in `dist/estilo.js`
+Estilo needs to be bundled to a single file before being compiled. This command
+will build Estilo scripts and its assets in `dist/estilo.js`
 
 ```sh
 deno run --unstable --allow-read --allow-write --allow-net bundler.ts

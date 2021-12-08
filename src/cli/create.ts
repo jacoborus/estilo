@@ -10,7 +10,7 @@ import {
 
 import { List } from "../common.ts";
 import { installTemplates } from "./install-templates.ts";
-import { buckets } from "../../buckets.ts";
+import buckets from "../buckets.ts";
 
 interface ProjectOptions {
   name: string;

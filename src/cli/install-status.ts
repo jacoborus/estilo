@@ -7,7 +7,7 @@ import {
   ValidateResult,
 } from "../../deps.ts";
 import { StatusBrand } from "../common.ts";
-import { buckets } from "../../buckets.ts";
+import buckets from "../buckets.ts";
 
 export async function installStatus(
   projectPath: string,

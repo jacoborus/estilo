@@ -1,5 +1,5 @@
 import { green, resolve } from "../../deps.ts";
-import { buckets } from "../../buckets.ts";
+import buckets from "../buckets.ts";
 
 const tick = green("✓");
 
