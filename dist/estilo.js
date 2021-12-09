@@ -331,8 +331,8 @@ function getConfig(override, baseConfig) {
     }
     return res;
 }
-function compile(str, config1) {
-    const options = getConfig(config1 || {
+function compile(str, config) {
+    const options = getConfig(config || {
     });
     const ctor = options.async ? getAsyncFunctionConstructor() : Function;
     try {
@@ -382,7 +382,7 @@ function isPathSeparator(code) {
 function isWindowsDeviceRoot(code) {
     return code >= 97 && code <= 122 || code >= 65 && code <= 90;
 }
-function normalizeString(path, allowAboveRoot, separator, isPathSeparator1) {
+function normalizeString(path, allowAboveRoot, separator, isPathSeparator) {
     let res = "";
     let lastSegmentLength = 0;
     let lastSlash = -1;
@@ -390,9 +390,9 @@ function normalizeString(path, allowAboveRoot, separator, isPathSeparator1) {
     let code;
     for(let i = 0, len = path.length; i <= len; ++i){
         if (i < len) code = path.charCodeAt(i);
-        else if (isPathSeparator1(code)) break;
+        else if (isPathSeparator(code)) break;
         else code = CHAR_FORWARD_SLASH;
-        if (isPathSeparator1(code)) {
+        if (isPathSeparator(code)) {
             if (lastSlash === i - 1 || dots === 1) {
             } else if (lastSlash !== i - 1 && dots === 2) {
                 if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== 46 || res.charCodeAt(res.length - 2) !== 46) {
@@ -1086,25 +1086,23 @@ function toFileUrl(path) {
     }
     return url;
 }
-const mod = function() {
-    return {
-        sep: sep,
-        delimiter: delimiter,
-        resolve: resolve6,
-        normalize: normalize,
-        isAbsolute: isAbsolute,
-        join: join,
-        relative: relative,
-        toNamespacedPath: toNamespacedPath,
-        dirname: dirname,
-        basename: basename,
-        extname: extname,
-        format: format,
-        parse: parse1,
-        fromFileUrl: fromFileUrl,
-        toFileUrl: toFileUrl
-    };
-}();
+const mod = {
+    sep: sep,
+    delimiter: delimiter,
+    resolve: resolve6,
+    normalize: normalize,
+    isAbsolute: isAbsolute,
+    join: join,
+    relative: relative,
+    toNamespacedPath: toNamespacedPath,
+    dirname: dirname,
+    basename: basename,
+    extname: extname,
+    format: format,
+    parse: parse1,
+    fromFileUrl: fromFileUrl,
+    toFileUrl: toFileUrl
+};
 const sep1 = "/";
 const delimiter1 = ":";
 function resolve1(...pathSegments) {
@@ -1136,12 +1134,12 @@ function resolve1(...pathSegments) {
 function normalize1(path) {
     assertPath(path);
     if (path.length === 0) return ".";
-    const isAbsolute1 = path.charCodeAt(0) === 47;
+    const isAbsolute = path.charCodeAt(0) === 47;
     const trailingSeparator = path.charCodeAt(path.length - 1) === 47;
-    path = normalizeString(path, !isAbsolute1, "/", isPosixPathSeparator);
-    if (path.length === 0 && !isAbsolute1) path = ".";
+    path = normalizeString(path, !isAbsolute, "/", isPosixPathSeparator);
+    if (path.length === 0 && !isAbsolute) path = ".";
     if (path.length > 0 && trailingSeparator) path += "/";
-    if (isAbsolute1) return `/${path}`;
+    if (isAbsolute) return `/${path}`;
     return path;
 }
 function isAbsolute1(path) {
@@ -1347,9 +1345,9 @@ function parse2(path) {
         name: ""
     };
     if (path.length === 0) return ret;
-    const isAbsolute2 = path.charCodeAt(0) === 47;
+    const isAbsolute = path.charCodeAt(0) === 47;
     let start;
-    if (isAbsolute2) {
+    if (isAbsolute) {
         ret.root = "/";
         start = 1;
     } else {
@@ -1383,14 +1381,14 @@ function parse2(path) {
     }
     if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
         if (end !== -1) {
-            if (startPart === 0 && isAbsolute2) {
+            if (startPart === 0 && isAbsolute) {
                 ret.base = ret.name = path.slice(1, end);
             } else {
                 ret.base = ret.name = path.slice(startPart, end);
             }
         }
     } else {
-        if (startPart === 0 && isAbsolute2) {
+        if (startPart === 0 && isAbsolute) {
             ret.name = path.slice(1, startDot);
             ret.base = path.slice(1, end);
         } else {
@@ -1400,7 +1398,7 @@ function parse2(path) {
         ret.ext = path.slice(startDot, end);
     }
     if (startPart > 0) ret.dir = path.slice(0, startPart - 1);
-    else if (isAbsolute2) ret.dir = "/";
+    else if (isAbsolute) ret.dir = "/";
     return ret;
 }
 function fromFileUrl1(url) {
@@ -1418,36 +1416,34 @@ function toFileUrl1(path) {
     url.pathname = encodeWhitespace(path.replace(/%/g, "%25").replace(/\\/g, "%5C"));
     return url;
 }
-const mod1 = function() {
-    return {
-        sep: sep1,
-        delimiter: delimiter1,
-        resolve: resolve1,
-        normalize: normalize1,
-        isAbsolute: isAbsolute1,
-        join: join1,
-        relative: relative1,
-        toNamespacedPath: toNamespacedPath1,
-        dirname: dirname1,
-        basename: basename1,
-        extname: extname1,
-        format: format1,
-        parse: parse2,
-        fromFileUrl: fromFileUrl1,
-        toFileUrl: toFileUrl1
-    };
-}();
+const mod1 = {
+    sep: sep1,
+    delimiter: delimiter1,
+    resolve: resolve1,
+    normalize: normalize1,
+    isAbsolute: isAbsolute1,
+    join: join1,
+    relative: relative1,
+    toNamespacedPath: toNamespacedPath1,
+    dirname: dirname1,
+    basename: basename1,
+    extname: extname1,
+    format: format1,
+    parse: parse2,
+    fromFileUrl: fromFileUrl1,
+    toFileUrl: toFileUrl1
+};
 const SEP = isWindows ? "\\" : "/";
 const SEP_PATTERN = isWindows ? /[\\/]+/ : /\/+/;
-function common(paths, sep2 = SEP) {
+function common(paths, sep = SEP) {
     const [first = "", ...remaining] = paths;
     if (first === "" || remaining.length === 0) {
-        return first.substring(0, first.lastIndexOf(sep2) + 1);
+        return first.substring(0, first.lastIndexOf(sep) + 1);
     }
-    const parts = first.split(sep2);
+    const parts = first.split(sep);
     let endOfPrefix = parts.length;
     for (const path of remaining){
-        const compare = path.split(sep2);
+        const compare = path.split(sep);
         for(let i = 0; i < endOfPrefix; i++){
             if (compare[i] !== parts[i]) {
                 endOfPrefix = i;
@@ -1457,11 +1453,11 @@ function common(paths, sep2 = SEP) {
             return "";
         }
     }
-    const prefix = parts.slice(0, endOfPrefix).join(sep2);
-    return prefix.endsWith(sep2) ? prefix : `${prefix}${sep2}`;
+    const prefix = parts.slice(0, endOfPrefix).join(sep);
+    return prefix.endsWith(sep) ? prefix : `${prefix}${sep}`;
 }
-const path3 = isWindows ? mod : mod1;
-const { join: join2 , normalize: normalize2  } = path3;
+const path = isWindows ? mod : mod1;
+const { join: join2 , normalize: normalize2  } = path;
 const regExpEscapeChars = [
     "!",
     "$",
@@ -1488,7 +1484,7 @@ function globToRegExp(glob, { extended =true , globstar: globstarOption = true ,
     if (glob == "") {
         return /(?!)/;
     }
-    const sep2 = os == "windows" ? "(?:\\\\|/)+" : "/+";
+    const sep = os == "windows" ? "(?:\\\\|/)+" : "/+";
     const sepMaybe = os == "windows" ? "(?:\\\\|/)*" : "/*";
     const seps = os == "windows" ? [
         "\\",
@@ -1669,7 +1665,7 @@ function globToRegExp(glob, { extended =true , globstar: globstarOption = true ,
         }
         regExpString += segment;
         if (!endsWithSep) {
-            regExpString += i < glob.length ? sep2 : sepMaybe;
+            regExpString += i < glob.length ? sep : sepMaybe;
             endsWithSep = true;
         }
         while(seps.includes(glob[i]))i++;
@@ -1727,10 +1723,10 @@ function joinGlobs(globs, { extended =false , globstar =false  } = {
     if (globs.length === 0) return ".";
     let joined;
     for (const glob of globs){
-        const path1 = glob;
-        if (path1.length > 0) {
-            if (!joined) joined = path1;
-            else joined += `${SEP}${path1}`;
+        const path = glob;
+        if (path.length > 0) {
+            if (!joined) joined = path;
+            else joined += `${SEP}${path}`;
         }
     }
     if (!joined) return ".";
@@ -1741,47 +1737,45 @@ function joinGlobs(globs, { extended =false , globstar =false  } = {
 }
 const path1 = isWindows ? mod : mod1;
 const { basename: basename2 , delimiter: delimiter2 , dirname: dirname2 , extname: extname2 , format: format2 , fromFileUrl: fromFileUrl2 , isAbsolute: isAbsolute2 , join: join3 , normalize: normalize3 , parse: parse3 , relative: relative2 , resolve: resolve2 , sep: sep2 , toFileUrl: toFileUrl2 , toNamespacedPath: toNamespacedPath2 ,  } = path1;
-const mod2 = function() {
-    return {
-        SEP: SEP,
-        SEP_PATTERN: SEP_PATTERN,
-        win32: mod,
-        posix: mod1,
-        basename: basename2,
-        delimiter: delimiter2,
-        dirname: dirname2,
-        extname: extname2,
-        format: format2,
-        fromFileUrl: fromFileUrl2,
-        isAbsolute: isAbsolute2,
-        join: join3,
-        normalize: normalize3,
-        parse: parse3,
-        relative: relative2,
-        resolve: resolve2,
-        sep: sep2,
-        toFileUrl: toFileUrl2,
-        toNamespacedPath: toNamespacedPath2,
-        common,
-        globToRegExp,
-        isGlob,
-        normalizeGlob,
-        joinGlobs
-    };
-}();
+const mod2 = {
+    SEP: SEP,
+    SEP_PATTERN: SEP_PATTERN,
+    win32: mod,
+    posix: mod1,
+    basename: basename2,
+    delimiter: delimiter2,
+    dirname: dirname2,
+    extname: extname2,
+    format: format2,
+    fromFileUrl: fromFileUrl2,
+    isAbsolute: isAbsolute2,
+    join: join3,
+    normalize: normalize3,
+    parse: parse3,
+    relative: relative2,
+    resolve: resolve2,
+    sep: sep2,
+    toFileUrl: toFileUrl2,
+    toNamespacedPath: toNamespacedPath2,
+    common,
+    globToRegExp,
+    isGlob,
+    normalizeGlob,
+    joinGlobs
+};
 const readFileSync = Deno.readTextFileSync;
 const _BOM = /^\uFEFF/;
 function getWholeFilePath(name, parentfile, isDirectory) {
     const includePath = mod2.resolve(isDirectory ? parentfile : mod2.dirname(parentfile), name) + (mod2.extname(name) ? "" : ".eta");
     return includePath;
 }
-function getPath(path2, options) {
+function getPath(path, options) {
     let includePath = false;
     const views = options.views;
     let searchedPaths = [];
     const pathOptions = JSON.stringify({
         filename: options.filename,
-        path: path2,
+        path: path,
         root: options.root,
         views: options.views
     });
@@ -1793,16 +1787,16 @@ function getPath(path2, options) {
             searchedPaths.push(pathSearched);
         }
     }
-    function searchViews(views1, path3) {
+    function searchViews(views, path) {
         let filePath;
-        if (Array.isArray(views1) && views1.some(function(v) {
-            filePath = getWholeFilePath(path3, v, true);
+        if (Array.isArray(views) && views.some(function(v) {
+            filePath = getWholeFilePath(path, v, true);
             addPathToSearched(filePath);
             return existsSync(filePath);
         })) {
             return filePath;
-        } else if (typeof views1 === "string") {
-            filePath = getWholeFilePath(path3, views1, true);
+        } else if (typeof views === "string") {
+            filePath = getWholeFilePath(path, views, true);
             addPathToSearched(filePath);
             if (existsSync(filePath)) {
                 return filePath;
@@ -1810,9 +1804,9 @@ function getPath(path2, options) {
         }
         return false;
     }
-    const match = /^[A-Za-z]+:\\|^\//.exec(path2);
+    const match = /^[A-Za-z]+:\\|^\//.exec(path);
     if (match && match.length) {
-        const formattedPath = path2.replace(/^\/*/, "");
+        const formattedPath = path.replace(/^\/*/, "");
         includePath = searchViews(views, formattedPath);
         if (!includePath) {
             const pathFromRoot = getWholeFilePath(formattedPath, options.root || "/", true);
@@ -1821,17 +1815,17 @@ function getPath(path2, options) {
         }
     } else {
         if (options.filename) {
-            const filePath = getWholeFilePath(path2, options.filename);
+            const filePath = getWholeFilePath(path, options.filename);
             addPathToSearched(filePath);
             if (existsSync(filePath)) {
                 includePath = filePath;
             }
         }
         if (!includePath) {
-            includePath = searchViews(views, path2);
+            includePath = searchViews(views, path);
         }
         if (!includePath) {
-            throw EtaErr('Could not find the template "' + path2 + '". Paths tried: ' + searchedPaths);
+            throw EtaErr('Could not find the template "' + path + '". Paths tried: ' + searchedPaths);
         }
     }
     if (options.cache && options.filepathCache) {
@@ -1847,12 +1841,12 @@ function readFile(filePath) {
     }
 }
 function loadFile(filePath, options, noCache) {
-    const config1 = getConfig(options);
+    const config = getConfig(options);
     const template = readFile(filePath);
     try {
-        const compiledTemplate = compile(template, config1);
+        const compiledTemplate = compile(template, config);
         if (!noCache) {
-            config1.templates.define(config1.filename, compiledTemplate);
+            config.templates.define(config.filename, compiledTemplate);
         }
         return compiledTemplate;
     } catch (e) {
@@ -1870,17 +1864,17 @@ function handleCache(options) {
     }
     return loadFile(filename, options, true);
 }
-function includeFile(path2, options) {
+function includeFile(path, options) {
     const newFileOptions = getConfig({
-        filename: getPath(path2, options)
+        filename: getPath(path, options)
     }, options);
     return [
         handleCache(newFileOptions),
         newFileOptions
     ];
 }
-function includeFileHelper(path2, data) {
-    const templateAndConfig = includeFile(path2, this);
+function includeFileHelper(path, data) {
+    const templateAndConfig = includeFile(path, this);
     return templateAndConfig[0](data, templateAndConfig[1]);
 }
 function handleCache1(template, options) {
@@ -1893,8 +1887,8 @@ function handleCache1(template, options) {
     }
     return templateFunc;
 }
-function render(template, data, config1, cb) {
-    const options = getConfig(config1 || {
+function render(template, data, config, cb) {
+    const options = getConfig(config || {
     });
     if (options.async) {
         if (cb) {
@@ -1906,9 +1900,9 @@ function render(template, data, config1, cb) {
             }
         } else {
             if (typeof promiseImpl === "function") {
-                return new promiseImpl(function(resolve3, reject) {
+                return new promiseImpl(function(resolve, reject) {
                     try {
-                        resolve3(handleCache1(template, options)(data, options));
+                        resolve(handleCache1(template, options)(data, options));
                     } catch (err) {
                         reject(err);
                     }
@@ -1924,7 +1918,7 @@ function render(template, data, config1, cb) {
 config.includeFile = includeFileHelper;
 config.filepathCache = {
 };
-const __default = "2.0.0-beta.2";
+const __default = "2.0.0-beta.3";
 const osType1 = (()=>{
     const { Deno  } = globalThis;
     if (typeof Deno?.build?.os === "string") {
@@ -1938,9 +1932,9 @@ const osType1 = (()=>{
 })();
 const isWindows1 = osType1 === "windows";
 const CHAR_FORWARD_SLASH1 = 47;
-function assertPath1(path2) {
-    if (typeof path2 !== "string") {
-        throw new TypeError(`Path must be a string. Received ${JSON.stringify(path2)}`);
+function assertPath1(path) {
+    if (typeof path !== "string") {
+        throw new TypeError(`Path must be a string. Received ${JSON.stringify(path)}`);
     }
 }
 function isPosixPathSeparator1(code) {
@@ -1952,17 +1946,17 @@ function isPathSeparator1(code) {
 function isWindowsDeviceRoot1(code) {
     return code >= 97 && code <= 122 || code >= 65 && code <= 90;
 }
-function normalizeString1(path2, allowAboveRoot, separator, isPathSeparator2) {
+function normalizeString1(path, allowAboveRoot, separator, isPathSeparator) {
     let res = "";
     let lastSegmentLength = 0;
     let lastSlash = -1;
     let dots = 0;
     let code;
-    for(let i = 0, len = path2.length; i <= len; ++i){
-        if (i < len) code = path2.charCodeAt(i);
-        else if (isPathSeparator2(code)) break;
+    for(let i = 0, len = path.length; i <= len; ++i){
+        if (i < len) code = path.charCodeAt(i);
+        else if (isPathSeparator(code)) break;
         else code = CHAR_FORWARD_SLASH1;
-        if (isPathSeparator2(code)) {
+        if (isPathSeparator(code)) {
             if (lastSlash === i - 1 || dots === 1) {
             } else if (lastSlash !== i - 1 && dots === 2) {
                 if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== 46 || res.charCodeAt(res.length - 2) !== 46) {
@@ -1992,8 +1986,8 @@ function normalizeString1(path2, allowAboveRoot, separator, isPathSeparator2) {
                     lastSegmentLength = 2;
                 }
             } else {
-                if (res.length > 0) res += separator + path2.slice(lastSlash + 1, i);
-                else res = path2.slice(lastSlash + 1, i);
+                if (res.length > 0) res += separator + path.slice(lastSlash + 1, i);
+                else res = path.slice(lastSlash + 1, i);
                 lastSegmentLength = i - lastSlash - 1;
             }
             lastSlash = i;
@@ -2006,12 +2000,12 @@ function normalizeString1(path2, allowAboveRoot, separator, isPathSeparator2) {
     }
     return res;
 }
-function _format1(sep3, pathObject) {
+function _format1(sep, pathObject) {
     const dir = pathObject.dir || pathObject.root;
     const base = pathObject.base || (pathObject.name || "") + (pathObject.ext || "");
     if (!dir) return base;
     if (dir === pathObject.root) return dir + base;
-    return dir + sep3 + base;
+    return dir + sep + base;
 }
 const WHITESPACE_ENCODINGS1 = {
     "\u0009": "%09",
@@ -2027,8 +2021,8 @@ function encodeWhitespace1(string) {
     });
 }
 class DenoStdInternalError1 extends Error {
-    constructor(message1){
-        super(message1);
+    constructor(message){
+        super(message);
         this.name = "DenoStdInternalError";
     }
 }
@@ -2044,56 +2038,56 @@ function resolve3(...pathSegments) {
     let resolvedTail = "";
     let resolvedAbsolute = false;
     for(let i = pathSegments.length - 1; i >= -1; i--){
-        let path2;
+        let path;
         const { Deno  } = globalThis;
         if (i >= 0) {
-            path2 = pathSegments[i];
+            path = pathSegments[i];
         } else if (!resolvedDevice) {
             if (typeof Deno?.cwd !== "function") {
                 throw new TypeError("Resolved a drive-letter-less path without a CWD.");
             }
-            path2 = Deno.cwd();
+            path = Deno.cwd();
         } else {
             if (typeof Deno?.env?.get !== "function" || typeof Deno?.cwd !== "function") {
                 throw new TypeError("Resolved a relative path without a CWD.");
             }
-            path2 = Deno.env.get(`=${resolvedDevice}`) || Deno.cwd();
-            if (path2 === undefined || path2.slice(0, 3).toLowerCase() !== `${resolvedDevice.toLowerCase()}\\`) {
-                path2 = `${resolvedDevice}\\`;
+            path = Deno.env.get(`=${resolvedDevice}`) || Deno.cwd();
+            if (path === undefined || path.slice(0, 3).toLowerCase() !== `${resolvedDevice.toLowerCase()}\\`) {
+                path = `${resolvedDevice}\\`;
             }
         }
-        assertPath1(path2);
-        const len = path2.length;
+        assertPath1(path);
+        const len = path.length;
         if (len === 0) continue;
         let rootEnd = 0;
         let device = "";
-        let isAbsolute3 = false;
-        const code = path2.charCodeAt(0);
+        let isAbsolute = false;
+        const code = path.charCodeAt(0);
         if (len > 1) {
             if (isPathSeparator1(code)) {
-                isAbsolute3 = true;
-                if (isPathSeparator1(path2.charCodeAt(1))) {
+                isAbsolute = true;
+                if (isPathSeparator1(path.charCodeAt(1))) {
                     let j = 2;
                     let last = j;
                     for(; j < len; ++j){
-                        if (isPathSeparator1(path2.charCodeAt(j))) break;
+                        if (isPathSeparator1(path.charCodeAt(j))) break;
                     }
                     if (j < len && j !== last) {
-                        const firstPart = path2.slice(last, j);
+                        const firstPart = path.slice(last, j);
                         last = j;
                         for(; j < len; ++j){
-                            if (!isPathSeparator1(path2.charCodeAt(j))) break;
+                            if (!isPathSeparator1(path.charCodeAt(j))) break;
                         }
                         if (j < len && j !== last) {
                             last = j;
                             for(; j < len; ++j){
-                                if (isPathSeparator1(path2.charCodeAt(j))) break;
+                                if (isPathSeparator1(path.charCodeAt(j))) break;
                             }
                             if (j === len) {
-                                device = `\\\\${firstPart}\\${path2.slice(last)}`;
+                                device = `\\\\${firstPart}\\${path.slice(last)}`;
                                 rootEnd = j;
                             } else if (j !== last) {
-                                device = `\\\\${firstPart}\\${path2.slice(last, j)}`;
+                                device = `\\\\${firstPart}\\${path.slice(last, j)}`;
                                 rootEnd = j;
                             }
                         }
@@ -2102,12 +2096,12 @@ function resolve3(...pathSegments) {
                     rootEnd = 1;
                 }
             } else if (isWindowsDeviceRoot1(code)) {
-                if (path2.charCodeAt(1) === 58) {
-                    device = path2.slice(0, 2);
+                if (path.charCodeAt(1) === 58) {
+                    device = path.slice(0, 2);
                     rootEnd = 2;
                     if (len > 2) {
-                        if (isPathSeparator1(path2.charCodeAt(2))) {
-                            isAbsolute3 = true;
+                        if (isPathSeparator1(path.charCodeAt(2))) {
+                            isAbsolute = true;
                             rootEnd = 3;
                         }
                     }
@@ -2115,7 +2109,7 @@ function resolve3(...pathSegments) {
             }
         } else if (isPathSeparator1(code)) {
             rootEnd = 1;
-            isAbsolute3 = true;
+            isAbsolute = true;
         }
         if (device.length > 0 && resolvedDevice.length > 0 && device.toLowerCase() !== resolvedDevice.toLowerCase()) {
             continue;
@@ -2124,46 +2118,46 @@ function resolve3(...pathSegments) {
             resolvedDevice = device;
         }
         if (!resolvedAbsolute) {
-            resolvedTail = `${path2.slice(rootEnd)}\\${resolvedTail}`;
-            resolvedAbsolute = isAbsolute3;
+            resolvedTail = `${path.slice(rootEnd)}\\${resolvedTail}`;
+            resolvedAbsolute = isAbsolute;
         }
         if (resolvedAbsolute && resolvedDevice.length > 0) break;
     }
     resolvedTail = normalizeString1(resolvedTail, !resolvedAbsolute, "\\", isPathSeparator1);
     return resolvedDevice + (resolvedAbsolute ? "\\" : "") + resolvedTail || ".";
 }
-function normalize4(path2) {
-    assertPath1(path2);
-    const len = path2.length;
+function normalize4(path) {
+    assertPath1(path);
+    const len = path.length;
     if (len === 0) return ".";
     let rootEnd = 0;
     let device;
-    let isAbsolute3 = false;
-    const code = path2.charCodeAt(0);
+    let isAbsolute = false;
+    const code = path.charCodeAt(0);
     if (len > 1) {
         if (isPathSeparator1(code)) {
-            isAbsolute3 = true;
-            if (isPathSeparator1(path2.charCodeAt(1))) {
+            isAbsolute = true;
+            if (isPathSeparator1(path.charCodeAt(1))) {
                 let j = 2;
                 let last = j;
                 for(; j < len; ++j){
-                    if (isPathSeparator1(path2.charCodeAt(j))) break;
+                    if (isPathSeparator1(path.charCodeAt(j))) break;
                 }
                 if (j < len && j !== last) {
-                    const firstPart = path2.slice(last, j);
+                    const firstPart = path.slice(last, j);
                     last = j;
                     for(; j < len; ++j){
-                        if (!isPathSeparator1(path2.charCodeAt(j))) break;
+                        if (!isPathSeparator1(path.charCodeAt(j))) break;
                     }
                     if (j < len && j !== last) {
                         last = j;
                         for(; j < len; ++j){
-                            if (isPathSeparator1(path2.charCodeAt(j))) break;
+                            if (isPathSeparator1(path.charCodeAt(j))) break;
                         }
                         if (j === len) {
-                            return `\\\\${firstPart}\\${path2.slice(last)}\\`;
+                            return `\\\\${firstPart}\\${path.slice(last)}\\`;
                         } else if (j !== last) {
-                            device = `\\\\${firstPart}\\${path2.slice(last, j)}`;
+                            device = `\\\\${firstPart}\\${path.slice(last, j)}`;
                             rootEnd = j;
                         }
                     }
@@ -2172,12 +2166,12 @@ function normalize4(path2) {
                 rootEnd = 1;
             }
         } else if (isWindowsDeviceRoot1(code)) {
-            if (path2.charCodeAt(1) === 58) {
-                device = path2.slice(0, 2);
+            if (path.charCodeAt(1) === 58) {
+                device = path.slice(0, 2);
                 rootEnd = 2;
                 if (len > 2) {
-                    if (isPathSeparator1(path2.charCodeAt(2))) {
-                        isAbsolute3 = true;
+                    if (isPathSeparator1(path.charCodeAt(2))) {
+                        isAbsolute = true;
                         rootEnd = 3;
                     }
                 }
@@ -2188,16 +2182,16 @@ function normalize4(path2) {
     }
     let tail;
     if (rootEnd < len) {
-        tail = normalizeString1(path2.slice(rootEnd), !isAbsolute3, "\\", isPathSeparator1);
+        tail = normalizeString1(path.slice(rootEnd), !isAbsolute, "\\", isPathSeparator1);
     } else {
         tail = "";
     }
-    if (tail.length === 0 && !isAbsolute3) tail = ".";
-    if (tail.length > 0 && isPathSeparator1(path2.charCodeAt(len - 1))) {
+    if (tail.length === 0 && !isAbsolute) tail = ".";
+    if (tail.length > 0 && isPathSeparator1(path.charCodeAt(len - 1))) {
         tail += "\\";
     }
     if (device === undefined) {
-        if (isAbsolute3) {
+        if (isAbsolute) {
             if (tail.length > 0) return `\\${tail}`;
             else return "\\";
         } else if (tail.length > 0) {
@@ -2205,7 +2199,7 @@ function normalize4(path2) {
         } else {
             return "";
         }
-    } else if (isAbsolute3) {
+    } else if (isAbsolute) {
         if (tail.length > 0) return `${device}\\${tail}`;
         else return `${device}\\`;
     } else if (tail.length > 0) {
@@ -2214,16 +2208,16 @@ function normalize4(path2) {
         return device;
     }
 }
-function isAbsolute3(path2) {
-    assertPath1(path2);
-    const len = path2.length;
+function isAbsolute3(path) {
+    assertPath1(path);
+    const len = path.length;
     if (len === 0) return false;
-    const code = path2.charCodeAt(0);
+    const code = path.charCodeAt(0);
     if (isPathSeparator1(code)) {
         return true;
     } else if (isWindowsDeviceRoot1(code)) {
-        if (len > 2 && path2.charCodeAt(1) === 58) {
-            if (isPathSeparator1(path2.charCodeAt(2))) return true;
+        if (len > 2 && path.charCodeAt(1) === 58) {
+            if (isPathSeparator1(path.charCodeAt(2))) return true;
         }
     }
     return false;
@@ -2234,11 +2228,11 @@ function join4(...paths) {
     let joined;
     let firstPart = null;
     for(let i = 0; i < pathsCount; ++i){
-        const path2 = paths[i];
-        assertPath1(path2);
-        if (path2.length > 0) {
-            if (joined === undefined) joined = firstPart = path2;
-            else joined += `\\${path2}`;
+        const path = paths[i];
+        assertPath1(path);
+        if (path.length > 0) {
+            if (joined === undefined) joined = firstPart = path;
+            else joined += `\\${path}`;
         }
     }
     if (joined === undefined) return ".";
@@ -2341,10 +2335,10 @@ function relative3(from, to) {
         return toOrig.slice(toStart, toEnd);
     }
 }
-function toNamespacedPath3(path2) {
-    if (typeof path2 !== "string") return path2;
-    if (path2.length === 0) return "";
-    const resolvedPath = resolve3(path2);
+function toNamespacedPath3(path) {
+    if (typeof path !== "string") return path;
+    if (path.length === 0) return "";
+    const resolvedPath = resolve3(path);
     if (resolvedPath.length >= 3) {
         if (resolvedPath.charCodeAt(0) === 92) {
             if (resolvedPath.charCodeAt(1) === 92) {
@@ -2359,38 +2353,38 @@ function toNamespacedPath3(path2) {
             }
         }
     }
-    return path2;
+    return path;
 }
-function dirname3(path2) {
-    assertPath1(path2);
-    const len = path2.length;
+function dirname3(path) {
+    assertPath1(path);
+    const len = path.length;
     if (len === 0) return ".";
     let rootEnd = -1;
     let end = -1;
     let matchedSlash = true;
     let offset = 0;
-    const code = path2.charCodeAt(0);
+    const code = path.charCodeAt(0);
     if (len > 1) {
         if (isPathSeparator1(code)) {
             rootEnd = offset = 1;
-            if (isPathSeparator1(path2.charCodeAt(1))) {
+            if (isPathSeparator1(path.charCodeAt(1))) {
                 let j = 2;
                 let last = j;
                 for(; j < len; ++j){
-                    if (isPathSeparator1(path2.charCodeAt(j))) break;
+                    if (isPathSeparator1(path.charCodeAt(j))) break;
                 }
                 if (j < len && j !== last) {
                     last = j;
                     for(; j < len; ++j){
-                        if (!isPathSeparator1(path2.charCodeAt(j))) break;
+                        if (!isPathSeparator1(path.charCodeAt(j))) break;
                     }
                     if (j < len && j !== last) {
                         last = j;
                         for(; j < len; ++j){
-                            if (isPathSeparator1(path2.charCodeAt(j))) break;
+                            if (isPathSeparator1(path.charCodeAt(j))) break;
                         }
                         if (j === len) {
-                            return path2;
+                            return path;
                         }
                         if (j !== last) {
                             rootEnd = offset = j + 1;
@@ -2399,18 +2393,18 @@ function dirname3(path2) {
                 }
             }
         } else if (isWindowsDeviceRoot1(code)) {
-            if (path2.charCodeAt(1) === 58) {
+            if (path.charCodeAt(1) === 58) {
                 rootEnd = offset = 2;
                 if (len > 2) {
-                    if (isPathSeparator1(path2.charCodeAt(2))) rootEnd = offset = 3;
+                    if (isPathSeparator1(path.charCodeAt(2))) rootEnd = offset = 3;
                 }
             }
         }
     } else if (isPathSeparator1(code)) {
-        return path2;
+        return path;
     }
     for(let i = len - 1; i >= offset; --i){
-        if (isPathSeparator1(path2.charCodeAt(i))) {
+        if (isPathSeparator1(path.charCodeAt(i))) {
             if (!matchedSlash) {
                 end = i;
                 break;
@@ -2423,29 +2417,29 @@ function dirname3(path2) {
         if (rootEnd === -1) return ".";
         else end = rootEnd;
     }
-    return path2.slice(0, end);
+    return path.slice(0, end);
 }
-function basename3(path2, ext = "") {
+function basename3(path, ext = "") {
     if (ext !== undefined && typeof ext !== "string") {
         throw new TypeError('"ext" argument must be a string');
     }
-    assertPath1(path2);
+    assertPath1(path);
     let start = 0;
     let end = -1;
     let matchedSlash = true;
     let i;
-    if (path2.length >= 2) {
-        const drive = path2.charCodeAt(0);
+    if (path.length >= 2) {
+        const drive = path.charCodeAt(0);
         if (isWindowsDeviceRoot1(drive)) {
-            if (path2.charCodeAt(1) === 58) start = 2;
+            if (path.charCodeAt(1) === 58) start = 2;
         }
     }
-    if (ext !== undefined && ext.length > 0 && ext.length <= path2.length) {
-        if (ext.length === path2.length && ext === path2) return "";
+    if (ext !== undefined && ext.length > 0 && ext.length <= path.length) {
+        if (ext.length === path.length && ext === path) return "";
         let extIdx = ext.length - 1;
         let firstNonSlashEnd = -1;
-        for(i = path2.length - 1; i >= start; --i){
-            const code = path2.charCodeAt(i);
+        for(i = path.length - 1; i >= start; --i){
+            const code = path.charCodeAt(i);
             if (isPathSeparator1(code)) {
                 if (!matchedSlash) {
                     start = i + 1;
@@ -2469,11 +2463,11 @@ function basename3(path2, ext = "") {
             }
         }
         if (start === end) end = firstNonSlashEnd;
-        else if (end === -1) end = path2.length;
-        return path2.slice(start, end);
+        else if (end === -1) end = path.length;
+        return path.slice(start, end);
     } else {
-        for(i = path2.length - 1; i >= start; --i){
-            if (isPathSeparator1(path2.charCodeAt(i))) {
+        for(i = path.length - 1; i >= start; --i){
+            if (isPathSeparator1(path.charCodeAt(i))) {
                 if (!matchedSlash) {
                     start = i + 1;
                     break;
@@ -2484,22 +2478,22 @@ function basename3(path2, ext = "") {
             }
         }
         if (end === -1) return "";
-        return path2.slice(start, end);
+        return path.slice(start, end);
     }
 }
-function extname3(path2) {
-    assertPath1(path2);
+function extname3(path) {
+    assertPath1(path);
     let start = 0;
     let startDot = -1;
     let startPart = 0;
     let end = -1;
     let matchedSlash = true;
     let preDotState = 0;
-    if (path2.length >= 2 && path2.charCodeAt(1) === 58 && isWindowsDeviceRoot1(path2.charCodeAt(0))) {
+    if (path.length >= 2 && path.charCodeAt(1) === 58 && isWindowsDeviceRoot1(path.charCodeAt(0))) {
         start = startPart = 2;
     }
-    for(let i = path2.length - 1; i >= start; --i){
-        const code = path2.charCodeAt(i);
+    for(let i = path.length - 1; i >= start; --i){
+        const code = path.charCodeAt(i);
         if (isPathSeparator1(code)) {
             if (!matchedSlash) {
                 startPart = i + 1;
@@ -2521,7 +2515,7 @@ function extname3(path2) {
     if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
         return "";
     }
-    return path2.slice(startDot, end);
+    return path.slice(startDot, end);
 }
 function format3(pathObject) {
     if (pathObject === null || typeof pathObject !== "object") {
@@ -2529,8 +2523,8 @@ function format3(pathObject) {
     }
     return _format1("\\", pathObject);
 }
-function parse4(path2) {
-    assertPath1(path2);
+function parse4(path) {
+    assertPath1(path);
     const ret = {
         root: "",
         dir: "",
@@ -2538,28 +2532,28 @@ function parse4(path2) {
         ext: "",
         name: ""
     };
-    const len = path2.length;
+    const len = path.length;
     if (len === 0) return ret;
     let rootEnd = 0;
-    let code = path2.charCodeAt(0);
+    let code = path.charCodeAt(0);
     if (len > 1) {
         if (isPathSeparator1(code)) {
             rootEnd = 1;
-            if (isPathSeparator1(path2.charCodeAt(1))) {
+            if (isPathSeparator1(path.charCodeAt(1))) {
                 let j = 2;
                 let last = j;
                 for(; j < len; ++j){
-                    if (isPathSeparator1(path2.charCodeAt(j))) break;
+                    if (isPathSeparator1(path.charCodeAt(j))) break;
                 }
                 if (j < len && j !== last) {
                     last = j;
                     for(; j < len; ++j){
-                        if (!isPathSeparator1(path2.charCodeAt(j))) break;
+                        if (!isPathSeparator1(path.charCodeAt(j))) break;
                     }
                     if (j < len && j !== last) {
                         last = j;
                         for(; j < len; ++j){
-                            if (isPathSeparator1(path2.charCodeAt(j))) break;
+                            if (isPathSeparator1(path.charCodeAt(j))) break;
                         }
                         if (j === len) {
                             rootEnd = j;
@@ -2570,35 +2564,35 @@ function parse4(path2) {
                 }
             }
         } else if (isWindowsDeviceRoot1(code)) {
-            if (path2.charCodeAt(1) === 58) {
+            if (path.charCodeAt(1) === 58) {
                 rootEnd = 2;
                 if (len > 2) {
-                    if (isPathSeparator1(path2.charCodeAt(2))) {
+                    if (isPathSeparator1(path.charCodeAt(2))) {
                         if (len === 3) {
-                            ret.root = ret.dir = path2;
+                            ret.root = ret.dir = path;
                             return ret;
                         }
                         rootEnd = 3;
                     }
                 } else {
-                    ret.root = ret.dir = path2;
+                    ret.root = ret.dir = path;
                     return ret;
                 }
             }
         }
     } else if (isPathSeparator1(code)) {
-        ret.root = ret.dir = path2;
+        ret.root = ret.dir = path;
         return ret;
     }
-    if (rootEnd > 0) ret.root = path2.slice(0, rootEnd);
+    if (rootEnd > 0) ret.root = path.slice(0, rootEnd);
     let startDot = -1;
     let startPart = rootEnd;
     let end = -1;
     let matchedSlash = true;
-    let i = path2.length - 1;
+    let i = path.length - 1;
     let preDotState = 0;
     for(; i >= rootEnd; --i){
-        code = path2.charCodeAt(i);
+        code = path.charCodeAt(i);
         if (isPathSeparator1(code)) {
             if (!matchedSlash) {
                 startPart = i + 1;
@@ -2619,15 +2613,15 @@ function parse4(path2) {
     }
     if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
         if (end !== -1) {
-            ret.base = ret.name = path2.slice(startPart, end);
+            ret.base = ret.name = path.slice(startPart, end);
         }
     } else {
-        ret.name = path2.slice(startPart, startDot);
-        ret.base = path2.slice(startPart, end);
-        ret.ext = path2.slice(startDot, end);
+        ret.name = path.slice(startPart, startDot);
+        ret.base = path.slice(startPart, end);
+        ret.ext = path.slice(startDot, end);
     }
     if (startPart > 0 && startPart !== rootEnd) {
-        ret.dir = path2.slice(0, startPart - 1);
+        ret.dir = path.slice(0, startPart - 1);
     } else ret.dir = ret.root;
     return ret;
 }
@@ -2636,17 +2630,17 @@ function fromFileUrl3(url) {
     if (url.protocol != "file:") {
         throw new TypeError("Must be a file URL.");
     }
-    let path2 = decodeURIComponent(url.pathname.replace(/\//g, "\\").replace(/%(?![0-9A-Fa-f]{2})/g, "%25")).replace(/^\\*([A-Za-z]:)(\\|$)/, "$1\\");
+    let path = decodeURIComponent(url.pathname.replace(/\//g, "\\").replace(/%(?![0-9A-Fa-f]{2})/g, "%25")).replace(/^\\*([A-Za-z]:)(\\|$)/, "$1\\");
     if (url.hostname != "") {
-        path2 = `\\\\${url.hostname}${path2}`;
+        path = `\\\\${url.hostname}${path}`;
     }
-    return path2;
+    return path;
 }
-function toFileUrl3(path2) {
-    if (!isAbsolute3(path2)) {
+function toFileUrl3(path) {
+    if (!isAbsolute3(path)) {
         throw new TypeError("Must be an absolute path.");
     }
-    const [, hostname, pathname] = path2.match(/^(?:[/\\]{2}([^/\\]+)(?=[/\\](?:[^/\\]|$)))?(.*)/);
+    const [, hostname, pathname] = path.match(/^(?:[/\\]{2}([^/\\]+)(?=[/\\](?:[^/\\]|$)))?(.*)/);
     const url = new URL("file:///");
     url.pathname = encodeWhitespace1(pathname.replace(/%/g, "%25"));
     if (hostname != null && hostname != "localhost") {
@@ -2657,46 +2651,44 @@ function toFileUrl3(path2) {
     }
     return url;
 }
-const mod3 = function() {
-    return {
-        sep: sep3,
-        delimiter: delimiter3,
-        resolve: resolve3,
-        normalize: normalize4,
-        isAbsolute: isAbsolute3,
-        join: join4,
-        relative: relative3,
-        toNamespacedPath: toNamespacedPath3,
-        dirname: dirname3,
-        basename: basename3,
-        extname: extname3,
-        format: format3,
-        parse: parse4,
-        fromFileUrl: fromFileUrl3,
-        toFileUrl: toFileUrl3
-    };
-}();
+const mod3 = {
+    sep: sep3,
+    delimiter: delimiter3,
+    resolve: resolve3,
+    normalize: normalize4,
+    isAbsolute: isAbsolute3,
+    join: join4,
+    relative: relative3,
+    toNamespacedPath: toNamespacedPath3,
+    dirname: dirname3,
+    basename: basename3,
+    extname: extname3,
+    format: format3,
+    parse: parse4,
+    fromFileUrl: fromFileUrl3,
+    toFileUrl: toFileUrl3
+};
 const sep4 = "/";
 const delimiter4 = ":";
 function resolve4(...pathSegments) {
     let resolvedPath = "";
     let resolvedAbsolute = false;
     for(let i = pathSegments.length - 1; i >= -1 && !resolvedAbsolute; i--){
-        let path2;
-        if (i >= 0) path2 = pathSegments[i];
+        let path;
+        if (i >= 0) path = pathSegments[i];
         else {
             const { Deno  } = globalThis;
             if (typeof Deno?.cwd !== "function") {
                 throw new TypeError("Resolved a relative path without a CWD.");
             }
-            path2 = Deno.cwd();
+            path = Deno.cwd();
         }
-        assertPath1(path2);
-        if (path2.length === 0) {
+        assertPath1(path);
+        if (path.length === 0) {
             continue;
         }
-        resolvedPath = `${path2}/${resolvedPath}`;
-        resolvedAbsolute = path2.charCodeAt(0) === CHAR_FORWARD_SLASH1;
+        resolvedPath = `${path}/${resolvedPath}`;
+        resolvedAbsolute = path.charCodeAt(0) === CHAR_FORWARD_SLASH1;
     }
     resolvedPath = normalizeString1(resolvedPath, !resolvedAbsolute, "/", isPosixPathSeparator1);
     if (resolvedAbsolute) {
@@ -2705,30 +2697,30 @@ function resolve4(...pathSegments) {
     } else if (resolvedPath.length > 0) return resolvedPath;
     else return ".";
 }
-function normalize5(path2) {
-    assertPath1(path2);
-    if (path2.length === 0) return ".";
-    const isAbsolute4 = path2.charCodeAt(0) === 47;
-    const trailingSeparator = path2.charCodeAt(path2.length - 1) === 47;
-    path2 = normalizeString1(path2, !isAbsolute4, "/", isPosixPathSeparator1);
-    if (path2.length === 0 && !isAbsolute4) path2 = ".";
-    if (path2.length > 0 && trailingSeparator) path2 += "/";
-    if (isAbsolute4) return `/${path2}`;
-    return path2;
+function normalize5(path) {
+    assertPath1(path);
+    if (path.length === 0) return ".";
+    const isAbsolute = path.charCodeAt(0) === 47;
+    const trailingSeparator = path.charCodeAt(path.length - 1) === 47;
+    path = normalizeString1(path, !isAbsolute, "/", isPosixPathSeparator1);
+    if (path.length === 0 && !isAbsolute) path = ".";
+    if (path.length > 0 && trailingSeparator) path += "/";
+    if (isAbsolute) return `/${path}`;
+    return path;
 }
-function isAbsolute4(path2) {
-    assertPath1(path2);
-    return path2.length > 0 && path2.charCodeAt(0) === 47;
+function isAbsolute4(path) {
+    assertPath1(path);
+    return path.length > 0 && path.charCodeAt(0) === 47;
 }
 function join5(...paths) {
     if (paths.length === 0) return ".";
     let joined;
     for(let i = 0, len = paths.length; i < len; ++i){
-        const path2 = paths[i];
-        assertPath1(path2);
-        if (path2.length > 0) {
-            if (!joined) joined = path2;
-            else joined += `/${path2}`;
+        const path = paths[i];
+        assertPath1(path);
+        if (path.length > 0) {
+            if (!joined) joined = path;
+            else joined += `/${path}`;
         }
     }
     if (!joined) return ".";
@@ -2792,17 +2784,17 @@ function relative4(from, to) {
         return to.slice(toStart);
     }
 }
-function toNamespacedPath4(path2) {
-    return path2;
+function toNamespacedPath4(path) {
+    return path;
 }
-function dirname4(path2) {
-    assertPath1(path2);
-    if (path2.length === 0) return ".";
-    const hasRoot = path2.charCodeAt(0) === 47;
+function dirname4(path) {
+    assertPath1(path);
+    if (path.length === 0) return ".";
+    const hasRoot = path.charCodeAt(0) === 47;
     let end = -1;
     let matchedSlash = true;
-    for(let i = path2.length - 1; i >= 1; --i){
-        if (path2.charCodeAt(i) === 47) {
+    for(let i = path.length - 1; i >= 1; --i){
+        if (path.charCodeAt(i) === 47) {
             if (!matchedSlash) {
                 end = i;
                 break;
@@ -2813,23 +2805,23 @@ function dirname4(path2) {
     }
     if (end === -1) return hasRoot ? "/" : ".";
     if (hasRoot && end === 1) return "//";
-    return path2.slice(0, end);
+    return path.slice(0, end);
 }
-function basename4(path2, ext = "") {
+function basename4(path, ext = "") {
     if (ext !== undefined && typeof ext !== "string") {
         throw new TypeError('"ext" argument must be a string');
     }
-    assertPath1(path2);
+    assertPath1(path);
     let start = 0;
     let end = -1;
     let matchedSlash = true;
     let i;
-    if (ext !== undefined && ext.length > 0 && ext.length <= path2.length) {
-        if (ext.length === path2.length && ext === path2) return "";
+    if (ext !== undefined && ext.length > 0 && ext.length <= path.length) {
+        if (ext.length === path.length && ext === path) return "";
         let extIdx = ext.length - 1;
         let firstNonSlashEnd = -1;
-        for(i = path2.length - 1; i >= 0; --i){
-            const code = path2.charCodeAt(i);
+        for(i = path.length - 1; i >= 0; --i){
+            const code = path.charCodeAt(i);
             if (code === 47) {
                 if (!matchedSlash) {
                     start = i + 1;
@@ -2853,11 +2845,11 @@ function basename4(path2, ext = "") {
             }
         }
         if (start === end) end = firstNonSlashEnd;
-        else if (end === -1) end = path2.length;
-        return path2.slice(start, end);
+        else if (end === -1) end = path.length;
+        return path.slice(start, end);
     } else {
-        for(i = path2.length - 1; i >= 0; --i){
-            if (path2.charCodeAt(i) === 47) {
+        for(i = path.length - 1; i >= 0; --i){
+            if (path.charCodeAt(i) === 47) {
                 if (!matchedSlash) {
                     start = i + 1;
                     break;
@@ -2868,18 +2860,18 @@ function basename4(path2, ext = "") {
             }
         }
         if (end === -1) return "";
-        return path2.slice(start, end);
+        return path.slice(start, end);
     }
 }
-function extname4(path2) {
-    assertPath1(path2);
+function extname4(path) {
+    assertPath1(path);
     let startDot = -1;
     let startPart = 0;
     let end = -1;
     let matchedSlash = true;
     let preDotState = 0;
-    for(let i = path2.length - 1; i >= 0; --i){
-        const code = path2.charCodeAt(i);
+    for(let i = path.length - 1; i >= 0; --i){
+        const code = path.charCodeAt(i);
         if (code === 47) {
             if (!matchedSlash) {
                 startPart = i + 1;
@@ -2901,7 +2893,7 @@ function extname4(path2) {
     if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
         return "";
     }
-    return path2.slice(startDot, end);
+    return path.slice(startDot, end);
 }
 function format4(pathObject) {
     if (pathObject === null || typeof pathObject !== "object") {
@@ -2909,8 +2901,8 @@ function format4(pathObject) {
     }
     return _format1("/", pathObject);
 }
-function parse5(path2) {
-    assertPath1(path2);
+function parse5(path) {
+    assertPath1(path);
     const ret = {
         root: "",
         dir: "",
@@ -2918,10 +2910,10 @@ function parse5(path2) {
         ext: "",
         name: ""
     };
-    if (path2.length === 0) return ret;
-    const isAbsolute5 = path2.charCodeAt(0) === 47;
+    if (path.length === 0) return ret;
+    const isAbsolute = path.charCodeAt(0) === 47;
     let start;
-    if (isAbsolute5) {
+    if (isAbsolute) {
         ret.root = "/";
         start = 1;
     } else {
@@ -2931,10 +2923,10 @@ function parse5(path2) {
     let startPart = 0;
     let end = -1;
     let matchedSlash = true;
-    let i = path2.length - 1;
+    let i = path.length - 1;
     let preDotState = 0;
     for(; i >= start; --i){
-        const code = path2.charCodeAt(i);
+        const code = path.charCodeAt(i);
         if (code === 47) {
             if (!matchedSlash) {
                 startPart = i + 1;
@@ -2955,24 +2947,24 @@ function parse5(path2) {
     }
     if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
         if (end !== -1) {
-            if (startPart === 0 && isAbsolute5) {
-                ret.base = ret.name = path2.slice(1, end);
+            if (startPart === 0 && isAbsolute) {
+                ret.base = ret.name = path.slice(1, end);
             } else {
-                ret.base = ret.name = path2.slice(startPart, end);
+                ret.base = ret.name = path.slice(startPart, end);
             }
         }
     } else {
-        if (startPart === 0 && isAbsolute5) {
-            ret.name = path2.slice(1, startDot);
-            ret.base = path2.slice(1, end);
+        if (startPart === 0 && isAbsolute) {
+            ret.name = path.slice(1, startDot);
+            ret.base = path.slice(1, end);
         } else {
-            ret.name = path2.slice(startPart, startDot);
-            ret.base = path2.slice(startPart, end);
+            ret.name = path.slice(startPart, startDot);
+            ret.base = path.slice(startPart, end);
         }
-        ret.ext = path2.slice(startDot, end);
+        ret.ext = path.slice(startDot, end);
     }
-    if (startPart > 0) ret.dir = path2.slice(0, startPart - 1);
-    else if (isAbsolute5) ret.dir = "/";
+    if (startPart > 0) ret.dir = path.slice(0, startPart - 1);
+    else if (isAbsolute) ret.dir = "/";
     return ret;
 }
 function fromFileUrl4(url) {
@@ -2982,35 +2974,35 @@ function fromFileUrl4(url) {
     }
     return decodeURIComponent(url.pathname.replace(/%(?![0-9A-Fa-f]{2})/g, "%25"));
 }
-function toFileUrl4(path2) {
-    if (!isAbsolute4(path2)) {
+function toFileUrl4(path) {
+    if (!isAbsolute4(path)) {
         throw new TypeError("Must be an absolute path.");
     }
     const url = new URL("file:///");
-    url.pathname = encodeWhitespace1(path2.replace(/%/g, "%25").replace(/\\/g, "%5C"));
+    url.pathname = encodeWhitespace1(path.replace(/%/g, "%25").replace(/\\/g, "%5C"));
     return url;
 }
-const mod4 = function() {
-    return {
-        sep: sep4,
-        delimiter: delimiter4,
-        resolve: resolve4,
-        normalize: normalize5,
-        isAbsolute: isAbsolute4,
-        join: join5,
-        relative: relative4,
-        toNamespacedPath: toNamespacedPath4,
-        dirname: dirname4,
-        basename: basename4,
-        extname: extname4,
-        format: format4,
-        parse: parse5,
-        fromFileUrl: fromFileUrl4,
-        toFileUrl: toFileUrl4
-    };
-}();
+const mod4 = {
+    sep: sep4,
+    delimiter: delimiter4,
+    resolve: resolve4,
+    normalize: normalize5,
+    isAbsolute: isAbsolute4,
+    join: join5,
+    relative: relative4,
+    toNamespacedPath: toNamespacedPath4,
+    dirname: dirname4,
+    basename: basename4,
+    extname: extname4,
+    format: format4,
+    parse: parse5,
+    fromFileUrl: fromFileUrl4,
+    toFileUrl: toFileUrl4
+};
 const path2 = isWindows1 ? mod3 : mod4;
-const { basename: basename5 , delimiter: delimiter5 , dirname: dirname5 , extname: extname5 , format: format5 , fromFileUrl: fromFileUrl5 , isAbsolute: isAbsolute5 , join: join6 , normalize: normalize6 , parse: parse6 , relative: relative5 , resolve: resolve5 , sep: sep5 , toFileUrl: toFileUrl5 , toNamespacedPath: toNamespacedPath5 ,  } = path2;
+const { join: join6 , normalize: normalize6  } = path2;
+const path3 = isWindows1 ? mod3 : mod4;
+const { basename: basename5 , delimiter: delimiter5 , dirname: dirname5 , extname: extname5 , format: format5 , fromFileUrl: fromFileUrl5 , isAbsolute: isAbsolute5 , join: join7 , normalize: normalize7 , parse: parse6 , relative: relative5 , resolve: resolve5 , sep: sep5 , toFileUrl: toFileUrl5 , toNamespacedPath: toNamespacedPath5 ,  } = path3;
 function getFileInfoType(fileInfo) {
     return fileInfo.isFile ? "file" : fileInfo.isDirectory ? "dir" : fileInfo.isSymlink ? "symlink" : undefined;
 }
@@ -3042,9 +3034,9 @@ function existsSync1(filePath) {
     }
 }
 var EOL;
-(function(EOL1) {
-    EOL1["LF"] = "\n";
-    EOL1["CRLF"] = "\r\n";
+(function(EOL) {
+    EOL["LF"] = "\n";
+    EOL["CRLF"] = "\r\n";
 })(EOL || (EOL = {
 }));
 const main = {
@@ -3276,38 +3268,36 @@ function image(buffer, options) {
     }
     return ret + ":" + encode(buffer) + bel;
 }
-const mod5 = function() {
-    return {
-        bel: bel,
-        cursorPosition: cursorPosition,
-        cursorTo: cursorTo,
-        cursorMove: cursorMove,
-        cursorUp: cursorUp,
-        cursorDown: cursorDown,
-        cursorForward: cursorForward,
-        cursorBackward: cursorBackward,
-        cursorNextLine: cursorNextLine,
-        cursorPrevLine: cursorPrevLine,
-        cursorLeft: cursorLeft,
-        cursorHide: cursorHide,
-        cursorShow: cursorShow,
-        cursorSave: cursorSave,
-        cursorRestore: cursorRestore,
-        scrollUp: scrollUp,
-        scrollDown: scrollDown,
-        eraseScreen: eraseScreen,
-        eraseUp: eraseUp,
-        eraseDown: eraseDown,
-        eraseLine: eraseLine,
-        eraseLineEnd: eraseLineEnd,
-        eraseLineStart: eraseLineStart,
-        eraseLines: eraseLines,
-        clearScreen: clearScreen,
-        clearTerminal: clearTerminal,
-        link: link,
-        image: image
-    };
-}();
+const mod5 = {
+    bel: bel,
+    cursorPosition: cursorPosition,
+    cursorTo: cursorTo,
+    cursorMove: cursorMove,
+    cursorUp: cursorUp,
+    cursorDown: cursorDown,
+    cursorForward: cursorForward,
+    cursorBackward: cursorBackward,
+    cursorNextLine: cursorNextLine,
+    cursorPrevLine: cursorPrevLine,
+    cursorLeft: cursorLeft,
+    cursorHide: cursorHide,
+    cursorShow: cursorShow,
+    cursorSave: cursorSave,
+    cursorRestore: cursorRestore,
+    scrollUp: scrollUp,
+    scrollDown: scrollDown,
+    eraseScreen: eraseScreen,
+    eraseUp: eraseUp,
+    eraseDown: eraseDown,
+    eraseLine: eraseLine,
+    eraseLineEnd: eraseLineEnd,
+    eraseLineStart: eraseLineStart,
+    eraseLines: eraseLines,
+    clearScreen: clearScreen,
+    clearTerminal: clearTerminal,
+    link: link,
+    image: image
+};
 function getCursorPosition({ stdin =Deno.stdin , stdout =Deno.stdout  } = {
 }) {
     const data = new Uint8Array(8);
@@ -3330,7 +3320,7 @@ function factory(options) {
     let stack = [];
     const stdout = options?.stdout ?? Deno.stdout;
     const stdin = options?.stdin ?? Deno.stdin;
-    const tty1 = function(...args) {
+    const tty = function(...args) {
         if (this) {
             update(args);
             stdout.writeSync(new TextEncoder().encode(result));
@@ -3338,7 +3328,7 @@ function factory(options) {
         }
         return factory(args[0] ?? options);
     };
-    tty1.text = function(text) {
+    tty.text = function(text) {
         stack.push([
             text,
             []
@@ -3347,7 +3337,7 @@ function factory(options) {
         stdout.writeSync(new TextEncoder().encode(result));
         return this;
     };
-    tty1.getCursorPosition = ()=>getCursorPosition({
+    tty.getCursorPosition = ()=>getCursorPosition({
             stdout,
             stdin
         })
@@ -3357,7 +3347,7 @@ function factory(options) {
         if (name === "cursorPosition") {
             continue;
         }
-        Object.defineProperty(tty1, name, {
+        Object.defineProperty(tty, name, {
             get () {
                 stack.push([
                     method,
@@ -3367,7 +3357,7 @@ function factory(options) {
             }
         });
     }
-    return tty1;
+    return tty;
     function update(args) {
         if (!stack.length) {
             return;
@@ -3375,7 +3365,7 @@ function factory(options) {
         if (args) {
             stack[stack.length - 1][1] = args;
         }
-        result = stack.reduce((prev, [cur, args1])=>prev + (typeof cur === "string" ? cur : cur.call(tty1, ...args1))
+        result = stack.reduce((prev, [cur, args])=>prev + (typeof cur === "string" ? cur : cur.call(tty, ...args))
         , "");
         stack = [];
     }
@@ -3606,51 +3596,51 @@ function code(open, close) {
         regexp: new RegExp(`\\x1b\\[${close}m`, "g")
     };
 }
-function run1(str, code1) {
-    return enabled ? `${code1.open}${str.replace(code1.regexp, code1.open)}${code1.close}` : str;
+function run(str, code) {
+    return enabled ? `${code.open}${str.replace(code.regexp, code.open)}${code.close}` : str;
 }
 function bold(str) {
-    return run1(str, code([
+    return run(str, code([
         1
     ], 22));
 }
 function dim(str) {
-    return run1(str, code([
+    return run(str, code([
         2
     ], 22));
 }
 function italic(str) {
-    return run1(str, code([
+    return run(str, code([
         3
     ], 23));
 }
 function underline(str) {
-    return run1(str, code([
+    return run(str, code([
         4
     ], 24));
 }
 function red(str) {
-    return run1(str, code([
+    return run(str, code([
         31
     ], 39));
 }
 function green(str) {
-    return run1(str, code([
+    return run(str, code([
         32
     ], 39));
 }
 function yellow(str) {
-    return run1(str, code([
+    return run(str, code([
         33
     ], 39));
 }
 function blue(str) {
-    return run1(str, code([
+    return run(str, code([
         34
     ], 39));
 }
 function magenta(str) {
-    return run1(str, code([
+    return run(str, code([
         35
     ], 39));
 }
@@ -3844,9 +3834,9 @@ class GenericPrompt {
 class GenericInput extends GenericPrompt {
     inputValue = "";
     inputIndex = 0;
-    constructor(settings1){
+    constructor(settings){
         super({
-            ...settings1,
+            ...settings,
             keys: {
                 moveCursorLeft: [
                     "left"
@@ -3860,7 +3850,7 @@ class GenericInput extends GenericPrompt {
                 deleteCharRight: [
                     "delete"
                 ],
-                ...settings1.keys ?? {
+                ...settings.keys ?? {
                 }
             }
         });
@@ -3869,9 +3859,9 @@ class GenericInput extends GenericPrompt {
         return this.inputValue;
     }
     message() {
-        const message2 = super.message() + " " + this.settings.pointer + " ";
-        this.cursor.x = stripColor(message2).length + this.inputIndex + 1;
-        return message2 + this.input();
+        const message = super.message() + " " + this.settings.pointer + " ";
+        this.cursor.x = stripColor(message).length + this.inputIndex + 1;
+        return message + this.input();
     }
     input() {
         return underline(this.inputValue);
@@ -3955,11 +3945,11 @@ function distance(a, b) {
         matrix[0][j] = j;
     }
     for(let i1 = 1; i1 <= b.length; i1++){
-        for(let j1 = 1; j1 <= a.length; j1++){
-            if (b.charAt(i1 - 1) == a.charAt(j1 - 1)) {
-                matrix[i1][j1] = matrix[i1 - 1][j1 - 1];
+        for(let j = 1; j <= a.length; j++){
+            if (b.charAt(i1 - 1) == a.charAt(j - 1)) {
+                matrix[i1][j] = matrix[i1 - 1][j - 1];
             } else {
-                matrix[i1][j1] = Math.min(matrix[i1 - 1][j1 - 1] + 1, Math.min(matrix[i1][j1 - 1] + 1, matrix[i1 - 1][j1] + 1));
+                matrix[i1][j] = Math.min(matrix[i1 - 1][j - 1] + 1, Math.min(matrix[i1][j - 1] + 1, matrix[i1 - 1][j] + 1));
             }
         }
     }
@@ -3982,18 +3972,18 @@ class GenericList extends GenericInput {
             disabled: !!option.disabled
         };
     }
-    constructor(settings2){
+    constructor(settings){
         super({
-            ...settings2,
+            ...settings,
             keys: {
-                previous: settings2.search ? [
+                previous: settings.search ? [
                     "up"
                 ] : [
                     "up",
                     "u",
                     "8"
                 ],
-                next: settings2.search ? [
+                next: settings.search ? [
                     "down"
                 ] : [
                     "down",
@@ -4006,7 +3996,7 @@ class GenericList extends GenericInput {
                 nextPage: [
                     "pagedown"
                 ],
-                ...settings2.keys ?? {
+                ...settings.keys ?? {
                 }
             }
         });
@@ -4027,12 +4017,12 @@ class GenericList extends GenericInput {
         }
     }
     message() {
-        let message2 = `${this.settings.indent}${this.settings.prefix}` + bold(this.settings.message) + this.defaults();
+        let message = `${this.settings.indent}${this.settings.prefix}` + bold(this.settings.message) + this.defaults();
         if (this.settings.search) {
-            message2 += " " + this.settings.searchLabel + " ";
+            message += " " + this.settings.searchLabel + " ";
         }
-        this.cursor.x = stripColor(message2).length + this.inputIndex + 1;
-        return message2 + this.input();
+        this.cursor.x = stripColor(message).length + this.inputIndex + 1;
+        return message + this.input();
     }
     body() {
         return this.getList() + this.getInfo();
@@ -4329,9 +4319,9 @@ class GenericSuggestions extends GenericInput {
     suggestionsIndex = -1;
     suggestionsOffset = 0;
     suggestions = [];
-    constructor(settings3){
+    constructor(settings){
         super({
-            ...settings3,
+            ...settings,
             keys: {
                 complete: [
                     "tab"
@@ -4348,14 +4338,14 @@ class GenericSuggestions extends GenericInput {
                 previousPage: [
                     "pagedown"
                 ],
-                ...settings3.keys ?? {
+                ...settings.keys ?? {
                 }
             }
         });
-        const suggestions1 = this.loadSuggestions();
-        if (suggestions1.length || this.settings.suggestions) {
+        const suggestions = this.loadSuggestions();
+        if (suggestions.length || this.settings.suggestions) {
             this.settings.suggestions = [
-                ...suggestions1,
+                ...suggestions,
                 ...this.settings.suggestions ?? [], 
             ].filter(uniqueSuggestions);
         }
@@ -4372,11 +4362,11 @@ class GenericSuggestions extends GenericInput {
     loadSuggestions() {
         if (this.settings.id) {
             const json = this.localStorage?.getItem(this.settings.id);
-            const suggestions1 = json ? JSON.parse(json) : [];
-            if (!Array.isArray(suggestions1)) {
+            const suggestions = json ? JSON.parse(json) : [];
+            if (!Array.isArray(suggestions)) {
                 return [];
             }
-            return suggestions1;
+            return suggestions;
         }
         return [];
     }
@@ -4730,10 +4720,10 @@ class PromptList {
     get prompt() {
         return this.prompts[this.index];
     }
-    constructor(prompts, options4){
+    constructor(prompts, options){
         this.prompts = prompts;
-        this.options = options4;
-        this.names = this.prompts.map((prompt1)=>prompt1.name
+        this.options = options;
+        this.names = this.prompts.map((prompt)=>prompt.name
         );
     }
     async run(name) {
@@ -4807,16 +4797,16 @@ class PromptList {
         await run();
     }
     async runPrompt() {
-        const prompt1 = this.prompt.type;
+        const prompt = this.prompt.type;
         if (typeof injected[this.prompt.name] !== "undefined") {
-            if (prompt1.inject) {
-                prompt1.inject(injected[this.prompt.name]);
+            if (prompt.inject) {
+                prompt.inject(injected[this.prompt.name]);
             } else {
                 GenericPrompt.inject(injected[this.prompt.name]);
             }
         }
         try {
-            this.result[this.prompt.name] = await prompt1.prompt({
+            this.result[this.prompt.name] = await prompt.prompt({
                 cbreak: this.options?.cbreak,
                 ...this.prompt
             });
@@ -4830,7 +4820,7 @@ class PromptList {
                 if (name) {
                     return this.next(name);
                 } else if (this.prompt.after) {
-                    await this.prompt.after(this.result, (name1)=>this.next(name1)
+                    await this.prompt.after(this.result, (name)=>this.next(name)
                     );
                 } else {
                     await this.next();
@@ -4859,21 +4849,21 @@ function getOption(flags, name) {
     }
     return;
 }
-function didYouMeanOption(option, options1) {
-    const optionNames = options1.map((option1)=>[
-            option1.name,
-            ...option1.aliases ?? []
+function didYouMeanOption(option, options) {
+    const optionNames = options.map((option)=>[
+            option.name,
+            ...option.aliases ?? []
         ]
-    ).flat().map((option1)=>getFlag(option1)
+    ).flat().map((option)=>getFlag(option)
     );
     return didYouMean(" Did you mean option", getFlag(option), optionNames);
 }
 function didYouMeanType(type, types) {
     return didYouMean(" Did you mean type", type, types);
 }
-function didYouMean(message2, type, types) {
+function didYouMean(message, type, types) {
     const match = closest(type, types);
-    return match ? `${message2} "${match}"?` : "";
+    return match ? `${message} "${match}"?` : "";
 }
 function getFlag(name) {
     if (name.startsWith("-")) {
@@ -4903,92 +4893,92 @@ function getDefaultValue(option) {
     return typeof option.default === "function" ? option.default() : option.default;
 }
 class FlagsError extends Error {
-    constructor(message2){
-        super(message2);
+    constructor(message){
+        super(message);
         Object.setPrototypeOf(this, FlagsError.prototype);
     }
 }
 class UnknownRequiredOption extends FlagsError {
-    constructor(option9, options1){
-        super(`Unknown required option "${getFlag(option9)}".${didYouMeanOption(option9, options1)}`);
+    constructor(option, options){
+        super(`Unknown required option "${getFlag(option)}".${didYouMeanOption(option, options)}`);
         Object.setPrototypeOf(this, UnknownRequiredOption.prototype);
     }
 }
 class UnknownConflictingOption extends FlagsError {
-    constructor(option1, options2){
-        super(`Unknown conflicting option "${getFlag(option1)}".${didYouMeanOption(option1, options2)}`);
+    constructor(option, options){
+        super(`Unknown conflicting option "${getFlag(option)}".${didYouMeanOption(option, options)}`);
         Object.setPrototypeOf(this, UnknownConflictingOption.prototype);
     }
 }
 class UnknownType extends FlagsError {
-    constructor(type2, types1){
-        super(`Unknown type "${type2}".${didYouMeanType(type2, types1)}`);
+    constructor(type, types){
+        super(`Unknown type "${type}".${didYouMeanType(type, types)}`);
         Object.setPrototypeOf(this, UnknownType.prototype);
     }
 }
 class ValidationError extends FlagsError {
-    constructor(message3){
-        super(message3);
+    constructor(message){
+        super(message);
         Object.setPrototypeOf(this, ValidationError.prototype);
     }
 }
 class DuplicateOption extends ValidationError {
-    constructor(name17){
-        super(`Option "${getFlag(name17).replace(/^--no-/, "--")}" can only occur once, but was found several times.`);
+    constructor(name){
+        super(`Option "${getFlag(name).replace(/^--no-/, "--")}" can only occur once, but was found several times.`);
         Object.setPrototypeOf(this, DuplicateOption.prototype);
     }
 }
 class UnknownOption extends ValidationError {
-    constructor(option2, options3){
-        super(`Unknown option "${getFlag(option2)}".${didYouMeanOption(option2, options3)}`);
+    constructor(option, options){
+        super(`Unknown option "${getFlag(option)}".${didYouMeanOption(option, options)}`);
         Object.setPrototypeOf(this, UnknownOption.prototype);
     }
 }
 class MissingOptionValue extends ValidationError {
-    constructor(option3){
-        super(`Missing value for option "${getFlag(option3)}".`);
+    constructor(option){
+        super(`Missing value for option "${getFlag(option)}".`);
         Object.setPrototypeOf(this, MissingOptionValue.prototype);
     }
 }
 class InvalidOptionValue extends ValidationError {
-    constructor(option4, expected, value2){
-        super(`Option "${getFlag(option4)}" must be of type "${expected}", but got "${value2}".`);
+    constructor(option, expected, value){
+        super(`Option "${getFlag(option)}" must be of type "${expected}", but got "${value}".`);
         Object.setPrototypeOf(this, InvalidOptionValue.prototype);
     }
 }
 class OptionNotCombinable extends ValidationError {
-    constructor(option5){
-        super(`Option "${getFlag(option5)}" cannot be combined with other options.`);
+    constructor(option){
+        super(`Option "${getFlag(option)}" cannot be combined with other options.`);
         Object.setPrototypeOf(this, OptionNotCombinable.prototype);
     }
 }
 class ConflictingOption extends ValidationError {
-    constructor(option6, conflictingOption){
-        super(`Option "${getFlag(option6)}" conflicts with option "${getFlag(conflictingOption)}".`);
+    constructor(option, conflictingOption){
+        super(`Option "${getFlag(option)}" conflicts with option "${getFlag(conflictingOption)}".`);
         Object.setPrototypeOf(this, ConflictingOption.prototype);
     }
 }
 class DependingOption extends ValidationError {
-    constructor(option7, dependingOption){
-        super(`Option "${getFlag(option7)}" depends on option "${getFlag(dependingOption)}".`);
+    constructor(option, dependingOption){
+        super(`Option "${getFlag(option)}" depends on option "${getFlag(dependingOption)}".`);
         Object.setPrototypeOf(this, DependingOption.prototype);
     }
 }
 class MissingRequiredOption extends ValidationError {
-    constructor(option8){
-        super(`Missing required option "${getFlag(option8)}".`);
+    constructor(option){
+        super(`Missing required option "${getFlag(option)}".`);
         Object.setPrototypeOf(this, MissingRequiredOption.prototype);
     }
 }
 class RequiredArgumentFollowsOptionalArgument extends ValidationError {
-    constructor(arg3){
-        super(`An required argument cannot follow an optional argument, but "${arg3}"  is defined as required.`);
+    constructor(arg){
+        super(`An required argument cannot follow an optional argument, but "${arg}"  is defined as required.`);
         Object.setPrototypeOf(this, RequiredArgumentFollowsOptionalArgument.prototype);
     }
 }
 class ArgumentFollowsVariadicArgument extends ValidationError {
-    constructor(arg1){
-        super(`An argument cannot follow an variadic argument, but got "${arg1}".`);
+    constructor(arg){
+        super(`An argument cannot follow an variadic argument, but got "${arg}".`);
         Object.setPrototypeOf(this, ArgumentFollowsVariadicArgument.prototype);
     }
 }
@@ -4999,26 +4989,26 @@ class NoArguments extends ValidationError {
     }
 }
 class InvalidTypeError extends ValidationError {
-    constructor({ label: label1 , name: name1 , value: value1 , type: type1  }, expected1){
-        super(`${label1} "${name1}" must be of type "${type1}", but got "${value1}".` + (expected1 ? ` Expected values: ${expected1.map((value2)=>`"${value2}"`
+    constructor({ label , name , value , type  }, expected){
+        super(`${label} "${name}" must be of type "${type}", but got "${value}".` + (expected ? ` Expected values: ${expected.map((value)=>`"${value}"`
         ).join(", ")}` : ""));
         Object.setPrototypeOf(this, MissingOptionValue.prototype);
     }
 }
-function normalize7(args) {
+function normalize8(args) {
     const normalized = [];
     let inLiteral = false;
-    for (const arg2 of args){
+    for (const arg of args){
         if (inLiteral) {
-            normalized.push(arg2);
-        } else if (arg2 === "--") {
+            normalized.push(arg);
+        } else if (arg === "--") {
             inLiteral = true;
-            normalized.push(arg2);
-        } else if (arg2.length > 1 && arg2[0] === "-") {
-            const isLong = arg2[1] === "-";
-            const isDotted = !isLong && arg2[2] === ".";
-            if (arg2.includes("=")) {
-                const parts = arg2.split("=");
+            normalized.push(arg);
+        } else if (arg.length > 1 && arg[0] === "-") {
+            const isLong = arg[1] === "-";
+            const isDotted = !isLong && arg[2] === ".";
+            if (arg.includes("=")) {
+                const parts = arg.split("=");
                 const flag = parts.shift();
                 if (isLong) {
                     normalized.push(flag);
@@ -5027,12 +5017,12 @@ function normalize7(args) {
                 }
                 normalized.push(parts.join("="));
             } else if (isLong || isDotted) {
-                normalized.push(arg2);
+                normalized.push(arg);
             } else {
-                normalizeShortFlags(arg2);
+                normalizeShortFlags(arg);
             }
         } else {
-            normalized.push(arg2);
+            normalized.push(arg);
         }
     }
     return normalized;
@@ -5048,47 +5038,47 @@ function normalize7(args) {
     }
 }
 var OptionType;
-(function(OptionType1) {
-    OptionType1["STRING"] = "string";
-    OptionType1["NUMBER"] = "number";
-    OptionType1["INTEGER"] = "integer";
-    OptionType1["BOOLEAN"] = "boolean";
+(function(OptionType) {
+    OptionType["STRING"] = "string";
+    OptionType["NUMBER"] = "number";
+    OptionType["INTEGER"] = "integer";
+    OptionType["BOOLEAN"] = "boolean";
 })(OptionType || (OptionType = {
 }));
-const __boolean = (type2)=>{
+const __boolean = (type)=>{
     if (~[
         "1",
         "true"
-    ].indexOf(type2.value)) {
+    ].indexOf(type.value)) {
         return true;
     }
     if (~[
         "0",
         "false"
-    ].indexOf(type2.value)) {
+    ].indexOf(type.value)) {
         return false;
     }
-    throw new InvalidTypeError(type2);
+    throw new InvalidTypeError(type);
 };
-const number = (type2)=>{
-    const value2 = Number(type2.value);
-    if (Number.isFinite(value2)) {
-        return value2;
+const number = (type)=>{
+    const value = Number(type.value);
+    if (Number.isFinite(value)) {
+        return value;
     }
-    throw new InvalidTypeError(type2);
+    throw new InvalidTypeError(type);
 };
-const string = ({ value: value2  })=>{
-    return value2;
+const string = ({ value  })=>{
+    return value;
 };
 function validateFlags(flags, values, _knownFlaks, allowEmpty, optionNames = {
 }) {
     const defaultValues = {
     };
-    for (const option9 of flags){
-        let name2;
+    for (const option of flags){
+        let name;
         let defaultValue = undefined;
-        if (option9.name.startsWith("no-")) {
-            const propName = option9.name.replace(/^no-/, "");
+        if (option.name.startsWith("no-")) {
+            const propName = option.name.replace(/^no-/, "");
             if (propName in values) {
                 continue;
             }
@@ -5096,21 +5086,21 @@ function validateFlags(flags, values, _knownFlaks, allowEmpty, optionNames = {
             if (positiveOption) {
                 continue;
             }
-            name2 = paramCaseToCamelCase(propName);
+            name = paramCaseToCamelCase(propName);
             defaultValue = true;
         }
-        if (!name2) {
-            name2 = paramCaseToCamelCase(option9.name);
+        if (!name) {
+            name = paramCaseToCamelCase(option.name);
         }
-        if (!(name2 in optionNames)) {
-            optionNames[name2] = option9.name;
+        if (!(name in optionNames)) {
+            optionNames[name] = option.name;
         }
-        const hasDefaultValue = typeof values[name2] === "undefined" && (typeof option9.default !== "undefined" || typeof defaultValue !== "undefined");
+        const hasDefaultValue = typeof values[name] === "undefined" && (typeof option.default !== "undefined" || typeof defaultValue !== "undefined");
         if (hasDefaultValue) {
-            values[name2] = getDefaultValue(option9) ?? defaultValue;
-            defaultValues[option9.name] = true;
-            if (typeof option9.value === "function") {
-                values[name2] = option9.value(values[name2]);
+            values[name] = getDefaultValue(option) ?? defaultValue;
+            defaultValues[option.name] = true;
+            if (typeof option.value === "function") {
+                values[name] = option.value(values[name]);
             }
         }
     }
@@ -5118,49 +5108,49 @@ function validateFlags(flags, values, _knownFlaks, allowEmpty, optionNames = {
     if (keys.length === 0 && allowEmpty) {
         return;
     }
-    const options4 = keys.map((name2)=>({
-            name: name2,
-            option: getOption(flags, optionNames[name2])
+    const options = keys.map((name)=>({
+            name,
+            option: getOption(flags, optionNames[name])
         })
     );
-    for (const { name: name2 , option: option10  } of options4){
-        if (!option10) {
-            throw new UnknownOption(name2, flags);
+    for (const { name , option: option1  } of options){
+        if (!option1) {
+            throw new UnknownOption(name, flags);
         }
-        if (option10.standalone) {
+        if (option1.standalone) {
             if (keys.length > 1) {
-                if (options4.every(({ option: opt  })=>opt && (option10 === opt || defaultValues[opt.name])
+                if (options.every(({ option: opt  })=>opt && (option1 === opt || defaultValues[opt.name])
                 )) {
                     return;
                 }
-                throw new OptionNotCombinable(option10.name);
+                throw new OptionNotCombinable(option1.name);
             }
             return;
         }
-        option10.conflicts?.forEach((flag)=>{
+        option1.conflicts?.forEach((flag)=>{
             if (isset(flag, values)) {
-                throw new ConflictingOption(option10.name, flag);
+                throw new ConflictingOption(option1.name, flag);
             }
         });
-        option10.depends?.forEach((flag)=>{
-            if (!isset(flag, values) && !defaultValues[option10.name]) {
-                throw new DependingOption(option10.name, flag);
+        option1.depends?.forEach((flag)=>{
+            if (!isset(flag, values) && !defaultValues[option1.name]) {
+                throw new DependingOption(option1.name, flag);
             }
         });
-        const isArray = (option10.args?.length || 0) > 1;
-        option10.args?.forEach((arg2, i)=>{
-            if (arg2.requiredValue && (typeof values[name2] === "undefined" || isArray && typeof values[name2][i] === "undefined")) {
-                throw new MissingOptionValue(option10.name);
+        const isArray = (option1.args?.length || 0) > 1;
+        option1.args?.forEach((arg, i)=>{
+            if (arg.requiredValue && (typeof values[name] === "undefined" || isArray && typeof values[name][i] === "undefined")) {
+                throw new MissingOptionValue(option1.name);
             }
         });
     }
-    for (const option11 of flags){
-        if (option11.required && !(paramCaseToCamelCase(option11.name) in values)) {
-            if ((!option11.conflicts || !option11.conflicts.find((flag)=>!!values[flag]
-            )) && !options4.find((opt)=>opt.option?.conflicts?.find((flag)=>flag === option11.name
+    for (const option2 of flags){
+        if (option2.required && !(paramCaseToCamelCase(option2.name) in values)) {
+            if ((!option2.conflicts || !option2.conflicts.find((flag)=>!!values[flag]
+            )) && !options.find((opt)=>opt.option?.conflicts?.find((flag)=>flag === option2.name
                 )
             )) {
-                throw new MissingRequiredOption(option11.name);
+                throw new MissingRequiredOption(option2.name);
             }
         }
     }
@@ -5169,15 +5159,15 @@ function validateFlags(flags, values, _knownFlaks, allowEmpty, optionNames = {
     }
 }
 function isset(flag, values) {
-    const name2 = paramCaseToCamelCase(flag);
-    return typeof values[name2] !== "undefined";
+    const name = paramCaseToCamelCase(flag);
+    return typeof values[name] !== "undefined";
 }
-const integer = (type2)=>{
-    const value2 = Number(type2.value);
-    if (Number.isInteger(value2)) {
-        return value2;
+const integer = (type)=>{
+    const value = Number(type.value);
+    if (Number.isInteger(value)) {
+        return value;
     }
-    throw new InvalidTypeError(type2);
+    throw new InvalidTypeError(type);
 };
 const Types = {
     [OptionType.STRING]: string,
@@ -5188,7 +5178,7 @@ const Types = {
 function parseFlags(args, opts = {
 }) {
     !opts.flags && (opts.flags = []);
-    const normalized = normalize7(args);
+    const normalized = normalize8(args);
     let inLiteral = false;
     let negate = false;
     const flags = {
@@ -5211,8 +5201,8 @@ function parseFlags(args, opts = {
         });
     });
     for(let i = 0; i < normalized.length; i++){
-        let option9;
-        let args1;
+        let option;
+        let args;
         const current = normalized[i];
         if (inLiteral) {
             literal.push(current);
@@ -5230,75 +5220,75 @@ function parseFlags(args, opts = {
                 throw new UnknownOption(current, opts.flags);
             }
             negate = current.startsWith("--no-");
-            option9 = getOption(opts.flags, current);
-            if (!option9) {
+            option = getOption(opts.flags, current);
+            if (!option) {
                 if (opts.flags.length) {
                     throw new UnknownOption(current, opts.flags);
                 }
-                option9 = {
+                option = {
                     name: current.replace(/^-+/, ""),
                     optionalValue: true,
                     type: OptionType.STRING
                 };
             }
-            const positiveName = option9.name.replace(/^no-?/, "");
+            const positiveName = option.name.replace(/^no-?/, "");
             const propName = paramCaseToCamelCase(positiveName);
-            if (typeof flags[propName] !== "undefined" && !option9.collect) {
+            if (typeof flags[propName] !== "undefined" && !option.collect) {
                 throw new DuplicateOption(current);
             }
-            args1 = option9.args?.length ? option9.args : [
+            args = option.args?.length ? option.args : [
                 {
-                    type: option9.type,
-                    requiredValue: option9.requiredValue,
-                    optionalValue: option9.optionalValue,
-                    variadic: option9.variadic,
-                    list: option9.list,
-                    separator: option9.separator
+                    type: option.type,
+                    requiredValue: option.requiredValue,
+                    optionalValue: option.optionalValue,
+                    variadic: option.variadic,
+                    list: option.list,
+                    separator: option.separator
                 }
             ];
             let argIndex = 0;
             let inOptionalArg = false;
             const previous = flags[propName];
-            parseNext(option9, args1);
+            parseNext(option, args);
             if (typeof flags[propName] === "undefined") {
-                if (typeof option9.default !== "undefined") {
-                    flags[propName] = getDefaultValue(option9);
-                } else if (args1[argIndex].requiredValue) {
-                    throw new MissingOptionValue(option9.name);
+                if (typeof option.default !== "undefined") {
+                    flags[propName] = getDefaultValue(option);
+                } else if (args[argIndex].requiredValue) {
+                    throw new MissingOptionValue(option.name);
                 } else {
                     flags[propName] = true;
                 }
             }
-            if (option9.value) {
-                flags[propName] = option9.value(flags[propName], previous);
-            } else if (option9.collect) {
-                const value2 = Array.isArray(previous) ? previous : [];
-                value2.push(flags[propName]);
-                flags[propName] = value2;
+            if (option.value) {
+                flags[propName] = option.value(flags[propName], previous);
+            } else if (option.collect) {
+                const value = Array.isArray(previous) ? previous : [];
+                value.push(flags[propName]);
+                flags[propName] = value;
             }
-            optionNames[propName] = option9.name;
-            opts.option?.(option9, flags[propName]);
-            function parseNext(option10, args2) {
-                const arg2 = args2[argIndex];
-                if (!arg2) {
+            optionNames[propName] = option.name;
+            opts.option?.(option, flags[propName]);
+            function parseNext(option, args) {
+                const arg = args[argIndex];
+                if (!arg) {
                     const flag = next();
                     throw new UnknownOption(flag, opts.flags ?? []);
                 }
-                if (!arg2.type) {
-                    arg2.type = OptionType.BOOLEAN;
+                if (!arg.type) {
+                    arg.type = OptionType.BOOLEAN;
                 }
-                if (option10.args?.length) {
-                    if ((typeof arg2.optionalValue === "undefined" || arg2.optionalValue === false) && typeof arg2.requiredValue === "undefined") {
-                        arg2.requiredValue = true;
+                if (option.args?.length) {
+                    if ((typeof arg.optionalValue === "undefined" || arg.optionalValue === false) && typeof arg.requiredValue === "undefined") {
+                        arg.requiredValue = true;
                     }
                 } else {
-                    if (arg2.type !== OptionType.BOOLEAN && (typeof arg2.optionalValue === "undefined" || arg2.optionalValue === false) && typeof arg2.requiredValue === "undefined") {
-                        arg2.requiredValue = true;
+                    if (arg.type !== OptionType.BOOLEAN && (typeof arg.optionalValue === "undefined" || arg.optionalValue === false) && typeof arg.requiredValue === "undefined") {
+                        arg.requiredValue = true;
                     }
                 }
-                if (arg2.requiredValue) {
+                if (arg.requiredValue) {
                     if (inOptionalArg) {
-                        throw new RequiredArgumentFollowsOptionalArgument(option10.name);
+                        throw new RequiredArgumentFollowsOptionalArgument(option.name);
                     }
                 } else {
                     inOptionalArg = true;
@@ -5309,58 +5299,58 @@ function parseFlags(args, opts = {
                 }
                 let result;
                 let increase = false;
-                if (arg2.list && hasNext(arg2)) {
-                    const parsed = next().split(arg2.separator || ",").map((nextValue)=>{
-                        const value2 = parseValue(option10, arg2, nextValue);
-                        if (typeof value2 === "undefined") {
-                            throw new InvalidOptionValue(option10.name, arg2.type ?? "?", nextValue);
+                if (arg.list && hasNext(arg)) {
+                    const parsed = next().split(arg.separator || ",").map((nextValue)=>{
+                        const value = parseValue(option, arg, nextValue);
+                        if (typeof value === "undefined") {
+                            throw new InvalidOptionValue(option.name, arg.type ?? "?", nextValue);
                         }
-                        return value2;
+                        return value;
                     });
                     if (parsed?.length) {
                         result = parsed;
                     }
                 } else {
-                    if (hasNext(arg2)) {
-                        result = parseValue(option10, arg2, next());
-                    } else if (arg2.optionalValue && arg2.type === OptionType.BOOLEAN) {
+                    if (hasNext(arg)) {
+                        result = parseValue(option, arg, next());
+                    } else if (arg.optionalValue && arg.type === OptionType.BOOLEAN) {
                         result = true;
                     }
                 }
                 if (increase) {
                     i++;
-                    if (!arg2.variadic) {
+                    if (!arg.variadic) {
                         argIndex++;
-                    } else if (args2[argIndex + 1]) {
+                    } else if (args[argIndex + 1]) {
                         throw new ArgumentFollowsVariadicArgument(next());
                     }
                 }
-                if (typeof result !== "undefined" && (args2.length > 1 || arg2.variadic)) {
+                if (typeof result !== "undefined" && (args.length > 1 || arg.variadic)) {
                     if (!flags[propName]) {
                         flags[propName] = [];
                     }
                     flags[propName].push(result);
-                    if (hasNext(arg2)) {
-                        parseNext(option10, args2);
+                    if (hasNext(arg)) {
+                        parseNext(option, args);
                     }
                 } else {
                     flags[propName] = result;
                 }
-                function hasNext(arg3) {
-                    return !!(normalized[i + 1] && (arg3.optionalValue || arg3.requiredValue || arg3.variadic) && (normalized[i + 1][0] !== "-" || arg3.type === OptionType.NUMBER && !isNaN(Number(normalized[i + 1]))) && arg3);
+                function hasNext(arg) {
+                    return !!(normalized[i + 1] && (arg.optionalValue || arg.requiredValue || arg.variadic) && (normalized[i + 1][0] !== "-" || arg.type === OptionType.NUMBER && !isNaN(Number(normalized[i + 1]))) && arg);
                 }
-                function parseValue(option11, arg3, value2) {
-                    const type2 = arg3.type || OptionType.STRING;
-                    const result1 = opts.parse ? opts.parse({
+                function parseValue(option, arg, value) {
+                    const type = arg.type || OptionType.STRING;
+                    const result = opts.parse ? opts.parse({
                         label: "Option",
-                        type: type2,
-                        name: `--${option11.name}`,
-                        value: value2
-                    }) : parseFlagValue(option11, arg3, value2);
-                    if (typeof result1 !== "undefined") {
+                        type,
+                        name: `--${option.name}`,
+                        value
+                    }) : parseFlagValue(option, arg, value);
+                    if (typeof result !== "undefined") {
                         increase = true;
                     }
-                    return result1;
+                    return result;
                 }
             }
         } else {
@@ -5384,21 +5374,21 @@ function parseFlags(args, opts = {
     if (opts.flags?.length) {
         validateFlags(opts.flags, flags, opts.knownFlaks, opts.allowEmpty, optionNames);
     }
-    const result = Object.keys(flags).reduce((result1, key)=>{
+    const result = Object.keys(flags).reduce((result, key)=>{
         if (~key.indexOf(".")) {
-            key.split(".").reduce((result2, subKey, index, parts)=>{
+            key.split(".").reduce((result, subKey, index, parts)=>{
                 if (index === parts.length - 1) {
-                    result2[subKey] = flags[key];
+                    result[subKey] = flags[key];
                 } else {
-                    result2[subKey] = result2[subKey] ?? {
+                    result[subKey] = result[subKey] ?? {
                     };
                 }
-                return result2[subKey];
-            }, result1);
+                return result[subKey];
+            }, result);
         } else {
-            result1[key] = flags[key];
+            result[key] = flags[key];
         }
-        return result1;
+        return result;
     }, {
     });
     return {
@@ -5407,17 +5397,17 @@ function parseFlags(args, opts = {
         literal
     };
 }
-function parseFlagValue(option9, arg2, value2) {
-    const type2 = arg2.type || OptionType.STRING;
-    const parseType = Types[type2];
+function parseFlagValue(option, arg, value) {
+    const type = arg.type || OptionType.STRING;
+    const parseType = Types[type];
     if (!parseType) {
-        throw new UnknownType(type2, Object.keys(Types));
+        throw new UnknownType(type, Object.keys(Types));
     }
     return parseType({
         label: "Option",
-        type: type2,
-        name: `--${option9.name}`,
-        value: value2
+        type,
+        name: `--${option.name}`,
+        value
     });
 }
 function getPermissions() {
@@ -5435,8 +5425,8 @@ function isUnstable() {
     return !!Deno.permissions;
 }
 function didYouMeanCommand(command, commands, excludes = []) {
-    const commandNames = commands.map((command1)=>command1.getName()
-    ).filter((command1)=>!excludes.includes(command1)
+    const commandNames = commands.map((command)=>command.getName()
+    ).filter((command)=>!excludes.includes(command)
     );
     return didYouMean(" Did you mean command", command, commandNames);
 }
@@ -5452,7 +5442,7 @@ async function hasPermission(permission) {
 async function hasPermissions(names) {
     const permissions = {
     };
-    await Promise.all(names.map((name2)=>hasPermission(name2).then((hasPermission1)=>permissions[name2] = hasPermission1
+    await Promise.all(names.map((name)=>hasPermission(name).then((hasPermission)=>permissions[name] = hasPermission
         )
     ));
     return permissions;
@@ -5476,24 +5466,24 @@ function parseArgumentsDefinition(argsDefinition) {
     let hasOptional = false;
     let hasVariadic = false;
     const parts = argsDefinition.split(/ +/);
-    for (const arg2 of parts){
+    for (const arg of parts){
         if (hasVariadic) {
-            throw new ArgumentFollowsVariadicArgument(arg2);
+            throw new ArgumentFollowsVariadicArgument(arg);
         }
-        const parts1 = arg2.split(ARGUMENT_DETAILS_REGEX);
-        const type2 = parts1[2] || OptionType.STRING;
+        const parts = arg.split(ARGUMENT_DETAILS_REGEX);
+        const type = parts[2] || OptionType.STRING;
         const details = {
-            optionalValue: arg2[0] !== "<",
-            name: parts1[1],
-            action: parts1[3] || type2,
+            optionalValue: arg[0] !== "<",
+            name: parts[1],
+            action: parts[3] || type,
             variadic: false,
-            list: type2 ? arg2.indexOf(type2 + "[]") !== -1 : false,
-            type: type2
+            list: type ? arg.indexOf(type + "[]") !== -1 : false,
+            type
         };
         if (!details.optionalValue && hasOptional) {
             throw new RequiredArgumentFollowsOptionalArgument(details.name);
         }
-        if (arg2[0] === "[") {
+        if (arg[0] === "[") {
             hasOptional = true;
         }
         if (details.name.length > 3) {
@@ -5513,23 +5503,23 @@ function parseArgumentsDefinition(argsDefinition) {
     return argumentDetails;
 }
 class CommandError extends Error {
-    constructor(message4){
-        super(message4);
+    constructor(message){
+        super(message);
         Object.setPrototypeOf(this, CommandError.prototype);
     }
 }
 class ValidationError1 extends CommandError {
     exitCode;
-    constructor(message5, { exitCode  } = {
+    constructor(message, { exitCode  } = {
     }){
-        super(message5);
+        super(message);
         Object.setPrototypeOf(this, ValidationError1.prototype);
         this.exitCode = exitCode ?? 1;
     }
 }
 class DuplicateOptionName extends CommandError {
-    constructor(name2){
-        super(`Option with name "${getFlag(name2)}" already exists.`);
+    constructor(name){
+        super(`Option with name "${getFlag(name)}" already exists.`);
         Object.setPrototypeOf(this, DuplicateOptionName.prototype);
     }
 }
@@ -5540,110 +5530,110 @@ class MissingCommandName extends CommandError {
     }
 }
 class DuplicateCommandName extends CommandError {
-    constructor(name3){
-        super(`Duplicate command name "${name3}".`);
+    constructor(name){
+        super(`Duplicate command name "${name}".`);
         Object.setPrototypeOf(this, DuplicateCommandName.prototype);
     }
 }
 class DuplicateCommandAlias extends CommandError {
-    constructor(alias1){
-        super(`Duplicate command alias "${alias1}".`);
+    constructor(alias){
+        super(`Duplicate command alias "${alias}".`);
         Object.setPrototypeOf(this, DuplicateCommandAlias.prototype);
     }
 }
 class CommandNotFound extends CommandError {
-    constructor(name4, commands4, excluded){
-        super(`Unknown command "${name4}".${didYouMeanCommand(name4, commands4, excluded)}`);
+    constructor(name, commands, excluded){
+        super(`Unknown command "${name}".${didYouMeanCommand(name, commands, excluded)}`);
         Object.setPrototypeOf(this, UnknownCommand.prototype);
     }
 }
 class DuplicateType extends CommandError {
-    constructor(name5){
-        super(`Type with name "${name5}" already exists.`);
+    constructor(name){
+        super(`Type with name "${name}" already exists.`);
         Object.setPrototypeOf(this, DuplicateType.prototype);
     }
 }
 class DuplicateCompletion extends CommandError {
-    constructor(name6){
-        super(`Completion with name "${name6}" already exists.`);
+    constructor(name){
+        super(`Completion with name "${name}" already exists.`);
         Object.setPrototypeOf(this, DuplicateCompletion.prototype);
     }
 }
 class DuplicateExample extends CommandError {
-    constructor(name7){
-        super(`Example with name "${name7}" already exists.`);
+    constructor(name){
+        super(`Example with name "${name}" already exists.`);
         Object.setPrototypeOf(this, DuplicateExample.prototype);
     }
 }
 class DuplicateEnvironmentVariable extends CommandError {
-    constructor(name8){
-        super(`Environment variable with name "${name8}" already exists.`);
+    constructor(name){
+        super(`Environment variable with name "${name}" already exists.`);
         Object.setPrototypeOf(this, DuplicateEnvironmentVariable.prototype);
     }
 }
 class EnvironmentVariableSingleValue extends CommandError {
-    constructor(name9){
-        super(`An environment variable can only have one value, but "${name9}" has more than one.`);
+    constructor(name){
+        super(`An environment variable can only have one value, but "${name}" has more than one.`);
         Object.setPrototypeOf(this, EnvironmentVariableSingleValue.prototype);
     }
 }
 class EnvironmentVariableOptionalValue extends CommandError {
-    constructor(name10){
-        super(`An environment variable cannot have an optional value, but "${name10}" is defined as optional.`);
+    constructor(name){
+        super(`An environment variable cannot have an optional value, but "${name}" is defined as optional.`);
         Object.setPrototypeOf(this, EnvironmentVariableOptionalValue.prototype);
     }
 }
 class EnvironmentVariableVariadicValue extends CommandError {
-    constructor(name11){
-        super(`An environment variable cannot have an variadic value, but "${name11}" is defined as variadic.`);
+    constructor(name){
+        super(`An environment variable cannot have an variadic value, but "${name}" is defined as variadic.`);
         Object.setPrototypeOf(this, EnvironmentVariableVariadicValue.prototype);
     }
 }
 class DefaultCommandNotFound extends CommandError {
-    constructor(name12, commands1){
-        super(`Default command "${name12}" not found.${didYouMeanCommand(name12, commands1)}`);
+    constructor(name, commands){
+        super(`Default command "${name}" not found.${didYouMeanCommand(name, commands)}`);
         Object.setPrototypeOf(this, DefaultCommandNotFound.prototype);
     }
 }
 class CommandExecutableNotFound extends CommandError {
-    constructor(name13, files){
-        super(`Command executable not found: ${name13}:\n    - ${files.join("\\n    - ")}`);
+    constructor(name, files){
+        super(`Command executable not found: ${name}:\n    - ${files.join("\\n    - ")}`);
         Object.setPrototypeOf(this, CommandExecutableNotFound.prototype);
     }
 }
 class UnknownCompletionCommand extends CommandError {
-    constructor(name14, commands2){
-        super(`Auto-completion failed. Unknown command "${name14}".${didYouMeanCommand(name14, commands2)}`);
+    constructor(name, commands){
+        super(`Auto-completion failed. Unknown command "${name}".${didYouMeanCommand(name, commands)}`);
         Object.setPrototypeOf(this, UnknownCompletionCommand.prototype);
     }
 }
 class UnknownCommand extends ValidationError1 {
-    constructor(name15, commands3, excluded1){
-        super(`Unknown command "${name15}".${didYouMeanCommand(name15, commands3, excluded1)}`);
+    constructor(name, commands, excluded){
+        super(`Unknown command "${name}".${didYouMeanCommand(name, commands, excluded)}`);
         Object.setPrototypeOf(this, UnknownCommand.prototype);
     }
 }
 class NoArgumentsAllowed extends ValidationError1 {
-    constructor(name16){
-        super(`No arguments allowed for command "${name16}".`);
+    constructor(name){
+        super(`No arguments allowed for command "${name}".`);
         Object.setPrototypeOf(this, NoArgumentsAllowed.prototype);
     }
 }
 class MissingArguments extends ValidationError1 {
-    constructor(args2){
-        super("Missing argument(s): " + args2.join(", "));
+    constructor(args){
+        super("Missing argument(s): " + args.join(", "));
         Object.setPrototypeOf(this, MissingArguments.prototype);
     }
 }
 class MissingArgument extends ValidationError1 {
-    constructor(arg2){
-        super(`Missing argument "${arg2}".`);
+    constructor(arg){
+        super(`Missing argument "${arg}".`);
         Object.setPrototypeOf(this, MissingArgument.prototype);
     }
 }
 class TooManyArguments extends ValidationError1 {
-    constructor(args1){
-        super(`Too many arguments: ${args1.join(" ")}`);
+    constructor(args){
+        super(`Too many arguments: ${args.join(" ")}`);
         Object.setPrototypeOf(this, TooManyArguments.prototype);
     }
 }
@@ -5703,8 +5693,8 @@ class Cell {
         }
         return cell;
     }
-    constructor(value3){
-        this.value = value3;
+    constructor(value){
+        this.value = value;
     }
     toString() {
         return this.value.toString();
@@ -5833,9 +5823,9 @@ function longest(index, rows, maxWidth) {
 class TableLayout {
     table;
     options;
-    constructor(table, options5){
+    constructor(table, options){
         this.table = table;
-        this.options = options5;
+        this.options = options;
     }
     toString() {
         const opts = this.createLayout();
@@ -6204,14 +6194,14 @@ class Table extends Array {
     };
     headerRow;
     static from(rows) {
-        const table1 = new this(...rows);
+        const table = new this(...rows);
         if (rows instanceof Table) {
-            table1.options = {
+            table.options = {
                 ...rows.options
             };
-            table1.headerRow = rows.headerRow ? Row.from(rows.headerRow) : undefined;
+            table.headerRow = rows.headerRow ? Row.from(rows.headerRow) : undefined;
         }
-        return table1;
+        return table;
     }
     static fromJson(rows) {
         return new this().fromJson(rows);
@@ -6239,13 +6229,13 @@ class Table extends Array {
         return this;
     }
     clone() {
-        const table1 = new Table(...this.map((row)=>row instanceof Row ? row.clone() : Row.from(row).clone()
+        const table = new Table(...this.map((row)=>row instanceof Row ? row.clone() : Row.from(row).clone()
         ));
-        table1.options = {
+        table.options = {
             ...this.options
         };
-        table1.headerRow = this.headerRow?.clone();
-        return table1;
+        table.headerRow = this.headerRow?.clone();
+        return table;
     }
     toString() {
         return new TableLayout(this, this.options).toString();
@@ -6340,14 +6330,14 @@ class HelpGenerator {
     static generate(cmd, options) {
         return new HelpGenerator(cmd, options).generate();
     }
-    constructor(cmd1, options6 = {
+    constructor(cmd, options = {
     }){
-        this.cmd = cmd1;
+        this.cmd = cmd;
         this.options = {
             types: false,
             hints: true,
             colors: true,
-            ...options6
+            ...options
         };
     }
     generate() {
@@ -6384,20 +6374,20 @@ class HelpGenerator {
         ]).indent(this.indent * 2).maxColWidth(140).padding(1).toString() + "\n";
     }
     generateOptions() {
-        const options7 = this.cmd.getOptions(false);
-        if (!options7.length) {
+        const options = this.cmd.getOptions(false);
+        if (!options.length) {
             return "";
         }
-        const hasTypeDefinitions = !!options7.find((option9)=>!!option9.typeDefinition
+        const hasTypeDefinitions = !!options.find((option)=>!!option.typeDefinition
         );
         if (hasTypeDefinitions) {
             return this.label("Options") + Table.from([
-                ...options7.map((option9)=>[
-                        option9.flags.map((flag)=>blue(flag)
+                ...options.map((option)=>[
+                        option.flags.map((flag)=>blue(flag)
                         ).join(", "),
-                        highlightArguments(option9.typeDefinition || "", this.options.types),
-                        red(bold("-")) + " " + option9.description.split("\n").shift(),
-                        this.generateHints(option9), 
+                        highlightArguments(option.typeDefinition || "", this.options.types),
+                        red(bold("-")) + " " + option.description.split("\n").shift(),
+                        this.generateHints(option), 
                     ]
                 ), 
             ]).padding([
@@ -6412,11 +6402,11 @@ class HelpGenerator {
             ]).toString() + "\n";
         }
         return this.label("Options") + Table.from([
-            ...options7.map((option9)=>[
-                    option9.flags.map((flag)=>blue(flag)
+            ...options.map((option)=>[
+                    option.flags.map((flag)=>blue(flag)
                     ).join(", "),
-                    red(bold("-")) + " " + option9.description.split("\n").shift(),
-                    this.generateHints(option9), 
+                    red(bold("-")) + " " + option.description.split("\n").shift(),
+                    this.generateHints(option), 
                 ]
             ), 
         ]).padding([
@@ -6429,19 +6419,19 @@ class HelpGenerator {
         ]).toString() + "\n";
     }
     generateCommands() {
-        const commands4 = this.cmd.getCommands(false);
-        if (!commands4.length) {
+        const commands = this.cmd.getCommands(false);
+        if (!commands.length) {
             return "";
         }
-        const hasTypeDefinitions = !!commands4.find((command)=>!!command.getArgsDefinition()
+        const hasTypeDefinitions = !!commands.find((command)=>!!command.getArgsDefinition()
         );
         if (hasTypeDefinitions) {
             return this.label("Commands") + Table.from([
-                ...commands4.map((command)=>[
+                ...commands.map((command)=>[
                         [
                             command.getName(),
                             ...command.getAliases()
-                        ].map((name17)=>blue(name17)
+                        ].map((name)=>blue(name)
                         ).join(", "),
                         highlightArguments(command.getArgsDefinition() || "", this.options.types),
                         red(bold("-")) + " " + command.getDescription().split("\n").shift(), 
@@ -6454,11 +6444,11 @@ class HelpGenerator {
             ]).indent(this.indent * 2).toString() + "\n";
         }
         return this.label("Commands") + Table.from([
-            ...commands4.map((command)=>[
+            ...commands.map((command)=>[
                     [
                         command.getName(),
                         ...command.getAliases()
-                    ].map((name17)=>blue(name17)
+                    ].map((name)=>blue(name)
                     ).join(", "),
                     red(bold("-")) + " " + command.getDescription().split("\n").shift(), 
                 ]
@@ -6475,7 +6465,7 @@ class HelpGenerator {
         }
         return this.label("Environment variables") + Table.from([
             ...envVars.map((envVar)=>[
-                    envVar.names.map((name17)=>blue(name17)
+                    envVar.names.map((name)=>blue(name)
                     ).join(", "),
                     highlightArgumentDetails(envVar.details, this.options.types),
                     `${red(bold("-"))} ${envVar.description}`, 
@@ -6503,11 +6493,11 @@ class HelpGenerator {
         typeof option.default !== "undefined" && hints.push(bold(`Default: `) + inspect(option.default, this.options.colors));
         option.depends?.length && hints.push(yellow(bold(`Depends: `)) + italic(option.depends.map(getFlag).join(", ")));
         option.conflicts?.length && hints.push(red(bold(`Conflicts: `)) + italic(option.conflicts.map(getFlag).join(", ")));
-        const type3 = this.cmd.getType(option.args[0]?.type)?.handler;
-        if (type3 instanceof Type) {
-            const possibleValues = type3.values?.(this.cmd, this.cmd.getParent());
+        const type = this.cmd.getType(option.args[0]?.type)?.handler;
+        if (type instanceof Type) {
+            const possibleValues = type.values?.(this.cmd, this.cmd.getParent());
             if (possibleValues?.length) {
-                hints.push(bold(`Values: `) + possibleValues.map((value4)=>inspect(value4, this.options.colors)
+                hints.push(bold(`Values: `) + possibleValues.map((value)=>inspect(value, this.options.colors)
                 ).join(", "));
             }
         }
@@ -6520,41 +6510,41 @@ class HelpGenerator {
         return "\n" + " ".repeat(this.indent) + bold(`${label}:`) + "\n\n";
     }
 }
-function capitalize(string1) {
-    return (string1?.charAt(0).toUpperCase() + string1.slice(1)) ?? "";
+function capitalize(string) {
+    return (string?.charAt(0).toUpperCase() + string.slice(1)) ?? "";
 }
-function inspect(value4, colors) {
-    return Deno.inspect(value4, {
+function inspect(value, colors) {
+    return Deno.inspect(value, {
         depth: 1,
         colors,
         trailingComma: false
     });
 }
-function highlightArguments(argsDefinition, types1 = true) {
+function highlightArguments(argsDefinition, types = true) {
     if (!argsDefinition) {
         return "";
     }
-    return parseArgumentsDefinition(argsDefinition).map((arg3)=>highlightArgumentDetails(arg3, types1)
+    return parseArgumentsDefinition(argsDefinition).map((arg)=>highlightArgumentDetails(arg, types)
     ).join(" ");
 }
-function highlightArgumentDetails(arg3, types1 = true) {
+function highlightArgumentDetails(arg, types = true) {
     let str = "";
-    str += yellow(arg3.optionalValue ? "[" : "<");
-    let name17 = "";
-    name17 += arg3.name;
-    if (arg3.variadic) {
-        name17 += "...";
+    str += yellow(arg.optionalValue ? "[" : "<");
+    let name = "";
+    name += arg.name;
+    if (arg.variadic) {
+        name += "...";
     }
-    name17 = magenta(name17);
-    str += name17;
-    if (types1) {
+    name = magenta(name);
+    str += name;
+    if (types) {
         str += yellow(":");
-        str += red(arg3.type);
+        str += red(arg.type);
     }
-    if (arg3.list) {
+    if (arg.list) {
         str += green("[]");
     }
-    str += yellow(arg3.optionalValue ? "]" : ">");
+    str += yellow(arg.optionalValue ? "]" : ">");
     return str;
 }
 class IntegerType extends Type {
@@ -6615,39 +6605,39 @@ class Command {
     }
     command(nameAndArguments, cmdOrDescription, override) {
         const result = splitArguments(nameAndArguments);
-        const name17 = result.flags.shift();
+        const name = result.flags.shift();
         const aliases = result.flags;
-        if (!name17) {
+        if (!name) {
             throw new MissingCommandName();
         }
-        if (this.getBaseCommand(name17, true)) {
+        if (this.getBaseCommand(name, true)) {
             if (!override) {
-                throw new DuplicateCommandName(name17);
+                throw new DuplicateCommandName(name);
             }
-            this.removeCommand(name17);
+            this.removeCommand(name);
         }
         let description;
-        let cmd2;
+        let cmd;
         if (typeof cmdOrDescription === "string") {
             description = cmdOrDescription;
         }
         if (cmdOrDescription instanceof Command) {
-            cmd2 = cmdOrDescription.reset();
+            cmd = cmdOrDescription.reset();
         } else {
-            cmd2 = new Command();
+            cmd = new Command();
         }
-        cmd2._name = name17;
-        cmd2._parent = this;
+        cmd._name = name;
+        cmd._parent = this;
         if (description) {
-            cmd2.description(description);
+            cmd.description(description);
         }
         if (result.typeDefinition) {
-            cmd2.arguments(result.typeDefinition);
+            cmd.arguments(result.typeDefinition);
         }
-        aliases.forEach((alias1)=>cmd2.alias(alias1)
+        aliases.forEach((alias)=>cmd.alias(alias)
         );
-        this.commands.set(name17, cmd2);
-        this.select(name17);
+        this.commands.set(name, cmd);
+        this.select(name);
         return this;
     }
     alias(alias) {
@@ -6662,11 +6652,11 @@ class Command {
         return this;
     }
     select(name) {
-        const cmd2 = this.getBaseCommand(name, true);
-        if (!cmd2) {
+        const cmd = this.getBaseCommand(name, true);
+        if (!cmd) {
             throw new CommandNotFound(name, this.getBaseCommands(true));
         }
-        this.cmd = cmd2;
+        this.cmd = cmd;
         return this;
     }
     name(name) {
@@ -6689,7 +6679,7 @@ class Command {
         } else if (typeof help === "function") {
             this.cmd._help = help;
         } else {
-            this.cmd._help = (cmd2)=>HelpGenerator.generate(cmd2, help)
+            this.cmd._help = (cmd)=>HelpGenerator.generate(cmd, help)
             ;
         }
         return this;
@@ -6750,7 +6740,7 @@ class Command {
             handler
         });
         if (handler instanceof Type && (typeof handler.complete !== "undefined" || typeof handler.values !== "undefined")) {
-            const completeHandler = (cmd2, parent)=>handler.complete?.(cmd2, parent) || []
+            const completeHandler = (cmd, parent)=>handler.complete?.(cmd, parent) || []
             ;
             this.complete(name, completeHandler, options);
         }
@@ -6799,47 +6789,47 @@ class Command {
             });
         }
         const result = splitArguments(flags);
-        const args3 = result.typeDefinition ? parseArgumentsDefinition(result.typeDefinition) : [];
-        const option10 = {
+        const args = result.typeDefinition ? parseArgumentsDefinition(result.typeDefinition) : [];
+        const option = {
             ...opts,
             name: "",
             description: desc,
-            args: args3,
+            args,
             flags: result.flags,
             typeDefinition: result.typeDefinition
         };
-        if (option10.separator) {
-            for (const arg3 of args3){
-                if (arg3.list) {
-                    arg3.separator = option10.separator;
+        if (option.separator) {
+            for (const arg of args){
+                if (arg.list) {
+                    arg.separator = option.separator;
                 }
             }
         }
-        for (const part of option10.flags){
-            const arg3 = part.trim();
-            const isLong = /^--/.test(arg3);
-            const name18 = isLong ? arg3.slice(2) : arg3.slice(1);
-            if (this.cmd.getBaseOption(name18, true)) {
+        for (const part of option.flags){
+            const arg = part.trim();
+            const isLong = /^--/.test(arg);
+            const name = isLong ? arg.slice(2) : arg.slice(1);
+            if (this.cmd.getBaseOption(name, true)) {
                 if (opts?.override) {
-                    this.removeOption(name18);
+                    this.removeOption(name);
                 } else {
-                    throw new DuplicateOptionName(name18);
+                    throw new DuplicateOptionName(name);
                 }
             }
-            if (!option10.name && isLong) {
-                option10.name = name18;
-            } else if (!option10.aliases) {
-                option10.aliases = [
-                    name18
+            if (!option.name && isLong) {
+                option.name = name;
+            } else if (!option.aliases) {
+                option.aliases = [
+                    name
                 ];
             } else {
-                option10.aliases.push(name18);
+                option.aliases.push(name);
             }
         }
-        if (option10.prepend) {
-            this.cmd.options.unshift(option10);
+        if (option.prepend) {
+            this.cmd.options.unshift(option);
         } else {
-            this.cmd.options.push(option10);
+            this.cmd.options.push(option);
         }
         return this;
     }
@@ -6991,12 +6981,12 @@ class Command {
         if (this.fn) {
             await this.fn(options, ...args);
         } else if (this.defaultCommand) {
-            const cmd2 = this.getCommand(this.defaultCommand, true);
-            if (!cmd2) {
+            const cmd = this.getCommand(this.defaultCommand, true);
+            if (!cmd) {
                 throw new DefaultCommandNotFound(this.defaultCommand, this.getCommands());
             }
-            cmd2._globalParent = this;
-            await cmd2.execute(options, ...args);
+            cmd._globalParent = this;
+            await cmd.execute(options, ...args);
         }
         return {
             options,
@@ -7017,32 +7007,32 @@ class Command {
                 name: "run"
             });
         }
-        const [main1, ...names] = this.getPath().split(" ");
-        names.unshift(main1.replace(/\.ts$/, ""));
+        const [main, ...names] = this.getPath().split(" ");
+        names.unshift(main.replace(/\.ts$/, ""));
         const executableName = names.join("-");
-        const files1 = [];
+        const files = [];
         const parts = Deno.mainModule.replace(/^file:\/\//g, "").split("/");
         if (Deno.build.os === "windows" && parts[0] === "") {
             parts.shift();
         }
         parts.pop();
-        const path3 = parts.join("/");
-        files1.push(path3 + "/" + executableName, path3 + "/" + executableName + ".ts");
-        files1.push(executableName, executableName + ".ts");
+        const path = parts.join("/");
+        files.push(path + "/" + executableName, path + "/" + executableName + ".ts");
+        files.push(executableName, executableName + ".ts");
         const denoOpts = [];
         if (isUnstable()) {
             denoOpts.push("--unstable");
         }
         denoOpts.push("--allow-read", "--allow-run");
-        Object.keys(permissions).forEach((name18)=>{
-            if (name18 === "read" || name18 === "run") {
+        Object.keys(permissions).forEach((name)=>{
+            if (name === "read" || name === "run") {
                 return;
             }
-            if (permissions[name18]) {
-                denoOpts.push(`--allow-${name18}`);
+            if (permissions[name]) {
+                denoOpts.push(`--allow-${name}`);
             }
         });
-        for (const file of files1){
+        for (const file of files){
             try {
                 Deno.lstatSync(file);
             } catch (error) {
@@ -7051,7 +7041,7 @@ class Command {
                 }
                 throw error;
             }
-            const cmd2 = [
+            const cmd = [
                 "deno",
                 "run",
                 ...denoOpts,
@@ -7059,7 +7049,7 @@ class Command {
                 ...args
             ];
             const process = Deno.run({
-                cmd: cmd2
+                cmd: cmd
             });
             const status = await process.status();
             if (!status.success) {
@@ -7067,7 +7057,7 @@ class Command {
             }
             return;
         }
-        throw new CommandExecutableNotFound(executableName, files1);
+        throw new CommandExecutableNotFound(executableName, files);
     }
     parseFlags(args) {
         try {
@@ -7076,11 +7066,11 @@ class Command {
                 stopEarly: this._stopEarly,
                 allowEmpty: this._allowEmpty,
                 flags: this.getOptions(true),
-                parse: (type3)=>this.parseType(type3)
+                parse: (type)=>this.parseType(type)
                 ,
-                option: (option10)=>{
-                    if (!action && option10.action) {
-                        action = option10.action;
+                option: (option)=>{
+                    if (!action && option.action) {
+                        action = option.action;
                     }
                 }
             });
@@ -7098,7 +7088,7 @@ class Command {
     parseType(type) {
         const typeSettings = this.getType(type.type);
         if (!typeSettings) {
-            throw new UnknownType(type.type, this.getTypes().map((type3)=>type3.name
+            throw new UnknownType(type.type, this.getTypes().map((type)=>type.name
             ));
         }
         return typeSettings.handler instanceof Type ? typeSettings.handler.parse(type) : typeSettings.handler(type);
@@ -7112,14 +7102,14 @@ class Command {
             return;
         }
         envVars.forEach((env)=>{
-            const name18 = env.names.find((name19)=>!!Deno.env.get(name19)
+            const name = env.names.find((name)=>!!Deno.env.get(name)
             );
-            if (name18) {
+            if (name) {
                 this.parseType({
                     label: "Environment variable",
                     type: env.type,
-                    name: name18,
-                    value: Deno.env.get(name18) ?? ""
+                    name,
+                    value: Deno.env.get(name) ?? ""
                 });
             }
         });
@@ -7142,7 +7132,7 @@ class Command {
                 );
                 if (required.length) {
                     const flagNames = Object.keys(flags);
-                    const hasStandaloneOption = !!flagNames.find((name18)=>this.getOption(name18, true)?.standalone
+                    const hasStandaloneOption = !!flagNames.find((name)=>this.getOption(name, true)?.standalone
                     );
                     if (!hasStandaloneOption) {
                         throw new MissingArguments(required);
@@ -7156,25 +7146,25 @@ class Command {
                         }
                         throw new MissingArgument(`Missing argument: ${expectedArg.name}`);
                     }
-                    let arg3;
+                    let arg;
                     if (expectedArg.variadic) {
-                        arg3 = args.splice(0, args.length).map((value4)=>this.parseType({
+                        arg = args.splice(0, args.length).map((value)=>this.parseType({
                                 label: "Argument",
                                 type: expectedArg.type,
                                 name: expectedArg.name,
-                                value: value4
+                                value
                             })
                         );
                     } else {
-                        arg3 = this.parseType({
+                        arg = this.parseType({
                             label: "Argument",
                             type: expectedArg.type,
                             name: expectedArg.name,
                             value: args.shift()
                         });
                     }
-                    if (arg3) {
-                        params.push(arg3);
+                    if (arg) {
+                        params.push(arg);
                     }
                 }
                 if (args.length) {
@@ -7214,7 +7204,7 @@ class Command {
         return this.argsDefinition;
     }
     getArgument(name) {
-        return this.getArguments().find((arg3)=>arg3.name === name
+        return this.getArguments().find((arg)=>arg.name === name
         );
     }
     getArguments() {
@@ -7271,20 +7261,20 @@ class Command {
         );
     }
     getGlobalOptions(hidden) {
-        const getOptions = (cmd2, options7 = [], names = [])=>{
-            if (cmd2) {
-                if (cmd2.options.length) {
-                    cmd2.options.forEach((option10)=>{
-                        if (option10.global && !this.options.find((opt)=>opt.name === option10.name
-                        ) && names.indexOf(option10.name) === -1 && (hidden || !option10.hidden)) {
-                            names.push(option10.name);
-                            options7.push(option10);
+        const getOptions = (cmd, options = [], names = [])=>{
+            if (cmd) {
+                if (cmd.options.length) {
+                    cmd.options.forEach((option)=>{
+                        if (option.global && !this.options.find((opt)=>opt.name === option.name
+                        ) && names.indexOf(option.name) === -1 && (hidden || !option.hidden)) {
+                            names.push(option.name);
+                            options.push(option);
                         }
                     });
                 }
-                return getOptions(cmd2._parent, options7, names);
+                return getOptions(cmd._parent, options, names);
             }
-            return options7;
+            return options;
         };
         return getOptions(this._parent);
     }
@@ -7295,22 +7285,22 @@ class Command {
         return this.getBaseOption(name, hidden) ?? this.getGlobalOption(name, hidden);
     }
     getBaseOption(name, hidden) {
-        const option10 = this.options.find((option11)=>option11.name === name
+        const option = this.options.find((option)=>option.name === name
         );
-        return option10 && (hidden || !option10.hidden) ? option10 : undefined;
+        return option && (hidden || !option.hidden) ? option : undefined;
     }
     getGlobalOption(name, hidden) {
         if (!this._parent) {
             return;
         }
-        const option10 = this._parent.getBaseOption(name, hidden);
-        if (!option10 || !option10.global) {
+        const option = this._parent.getBaseOption(name, hidden);
+        if (!option || !option.global) {
             return this._parent.getGlobalOption(name, hidden);
         }
-        return option10;
+        return option;
     }
     removeOption(name) {
-        const index = this.options.findIndex((option10)=>option10.name === name
+        const index = this.options.findIndex((option)=>option.name === name
         );
         if (index === -1) {
             return;
@@ -7324,24 +7314,24 @@ class Command {
         return this.getGlobalCommands(hidden).concat(this.getBaseCommands(hidden));
     }
     getBaseCommands(hidden) {
-        const commands5 = Array.from(this.commands.values());
-        return hidden ? commands5 : commands5.filter((cmd2)=>!cmd2.isHidden
+        const commands = Array.from(this.commands.values());
+        return hidden ? commands : commands.filter((cmd)=>!cmd.isHidden
         );
     }
     getGlobalCommands(hidden) {
-        const getCommands = (cmd2, commands5 = [], names = [])=>{
-            if (cmd2) {
-                if (cmd2.commands.size) {
-                    cmd2.commands.forEach((cmd3)=>{
-                        if (cmd3.isGlobal && this !== cmd3 && !this.commands.has(cmd3._name) && names.indexOf(cmd3._name) === -1 && (hidden || !cmd3.isHidden)) {
-                            names.push(cmd3._name);
-                            commands5.push(cmd3);
+        const getCommands = (cmd, commands = [], names = [])=>{
+            if (cmd) {
+                if (cmd.commands.size) {
+                    cmd.commands.forEach((cmd)=>{
+                        if (cmd.isGlobal && this !== cmd && !this.commands.has(cmd._name) && names.indexOf(cmd._name) === -1 && (hidden || !cmd.isHidden)) {
+                            names.push(cmd._name);
+                            commands.push(cmd);
                         }
                     });
                 }
-                return getCommands(cmd2._parent, commands5, names);
+                return getCommands(cmd._parent, commands, names);
             }
-            return commands5;
+            return commands;
         };
         return getCommands(this._parent);
     }
@@ -7352,9 +7342,9 @@ class Command {
         return this.getBaseCommand(name, hidden) ?? this.getGlobalCommand(name, hidden);
     }
     getBaseCommand(name, hidden) {
-        for (const cmd2 of this.commands.values()){
-            if (cmd2._name === name || cmd2.aliases.includes(name)) {
-                return cmd2 && (hidden || !cmd2.isHidden) ? cmd2 : undefined;
+        for (const cmd of this.commands.values()){
+            if (cmd._name === name || cmd.aliases.includes(name)) {
+                return cmd && (hidden || !cmd.isHidden) ? cmd : undefined;
             }
         }
     }
@@ -7362,11 +7352,11 @@ class Command {
         if (!this._parent) {
             return;
         }
-        const cmd2 = this._parent.getBaseCommand(name, hidden);
-        if (!cmd2?.isGlobal) {
+        const cmd = this._parent.getBaseCommand(name, hidden);
+        if (!cmd?.isGlobal) {
             return this._parent.getGlobalCommand(name, hidden);
         }
-        return cmd2;
+        return cmd;
     }
     removeCommand(name) {
         const command = this.getBaseCommand(name, true);
@@ -7382,19 +7372,19 @@ class Command {
         return Array.from(this.types.values());
     }
     getGlobalTypes() {
-        const getTypes = (cmd2, types2 = [], names = [])=>{
-            if (cmd2) {
-                if (cmd2.types.size) {
-                    cmd2.types.forEach((type3)=>{
-                        if (type3.global && !this.types.has(type3.name) && names.indexOf(type3.name) === -1) {
-                            names.push(type3.name);
-                            types2.push(type3);
+        const getTypes = (cmd, types = [], names = [])=>{
+            if (cmd) {
+                if (cmd.types.size) {
+                    cmd.types.forEach((type)=>{
+                        if (type.global && !this.types.has(type.name) && names.indexOf(type.name) === -1) {
+                            names.push(type.name);
+                            types.push(type);
                         }
                     });
                 }
-                return getTypes(cmd2._parent, types2, names);
+                return getTypes(cmd._parent, types, names);
             }
-            return types2;
+            return types;
         };
         return getTypes(this._parent);
     }
@@ -7408,11 +7398,11 @@ class Command {
         if (!this._parent) {
             return;
         }
-        const cmd2 = this._parent.getBaseType(name);
-        if (!cmd2?.global) {
+        const cmd = this._parent.getBaseType(name);
+        if (!cmd?.global) {
             return this._parent.getGlobalType(name);
         }
-        return cmd2;
+        return cmd;
     }
     getCompletions() {
         return this.getGlobalCompletions().concat(this.getBaseCompletions());
@@ -7421,17 +7411,17 @@ class Command {
         return Array.from(this.completions.values());
     }
     getGlobalCompletions() {
-        const getCompletions = (cmd2, completions = [], names = [])=>{
-            if (cmd2) {
-                if (cmd2.completions.size) {
-                    cmd2.completions.forEach((completion)=>{
+        const getCompletions = (cmd, completions = [], names = [])=>{
+            if (cmd) {
+                if (cmd.completions.size) {
+                    cmd.completions.forEach((completion)=>{
                         if (completion.global && !this.completions.has(completion.name) && names.indexOf(completion.name) === -1) {
                             names.push(completion.name);
                             completions.push(completion);
                         }
                     });
                 }
-                return getCompletions(cmd2._parent, completions, names);
+                return getCompletions(cmd._parent, completions, names);
             }
             return completions;
         };
@@ -7467,10 +7457,10 @@ class Command {
         );
     }
     getGlobalEnvVars(hidden) {
-        const getEnvVars = (cmd2, envVars = [], names = [])=>{
-            if (cmd2) {
-                if (cmd2.envVars.length) {
-                    cmd2.envVars.forEach((envVar)=>{
+        const getEnvVars = (cmd, envVars = [], names = [])=>{
+            if (cmd) {
+                if (cmd.envVars.length) {
+                    cmd.envVars.forEach((envVar)=>{
                         if (envVar.global && !this.envVars.find((env)=>env.names[0] === envVar.names[0]
                         ) && names.indexOf(envVar.names[0]) === -1 && (hidden || !envVar.hidden)) {
                             names.push(envVar.names[0]);
@@ -7478,7 +7468,7 @@ class Command {
                         }
                     });
                 }
-                return getEnvVars(cmd2._parent, envVars, names);
+                return getEnvVars(cmd._parent, envVars, names);
             }
             return envVars;
         };
@@ -7524,16 +7514,16 @@ class BashCompletionsGenerator {
     static generate(cmd) {
         return new BashCompletionsGenerator(cmd).generate();
     }
-    constructor(cmd2){
-        this.cmd = cmd2;
+    constructor(cmd){
+        this.cmd = cmd;
     }
     generate() {
-        const path3 = this.cmd.getPath();
+        const path = this.cmd.getPath();
         const version = this.cmd.getVersion() ? ` v${this.cmd.getVersion()}` : "";
         return `#!/usr/bin/env bash
-# bash completion support for ${path3}${version}
+# bash completion support for ${path}${version}
 
-_${replaceSpecialChars1(path3)}() {
+_${replaceSpecialChars(path)}() {
   local word cur prev
   local -a opts
   COMPREPLY=()
@@ -7542,7 +7532,7 @@ _${replaceSpecialChars1(path3)}() {
   cmd="_"
   opts=()
 
-  _${replaceSpecialChars1(this.cmd.getName())}_complete() {
+  _${replaceSpecialChars(this.cmd.getName())}_complete() {
     local action="$1"; shift
     mapfile -t values < <( ${this.cmd.getName()} completions complete "\${action}" "\${@}" )
     for i in "\${values[@]}"; do
@@ -7587,7 +7577,7 @@ _${replaceSpecialChars1(path3)}() {
   return 0
 }
 
-complete -F _${replaceSpecialChars1(path3)} -o bashdefault -o default ${path3}
+complete -F _${replaceSpecialChars(path)} -o bashdefault -o default ${path}
 `;
     }
     generateCompletions(command, path = "", index = 1) {
@@ -7607,7 +7597,7 @@ ${childCommandCompletions}`;
         const completionsPath = ~path.indexOf(" ") ? " " + path.split(" ").slice(1).join(" ") : "";
         const optionArguments = this.generateOptionArguments(command, completionsPath);
         const completionsCmd = this.generateCommandCompletionsCommand(command.getArguments(), completionsPath);
-        return `  __${replaceSpecialChars1(path)}() {
+        return `  __${replaceSpecialChars(path)}() {
     opts=(${[
             ...flags,
             ...childCommandNames
@@ -7620,19 +7610,19 @@ ${childCommandCompletions}`;
   }`;
     }
     getFlags(command) {
-        return command.getOptions(false).map((option10)=>option10.flags
+        return command.getOptions(false).map((option)=>option.flags
         ).flat();
     }
     generateOptionArguments(command, completionsPath) {
         let opts = "";
-        const options7 = command.getOptions(false);
-        if (options7.length) {
+        const options = command.getOptions(false);
+        if (options.length) {
             opts += 'case "${prev}" in';
-            for (const option10 of options7){
-                const flags = option10.flags.map((flag)=>flag.trim()
+            for (const option of options){
+                const flags = option.flags.map((flag)=>flag.trim()
                 ).join("|");
-                const completionsCmd = this.generateOptionCompletionsCommand(option10.args, completionsPath, {
-                    standalone: option10.standalone
+                const completionsCmd = this.generateOptionCompletionsCommand(option.args, completionsPath, {
+                    standalone: option.standalone
                 });
                 opts += `\n      ${flags}) ${completionsCmd} ;;`;
             }
@@ -7642,13 +7632,13 @@ ${childCommandCompletions}`;
     }
     generateCommandCompletionsCommand(args, path) {
         if (args.length) {
-            return `_${replaceSpecialChars1(this.cmd.getName())}_complete ${args[0].action}${path}`;
+            return `_${replaceSpecialChars(this.cmd.getName())}_complete ${args[0].action}${path}`;
         }
         return "";
     }
     generateOptionCompletionsCommand(args, path, opts) {
         if (args.length) {
-            return `opts=(); _${replaceSpecialChars1(this.cmd.getName())}_complete ${args[0].action}${path}`;
+            return `opts=(); _${replaceSpecialChars(this.cmd.getName())}_complete ${args[0].action}${path}`;
         }
         if (opts?.standalone) {
             return "opts=()";
@@ -7656,63 +7646,24 @@ ${childCommandCompletions}`;
         return "";
     }
 }
-function replaceSpecialChars1(str) {
+function replaceSpecialChars(str) {
     return str.replace(/[^a-zA-Z0-9]/g, "_");
-}
-class BashCompletionsCommand extends Command {
-    #cmd;
-    constructor(cmd3){
-        super();
-        this.#cmd = cmd3;
-        this.description(()=>{
-            const baseCmd = this.#cmd || this.getMainCommand();
-            return `Generate shell completions for bash.
-
-To enable bash completions for this program add following line to your ${dim(italic("~/.bashrc"))}:
-
-    ${dim(italic(`source <(${baseCmd.getPath()} completions bash)`))}`;
-        }).action(()=>{
-            const baseCmd = this.#cmd || this.getMainCommand();
-            Deno.stdout.writeSync(new TextEncoder().encode(BashCompletionsGenerator.generate(baseCmd)));
-        });
-    }
-}
-class CompleteCommand extends Command {
-    constructor(cmd4){
-        super();
-        this.description("Get completions for given action from given command.").arguments("<action:string> [command...:string]").action(async (_, action, commandNames)=>{
-            let parent;
-            const completeCommand = commandNames?.reduce((cmd5, name18)=>{
-                parent = cmd5;
-                const childCmd = cmd5.getCommand(name18, false);
-                if (!childCmd) {
-                    throw new UnknownCompletionCommand(name18, cmd5.getCommands());
-                }
-                return childCmd;
-            }, cmd4 || this.getMainCommand()) ?? (cmd4 || this.getMainCommand());
-            const completion = completeCommand.getCompletion(action);
-            const result = await completion?.complete(completeCommand, parent) ?? [];
-            if (result?.length) {
-                Deno.stdout.writeSync(new TextEncoder().encode(result.join("\n")));
-            }
-        }).reset();
-    }
 }
 class FishCompletionsGenerator {
     cmd;
     static generate(cmd) {
         return new FishCompletionsGenerator(cmd).generate();
     }
-    constructor(cmd5){
-        this.cmd = cmd5;
+    constructor(cmd){
+        this.cmd = cmd;
     }
     generate() {
-        const path4 = this.cmd.getPath();
+        const path = this.cmd.getPath();
         const version = this.cmd.getVersion() ? ` v${this.cmd.getVersion()}` : "";
         return `#!/usr/bin/env fish
-# fish completion support for ${path4}${version}
+# fish completion support for ${path}${version}
 
-function __fish_${replaceSpecialChars2(this.cmd.getName())}_using_command
+function __fish_${replaceSpecialChars1(this.cmd.getName())}_using_command
   set cmds ${getCommandFnNames(this.cmd).join(" ")}
   set words (commandline -opc)
   set cmd "_"
@@ -7752,8 +7703,8 @@ ${this.generateCompletions(this.cmd).trim()}
                 arguments: commandArgs.length ? this.getCompletionCommand(commandArgs[0].action + " " + getCompletionsPath(command)) : undefined
             });
         }
-        for (const option10 of command.getOptions(false)){
-            result += "\n" + this.completeOption(command, option10);
+        for (const option of command.getOptions(false)){
+            result += "\n" + this.completeOption(command, option);
         }
         for (const subCommand of command.getCommands(false)){
             result += this.generateCompletions(subCommand);
@@ -7775,30 +7726,30 @@ ${this.generateCompletions(this.cmd).trim()}
         });
     }
     complete(command, options) {
-        const cmd6 = [
+        const cmd = [
             "complete"
         ];
-        cmd6.push("-c", this.cmd.getName());
-        cmd6.push("-n", `'__fish_${replaceSpecialChars2(this.cmd.getName())}_using_command __${replaceSpecialChars2(command.getPath())}'`);
-        options.shortOption && cmd6.push("-s", options.shortOption);
-        options.longOption && cmd6.push("-l", options.longOption);
-        options.standalone && cmd6.push("-x");
-        cmd6.push("-k");
-        cmd6.push("-f");
+        cmd.push("-c", this.cmd.getName());
+        cmd.push("-n", `'__fish_${replaceSpecialChars1(this.cmd.getName())}_using_command __${replaceSpecialChars1(command.getPath())}'`);
+        options.shortOption && cmd.push("-s", options.shortOption);
+        options.longOption && cmd.push("-l", options.longOption);
+        options.standalone && cmd.push("-x");
+        cmd.push("-k");
+        cmd.push("-f");
         if (options.arguments) {
-            options.required && cmd6.push("-r");
-            cmd6.push("-a", options.arguments);
+            options.required && cmd.push("-r");
+            cmd.push("-a", options.arguments);
         }
-        options.description && cmd6.push("-d", `'${options.description}'`);
-        return cmd6.join(" ");
+        options.description && cmd.push("-d", `'${options.description}'`);
+        return cmd.join(" ");
     }
     getCompletionCommand(cmd) {
         return `'(${this.cmd.getName()} completions complete ${cmd.trim()})'`;
     }
 }
-function getCommandFnNames(cmd6, cmds = []) {
-    cmds.push(`__${replaceSpecialChars2(cmd6.getPath())}`);
-    cmd6.getCommands(false).forEach((command)=>{
+function getCommandFnNames(cmd, cmds = []) {
+    cmds.push(`__${replaceSpecialChars1(cmd.getPath())}`);
+    cmd.getCommands(false).forEach((command)=>{
         getCommandFnNames(command, cmds);
     });
     return cmds;
@@ -7806,26 +7757,8 @@ function getCommandFnNames(cmd6, cmds = []) {
 function getCompletionsPath(command) {
     return command.getPath().split(" ").slice(1).join(" ");
 }
-function replaceSpecialChars2(str) {
+function replaceSpecialChars1(str) {
     return str.replace(/[^a-zA-Z0-9]/g, "_");
-}
-class FishCompletionsCommand extends Command {
-    #cmd;
-    constructor(cmd6){
-        super();
-        this.#cmd = cmd6;
-        this.description(()=>{
-            const baseCmd = this.#cmd || this.getMainCommand();
-            return `Generate shell completions for fish.
-
-To enable fish completions for this program add following line to your ${dim(italic("~/.config/fish/config.fish"))}:
-
-    ${dim(italic(`source (${baseCmd.getPath()} completions fish | psub)`))}`;
-        }).action(()=>{
-            const baseCmd = this.#cmd || this.getMainCommand();
-            Deno.stdout.writeSync(new TextEncoder().encode(FishCompletionsGenerator.generate(baseCmd)));
-        });
-    }
 }
 class ZshCompletionsGenerator {
     cmd;
@@ -7833,21 +7766,21 @@ class ZshCompletionsGenerator {
     static generate(cmd) {
         return new ZshCompletionsGenerator(cmd).generate();
     }
-    constructor(cmd7){
-        this.cmd = cmd7;
+    constructor(cmd){
+        this.cmd = cmd;
     }
     generate() {
-        const path4 = this.cmd.getPath();
-        const name18 = this.cmd.getName();
+        const path = this.cmd.getPath();
+        const name = this.cmd.getName();
         const version = this.cmd.getVersion() ? ` v${this.cmd.getVersion()}` : "";
         return `#!/usr/bin/env zsh
-# zsh completion support for ${path4}${version}
+# zsh completion support for ${path}${version}
 
 autoload -U is-at-least
 
 # shellcheck disable=SC2154
-(( $+functions[__${replaceSpecialChars3(name18)}_complete] )) ||
-function __${replaceSpecialChars3(name18)}_complete {
+(( $+functions[__${replaceSpecialChars2(name)}_complete] )) ||
+function __${replaceSpecialChars2(name)}_complete {
   local name="$1"; shift
   local action="$1"; shift
   integer ret=1
@@ -7857,7 +7790,7 @@ function __${replaceSpecialChars3(name18)}_complete {
   while _tags; do
     if _requested "$name"; then
       # shellcheck disable=SC2034
-      lines="$(${name18} completions complete "\${action}" "\${@}")"
+      lines="$(${name} completions complete "\${action}" "\${@}")"
       values=("\${(ps:\\n:)lines}")
       if (( \${#values[@]} )); then
         while _next_label "$name" expl "$action"; do
@@ -7870,9 +7803,9 @@ function __${replaceSpecialChars3(name18)}_complete {
 
 ${this.generateCompletions(this.cmd).trim()}
 
-# _${replaceSpecialChars3(path4)} "\${@}"
+# _${replaceSpecialChars2(path)} "\${@}"
 
-compdef _${replaceSpecialChars3(path4)} ${path4}
+compdef _${replaceSpecialChars2(path)} ${path}
 
 `;
     }
@@ -7882,15 +7815,15 @@ compdef _${replaceSpecialChars3(path4)} ${path4}
         }
         path = (path ? path + " " : "") + command.getName();
         return `# shellcheck disable=SC2154
-(( $+functions[_${replaceSpecialChars3(path)}] )) ||
-function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
+(( $+functions[_${replaceSpecialChars2(path)}] )) ||
+function _${replaceSpecialChars2(path)}() {` + (!command.getParent() ? `
   local state` : "") + this.generateCommandCompletions(command, path) + this.generateSubCommandCompletions(command, path) + this.generateArgumentCompletions(command, path) + this.generateActions(command) + `\n}\n\n` + command.getCommands(false).filter((subCommand)=>subCommand !== command
         ).map((subCommand)=>this.generateCompletions(subCommand, path)
         ).join("");
     }
     generateCommandCompletions(command, path) {
-        const commands5 = command.getCommands(false);
-        let completions = commands5.map((subCommand)=>`'${subCommand.getName()}:${subCommand.getShortDescription()}'`
+        const commands = command.getCommands(false);
+        let completions = commands.map((subCommand)=>`'${subCommand.getName()}:${subCommand.getShortDescription()}'`
         ).join("\n      ");
         if (completions) {
             completions = `
@@ -7903,10 +7836,10 @@ function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
         }
         if (command.hasArguments()) {
             const completionsPath = path.split(" ").slice(1).join(" ");
-            const arg3 = command.getArguments()[0];
-            const action = this.addAction(arg3, completionsPath);
-            if (action && command.getCompletion(arg3.action)) {
-                completions += `\n    __${replaceSpecialChars3(this.cmd.getName())}_complete ${action.arg.name} ${action.arg.action} ${action.cmd}`;
+            const arg = command.getArguments()[0];
+            const action = this.addAction(arg, completionsPath);
+            if (action && command.getCompletion(arg.action)) {
+                completions += `\n    __${replaceSpecialChars2(this.cmd.getName())}_complete ${action.arg.name} ${action.arg.action} ${action.cmd}`;
             }
         }
         if (completions) {
@@ -7916,7 +7849,7 @@ function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
     }
     generateSubCommandCompletions(command, path) {
         if (command.hasCommands(false)) {
-            const actions = command.getCommands(false).map((command)=>`${command.getName()}) _${replaceSpecialChars3(path + " " + command.getName())} ;;`
+            const actions = command.getCommands(false).map((command)=>`${command.getName()}) _${replaceSpecialChars2(path + " " + command.getName())} ;;`
             ).join("\n      ");
             return `\n
   function _command_args() {
@@ -7927,24 +7860,24 @@ function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
     }
     generateArgumentCompletions(command, path) {
         this.actions.clear();
-        const options7 = this.generateOptions(command, path);
+        const options = this.generateOptions(command, path);
         let argIndex = 0;
         let argsCommand = "\n\n  _arguments -w -s -S -C";
         if (command.hasOptions()) {
-            argsCommand += ` \\\n    ${options7.join(" \\\n    ")}`;
+            argsCommand += ` \\\n    ${options.join(" \\\n    ")}`;
         }
-        if (command.hasCommands(false) || command.getArguments().filter((arg3)=>command.getCompletion(arg3.action)
+        if (command.hasCommands(false) || command.getArguments().filter((arg)=>command.getCompletion(arg.action)
         ).length) {
             argsCommand += ` \\\n    '${++argIndex}: :_commands'`;
         }
         if (command.hasArguments() || command.hasCommands(false)) {
-            const args3 = [];
-            for (const arg3 of command.getArguments().slice(1)){
+            const args = [];
+            for (const arg of command.getArguments().slice(1)){
                 const completionsPath = path.split(" ").slice(1).join(" ");
-                const action = this.addAction(arg3, completionsPath);
-                args3.push(`${++argIndex}${arg3.optionalValue ? "::" : ":"}${action.name}`);
+                const action = this.addAction(arg, completionsPath);
+                args.push(`${++argIndex}${arg.optionalValue ? "::" : ":"}${action.name}`);
             }
-            argsCommand += args3.map((arg4)=>`\\\n    '${arg4}'`
+            argsCommand += args.map((arg)=>`\\\n    '${arg}'`
             ).join("");
             if (command.hasCommands(false)) {
                 argsCommand += ` \\\n    '*:: :->command_args'`;
@@ -7953,17 +7886,17 @@ function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
         return argsCommand;
     }
     generateOptions(command, path) {
-        const options7 = [];
+        const options = [];
         const cmdArgs = path.split(" ");
-        const _baseName = cmdArgs.shift();
+        cmdArgs.shift();
         const completionsPath = cmdArgs.join(" ");
-        const excludedFlags = command.getOptions(false).map((option10)=>option10.standalone ? option10.flags : false
+        const excludedFlags = command.getOptions(false).map((option)=>option.standalone ? option.flags : false
         ).flat().filter((flag)=>typeof flag === "string"
         );
-        for (const option10 of command.getOptions(false)){
-            options7.push(this.generateOption(option10, completionsPath, excludedFlags));
+        for (const option of command.getOptions(false)){
+            options.push(this.generateOption(option, completionsPath, excludedFlags));
         }
-        return options7;
+        return options;
     }
     generateOption(option, completionsPath, excludedOptions) {
         const flags = option.flags;
@@ -7976,26 +7909,26 @@ function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
             ...excludedFlags,
             ...flags, 
         ];
-        let args3 = "";
-        for (const arg3 of option.args){
-            const action = this.addAction(arg3, completionsPath);
-            if (arg3.variadic) {
-                args3 += `${arg3.optionalValue ? "::" : ":"}${arg3.name}:->${action.name}`;
+        let args = "";
+        for (const arg of option.args){
+            const action = this.addAction(arg, completionsPath);
+            if (arg.variadic) {
+                args += `${arg.optionalValue ? "::" : ":"}${arg.name}:->${action.name}`;
             } else {
-                args3 += `${arg3.optionalValue ? "::" : ":"}${arg3.name}:->${action.name}`;
+                args += `${arg.optionalValue ? "::" : ":"}${arg.name}:->${action.name}`;
             }
         }
         let description = option.description.trim().split("\n").shift();
         description = description.replace(/\[/g, "\\[").replace(/]/g, "\\]").replace(/"/g, '\\"').replace(/'/g, "'\"'\"'");
         const collect = option.collect ? "*" : "";
         if (option.standalone) {
-            return `'(- *)'{${collect}${flags}}'[${description}]${args3}'`;
+            return `'(- *)'{${collect}${flags}}'[${description}]${args}'`;
         } else {
-            const excluded2 = excludedFlags.length ? `'(${excludedFlags.join(" ")})'` : "";
+            const excluded = excludedFlags.length ? `'(${excludedFlags.join(" ")})'` : "";
             if (collect || flags.length > 1) {
-                return `${excluded2}{${collect}${flags}}'[${description}]${args3}'`;
+                return `${excluded}{${collect}${flags}}'[${description}]${args}'`;
             } else {
-                return `${excluded2}${flags}'[${description}]${args3}'`;
+                return `${excluded}${flags}'[${description}]${args}'`;
             }
         }
     }
@@ -8014,7 +7947,7 @@ function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
     generateActions(command) {
         let actions = [];
         if (this.actions.size) {
-            actions = Array.from(this.actions).map(([name18, action])=>`${name18}) __${replaceSpecialChars3(this.cmd.getName())}_complete ${action.arg.name} ${action.arg.action} ${action.cmd} ;;`
+            actions = Array.from(this.actions).map(([name, action])=>`${name}) __${replaceSpecialChars2(this.cmd.getName())}_complete ${action.arg.name} ${action.arg.action} ${action.cmd} ;;`
             );
         }
         if (command.hasCommands(false)) {
@@ -8026,119 +7959,38 @@ function _${replaceSpecialChars3(path)}() {` + (!command.getParent() ? `
         return "";
     }
 }
-function replaceSpecialChars3(str) {
+function replaceSpecialChars2(str) {
     return str.replace(/[^a-zA-Z0-9]/g, "_");
-}
-class ZshCompletionsCommand extends Command {
-    #cmd;
-    constructor(cmd8){
-        super();
-        this.#cmd = cmd8;
-        this.description(()=>{
-            const baseCmd = this.#cmd || this.getMainCommand();
-            return `Generate shell completions for zsh.
-
-To enable zsh completions for this program add following line to your ${dim(italic("~/.zshrc"))}:
-
-    ${dim(italic(`source <(${baseCmd.getPath()} completions zsh)`))}`;
-        }).action(()=>{
-            const baseCmd = this.#cmd || this.getMainCommand();
-            Deno.stdout.writeSync(new TextEncoder().encode(ZshCompletionsGenerator.generate(baseCmd)));
-        });
-    }
-}
-class CompletionsCommand extends Command {
-    #cmd;
-    constructor(cmd9){
-        super();
-        this.#cmd = cmd9;
-        this.description(()=>{
-            const baseCmd = this.#cmd || this.getMainCommand();
-            return `Generate shell completions.
-
-To enable shell completions for this program add the following line to your ${dim(italic("~/.bashrc"))} or similar:
-
-    ${dim(italic(`source <(${baseCmd.getPath()} completions [shell])`))}
-
-    For more information run ${dim(italic(`${baseCmd.getPath()} completions [shell] --help`))}
-`;
-        }).action(()=>this.showHelp()
-        ).command("bash", new BashCompletionsCommand(this.#cmd)).command("fish", new FishCompletionsCommand(this.#cmd)).command("zsh", new ZshCompletionsCommand(this.#cmd)).command("complete", new CompleteCommand(this.#cmd).hidden()).reset();
-    }
 }
 class CommandType extends StringType {
     complete(_cmd, parent) {
-        return parent?.getCommands(false).map((cmd10)=>cmd10.getName()
+        return parent?.getCommands(false).map((cmd)=>cmd.getName()
         ) || [];
     }
 }
 class HelpCommand extends Command {
-    constructor(cmd10){
+    constructor(cmd){
         super();
-        this.type("command", new CommandType()).arguments("[command:command]").description("Show this help or the help of a sub-command.").action((_, name18)=>{
-            if (!cmd10) {
-                cmd10 = name18 ? this.getGlobalParent()?.getBaseCommand(name18) : this.getGlobalParent();
+        this.type("command", new CommandType()).arguments("[command:command]").description("Show this help or the help of a sub-command.").action((_, name)=>{
+            if (!cmd) {
+                cmd = name ? this.getGlobalParent()?.getBaseCommand(name) : this.getGlobalParent();
             }
-            if (!cmd10) {
+            if (!cmd) {
                 const cmds = this.getGlobalParent()?.getCommands();
-                throw new UnknownCommand(name18 ?? "", cmds ?? [], [
+                throw new UnknownCommand(name ?? "", cmds ?? [], [
                     this.getName(),
                     ...this.getAliases(), 
                 ]);
             }
-            cmd10.showHelp();
+            cmd.showHelp();
             Deno.exit(0);
         });
     }
 }
-class ActionListType extends StringType {
-    cmd;
-    constructor(cmd11){
-        super();
-        this.cmd = cmd11;
-    }
-    complete() {
-        return this.cmd.getCompletions().map((type3)=>type3.name
-        ).filter((value4, index, self)=>self.indexOf(value4) === index
-        );
-    }
-}
-class ChildCommandType extends StringType {
-    #cmd;
-    constructor(cmd12){
-        super();
-        this.#cmd = cmd12;
-    }
-    complete(cmd) {
-        return (this.#cmd ?? cmd)?.getCommands(false).map((cmd13)=>cmd13.getName()
-        ) || [];
-    }
-}
-class EnumType extends Type {
-    allowedValues;
-    constructor(values){
-        super();
-        this.allowedValues = values;
-    }
-    parse(type) {
-        for (const value4 of this.allowedValues){
-            if (value4.toString() === type.value) {
-                return value4;
-            }
-        }
-        throw new InvalidTypeError(type, this.allowedValues.slice());
-    }
-    values() {
-        return this.allowedValues.slice();
-    }
-    complete() {
-        return this.values();
-    }
-}
 class YAMLError extends Error {
     mark;
-    constructor(message6 = "(unknown reason)", mark = ""){
-        super(`${message6} ${mark}`);
+    constructor(message = "(unknown reason)", mark = ""){
+        super(`${message} ${mark}`);
         this.mark = mark;
         this.name = this.constructor.name;
     }
@@ -8146,11 +7998,11 @@ class YAMLError extends Error {
         return `${this.name}: ${this.message} ${this.mark}`;
     }
 }
-function isBoolean(value4) {
-    return typeof value4 === "boolean" || value4 instanceof Boolean;
+function isBoolean(value) {
+    return typeof value === "boolean" || value instanceof Boolean;
 }
-function isObject(value4) {
-    return value4 !== null && typeof value4 === "object";
+function isObject(value) {
+    return value !== null && typeof value === "object";
 }
 function repeat(str, count) {
     let result = "";
@@ -8168,11 +8020,11 @@ class Mark {
     position;
     line;
     column;
-    constructor(name18, buffer, position1, line1, column){
-        this.name = name18;
+    constructor(name, buffer, position, line, column){
+        this.name = name;
         this.buffer = buffer;
-        this.position = position1;
-        this.line = line1;
+        this.position = position;
+        this.line = line;
         this.column = column;
     }
     getSnippet(indent = 4, maxLength = 75) {
@@ -8215,12 +8067,12 @@ class Mark {
         return where;
     }
 }
-function compileList(schema, name19, result) {
+function compileList(schema, name, result) {
     const exclude = [];
     for (const includedSchema of schema.include){
-        result = compileList(includedSchema, name19, result);
+        result = compileList(includedSchema, name, result);
     }
-    for (const currentType of schema[name19]){
+    for (const currentType of schema[name]){
         for(let previousIndex = 0; previousIndex < result.length; previousIndex++){
             const previousType = result[previousIndex];
             if (previousType.tag === currentType.tag && previousType.kind === currentType.kind) {
@@ -8243,10 +8095,10 @@ function compileMap(...typesList) {
         sequence: {
         }
     };
-    for (const types2 of typesList){
-        for (const type3 of types2){
-            if (type3.kind !== null) {
-                result[type3.kind][type3.tag] = result["fallback"][type3.tag] = type3;
+    for (const types of typesList){
+        for (const type of types){
+            if (type.kind !== null) {
+                result[type.kind][type.tag] = result["fallback"][type.tag] = type;
             }
         }
     }
@@ -8260,12 +8112,12 @@ class Schema {
     compiledImplicit;
     compiledExplicit;
     compiledTypeMap;
-    constructor(definition1){
-        this.explicit = definition1.explicit || [];
-        this.implicit = definition1.implicit || [];
-        this.include = definition1.include || [];
-        for (const type3 of this.implicit){
-            if (type3.loadKind && type3.loadKind !== "scalar") {
+    constructor(definition){
+        this.explicit = definition.explicit || [];
+        this.implicit = definition.implicit || [];
+        this.include = definition.include || [];
+        for (const type of this.implicit){
+            if (type.loadKind && type.loadKind !== "scalar") {
                 throw new YAMLError("There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.");
             }
         }
@@ -8314,17 +8166,17 @@ class Type1 {
     defaultStyle;
     styleAliases;
     loadKind;
-    constructor(tag1, options7){
-        this.tag = checkTagFormat(tag1);
-        if (options7) {
-            this.kind = options7.kind;
-            this.resolve = options7.resolve || DEFAULT_RESOLVE;
-            this.construct = options7.construct || DEFAULT_CONSTRUCT;
-            this.instanceOf = options7.instanceOf;
-            this.predicate = options7.predicate;
-            this.represent = options7.represent;
-            this.defaultStyle = options7.defaultStyle;
-            this.styleAliases = options7.styleAliases;
+    constructor(tag, options){
+        this.tag = checkTagFormat(tag);
+        if (options) {
+            this.kind = options.kind;
+            this.resolve = options.resolve || DEFAULT_RESOLVE;
+            this.construct = options.construct || DEFAULT_CONSTRUCT;
+            this.instanceOf = options.instanceOf;
+            this.predicate = options.predicate;
+            this.represent = options.represent;
+            this.defaultStyle = options.defaultStyle;
+            this.styleAliases = options.styleAliases;
         }
     }
     resolve = ()=>true
@@ -8478,14 +8330,14 @@ class Buffer {
 const BASE64_MAP = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\n\r";
 function resolveYamlBinary(data) {
     if (data === null) return false;
-    let code1;
+    let code;
     let bitlen = 0;
     const max = data.length;
     const map = BASE64_MAP;
     for(let idx = 0; idx < max; idx++){
-        code1 = map.indexOf(data.charAt(idx));
-        if (code1 > 64) continue;
-        if (code1 < 0) return false;
+        code = map.indexOf(data.charAt(idx));
+        if (code > 64) continue;
+        if (code < 0) return false;
         bitlen += 6;
     }
     return bitlen % 8 === 0;
@@ -8601,20 +8453,20 @@ function resolveYamlFloat(data) {
     return true;
 }
 function constructYamlFloat(data) {
-    let value4 = data.replace(/_/g, "").toLowerCase();
-    const sign = value4[0] === "-" ? -1 : 1;
+    let value = data.replace(/_/g, "").toLowerCase();
+    const sign = value[0] === "-" ? -1 : 1;
     const digits = [];
-    if ("+-".indexOf(value4[0]) >= 0) {
-        value4 = value4.slice(1);
+    if ("+-".indexOf(value[0]) >= 0) {
+        value = value.slice(1);
     }
-    if (value4 === ".inf") {
+    if (value === ".inf") {
         return sign === 1 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
     }
-    if (value4 === ".nan") {
+    if (value === ".nan") {
         return NaN;
     }
-    if (value4.indexOf(":") >= 0) {
-        value4.split(":").forEach((v)=>{
+    if (value.indexOf(":") >= 0) {
+        value.split(":").forEach((v)=>{
             digits.unshift(parseFloat(v));
         });
         let valueNb = 0;
@@ -8625,7 +8477,7 @@ function constructYamlFloat(data) {
         });
         return sign * valueNb;
     }
-    return sign * parseFloat(value4);
+    return sign * parseFloat(value);
 }
 const SCIENTIFIC_WITHOUT_DOT = /^[-+]?[0-9]+e/;
 function representYamlFloat(object, style) {
@@ -8673,10 +8525,10 @@ const __float = new Type1("tag:yaml.org,2002:float", {
     represent: representYamlFloat,
     resolve: resolveYamlFloat
 });
-function reconstructFunction(code1) {
-    const func = new Function(`return ${code1}`)();
+function reconstructFunction(code) {
+    const func = new Function(`return ${code}`)();
     if (!(func instanceof Function)) {
-        throw new TypeError(`Expected function but got ${typeof func}: ${code1}`);
+        throw new TypeError(`Expected function but got ${typeof func}: ${code}`);
     }
     return func;
 }
@@ -8767,26 +8619,26 @@ function resolveYamlInteger(data) {
     return /^(:[0-5]?[0-9])+$/.test(data.slice(index));
 }
 function constructYamlInteger(data) {
-    let value4 = data;
+    let value = data;
     const digits = [];
-    if (value4.indexOf("_") !== -1) {
-        value4 = value4.replace(/_/g, "");
+    if (value.indexOf("_") !== -1) {
+        value = value.replace(/_/g, "");
     }
     let sign = 1;
-    let ch = value4[0];
+    let ch = value[0];
     if (ch === "-" || ch === "+") {
         if (ch === "-") sign = -1;
-        value4 = value4.slice(1);
-        ch = value4[0];
+        value = value.slice(1);
+        ch = value[0];
     }
-    if (value4 === "0") return 0;
+    if (value === "0") return 0;
     if (ch === "0") {
-        if (value4[1] === "b") return sign * parseInt(value4.slice(2), 2);
-        if (value4[1] === "x") return sign * parseInt(value4, 16);
-        return sign * parseInt(value4, 8);
+        if (value[1] === "b") return sign * parseInt(value.slice(2), 2);
+        if (value[1] === "x") return sign * parseInt(value, 16);
+        return sign * parseInt(value, 8);
     }
-    if (value4.indexOf(":") !== -1) {
-        value4.split(":").forEach((v)=>{
+    if (value.indexOf(":") !== -1) {
+        value.split(":").forEach((v)=>{
             digits.unshift(parseInt(v, 10));
         });
         let valueInt = 0;
@@ -8797,7 +8649,7 @@ function constructYamlInteger(data) {
         });
         return sign * valueInt;
     }
-    return sign * parseInt(value4, 10);
+    return sign * parseInt(value, 10);
 }
 function isInteger(object) {
     return Object.prototype.toString.call(object) === "[object Number]" && object % 1 === 0 && !isNegativeZero(object);
@@ -8955,13 +8807,13 @@ const regexp = new Type1("tag:yaml.org,2002:js/regexp", {
         if (data === null || !data.length) {
             return false;
         }
-        const regexp1 = `${data}`;
-        if (regexp1.charAt(0) === "/") {
+        const regexp = `${data}`;
+        if (regexp.charAt(0) === "/") {
             if (!REGEXP.test(data)) {
                 return false;
             }
             const modifiers = [
-                ...regexp1.match(REGEXP)?.groups?.modifiers ?? ""
+                ...regexp.match(REGEXP)?.groups?.modifiers ?? ""
             ];
             if (new Set(modifiers).size < modifiers.length) {
                 return false;
@@ -8970,9 +8822,9 @@ const regexp = new Type1("tag:yaml.org,2002:js/regexp", {
         return true;
     },
     construct (data) {
-        const { regexp: regexp1 = `${data}` , modifiers =""  } = `${data}`.match(REGEXP)?.groups ?? {
+        const { regexp =`${data}` , modifiers =""  } = `${data}`.match(REGEXP)?.groups ?? {
         };
-        return new RegExp(regexp1, modifiers);
+        return new RegExp(regexp, modifiers);
     },
     predicate (object) {
         return object instanceof RegExp;
@@ -9115,7 +8967,7 @@ const def = new Schema({
         core
     ]
 });
-const extended = new Schema({
+new Schema({
     explicit: [
         func,
         regexp,
@@ -9154,13 +9006,13 @@ class LoaderState extends State {
     anchor;
     kind;
     result = "";
-    constructor(input, { filename , schema: schema1 , onWarning , legacy =false , json: json2 = false , listener =null  }){
-        super(schema1);
+    constructor(input, { filename , schema , onWarning , legacy =false , json =false , listener =null  }){
+        super(schema);
         this.input = input;
         this.filename = filename;
         this.onWarning = onWarning;
         this.legacy = legacy;
-        this.json = json2;
+        this.json = json;
         this.listener = listener;
         this.implicitTypes = this.schema.compiledImplicit;
         this.typeMap = this.schema.compiledTypeMap;
@@ -9235,15 +9087,15 @@ for(let i = 0; i < 256; i++){
     simpleEscapeCheck[i] = simpleEscapeSequence(i) ? 1 : 0;
     simpleEscapeMap[i] = simpleEscapeSequence(i);
 }
-function generateError(state, message7) {
-    return new YAMLError(message7, new Mark(state.filename, state.input, state.position, state.line, state.position - state.lineStart));
+function generateError(state, message) {
+    return new YAMLError(message, new Mark(state.filename, state.input, state.position, state.line, state.position - state.lineStart));
 }
-function throwError(state, message7) {
-    throw generateError(state, message7);
+function throwError(state, message) {
+    throw generateError(state, message);
 }
-function throwWarning(state, message7) {
+function throwWarning(state, message) {
     if (state.onWarning) {
-        state.onWarning.call(null, generateError(state, message7));
+        state.onWarning.call(null, generateError(state, message));
     }
 }
 const directiveHandlers = {
@@ -9296,8 +9148,8 @@ function captureSegment(state, start, end, checkJson) {
     if (start < end) {
         result = state.input.slice(start, end);
         if (checkJson) {
-            for(let position2 = 0, length = result.length; position2 < length; position2++){
-                const character = result.charCodeAt(position2);
+            for(let position = 0, length = result.length; position < length; position++){
+                const character = result.charCodeAt(position);
                 if (!(character === 9 || 32 <= character && character <= 1114111)) {
                     return throwError(state, "expected valid JSON character");
                 }
@@ -9313,8 +9165,8 @@ function mergeMappings(state, destination, source, overridableKeys) {
         return throwError(state, "cannot merge mappings; the provided source object is unacceptable");
     }
     const keys = Object.keys(source);
-    for(let i1 = 0, len = keys.length; i1 < len; i1++){
-        const key = keys[i1];
+    for(let i = 0, len = keys.length; i < len; i++){
+        const key = keys[i];
         if (!_hasOwnProperty2.call(destination, key)) {
             destination[key] = source[key];
             overridableKeys[key] = true;
@@ -9441,7 +9293,7 @@ function readPlainScalar(state, nodeIndent, withinFlowCollection) {
     state.result = "";
     let captureEnd, captureStart = captureEnd = state.position;
     let hasPendingContent = false;
-    let line2 = 0;
+    let line = 0;
     while(ch !== 0){
         if (ch === 58) {
             following = state.input.charCodeAt(state.position + 1);
@@ -9456,7 +9308,7 @@ function readPlainScalar(state, nodeIndent, withinFlowCollection) {
         } else if (state.position === state.lineStart && testDocumentSeparator(state) || withinFlowCollection && isFlowIndicator(ch)) {
             break;
         } else if (isEOL(ch)) {
-            line2 = state.line;
+            line = state.line;
             const lineStart = state.lineStart;
             const lineIndent = state.lineIndent;
             skipSeparationSpace(state, false, -1);
@@ -9466,7 +9318,7 @@ function readPlainScalar(state, nodeIndent, withinFlowCollection) {
                 continue;
             } else {
                 state.position = captureEnd;
-                state.line = line2;
+                state.line = line;
                 state.lineStart = lineStart;
                 state.lineIndent = lineIndent;
                 break;
@@ -9474,7 +9326,7 @@ function readPlainScalar(state, nodeIndent, withinFlowCollection) {
         }
         if (hasPendingContent) {
             captureSegment(state, captureStart, captureEnd, false);
-            writeFoldedLines(state, state.line - line2);
+            writeFoldedLines(state, state.line - line);
             captureStart = captureEnd = state.position;
             hasPendingContent = false;
         }
@@ -9598,10 +9450,10 @@ function readFlowCollection(state, nodeIndent) {
         state.anchorMap[state.anchor] = result;
     }
     ch = state.input.charCodeAt(++state.position);
-    const tag2 = state.tag, anchor = state.anchor;
+    const tag = state.tag, anchor = state.anchor;
     let readNext = true;
     let valueNode, keyNode, keyTag = keyNode = valueNode = null, isExplicitPair, isPair = isExplicitPair = false;
-    let following = 0, line2 = 0;
+    let following = 0, line = 0;
     const overridableKeys = {
     };
     while(ch !== 0){
@@ -9609,7 +9461,7 @@ function readFlowCollection(state, nodeIndent) {
         ch = state.input.charCodeAt(state.position);
         if (ch === terminator) {
             state.position++;
-            state.tag = tag2;
+            state.tag = tag;
             state.anchor = anchor;
             state.kind = isMapping ? "mapping" : "sequence";
             state.result = result;
@@ -9628,13 +9480,13 @@ function readFlowCollection(state, nodeIndent) {
                 skipSeparationSpace(state, true, nodeIndent);
             }
         }
-        line2 = state.line;
+        line = state.line;
         composeNode(state, nodeIndent, 1, false, true);
         keyTag = state.tag || null;
         keyNode = state.result;
         skipSeparationSpace(state, true, nodeIndent);
         ch = state.input.charCodeAt(state.position);
-        if ((isExplicitPair || state.line === line2) && ch === 58) {
+        if ((isExplicitPair || state.line === line) && ch === 58) {
             isPair = true;
             ch = state.input.charCodeAt(++state.position);
             skipSeparationSpace(state, true, nodeIndent);
@@ -9758,8 +9610,8 @@ function readBlockScalar(state, nodeIndent) {
     return true;
 }
 function readBlockSequence(state, nodeIndent) {
-    let line2, following, detected = false, ch;
-    const tag2 = state.tag, anchor = state.anchor, result = [];
+    let line, following, detected = false, ch;
+    const tag = state.tag, anchor = state.anchor, result = [];
     if (state.anchor !== null && typeof state.anchor !== "undefined" && typeof state.anchorMap !== "undefined") {
         state.anchorMap[state.anchor] = result;
     }
@@ -9781,19 +9633,19 @@ function readBlockSequence(state, nodeIndent) {
                 continue;
             }
         }
-        line2 = state.line;
+        line = state.line;
         composeNode(state, nodeIndent, 3, false, true);
         result.push(state.result);
         skipSeparationSpace(state, true, -1);
         ch = state.input.charCodeAt(state.position);
-        if ((state.line === line2 || state.lineIndent > nodeIndent) && ch !== 0) {
+        if ((state.line === line || state.lineIndent > nodeIndent) && ch !== 0) {
             return throwError(state, "bad indentation of a sequence entry");
         } else if (state.lineIndent < nodeIndent) {
             break;
         }
     }
     if (detected) {
-        state.tag = tag2;
+        state.tag = tag;
         state.anchor = anchor;
         state.kind = "sequence";
         state.result = result;
@@ -9802,17 +9654,17 @@ function readBlockSequence(state, nodeIndent) {
     return false;
 }
 function readBlockMapping(state, nodeIndent, flowIndent) {
-    const tag2 = state.tag, anchor = state.anchor, result = {
+    const tag = state.tag, anchor = state.anchor, result = {
     }, overridableKeys = {
     };
-    let following, allowCompact = false, line2, pos, keyTag = null, keyNode = null, valueNode = null, atExplicitKey = false, detected = false, ch;
+    let following, allowCompact = false, line, pos, keyTag = null, keyNode = null, valueNode = null, atExplicitKey = false, detected = false, ch;
     if (state.anchor !== null && typeof state.anchor !== "undefined" && typeof state.anchorMap !== "undefined") {
         state.anchorMap[state.anchor] = result;
     }
     ch = state.input.charCodeAt(state.position);
     while(ch !== 0){
         following = state.input.charCodeAt(state.position + 1);
-        line2 = state.line;
+        line = state.line;
         pos = state.position;
         if ((ch === 63 || ch === 58) && isWsOrEol(following)) {
             if (ch === 63) {
@@ -9832,7 +9684,7 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
             state.position += 1;
             ch = following;
         } else if (composeNode(state, flowIndent, 2, false, true)) {
-            if (state.line === line2) {
+            if (state.line === line) {
                 ch = state.input.charCodeAt(state.position);
                 while(isWhiteSpace(ch)){
                     ch = state.input.charCodeAt(++state.position);
@@ -9854,21 +9706,21 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
                 } else if (detected) {
                     return throwError(state, "can not read an implicit mapping pair; a colon is missed");
                 } else {
-                    state.tag = tag2;
+                    state.tag = tag;
                     state.anchor = anchor;
                     return true;
                 }
             } else if (detected) {
                 return throwError(state, "can not read a block mapping entry; a multiline key may not be an implicit key");
             } else {
-                state.tag = tag2;
+                state.tag = tag;
                 state.anchor = anchor;
                 return true;
             }
         } else {
             break;
         }
-        if (state.line === line2 || state.lineIndent > nodeIndent) {
+        if (state.line === line || state.lineIndent > nodeIndent) {
             if (composeNode(state, nodeIndent, 4, true, allowCompact)) {
                 if (atExplicitKey) {
                     keyNode = state.result;
@@ -9877,7 +9729,7 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
                 }
             }
             if (!atExplicitKey) {
-                storeMappingPair(state, result, overridableKeys, keyTag, keyNode, valueNode, line2, pos);
+                storeMappingPair(state, result, overridableKeys, keyTag, keyNode, valueNode, line, pos);
                 keyTag = keyNode = valueNode = null;
             }
             skipSeparationSpace(state, true, -1);
@@ -9893,7 +9745,7 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
         storeMappingPair(state, result, overridableKeys, keyTag, keyNode, null);
     }
     if (detected) {
-        state.tag = tag2;
+        state.tag = tag;
         state.anchor = anchor;
         state.kind = "mapping";
         state.result = result;
@@ -9901,7 +9753,7 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
     return detected;
 }
 function readTagProperty(state) {
-    let position2, isVerbatim = false, isNamed = false, tagHandle = "", tagName, ch;
+    let position, isVerbatim = false, isNamed = false, tagHandle = "", tagName, ch;
     ch = state.input.charCodeAt(state.position);
     if (ch !== 33) return false;
     if (state.tag !== null) {
@@ -9918,13 +9770,13 @@ function readTagProperty(state) {
     } else {
         tagHandle = "!";
     }
-    position2 = state.position;
+    position = state.position;
     if (isVerbatim) {
         do {
             ch = state.input.charCodeAt(++state.position);
         }while (ch !== 0 && ch !== 62)
         if (state.position < state.length) {
-            tagName = state.input.slice(position2, state.position);
+            tagName = state.input.slice(position, state.position);
             ch = state.input.charCodeAt(++state.position);
         } else {
             return throwError(state, "unexpected end of the stream within a verbatim tag");
@@ -9933,19 +9785,19 @@ function readTagProperty(state) {
         while(ch !== 0 && !isWsOrEol(ch)){
             if (ch === 33) {
                 if (!isNamed) {
-                    tagHandle = state.input.slice(position2 - 1, state.position + 1);
+                    tagHandle = state.input.slice(position - 1, state.position + 1);
                     if (!PATTERN_TAG_HANDLE.test(tagHandle)) {
                         return throwError(state, "named tag handle cannot contain such characters");
                     }
                     isNamed = true;
-                    position2 = state.position + 1;
+                    position = state.position + 1;
                 } else {
                     return throwError(state, "tag suffix cannot contain exclamation marks");
                 }
             }
             ch = state.input.charCodeAt(++state.position);
         }
-        tagName = state.input.slice(position2, state.position);
+        tagName = state.input.slice(position, state.position);
         if (PATTERN_FLOW_INDICATORS.test(tagName)) {
             return throwError(state, "tag suffix cannot contain flow indicator characters");
         }
@@ -9973,14 +9825,14 @@ function readAnchorProperty(state) {
         return throwError(state, "duplication of an anchor property");
     }
     ch = state.input.charCodeAt(++state.position);
-    const position2 = state.position;
+    const position = state.position;
     while(ch !== 0 && !isWsOrEol(ch) && !isFlowIndicator(ch)){
         ch = state.input.charCodeAt(++state.position);
     }
-    if (state.position === position2) {
+    if (state.position === position) {
         return throwError(state, "name of an anchor node must contain at least one character");
     }
-    state.anchor = state.input.slice(position2, state.position);
+    state.anchor = state.input.slice(position, state.position);
     return true;
 }
 function readAlias(state) {
@@ -9994,18 +9846,18 @@ function readAlias(state) {
     if (state.position === _position) {
         return throwError(state, "name of an alias node must contain at least one character");
     }
-    const alias2 = state.input.slice(_position, state.position);
-    if (typeof state.anchorMap !== "undefined" && !Object.prototype.hasOwnProperty.call(state.anchorMap, alias2)) {
-        return throwError(state, `unidentified alias "${alias2}"`);
+    const alias = state.input.slice(_position, state.position);
+    if (typeof state.anchorMap !== "undefined" && !Object.prototype.hasOwnProperty.call(state.anchorMap, alias)) {
+        return throwError(state, `unidentified alias "${alias}"`);
     }
     if (typeof state.anchorMap !== "undefined") {
-        state.result = state.anchorMap[alias2];
+        state.result = state.anchorMap[alias];
     }
     skipSeparationSpace(state, true, -1);
     return true;
 }
 function composeNode(state, parentIndent, nodeContext, allowToSeek, allowCompact) {
-    let allowBlockScalars, allowBlockCollections, indentStatus = 1, atNewLine = false, hasContent = false, type4, flowIndent, blockIndent;
+    let allowBlockScalars, allowBlockCollections, indentStatus = 1, atNewLine = false, hasContent = false, type, flowIndent, blockIndent;
     if (state.listener && state.listener !== null) {
         state.listener("open", state);
     }
@@ -10078,10 +9930,10 @@ function composeNode(state, parentIndent, nodeContext, allowToSeek, allowCompact
     if (state.tag !== null && state.tag !== "!") {
         if (state.tag === "?") {
             for(let typeIndex = 0, typeQuantity = state.implicitTypes.length; typeIndex < typeQuantity; typeIndex++){
-                type4 = state.implicitTypes[typeIndex];
-                if (type4.resolve(state.result)) {
-                    state.result = type4.construct(state.result);
-                    state.tag = type4.tag;
+                type = state.implicitTypes[typeIndex];
+                if (type.resolve(state.result)) {
+                    state.result = type.construct(state.result);
+                    state.tag = type.tag;
                     if (state.anchor !== null && typeof state.anchorMap !== "undefined") {
                         state.anchorMap[state.anchor] = state.result;
                     }
@@ -10089,14 +9941,14 @@ function composeNode(state, parentIndent, nodeContext, allowToSeek, allowCompact
                 }
             }
         } else if (_hasOwnProperty2.call(state.typeMap[state.kind || "fallback"], state.tag)) {
-            type4 = state.typeMap[state.kind || "fallback"][state.tag];
-            if (state.result !== null && type4.kind !== state.kind) {
-                return throwError(state, `unacceptable node kind for !<${state.tag}> tag; it should be "${type4.kind}", not "${state.kind}"`);
+            type = state.typeMap[state.kind || "fallback"][state.tag];
+            if (state.result !== null && type.kind !== state.kind) {
+                return throwError(state, `unacceptable node kind for !<${state.tag}> tag; it should be "${type.kind}", not "${state.kind}"`);
             }
-            if (!type4.resolve(state.result)) {
+            if (!type.resolve(state.result)) {
                 return throwError(state, `cannot resolve a node with !<${state.tag}> explicit tag`);
             } else {
-                state.result = type4.construct(state.result);
+                state.result = type.construct(state.result);
                 if (state.anchor !== null && typeof state.anchorMap !== "undefined") {
                     state.anchorMap[state.anchor] = state.result;
                 }
@@ -10112,7 +9964,7 @@ function composeNode(state, parentIndent, nodeContext, allowToSeek, allowCompact
 }
 function readDocument(state) {
     const documentStart = state.position;
-    let position2, directiveName, directiveArgs, hasDirectives = false, ch;
+    let position, directiveName, directiveArgs, hasDirectives = false, ch;
     state.version = null;
     state.checkLineBreaks = state.legacy;
     state.tagMap = {
@@ -10127,11 +9979,11 @@ function readDocument(state) {
         }
         hasDirectives = true;
         ch = state.input.charCodeAt(++state.position);
-        position2 = state.position;
+        position = state.position;
         while(ch !== 0 && !isWsOrEol(ch)){
             ch = state.input.charCodeAt(++state.position);
         }
-        directiveName = state.input.slice(position2, state.position);
+        directiveName = state.input.slice(position, state.position);
         directiveArgs = [];
         if (directiveName.length < 1) {
             return throwError(state, "directive name must not be less than one character in length");
@@ -10147,11 +9999,11 @@ function readDocument(state) {
                 break;
             }
             if (isEOL(ch)) break;
-            position2 = state.position;
+            position = state.position;
             while(ch !== 0 && !isWsOrEol(ch)){
                 ch = state.input.charCodeAt(++state.position);
             }
-            directiveArgs.push(state.input.slice(position2, state.position));
+            directiveArgs.push(state.input.slice(position, state.position));
         }
         if (ch !== 0) readLineBreak(state);
         if (_hasOwnProperty2.call(directiveHandlers, directiveName)) {
@@ -10186,19 +10038,19 @@ function readDocument(state) {
         return;
     }
 }
-function loadDocuments(input1, options8) {
-    input1 = String(input1);
-    options8 = options8 || {
+function loadDocuments(input, options) {
+    input = String(input);
+    options = options || {
     };
-    if (input1.length !== 0) {
-        if (input1.charCodeAt(input1.length - 1) !== 10 && input1.charCodeAt(input1.length - 1) !== 13) {
-            input1 += "\n";
+    if (input.length !== 0) {
+        if (input.charCodeAt(input.length - 1) !== 10 && input.charCodeAt(input.length - 1) !== 13) {
+            input += "\n";
         }
-        if (input1.charCodeAt(0) === 65279) {
-            input1 = input1.slice(1);
+        if (input.charCodeAt(0) === 65279) {
+            input = input.slice(1);
         }
     }
-    const state = new LoaderState(input1, options8);
+    const state = new LoaderState(input, options);
     state.input += "\0";
     while(state.input.charCodeAt(state.position) === 32){
         state.lineIndent += 1;
@@ -10209,8 +10061,8 @@ function loadDocuments(input1, options8) {
     }
     return state.documents;
 }
-function load(input1, options8) {
-    const documents = loadDocuments(input1, options8);
+function load(input, options) {
+    const documents = loadDocuments(input, options);
     if (documents.length === 0) {
         return;
     }
@@ -10219,68 +10071,12 @@ function load(input1, options8) {
     }
     throw new YAMLError("expected a single document in the stream, but found more");
 }
-function parse8(content, options8) {
-    return load(content, options8);
+function parse8(content, options) {
+    return load(content, options);
 }
-const _hasOwnProperty3 = Object.prototype.hasOwnProperty;
-function compileStyleMap(schema2, map1) {
-    if (typeof map1 === "undefined" || map1 === null) return {
-    };
-    let type4;
-    const result = {
-    };
-    const keys = Object.keys(map1);
-    let tag2, style;
-    for(let index = 0, length = keys.length; index < length; index += 1){
-        tag2 = keys[index];
-        style = String(map1[tag2]);
-        if (tag2.slice(0, 2) === "!!") {
-            tag2 = `tag:yaml.org,2002:${tag2.slice(2)}`;
-        }
-        type4 = schema2.compiledTypeMap.fallback[tag2];
-        if (type4 && typeof type4.styleAliases !== "undefined" && _hasOwnProperty3.call(type4.styleAliases, style)) {
-            style = type4.styleAliases[style];
-        }
-        result[tag2] = style;
-    }
-    return result;
-}
-class DumperState extends State {
-    indent;
-    noArrayIndent;
-    skipInvalid;
-    flowLevel;
-    sortKeys;
-    lineWidth;
-    noRefs;
-    noCompatMode;
-    condenseFlow;
-    implicitTypes;
-    explicitTypes;
-    tag = null;
-    result = "";
-    duplicates = [];
-    usedDuplicates = [];
-    styleMap;
-    dump;
-    constructor({ schema: schema2 , indent =2 , noArrayIndent =false , skipInvalid =false , flowLevel =-1 , styles =null , sortKeys =false , lineWidth =80 , noRefs =false , noCompatMode =false , condenseFlow =false  }){
-        super(schema2);
-        this.indent = Math.max(1, indent);
-        this.noArrayIndent = noArrayIndent;
-        this.skipInvalid = skipInvalid;
-        this.flowLevel = flowLevel;
-        this.styleMap = compileStyleMap(this.schema, styles);
-        this.sortKeys = sortKeys;
-        this.lineWidth = lineWidth;
-        this.noRefs = noRefs;
-        this.noCompatMode = noCompatMode;
-        this.condenseFlow = condenseFlow;
-        this.implicitTypes = this.schema.compiledImplicit;
-        this.explicitTypes = this.schema.compiledExplicit;
-    }
-}
+Object.prototype.hasOwnProperty;
 const _toString2 = Object.prototype.toString;
-const _hasOwnProperty4 = Object.prototype.hasOwnProperty;
+const _hasOwnProperty3 = Object.prototype.hasOwnProperty;
 const ESCAPE_SEQUENCES = {
 };
 ESCAPE_SEQUENCES[0] = "\\0";
@@ -10317,7 +10113,7 @@ const DEPRECATED_BOOLEANS_SYNTAX = [
     "OFF", 
 ];
 function encodeHex(character) {
-    const string1 = character.toString(16).toUpperCase();
+    const string = character.toString(16).toUpperCase();
     let handle;
     let length;
     if (character <= 255) {
@@ -10332,33 +10128,33 @@ function encodeHex(character) {
     } else {
         throw new YAMLError("code point within a string may not be greater than 0xFFFFFFFF");
     }
-    return `\\${handle}${repeat("0", length - string1.length)}${string1}`;
+    return `\\${handle}${repeat("0", length - string.length)}${string}`;
 }
-function indentString(string1, spaces) {
-    const ind = repeat(" ", spaces), length = string1.length;
-    let position2 = 0, next = -1, result = "", line2;
-    while(position2 < length){
-        next = string1.indexOf("\n", position2);
+function indentString(string, spaces) {
+    const ind = repeat(" ", spaces), length = string.length;
+    let position = 0, next = -1, result = "", line;
+    while(position < length){
+        next = string.indexOf("\n", position);
         if (next === -1) {
-            line2 = string1.slice(position2);
-            position2 = length;
+            line = string.slice(position);
+            position = length;
         } else {
-            line2 = string1.slice(position2, next + 1);
-            position2 = next + 1;
+            line = string.slice(position, next + 1);
+            position = next + 1;
         }
-        if (line2.length && line2 !== "\n") result += ind;
-        result += line2;
+        if (line.length && line !== "\n") result += ind;
+        result += line;
     }
     return result;
 }
 function generateNextLine(state, level) {
     return `\n${repeat(" ", state.indent * level)}`;
 }
-function testImplicitResolving(state, str1) {
-    let type4;
+function testImplicitResolving(state, str) {
+    let type;
     for(let index = 0, length = state.implicitTypes.length; index < length; index += 1){
-        type4 = state.implicitTypes[index];
-        if (type4.resolve(str1)) {
+        type = state.implicitTypes[index];
+        if (type.resolve(str)) {
             return true;
         }
     }
@@ -10376,143 +10172,143 @@ function isPlainSafe(c) {
 function isPlainSafeFirst(c) {
     return isPrintable(c) && c !== 65279 && !isWhitespace(c) && c !== 45 && c !== 63 && c !== 58 && c !== 44 && c !== 91 && c !== 93 && c !== 123 && c !== 125 && c !== 35 && c !== 38 && c !== 42 && c !== 33 && c !== 124 && c !== 62 && c !== 39 && c !== 34 && c !== 37 && c !== 64 && c !== 96;
 }
-function needIndentIndicator(string1) {
+function needIndentIndicator(string) {
     const leadingSpaceRe = /^\n* /;
-    return leadingSpaceRe.test(string1);
+    return leadingSpaceRe.test(string);
 }
 const STYLE_PLAIN = 1, STYLE_SINGLE = 2, STYLE_LITERAL = 3, STYLE_FOLDED = 4, STYLE_DOUBLE = 5;
-function chooseScalarStyle(string1, singleLineOnly, indentPerLevel, lineWidth1, testAmbiguousType) {
-    const shouldTrackWidth = lineWidth1 !== -1;
-    let hasLineBreak = false, hasFoldableLine = false, previousLineBreak = -1, plain = isPlainSafeFirst(string1.charCodeAt(0)) && !isWhitespace(string1.charCodeAt(string1.length - 1));
-    let __char, i1;
+function chooseScalarStyle(string, singleLineOnly, indentPerLevel, lineWidth, testAmbiguousType) {
+    const shouldTrackWidth = lineWidth !== -1;
+    let hasLineBreak = false, hasFoldableLine = false, previousLineBreak = -1, plain = isPlainSafeFirst(string.charCodeAt(0)) && !isWhitespace(string.charCodeAt(string.length - 1));
+    let __char, i;
     if (singleLineOnly) {
-        for(i1 = 0; i1 < string1.length; i1++){
-            __char = string1.charCodeAt(i1);
+        for(i = 0; i < string.length; i++){
+            __char = string.charCodeAt(i);
             if (!isPrintable(__char)) {
                 return 5;
             }
             plain = plain && isPlainSafe(__char);
         }
     } else {
-        for(i1 = 0; i1 < string1.length; i1++){
-            __char = string1.charCodeAt(i1);
+        for(i = 0; i < string.length; i++){
+            __char = string.charCodeAt(i);
             if (__char === 10) {
                 hasLineBreak = true;
                 if (shouldTrackWidth) {
-                    hasFoldableLine = hasFoldableLine || i1 - previousLineBreak - 1 > lineWidth1 && string1[previousLineBreak + 1] !== " ";
-                    previousLineBreak = i1;
+                    hasFoldableLine = hasFoldableLine || i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
+                    previousLineBreak = i;
                 }
             } else if (!isPrintable(__char)) {
                 return 5;
             }
             plain = plain && isPlainSafe(__char);
         }
-        hasFoldableLine = hasFoldableLine || shouldTrackWidth && i1 - previousLineBreak - 1 > lineWidth1 && string1[previousLineBreak + 1] !== " ";
+        hasFoldableLine = hasFoldableLine || shouldTrackWidth && i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
     }
     if (!hasLineBreak && !hasFoldableLine) {
-        return plain && !testAmbiguousType(string1) ? 1 : 2;
+        return plain && !testAmbiguousType(string) ? 1 : 2;
     }
-    if (indentPerLevel > 9 && needIndentIndicator(string1)) {
+    if (indentPerLevel > 9 && needIndentIndicator(string)) {
         return 5;
     }
     return hasFoldableLine ? 4 : 3;
 }
-function foldLine(line2, width) {
-    if (line2 === "" || line2[0] === " ") return line2;
+function foldLine(line, width) {
+    if (line === "" || line[0] === " ") return line;
     const breakRe = / [^ ]/g;
     let match;
     let start = 0, end, curr = 0, next = 0;
     let result = "";
-    while(match = breakRe.exec(line2)){
+    while(match = breakRe.exec(line)){
         next = match.index;
         if (next - start > width) {
             end = curr > start ? curr : next;
-            result += `\n${line2.slice(start, end)}`;
+            result += `\n${line.slice(start, end)}`;
             start = end + 1;
         }
         curr = next;
     }
     result += "\n";
-    if (line2.length - start > width && curr > start) {
-        result += `${line2.slice(start, curr)}\n${line2.slice(curr + 1)}`;
+    if (line.length - start > width && curr > start) {
+        result += `${line.slice(start, curr)}\n${line.slice(curr + 1)}`;
     } else {
-        result += line2.slice(start);
+        result += line.slice(start);
     }
     return result.slice(1);
 }
-function dropEndingNewline(string1) {
-    return string1[string1.length - 1] === "\n" ? string1.slice(0, -1) : string1;
+function dropEndingNewline(string) {
+    return string[string.length - 1] === "\n" ? string.slice(0, -1) : string;
 }
-function foldString(string1, width) {
+function foldString(string, width) {
     const lineRe = /(\n+)([^\n]*)/g;
     let result = (()=>{
-        let nextLF = string1.indexOf("\n");
-        nextLF = nextLF !== -1 ? nextLF : string1.length;
+        let nextLF = string.indexOf("\n");
+        nextLF = nextLF !== -1 ? nextLF : string.length;
         lineRe.lastIndex = nextLF;
-        return foldLine(string1.slice(0, nextLF), width);
+        return foldLine(string.slice(0, nextLF), width);
     })();
-    let prevMoreIndented = string1[0] === "\n" || string1[0] === " ";
+    let prevMoreIndented = string[0] === "\n" || string[0] === " ";
     let moreIndented;
     let match;
-    while(match = lineRe.exec(string1)){
-        const prefix = match[1], line2 = match[2];
-        moreIndented = line2[0] === " ";
-        result += prefix + (!prevMoreIndented && !moreIndented && line2 !== "" ? "\n" : "") + foldLine(line2, width);
+    while(match = lineRe.exec(string)){
+        const prefix = match[1], line = match[2];
+        moreIndented = line[0] === " ";
+        result += prefix + (!prevMoreIndented && !moreIndented && line !== "" ? "\n" : "") + foldLine(line, width);
         prevMoreIndented = moreIndented;
     }
     return result;
 }
-function escapeString(string1) {
+function escapeString(string) {
     let result = "";
     let __char, nextChar;
     let escapeSeq;
-    for(let i1 = 0; i1 < string1.length; i1++){
-        __char = string1.charCodeAt(i1);
+    for(let i = 0; i < string.length; i++){
+        __char = string.charCodeAt(i);
         if (__char >= 55296 && __char <= 56319) {
-            nextChar = string1.charCodeAt(i1 + 1);
+            nextChar = string.charCodeAt(i + 1);
             if (nextChar >= 56320 && nextChar <= 57343) {
                 result += encodeHex((__char - 55296) * 1024 + nextChar - 56320 + 65536);
-                i1++;
+                i++;
                 continue;
             }
         }
         escapeSeq = ESCAPE_SEQUENCES[__char];
-        result += !escapeSeq && isPrintable(__char) ? string1[i1] : escapeSeq || encodeHex(__char);
+        result += !escapeSeq && isPrintable(__char) ? string[i] : escapeSeq || encodeHex(__char);
     }
     return result;
 }
-function blockHeader(string1, indentPerLevel) {
-    const indentIndicator = needIndentIndicator(string1) ? String(indentPerLevel) : "";
-    const clip = string1[string1.length - 1] === "\n";
-    const keep = clip && (string1[string1.length - 2] === "\n" || string1 === "\n");
+function blockHeader(string, indentPerLevel) {
+    const indentIndicator = needIndentIndicator(string) ? String(indentPerLevel) : "";
+    const clip = string[string.length - 1] === "\n";
+    const keep = clip && (string[string.length - 2] === "\n" || string === "\n");
     const chomp = keep ? "+" : clip ? "" : "-";
     return `${indentIndicator}${chomp}\n`;
 }
-function writeScalar(state, string1, level, iskey) {
+function writeScalar(state, string, level, iskey) {
     state.dump = (()=>{
-        if (string1.length === 0) {
+        if (string.length === 0) {
             return "''";
         }
-        if (!state.noCompatMode && DEPRECATED_BOOLEANS_SYNTAX.indexOf(string1) !== -1) {
-            return `'${string1}'`;
+        if (!state.noCompatMode && DEPRECATED_BOOLEANS_SYNTAX.indexOf(string) !== -1) {
+            return `'${string}'`;
         }
-        const indent1 = state.indent * Math.max(1, level);
-        const lineWidth1 = state.lineWidth === -1 ? -1 : Math.max(Math.min(state.lineWidth, 40), state.lineWidth - indent1);
+        const indent = state.indent * Math.max(1, level);
+        const lineWidth = state.lineWidth === -1 ? -1 : Math.max(Math.min(state.lineWidth, 40), state.lineWidth - indent);
         const singleLineOnly = iskey || state.flowLevel > -1 && level >= state.flowLevel;
-        function testAmbiguity(str1) {
-            return testImplicitResolving(state, str1);
+        function testAmbiguity(str) {
+            return testImplicitResolving(state, str);
         }
-        switch(chooseScalarStyle(string1, singleLineOnly, state.indent, lineWidth1, testAmbiguity)){
+        switch(chooseScalarStyle(string, singleLineOnly, state.indent, lineWidth, testAmbiguity)){
             case STYLE_PLAIN:
-                return string1;
+                return string;
             case STYLE_SINGLE:
-                return `'${string1.replace(/'/g, "''")}'`;
+                return `'${string.replace(/'/g, "''")}'`;
             case STYLE_LITERAL:
-                return `|${blockHeader(string1, state.indent)}${dropEndingNewline(indentString(string1, indent1))}`;
+                return `|${blockHeader(string, state.indent)}${dropEndingNewline(indentString(string, indent))}`;
             case STYLE_FOLDED:
-                return `>${blockHeader(string1, state.indent)}${dropEndingNewline(indentString(foldString(string1, lineWidth1), indent1))}`;
+                return `>${blockHeader(string, state.indent)}${dropEndingNewline(indentString(foldString(string, lineWidth), indent))}`;
             case STYLE_DOUBLE:
-                return `"${escapeString(string1)}"`;
+                return `"${escapeString(string)}"`;
             default:
                 throw new YAMLError("impossible error: invalid scalar style");
         }
@@ -10621,21 +10417,21 @@ function writeBlockMapping(state, level, object, compact = false) {
 }
 function detectType(state, object, explicit = false) {
     const typeList = explicit ? state.explicitTypes : state.implicitTypes;
-    let type4;
+    let type;
     let style;
     let _result;
     for(let index = 0, length = typeList.length; index < length; index += 1){
-        type4 = typeList[index];
-        if ((type4.instanceOf || type4.predicate) && (!type4.instanceOf || typeof object === "object" && object instanceof type4.instanceOf) && (!type4.predicate || type4.predicate(object))) {
-            state.tag = explicit ? type4.tag : "?";
-            if (type4.represent) {
-                style = state.styleMap[type4.tag] || type4.defaultStyle;
-                if (_toString2.call(type4.represent) === "[object Function]") {
-                    _result = type4.represent(object, style);
-                } else if (_hasOwnProperty4.call(type4.represent, style)) {
-                    _result = type4.represent[style](object, style);
+        type = typeList[index];
+        if ((type.instanceOf || type.predicate) && (!type.instanceOf || typeof object === "object" && object instanceof type.instanceOf) && (!type.predicate || type.predicate(object))) {
+            state.tag = explicit ? type.tag : "?";
+            if (type.represent) {
+                style = state.styleMap[type.tag] || type.defaultStyle;
+                if (_toString2.call(type.represent) === "[object Function]") {
+                    _result = type.represent(object, style);
+                } else if (_hasOwnProperty3.call(type.represent, style)) {
+                    _result = type.represent[style](object, style);
                 } else {
-                    throw new YAMLError(`!<${type4.tag}> tag resolver accepts not "${style}" style`);
+                    throw new YAMLError(`!<${type.tag}> tag resolver accepts not "${style}" style`);
                 }
                 state.dump = _result;
             }
@@ -10650,11 +10446,11 @@ function writeNode(state, level, object, block, compact, iskey = false) {
     if (!detectType(state, object, false)) {
         detectType(state, object, true);
     }
-    const type4 = _toString2.call(state.dump);
+    const type = _toString2.call(state.dump);
     if (block) {
         block = state.flowLevel < 0 || state.flowLevel > level;
     }
-    const objectOrArray = type4 === "[object Object]" || type4 === "[object Array]";
+    const objectOrArray = type === "[object Object]" || type === "[object Array]";
     let duplicateIndex = -1;
     let duplicate = false;
     if (objectOrArray) {
@@ -10670,7 +10466,7 @@ function writeNode(state, level, object, block, compact, iskey = false) {
         if (objectOrArray && duplicate && !state.usedDuplicates[duplicateIndex]) {
             state.usedDuplicates[duplicateIndex] = true;
         }
-        if (type4 === "[object Object]") {
+        if (type === "[object Object]") {
             if (block && Object.keys(state.dump).length !== 0) {
                 writeBlockMapping(state, level, state.dump, compact);
                 if (duplicate) {
@@ -10682,7 +10478,7 @@ function writeNode(state, level, object, block, compact, iskey = false) {
                     state.dump = `&ref_${duplicateIndex} ${state.dump}`;
                 }
             }
-        } else if (type4 === "[object Array]") {
+        } else if (type === "[object Array]") {
             const arrayLevel = state.noArrayIndent && level > 0 ? level - 1 : level;
             if (block && state.dump.length !== 0) {
                 writeBlockSequence(state, arrayLevel, state.dump, compact);
@@ -10695,13 +10491,13 @@ function writeNode(state, level, object, block, compact, iskey = false) {
                     state.dump = `&ref_${duplicateIndex} ${state.dump}`;
                 }
             }
-        } else if (type4 === "[object String]") {
+        } else if (type === "[object String]") {
             if (state.tag !== "?") {
                 writeScalar(state, state.dump, level, iskey);
             }
         } else {
             if (state.skipInvalid) return false;
-            throw new YAMLError(`unacceptable kind of an object to dump ${type4}`);
+            throw new YAMLError(`unacceptable kind of an object to dump ${type}`);
         }
         if (state.tag !== null && state.tag !== "?") {
             state.dump = `!<${state.tag}> ${state.dump}`;
@@ -10750,18 +10546,18 @@ function hexterm(hex) {
     const cached = cache1[hex];
     if (cached) return cached;
     let similar = 0;
-    const closest1 = {
+    const closest = {
     };
-    xtermcolors.forEach((hexcode, i1)=>{
+    xtermcolors.forEach((hexcode, i)=>{
         const res = hexColorDelta(hex, hexcode);
         if (res > similar) {
             similar = res;
-            closest1.hex = hexcode;
-            closest1.x = i1;
+            closest.hex = hexcode;
+            closest.x = i;
         }
     });
-    cache1[closest1.hex] = closest1.x;
-    return closest1.x;
+    cache1[closest.hex] = closest.x;
+    return closest.x;
 }
 const xtermcolors = [
     '000000',
@@ -11021,8 +10817,8 @@ const xtermcolors = [
     'e4e4e4',
     'eeeeee'
 ];
-function crash(message7, data) {
-    console.log(red("Error: " + message7));
+function crash(message, data) {
+    console.log(red("Error: " + message));
     if (data) console.log(red(dataToText(data)));
     Deno.exit(1);
 }
@@ -11033,72 +10829,72 @@ function dataToText(data) {
 const __default1 = {
     "mustaches": {
         "lightline.ejs": "<% const info = it.info; %>\n\"\"\n\" Lightline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){ %>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){ %>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){ %>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet s:p = {\"normal\": {}, \"inactive\": {}, \"insert\": {}, \"replace\": {}, \"visual\": {}, \"tabline\": {} }\n\nlet s:p.normal.left = [[[\"<%= it.normal1.fg.hex %>\", <%= it.normal1.fg.xterm %>], [\"<%= it.normal1.bg.hex %>\", <%= it.normal1.bg.xterm %>]], [[\"<%= it.normal2.fg.hex %>\", <%= it.normal2.fg.xterm %>], [\"<%= it.normal2.bg.hex %>\", <%= it.normal2.bg.xterm %>]]]\nlet s:p.normal.middle = [[[\"<%= it.normal3.fg.hex %>\", <%= it.normal3.fg.xterm %>], [\"<%= it.normal3.bg.hex %>\", <%= it.normal3.bg.xterm %>]]]\nlet s:p.normal.right = [[[\"<%= it.normal4.fg.hex %>\", <%= it.normal4.fg.xterm %>], [\"<%= it.normal4.bg.hex %>\", <%= it.normal4.bg.xterm %>]], [[\"<%= it.normal5.fg.hex %>\", <%= it.normal5.fg.xterm %>], [\"<%= it.normal5.bg.hex %>\", <%= it.normal5.bg.xterm %>]]]\nlet s:p.normal.error = [[[\"<%= it.normalError.fg.hex %>\", <%= it.normalError.fg.xterm %>], [\"<%= it.normalError.bg.hex %>\", <%= it.normalError.bg.xterm %>]]]\nlet s:p.normal.warning = [[[\"<%= it.normalWarning.fg.hex %>\", <%= it.normalWarning.fg.xterm %>], [\"<%= it.normalWarning.bg.hex %>\", <%= it.normalWarning.bg.xterm %>]]]\n\nlet s:p.inactive.left = [[[\"<%= it.inactive1.fg.hex %>\", <%= it.inactive1.fg.xterm %>], [\"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.bg.xterm %>]], [[\"<%= it.inactive2.fg.hex %>\", <%= it.inactive2.fg.xterm %>], [\"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.bg.xterm %>]]]\nlet s:p.inactive.middle = [[[\"<%= it.inactive3.fg.hex %>\", <%= it.inactive3.fg.xterm %>], [\"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.bg.xterm %>]]]\nlet s:p.inactive.right = [[[\"<%= it.inactive4.fg.hex %>\", <%= it.inactive4.fg.xterm %>], [\"<%= it.inactive4.bg.hex %>\", <%= it.inactive4.bg.xterm %>]], [[\"<%= it.inactive5.fg.hex %>\", <%= it.inactive5.fg.xterm %>], [\"<%= it.inactive5.bg.hex %>\", <%= it.inactive5.bg.xterm %>]]]\n\nlet s:p.insert.left = [[[\"<%= it.insert1.fg.hex %>\", <%= it.insert1.fg.xterm %>], [\"<%= it.insert1.bg.hex %>\", <%= it.insert1.bg.xterm %>]], [[\"<%= it.insert2.fg.hex %>\", <%= it.insert2.fg.xterm %>], [\"<%= it.insert2.bg.hex %>\", <%= it.insert2.bg.xterm %>]]]\nlet s:p.insert.middle = [[[\"<%= it.insert3.fg.hex %>\", <%= it.insert3.fg.xterm %>], [\"<%= it.insert3.bg.hex %>\", <%= it.insert3.bg.xterm %>]]]\nlet s:p.insert.right = [[[\"<%= it.insert4.fg.hex %>\", <%= it.insert4.fg.xterm %>], [\"<%= it.insert4.bg.hex %>\", <%= it.insert4.bg.xterm %>]], [[\"<%= it.insert5.fg.hex %>\", <%= it.insert5.fg.xterm %>], [\"<%= it.insert5.bg.hex %>\", <%= it.insert5.bg.xterm %>]]]\n\nlet s:p.replace.left = [[[\"<%= it.replace1.fg.hex %>\", <%= it.replace1.fg.xterm %>], [\"<%= it.replace1.bg.hex %>\", <%= it.replace1.bg.xterm %>]], [[\"<%= it.replace2.fg.hex %>\", <%= it.replace2.fg.xterm %>], [\"<%= it.replace2.bg.hex %>\", <%= it.replace2.bg.xterm %>]]]\nlet s:p.replace.middle = [[[\"<%= it.replace3.fg.hex %>\", <%= it.replace3.fg.xterm %>], [\"<%= it.replace3.bg.hex %>\", <%= it.replace3.bg.xterm %>]]]\nlet s:p.replace.right = [[[\"<%= it.replace4.fg.hex %>\", <%= it.replace4.fg.xterm %>], [\"<%= it.replace4.bg.hex %>\", <%= it.replace4.bg.xterm %>]], [[\"<%= it.replace5.fg.hex %>\", <%= it.replace5.fg.xterm %>], [\"<%= it.replace5.bg.hex %>\", <%= it.replace5.bg.xterm %>]]]\n\nlet s:p.visual.left = [[[\"<%= it.visual1.fg.hex %>\", <%= it.visual1.fg.xterm %>], [\"<%= it.visual1.bg.hex %>\", <%= it.visual1.bg.xterm %>]], [[\"<%= it.visual2.fg.hex %>\", <%= it.visual2.fg.xterm %>], [\"<%= it.visual2.bg.hex %>\", <%= it.visual2.bg.xterm %>]]]\nlet s:p.visual.middle = [[[\"<%= it.visual3.fg.hex %>\", <%= it.visual3.fg.xterm %>], [\"<%= it.visual3.bg.hex %>\", <%= it.visual3.bg.xterm %>]]]\nlet s:p.visual.right = [[[\"<%= it.visual4.fg.hex %>\", <%= it.visual4.fg.xterm %>], [\"<%= it.visual4.bg.hex %>\", <%= it.visual4.bg.xterm %>]], [[\"<%= it.visual5.fg.hex %>\", <%= it.visual5.fg.xterm %>], [\"<%= it.visual5.bg.hex %>\", <%= it.visual5.bg.xterm %>]]]\n\nlet s:p.tabline.left = [[[\"<%= it.tablineLeft.fg.hex %>\", <%= it.tablineLeft.fg.xterm %>], [\"<%= it.tablineLeft.bg.hex %>\", <%= it.tablineLeft.bg.xterm %>]]]\nlet s:p.tabline.tabsel = [[[\"<%= it.tablineSelected.fg.hex %>\", <%= it.tablineSelected.fg.xterm %>], [\"<%= it.tablineSelected.bg.hex %>\", <%= it.tablineSelected.bg.xterm %>]]]\nlet s:p.tabline.middle = [[[\"<%= it.tablineMiddle.fg.hex %>\", <%= it.tablineMiddle.fg.xterm %>], [\"<%= it.tablineMiddle.bg.hex %>\", <%= it.tablineMiddle.bg.xterm %>]]]\nlet s:p.tabline.right = [[[\"<%= it.tablineRight.fg.hex %>\", <%= it.tablineRight.fg.xterm %>], [\"<%= it.tablineRight.bg.hex %>\", <%= it.tablineRight.bg.xterm %>]]]\n\nlet g:lightline#colorscheme#<%= info.name %>#palette = lightline#colorscheme#flatten(s:p)\n",
-        "airline.ejs": "<% const info = it.info; %>\n\"\"\n\" Airline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){%>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){%>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){%>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet g:airline#themes#<%= info.name %>#palette = {}\n\nlet s:normal1 = [ \"<%= it.normal1.fg.hex %>\", \"<%= it.normal1.bg.hex %>\", <%= it.normal1.fg.xterm %>, <%= it.normal1.bg.xterm %> ]\nlet s:normal2 = [ \"<%= it.normal2.fg.hex %>\", \"<%= it.normal2.bg.hex %>\", <%= it.normal2.fg.xterm %>, <%= it.normal2.bg.xterm %> ]\nlet s:normal3 = [ \"<%= it.normal3.fg.hex %>\", \"<%= it.normal3.bg.hex %>\", <%= it.normal3.fg.xterm %>, <%= it.normal3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)\n\nlet s:insert1 = [ \"<%= it.insert1.fg.hex %>\", \"<%= it.insert1.bg.hex %>\", <%= it.insert1.fg.xterm %>, <%= it.insert1.bg.xterm %> ]\nlet s:insert2 = [ \"<%= it.insert2.fg.hex %>\", \"<%= it.insert2.bg.hex %>\", <%= it.insert2.fg.xterm %>, <%= it.insert2.bg.xterm %> ]\nlet s:insert3 = [ \"<%= it.insert3.fg.hex %>\", \"<%= it.insert3.bg.hex %>\", <%= it.insert3.fg.xterm %>, <%= it.insert3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)\n\nlet s:replace1 = [ \"<%= it.replace1.fg.hex %>\", \"<%= it.replace1.bg.hex %>\", <%= it.replace1.fg.xterm %>, <%= it.replace1.bg.xterm %> ]\nlet s:replace2 = [ \"<%= it.replace2.fg.hex %>\", \"<%= it.replace2.bg.hex %>\", <%= it.replace2.fg.xterm %>, <%= it.replace2.bg.xterm %> ]\nlet s:replace3 = [ \"<%= it.replace3.fg.hex %>\", \"<%= it.replace3.bg.hex %>\", <%= it.replace3.fg.xterm %>, <%= it.replace3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)\n\nlet s:visual1 = [ \"<%= it.visual1.fg.hex %>\", \"<%= it.visual1.bg.hex %>\", <%= it.visual1.fg.xterm %>, <%= it.visual1.bg.xterm %> ]\nlet s:visual2 = [ \"<%= it.visual2.fg.hex %>\", \"<%= it.visual2.bg.hex %>\", <%= it.visual2.fg.xterm %>, <%= it.visual2.bg.xterm %> ]\nlet s:visual3 = [ \"<%= it.visual3.fg.hex %>\", \"<%= it.visual3.bg.hex %>\", <%= it.visual3.fg.xterm %>, <%= it.visual3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)\n\nlet s:inactive1 = [ \"<%= it.inactive1.fg.hex %>\", \"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.fg.xterm %>, <%= it.inactive1.bg.xterm %> ]\nlet s:inactive2 = [ \"<%= it.inactive2.fg.hex %>\", \"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.fg.xterm %>, <%= it.inactive2.bg.xterm %> ]\nlet s:inactive3 = [ \"<%= it.inactive3.fg.hex %>\", \"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.fg.xterm %>, <%= it.inactive3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)\n\n<% if(it.ctrlp1){ %>\nif !get(g:, 'loaded_ctrlp', 0)\n  finish\nendif\n\nlet s:CP1 = [ \"<%= it.ctrlp1.fg.hex %>\", \"<%= it.ctrlp1.bg.hex %>\", <%= it.ctrlp1.fg.xterm %>, <%= it.ctrlp1.bg.xterm %> ]\nlet s:CP2 = [ \"<%= it.ctrlp2.fg.hex %>\", \"<%= it.ctrlp2.bg.hex %>\", <%= it.ctrlp2.fg.xterm %>, <%= it.ctrlp2.bg.xterm %> ]\nlet s:CP3 = [ \"<%= it.ctrlp3.fg.hex %>\", \"<%= it.ctrlp3.bg.hex %>\", <%= it.ctrlp3.fg.xterm %>, <%= it.ctrlp3.bg.xterm %> ]\n\nlet g:airline#themes#<%= it.info.name %>#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)\n<% } %>\n",
+        "project.ejs": "name: '<%= it.name %>'\nversion: '<%= it.version %>'\nlicense: '<%= it.license %>'\nauthor: '<%= it.author %>'\nurl: '<%= it.url %>'\ndescription: '<%= it.description %>'\ncolorschemes:\n- name: '<%= it.name %>'\n  background: 'dark'\n  palette: '<%= it.name %>'\n",
         "colorscheme.ejs": "<% const info = it.info; %>\n\"\"\n\" Colorscheme: <% info.name %>\n<% if(it.info.description) { %>\" Description: <%= it.info.description %>\n<% } %>\n<% if(it.info.url){ %>\" URL: <%= it.info.url %>\n<% } %>\n<% if(it.info.author){ %>\" Author: <%= it.info.author %>\n<% } %>\n<% if(it.info.license){%>\" License: <%= it.info.license %>\n<% } %>\n\"\"\n\nset background=<%= it.info.background %>\n\nhi clear\n\nif exists(\"syntax_on\")\n  syntax reset\nendif\nlet g:colors_name=\"<%= it.info.name %>\"\n\n\nlet Italic = \"\"\nif exists('g:<%= it.info.name %>_italic')\n  let Italic = \"italic\"\nendif\nlet g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)\n\nlet Bold = \"\"\nif exists('g:<%= info.name %>_bold')\n  let Bold = \"bold\"\nendif\n\nlet g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)\n\n<% Object.keys(it.stacks).forEach(function (key) {%>\n  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>\n<%- if(link){ -%>\nhi link <%=key%> <%=link%>\n<%- } else { -%>\nhi <%=key%>\n<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>\n<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>\n<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>\n<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>\n<% } %>\n\n<% }) %>\n\n<% if(it.term.color_0){ %>\nif has('terminal')\n  let g:terminal_ansi_colors = [\n  \\ \"<%= it.term.color_0 %>\",\n  \\ \"<%= it.term.color_1 %>\",\n  \\ \"<%= it.term.color_2 %>\",\n  \\ \"<%= it.term.color_3 %>\",\n  \\ \"<%= it.term.color_4 %>\",\n  \\ \"<%= it.term.color_5 %>\",\n  \\ \"<%= it.term.color_6 %>\",\n  \\ \"<%= it.term.color_7 %>\",\n  \\ \"<%= it.term.color_8 %>\",\n  \\ \"<%= it.term.color_9 %>\",\n  \\ \"<%= it.term.color_10 %>\",\n  \\ \"<%= it.term.color_11 %>\",\n  \\ \"<%= it.term.color_12 %>\",\n  \\ \"<%= it.term.color_13 %>\",\n  \\ \"<%= it.term.color_14 %>\",\n  \\ \"<%= it.term.color_15 %>\"\n  \\ ]\nendif\n\nif has('nvim')\n<% Object.keys(it.term).forEach(function (key) { %>\n  let g:terminal_<%= key %> = \"<%= it.term[key] %>\"\n<% }) %>\nendif\n<% } %>\n",
-        "project.ejs": "name: '<%= it.name %>'\nversion: '<%= it.version %>'\nlicense: '<%= it.license %>'\nauthor: '<%= it.author %>'\nurl: '<%= it.url %>'\ndescription: '<%= it.description %>'\ncolorschemes:\n- name: '<%= it.name %>'\n  background: 'dark'\n  palette: '<%= it.name %>'\n"
+        "airline.ejs": "<% const info = it.info; %>\n\"\"\n\" Airline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){%>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){%>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){%>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet g:airline#themes#<%= info.name %>#palette = {}\n\nlet s:normal1 = [ \"<%= it.normal1.fg.hex %>\", \"<%= it.normal1.bg.hex %>\", <%= it.normal1.fg.xterm %>, <%= it.normal1.bg.xterm %> ]\nlet s:normal2 = [ \"<%= it.normal2.fg.hex %>\", \"<%= it.normal2.bg.hex %>\", <%= it.normal2.fg.xterm %>, <%= it.normal2.bg.xterm %> ]\nlet s:normal3 = [ \"<%= it.normal3.fg.hex %>\", \"<%= it.normal3.bg.hex %>\", <%= it.normal3.fg.xterm %>, <%= it.normal3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)\n\nlet s:insert1 = [ \"<%= it.insert1.fg.hex %>\", \"<%= it.insert1.bg.hex %>\", <%= it.insert1.fg.xterm %>, <%= it.insert1.bg.xterm %> ]\nlet s:insert2 = [ \"<%= it.insert2.fg.hex %>\", \"<%= it.insert2.bg.hex %>\", <%= it.insert2.fg.xterm %>, <%= it.insert2.bg.xterm %> ]\nlet s:insert3 = [ \"<%= it.insert3.fg.hex %>\", \"<%= it.insert3.bg.hex %>\", <%= it.insert3.fg.xterm %>, <%= it.insert3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)\n\nlet s:replace1 = [ \"<%= it.replace1.fg.hex %>\", \"<%= it.replace1.bg.hex %>\", <%= it.replace1.fg.xterm %>, <%= it.replace1.bg.xterm %> ]\nlet s:replace2 = [ \"<%= it.replace2.fg.hex %>\", \"<%= it.replace2.bg.hex %>\", <%= it.replace2.fg.xterm %>, <%= it.replace2.bg.xterm %> ]\nlet s:replace3 = [ \"<%= it.replace3.fg.hex %>\", \"<%= it.replace3.bg.hex %>\", <%= it.replace3.fg.xterm %>, <%= it.replace3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)\n\nlet s:visual1 = [ \"<%= it.visual1.fg.hex %>\", \"<%= it.visual1.bg.hex %>\", <%= it.visual1.fg.xterm %>, <%= it.visual1.bg.xterm %> ]\nlet s:visual2 = [ \"<%= it.visual2.fg.hex %>\", \"<%= it.visual2.bg.hex %>\", <%= it.visual2.fg.xterm %>, <%= it.visual2.bg.xterm %> ]\nlet s:visual3 = [ \"<%= it.visual3.fg.hex %>\", \"<%= it.visual3.bg.hex %>\", <%= it.visual3.fg.xterm %>, <%= it.visual3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)\n\nlet s:inactive1 = [ \"<%= it.inactive1.fg.hex %>\", \"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.fg.xterm %>, <%= it.inactive1.bg.xterm %> ]\nlet s:inactive2 = [ \"<%= it.inactive2.fg.hex %>\", \"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.fg.xterm %>, <%= it.inactive2.bg.xterm %> ]\nlet s:inactive3 = [ \"<%= it.inactive3.fg.hex %>\", \"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.fg.xterm %>, <%= it.inactive3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)\n\n<% if(it.ctrlp1){ %>\nif !get(g:, 'loaded_ctrlp', 0)\n  finish\nendif\n\nlet s:CP1 = [ \"<%= it.ctrlp1.fg.hex %>\", \"<%= it.ctrlp1.bg.hex %>\", <%= it.ctrlp1.fg.xterm %>, <%= it.ctrlp1.bg.xterm %> ]\nlet s:CP2 = [ \"<%= it.ctrlp2.fg.hex %>\", \"<%= it.ctrlp2.bg.hex %>\", <%= it.ctrlp2.fg.xterm %>, <%= it.ctrlp2.bg.xterm %> ]\nlet s:CP3 = [ \"<%= it.ctrlp3.fg.hex %>\", \"<%= it.ctrlp3.bg.hex %>\", <%= it.ctrlp3.fg.xterm %>, <%= it.ctrlp3.bg.xterm %> ]\n\nlet g:airline#themes#<%= it.info.name %>#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)\n<% } %>\n"
     },
     "syntax": {
+        "json.yml": "jsonPadding: '' # Operator\njsonString: '' # String\njsonTest: '' # Label\njsonEscape: '' # Special\njsonNumber: '' # Number\njsonBraces: '' # Delimiter\njsonNull: '' # Function\njsonBoolean: '' # Boolean\njsonKeyword: '' # Label\njsonNumError: '' # Error\njsonCommentError: '' # Error\njsonSemicolonError: '' # Error\njsonTrailingCommaError: '' # Error\njsonMissingCommaError: '' # Error\njsonStringSQError: '' # Error\njsonNoQuotesError: '' # Error\njsonTripleQuotesError: '' # Error\njsonQuote: '' # Quote\njsonNoise: '' # Noise\n",
+        "help.yml": "helpIgnore: '' # Ignore\nhelpHyperTextJump: '' # Identifier\nhelpBar: '' # Ignore\nhelpBacktick: '' # Ignore\nhelpStar: '' # Ignore\nhelpHyperTextEntry: '' # String\nhelpHeadline: '' # Statement\nhelpHeader: '' # PreProc\nhelpSectionDelim: '' # PreProc\nhelpVim: '' # Identifier\nhelpCommand: '' # Comment\nhelpExample: '' # Comment\nhelpOption: '' # Type\nhelpSpecial: '' # Special\nhelpNote: '' # Todo\nhelpComment: '' # Comment\nhelpConstant: '' # Constant\nhelpString: '' # String\nhelpCharacter: '' # Character\nhelpNumber: '' # Number\nhelpBoolean: '' # Boolean\nhelpFloat: '' # Float\nhelpIdentifier: '' # Identifier\nhelpFunction: '' # Function\nhelpStatement: '' # Statement\nhelpConditional: '' # Conditional\nhelpRepeat: '' # Repeat\nhelpLabel: '' # Label\nhelpOperator: '' # Operator\nhelpKeyword: '' # Keyword\nhelpException: '' # Exception\nhelpPreProc: '' # PreProc\nhelpInclude: '' # Include\nhelpDefine: '' # Define\nhelpMacro: '' # Macro\nhelpPreCondit: '' # PreCondit\nhelpType: '' # Type\nhelpStorageClass: '' # StorageClass\nhelpStructure: '' # Structure\nhelpTypedef: '' # Typedef\nhelpSpecialChar: '' # SpecialChar\nhelpTag: '' # Tag\nhelpDelimiter: '' # Delimiter\nhelpSpecialComment: '' # SpecialComment\nhelpDebug: '' # Debug\nhelpUnderlined: '' # Underlined\nhelpError: '' # Error\nhelpTodo: '' # Todo\nhelpURL: '' # String\n",
+        "base.yml": "# BASE UI\nColorColumn: ''\nConceal: ''\nCursor: ''\nCursorIM: ''\nCursorColumn: ''\nCursorLine: ''\nCursorLineNr: ''\nDirectory: ''\nDiffAdd: ''\nDiffChange: ''\nDiffDelete: ''\nDiffText: ''\nErrorMsg: ''\nVertSplit: ''\nFolded: ''\nFoldColumn: ''\nSignColumn: ''\nIncSearch: ''\nLineNr: ''\nMatchParen: ''\nModeMsg: ''\nMoreMsg: ''\nNonText: ''\nNormal: ''\nPMenu: ''\nPMenuSel: ''\nPmenuSbar: ''\nPmenuThumb: ''\nQuestion: ''\nSearch: ''\nSpecialKey: ''\nSpellBad: ''\nSpellLocal: ''\nSpellCap: ''\nSpellRare: ''\nStatusLine: ''\nStatusLineNC: ''\nTabLine: ''\nTabLineFill: ''\nTabLineSel: ''\nTitle: ''\nVisual: ''\nVisualNOS: ''\nWarningMsg: ''\nWildMenu: ''\n# BASE SYNTAX\nComment: ''\nConstant: ''\nString: '' # Constant\nCharacter: '' # Constant\nBoolean: '' # Constant\nNumber: '' # Constant\nFloat: '' # Constant\nIdentifier: ''\nFunction: '' # Identifier\nStatement: ''\nConditional: '' # Statement\nRepeat: '' # Statement\nLabel: '' # Statement\nOperator: '' # Statement\nKeyword: '' # Statement\nException: '' # Statement\nPreProc: ''\nInclude: '' # PreProc\nDefine: '' # PreProc\nMacro: '' # PreProc\nPreCondit: '' # PreProc\nType: ''\nStorageClass: '' # Type\nStructure: '' # Type\nTypedef: '' # Type\nSpecial: ''\nSpecialChar: '' # Special\nTag: '' # Special\nDelimiter: '' # Special\nSpecialComment: '' # Special\nDebug: '' # Special\nUnderlined: ''\nIgnore: ''\nError: ''\nTodo: ''\n",
+        "xml.yml": "xmlTodo: '' # Todo\nxmlTag: '' # Function\nxmlTagName: '' # Function\nxmlEndTag: '' # Identifier\nxmlNamespace: '' # Tag\nxmlEntity: '' # Statement\nxmlEntityPunct: '' # Type\nxmlAttribPunct: '' # Comment\nxmlAttrib: '' # Type\nxmlString: '' # String\nxmlComment: '' # Comment\nxmlCommentStart: '' # xmlComment\nxmlCommentPart: '' # Comment\nxmlCommentError: '' # Error\nxmlError: '' # Error\nxmlProcessingDelim: '' # Comment\nxmlProcessing: '' # Type\nxmlCdata: '' # String\nxmlCdataCdata: '' # Statement\nxmlCdataStart: '' # Type\nxmlCdataEnd: '' # Type\nxmlDocTypeDecl: '' # Function\nxmlDocTypeKeyword: '' # Statement\nxmlInlineDTD: '' # Function\n",
+        "css.yml": "cssComment: '' # Comment\ncssVendor: '' # Comment\ncssHacks: '' # Comment\ncssTagName: '' # Statement\ncssDeprecated: '' # Error\ncssSelectorOp: '' # Special\ncssSelectorOp2: '' # Special\ncssAttrComma: '' # Special\ncssAnimationProp: '' # cssProp\ncssBackgroundProp: '' # cssProp\ncssBorderProp: '' # cssProp\ncssBoxProp: '' # cssProp\ncssColorProp: '' # cssProp\ncssContentForPagedMediaProp: '' # cssProp\ncssDimensionProp: '' # cssProp\ncssFlexibleBoxProp: '' # cssProp\ncssFontProp: '' # cssProp\ncssGeneratedContentProp: '' # cssProp\ncssGridProp: '' # cssProp\ncssHyerlinkProp: '' # cssProp\ncssLineboxProp: '' # cssProp\ncssListProp: '' # cssProp\ncssMarqueeProp: '' # cssProp\ncssMultiColumnProp: '' # cssProp\ncssPagedMediaProp: '' # cssProp\ncssPositioningProp: '' # cssProp\ncssPrintProp: '' # cssProp\ncssRubyProp: '' # cssProp\ncssSpeechProp: '' # cssProp\ncssTableProp: '' # cssProp\ncssTextProp: '' # cssProp\ncssTransformProp: '' # cssProp\ncssTransitionProp: '' # cssProp\ncssUIProp: '' # cssProp\ncssIEUIProp: '' # cssProp\ncssAuralProp: '' # cssProp\ncssRenderProp: '' # cssProp\ncssMobileTextProp: '' # cssProp\ncssAnimationAttr: '' # cssAttr\ncssBackgroundAttr: '' # cssAttr\ncssBorderAttr: '' # cssAttr\ncssBoxAttr: '' # cssAttr\ncssContentForPagedMediaAttr: '' # cssAttr\ncssDimensionAttr: '' # cssAttr\ncssFlexibleBoxAttr: '' # cssAttr\ncssFontAttr: '' # cssAttr\ncssGeneratedContentAttr: '' # cssAttr\ncssGridAttr: '' # cssAttr\ncssHyerlinkAttr: '' # cssAttr\ncssLineboxAttr: '' # cssAttr\ncssListAttr: '' # cssAttr\ncssMarginAttr: '' # cssAttr\ncssMarqueeAttr: '' # cssAttr\ncssMultiColumnAttr: '' # cssAttr\ncssPaddingAttr: '' # cssAttr\ncssPagedMediaAttr: '' # cssAttr\ncssPositioningAttr: '' # cssAttr\ncssGradientAttr: '' # cssAttr\ncssPrintAttr: '' # cssAttr\ncssRubyAttr: '' # cssAttr\ncssSpeechAttr: '' # cssAttr\ncssTableAttr: '' # cssAttr\ncssTextAttr: '' # cssAttr\ncssTransformAttr: '' # cssAttr\ncssTransitionAttr: '' # cssAttr\ncssUIAttr: '' # cssAttr\ncssIEUIAttr: '' # cssAttr\ncssAuralAttr: '' # cssAttr\ncssRenderAttr: '' # cssAttr\ncssCommonAttr: '' # cssAttr\ncssPseudoClassId: '' # PreProc\ncssPseudoClassLang: '' # Constant\ncssValueLength: '' # Number\ncssValueInteger: '' # Number\ncssValueNumber: '' # Number\ncssValueAngle: '' # Number\ncssValueTime: '' # Number\ncssValueFrequency: '' # Number\ncssFunction: '' # Constant\ncssURL: '' # String\ncssFunctionName: '' # Function\ncssFunctionComma: '' # Function\ncssColor: '' # Constant\ncssIdentifier: '' # Function\ncssInclude: '' # Include\ncssIncludeKeyword: '' # atKeyword\ncssImportant: '' # Special\ncssBraces: '' # Function\ncssBraceError: '' # Error\ncssError: '' # Error\ncssUnicodeEscape: '' # Special\ncssStringQQ: '' # String\ncssStringQ: '' # String\ncssAttributeSelector: '' # String\ncssMedia: '' # atKeyword\ncssMediaType: '' # Special\ncssMediaComma: '' # Normal\ncssMediaKeyword: '' # Statement\ncssMediaProp: '' # cssProp\ncssMediaAttr: '' # cssAttr\ncssPage: '' # atKeyword\ncssPagePseudo: '' # PreProc\ncssPageMargin: '' # atKeyword\ncssPageProp: '' # cssProp\ncssKeyFrame: '' # atKeyword\ncssKeyFrameSelector: '' # Constant\ncssFontDescriptor: '' # Special\ncssFontDescriptorFunction: '' # Constant\ncssFontDescriptorProp: '' # cssProp\ncssFontDescriptorAttr: '' # cssAttr\ncssUnicodeRange: '' # Constant\ncssClassName: '' # Function\ncssClassNameDot: '' # Function\ncssProp: '' # StorageClass\ncssAttr: '' # Constant\ncssUnitDecorators: '' # Number\ncssNoise: '' # Noise\natKeyword: '' # PreProc\n",
+        "vim-stylus.yml": "stylusComment: '' # Comment\nstylusVariable: '' # Identifier\nstylusControl: '' # PreProc\nstylusFunction: '' # Function\nstylusInterpolation: '' # Delimiter\nstylusAmpersand: '' # Character\nstylusClass: '' # Type\nstylusClassChar: '' # Special\nstylusEscape: '' # Special\nstylusId: '' # Identifier\nstylusIdChar: '' # Special\n",
+        "vim-mustache-handlebars.yml": "mustacheVariable: '' # Number\nmustacheVariableUnescape: '' # Number\nmustachePartial: '' # Number\nmustacheSection: '' # Number\nmustacheMarkerSet: '' # Number\nmustacheComment: '' # Comment\nmustacheBlockComment: '' # Comment\nmustacheError: '' # Error\nmustacheInsideError: '' # Error\nmustacheHandlebars: '' # Special\nmustacheUnescape: '' # Identifier\nmustacheOperators: '' # Operator\nmustacheConditionals: '' # Conditional\nmustacheHelpers: '' # Repeat\nmustacheQString: '' # String\nmustacheDQString: '' # String\n",
+        "vim-signify.yml": "# mhinz/vim-signify\nSignifyLineAdd: ''\nSignifyLineDelete: ''\nSignifyLineDeleteFirstLine: ''\nSignifyLineChange: ''\nSignifyLineChangeDelete: ''\n\nSignifySignAdd: ''\nSignifySignDelete: ''\nSignifySignDeleteFirstLine: ''\nSignifySignChange: ''\nSignifySignChangeDelete: ''\n",
+        "diff.yml": "diffOldFile: '' # diffFile\ndiffNewFile: '' # diffFile\ndiffFile: '' # Type\ndiffOnly: '' # Constant\ndiffIdentical: '' # Constant\ndiffDiffer: '' # Constant\ndiffBDiffer: '' # Constant\ndiffIsA: '' # Constant\ndiffNoEOL: '' # Constant\ndiffCommon: '' # Constant\ndiffRemoved: '' # Special\ndiffChanged: '' # PreProc\ndiffAdded: '' # Identifier\ndiffLine: '' # Statement\ndiffSubname: '' # PreProc\ndiffComment: '' # Comment\n",
+        "vim-plug.yml": "plug1: '' # Title\nplug2: '' # Repeat\nplugH2: '' # Type\nplugX: '' # Exception\nplugBracket: '' # Structure\nplugNumber: '' # Number\nplugDash: '' # Special\nplugPlus: '' # Constant\nplugStar: '' # Boolean\nplugMessage: '' # Function\nplugName: '' # Label\nplugInstall: '' # Function\nplugUpdate: '' # Type\nplugError: '' # Error\nplugRelDate: '' # Comment\nplugEdge: '' # PreProc\nplugSha: '' # Identifier\nplugTag: '' # Constant\nplugNotLoaded: '' # Comment\n",
+        "pug.yml": "pugPlainChar: '' # Special\npugScriptConditional: '' # PreProc\npugScriptLoopKeywords: '' # PreProc\npugScriptStatement: '' # PreProc\npugHtmlArg: '' # htmlArg\npugAttributeString: '' # String\npugAttributesDelimiter: '' # Identifier\npugIdChar: '' # Special\npugClassChar: '' # Special\npugBlockExpansionChar: '' # Special\npugPipeChar: '' # Special\npugTagBlockChar: '' # Special\npugId: '' # Identifier\npugClass: '' # Type\npugInterpolationDelimiter: '' # Delimiter\npugInlineDelimiter: '' # Delimiter\npugFilter: '' # PreProc\npugDocType: '' # PreProc\npugComment: '' # Comment\npugCommentBlock: '' # Comment\npugHtmlConditionalComment: '' # pugComment\n",
+        "git.yml": "gitDateHeader: '' # gitIdentityHeader\ngitIdentityHeader: '' # gitIdentityKeyword\ngitIdentityKeyword: '' # Label\ngitNotesHeader: '' # gitKeyword\ngitReflogHeader: '' # gitKeyword\ngitKeyword: '' # Keyword\ngitIdentity: '' # String\ngitEmailDelimiter: '' # Delimiter\ngitEmail: '' # Special\ngitDate: '' # Number\ngitMode: '' # Number\ngitHashAbbrev: '' # gitHash\ngitHash: '' # Identifier\ngitReflogMiddle: '' # gitReference\ngitReference: '' # Function\ngitStage: '' # gitType\ngitType: '' # Type\ngitDiffAdded: '' # diffAdded\ngitDiffRemoved: '' # diffRemoved\n",
+        "elixir.yml": "# Elixir\nelixirComment: '' # Comment\nelixirUnusedVariable: '' # Comment\nelixirAtom: '' # Constant\nelixirBoolean: '' # Constant\nelixirPseudoVariable: '' # Constant\nelixirNumber: '' # Constant\nelixirString: '' # Constant\nelixirRegex: '' # Constant\nelixirDocString: '' # Constant\nelixirAtomInterpolated: '' # Constant\nelixirSigil: '' # Constant\nelixirRegexDelimiter: '' # Delimiter\nelixirStringDelimiter: '' # Delimiter\nelixirInterpolationDelimiter: '' # Delimiter\nelixirSigilDelimiter: '' # Delimiter\nelixirSpecial: '' # Delimiter\nelixirRegexEscape: '' # Delimiter\nelixirRegexEscapePunctuation: '' # Delimiter\nelixirRegexQuantifier: '' # Delimiter\nelixirRegexCharClass: '' # Delimiter\nelixirSelf: '' # Identifier\nelixirVariable: '' # Identifier\nelixirFunctionDeclaration: '' # Identifier\nelixirBlockDefinition: '' # Statement\nelixirKeyword: '' # Statement\nelixirOperator: '' # Statement\nelixirInclude: '' # Preproc\nelixirDefine: '' # Preproc\nelixirPrivateDefine: '' # Preproc\nelixirModuleDefine: '' # Preproc\nelixirProtocolDefine: '' # Preproc\nelixirImplDefine: '' # Preproc\nelixirRecordDefine: '' # Preproc\nelixirPrivateRecordDefine: '' # Preproc\nelixirMacroDefine: '' # Preproc\nelixirMacroDeclaration: '' # Preproc\nelixirPrivateMacroDefine: '' # Preproc\nelixirDelegateDefine: '' # Preproc\nelixirOverridableDefine: '' # Preproc\nelixirExceptionDefine: '' # Preproc\nelixirCallbackDefine: '' # Preproc\nelixirStructDefine: '' # Preproc\nelixirAlias: '' # Type\nelixirTodo: '' # Todo\nelixirArguments: ''\nelixirGuard: ''\nelixirId: ''\nelixirInterpolation: ''\nelixirDocStringStar: ''\nelixirBlock: ''\nelixirAnonymousFunction: ''\nelixirDelimEscape: ''\nelixirModuleDeclaration: ''\nelixirProtocolDeclaration: ''\nelixirImplDeclaration: ''\nelixirRecordDeclaration: ''\nelixirDelegateDeclaration: ''\nelixirOverridableDeclaratio: ''\nelixirExceptionDeclaration: ''\nelixirCallbackDeclaration: ''\nelixirStructDeclaration: ''\n",
+        "elm-vim.yml": "elmTopLevelDecl: '' # Function\nelmTupleFunction: '' # Normal\nelmTodo: '' # Todo\nelmComment: '' # Comment\nelmLineComment: '' # Comment\nelmString: '' # String\nelmTripleString: '' # String\nelmChar: '' # String\nelmStringEscape: '' # Special\nelmInt: '' # Number\nelmFloat: '' # Float\nelmDelimiter: '' # Comment\nelmTypedef: '' # Keyword\nelmImport: '' # Keyword\nelmConditional: '' # Keyword\nelmAlias: '' # Keyword\nelmOperator: '' # Operator\nelmType: '' # Type\nelmNumberType: '' # Type\nelmBraces: '' # Delimiter\n",
+        "markdown.yml": "markdownH1: '' # htmlH1\nmarkdownH2: '' # htmlH2\nmarkdownH3: '' # htmlH3\nmarkdownH4: '' # htmlH4\nmarkdownH5: '' # htmlH5\nmarkdownH6: '' # htmlH6\nmarkdownHeadingRule: '' # markdownRule\nmarkdownHeadingDelimiter: '' # Delimiter\nmarkdownOrderedListMarker: '' # markdownListMarker\nmarkdownListMarker: '' # htmlTagName\nmarkdownBlockquote: '' # Comment\nmarkdownRule: '' # PreProc\nmarkdownLinkText: '' # htmlLink\nmarkdownIdDeclaration: '' # Typedef\nmarkdownId: '' # Type\nmarkdownAutomaticLink: '' # markdownUrl\nmarkdownUrl: '' # Float\nmarkdownUrlTitle: '' # String\nmarkdownIdDelimiter: '' # markdownLinkDelimiter\nmarkdownUrlDelimiter: '' # htmlTag\nmarkdownUrlTitleDelimiter: '' # Delimiter\nmarkdownItalic: '' # htmlItalic\nmarkdownBold: '' # htmlBold\nmarkdownBoldItalic: '' # htmlBoldItalic\nmarkdownCodeDelimiter: '' # Delimiter\nmarkdownEscape: '' # Special\nmarkdownError: '' # Error\n",
+        "sh.yml": "shArithRegion: '' # shShellVariables\nshAtExpr: '' # shSetList\nshBeginHere: '' # shRedir\nshCaseBar: '' # shConditional\nshCaseCommandSub: '' # shCommandSub\nshCaseDoubleQuote: '' # shDoubleQuote\nshCaseIn: '' # shConditional\nshQuote: '' # shOperator\nshCaseSingleQuote: '' # shSingleQuote\nshCaseStart: '' # shConditional\nshCmdSubRegion: '' # shShellVariables\nshColon: '' # shComment\nshDerefOp: '' # shOperator\nshDerefPOL: '' # shDerefOp\nshDerefPPS: '' # shDerefOp\nshDeref: '' # shShellVariables\nshDerefDelim: '' # shOperator\nshDerefSimple: '' # shDeref\nshDerefSpecial: '' # shDeref\nshDerefString: '' # shDoubleQuote\nshDerefVar: '' # shDeref\nshDoubleQuote: '' # shString\nshEcho: '' # shString\nshEchoDelim: '' # shOperator\nshEchoQuote: '' # shString\nshForPP: '' # shLoop\nshEmbeddedEcho: '' # shString\nshEscape: '' # shCommandSub\nshExDoubleQuote: '' # shDoubleQuote\nshExSingleQuote: '' # shSingleQuote\nshFunction: '' # Function\nshHereDoc: '' # shString\nshHerePayload: '' # shHereDoc\nshLoop: '' # shStatement\nshMoreSpecial: '' # shSpecial\nshOption: '' # shCommandSub\nshPattern: '' # shString\nshParen: '' # shArithmetic\nshPosnParm: '' # shShellVariables\nshQuickComment: '' # shComment\nshRange: '' # shOperator\nshRedir: '' # shOperator\nshSetListDelim: '' # shOperator\nshSetOption: '' # shOption\nshSingleQuote: '' # shString\nshSource: '' # shOperator\nshStringSpecial: '' # shSpecial\nshSubShRegion: '' # shOperator\nshTestOpr: '' # shConditional\nshTestPattern: '' # shString\nshTestDoubleQuote: '' # shString\nshTestSingleQuote: '' # shString\nshVariable: '' # shSetList\nshWrapLineOperator: '' # shOperator\nbashAdminStatement: '' # shStatement if exists(\"b:is_bash\")\nbashSpecialVariables: '' # shShellVariables if exists(\"b:is_bash\")\nbashStatement: '' # shStatement if exists(\"b:is_bash\")\nshFunctionParen: '' # Delimiter if exists(\"b:is_bash\")\nshFunctionDelim: '' # Delimiter if exists(\"b:is_bash\")\nkshSpecialVariables: '' # shShellVariables if exists(\"b:is_kornshell\")\nkshStatement: '' # shStatement if exists(\"b:is_kornshell\")\nshCaseError: '' # Error if !exists(\"g:sh_no_error\")\nshCondError: '' # Error if !exists(\"g:sh_no_error\")\nshCurlyError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefOpError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefWordError: '' # Error if !exists(\"g:sh_no_error\")\nshDoError: '' # Error if !exists(\"g:sh_no_error\")\nshEsacError: '' # Error if !exists(\"g:sh_no_error\")\nshIfError: '' # Error if !exists(\"g:sh_no_error\")\nshInError: '' # Error if !exists(\"g:sh_no_error\")\nshParenError: '' # Error if !exists(\"g:sh_no_error\")\nshTestError: '' # Error if !exists(\"g:sh_no_error\")\nshDTestError: '' # Error if exists(\"b:is_kornshell\")\nshArithmetic: '' # Special\nshCharClass: '' # Identifier\nshSnglCase: '' # Statement\nshCommandSub: '' # Special\nshComment: '' # Comment\nshConditional: '' # Conditional\nshCtrlSeq: '' # Special\nshExprRegion: '' # Delimiter\nshFunctionKey: '' # Function\nshFunctionName: '' # Function\nshNumber: '' # Number\nshOperator: '' # Operator\nshRepeat: '' # Repeat\nshSet: '' # Statement\nshSetList: '' # Identifier\nshShellVariables: '' # PreProc\nshSpecial: '' # Special\nshStatement: '' # Statement\nshString: '' # String\nshTodo: '' # Todo\nshAlias: '' # Identifier\nshHereDoc01: '' # shRedir\nshHereDoc02: '' # shRedir\nshHereDoc03: '' # shRedir\nshHereDoc04: '' # shRedir\nshHereDoc05: '' # shRedir\nshHereDoc06: '' # shRedir\nshHereDoc07: '' # shRedir\nshHereDoc08: '' # shRedir\nshHereDoc09: '' # shRedir\nshHereDoc10: '' # shRedir\nshHereDoc11: '' # shRedir\nshHereDoc12: '' # shRedir\nshHereDoc13: '' # shRedir\nshHereDoc14: '' # shRedir\nshHereDoc15: '' # shRedir\nshHereDoc16: '' # shRedir\nshHereDoc17: '' # shRedir\nshHereDoc18: '' # shRedir\nshHereDoc19: '' # shRedir\nshHereDoc20: '' # shRedir\nshHereDoc21: '' # shRedir\nshHereDoc22: '' # shRedir\nshHereDoc23: '' # shRedir\nshHereDoc24: '' # shRedir\nshHereDoc25: '' # shRedir\nshHereDoc26: '' # shRedir\nshHereDoc27: '' # shRedir\nshHereDoc28: '' # shRedir\nshHereDoc29: '' # shRedir\nshHereDoc30: '' # shRedir\nshHereDoc31: '' # shRedir\nshHereDoc32: '' # shRedir\n",
+        "elm.vim.yml": "elmKeyword: '' # Keyword\nelmBuiltinOp: '' # Special\nelmType: '' # Type\nelmTodo: '' # Todo\nelmLineComment: '' # Comment\nelmComment: '' # Comment\nelmString: '' # String\nelmNumber: '' # Number\nspecialName: '' # Special\n",
+        "vim-gitgutter.yml": "# GitGutter airblade/vim-gitgutter\nGitGutterAdd: ''\nGitGutterChange: ''\nGitGutterDelete: ''\nGitGutterChangeDelete: ''\n",
+        "html.yml": "htmlTag: '' # Function\nhtmlEndTag: '' # Identifier\nhtmlArg: '' # Type\nhtmlTagName: '' # htmlStatement\nhtmlSpecialTagName: '' # Exception\nhtmlValue: '' # String\nhtmlH1: '' # Title\nhtmlH2: '' # htmlH1\nhtmlH3: '' # htmlH2\nhtmlH4: '' # htmlH3\nhtmlH5: '' # htmlH4\nhtmlH6: '' # htmlH5\nhtmlHead: '' # PreProc\nhtmlTitle: '' # Title\nhtmlBoldItalicUnderline: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBold: '' # htmlBoldUnderline\nhtmlUnderlineItalicBold: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBoldItalic: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderline: '' # htmlUnderlineItalic\nhtmlItalicBold: '' # htmlBoldItalic\nhtmlItalicBoldUnderline: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderlineBold: '' # htmlBoldUnderlineItalic\nhtmlLink: '' # Underlined\nhtmlLeadingSpace: '' # None\nhtmlPreStmt: '' # PreProc\nhtmlPreError: '' # Error\nhtmlPreProc: '' # PreProc\nhtmlPreAttr: '' # String\nhtmlPreProcAttrName: '' # PreProc\nhtmlPreProcAttrError: '' # Error\nhtmlSpecial: '' # Special\nhtmlSpecialChar: '' # Special\nhtmlString: '' # String\nhtmlStatement: '' # Statement\nhtmlComment: '' # Comment\nhtmlCommentPart: '' # Comment\nhtmlCommentError: '' # htmlError\nhtmlTagError: '' # htmlError\nhtmlEvent: '' # javaScript\nhtmlError: '' # Error\njavaScript: '' # Special\njavaScriptExpression: '' # javaScript\nhtmlCssStyleComment: '' # Comment\nhtmlCssDefinition: '' # Special\n",
+        "viminfo.yml": "viminfoComment: '' # Comment\nviminfoError: '' # Error\nviminfoStatement: '' # Statement\n",
+        "php.yml": "phpConstant: '' # Constant\nphpCoreConstant: '' # Constant\nphpComment: '' # Comment\nphpDocTags: '' # PreProc\nphpDocCustomTags: '' # Type\nphpException: '' # Exception\nphpBoolean: '' # Boolean\nphpStorageClass: '' # StorageClass\nphpSCKeyword: '' # StorageClass\nphpFCKeyword: '' # Define\nphpStructure: '' # Structure\nphpStringSingle: '' # String\nphpStringDouble: '' # String\nphpBacktick: '' # String\nphpNumber: '' # Number\nphpFloat: '' # Float\nphpMethods: '' # Function\nphpFunctions: '' # Function\nphpBaselib: '' # Function\nphpRepeat: '' # Repeat\nphpConditional: '' # Conditional\nphpLabel: '' # Label\nphpStatement: '' # Statement\nphpKeyword: '' # Statement\nphpType: '' # Type\nphpInclude: '' # Include\nphpDefine: '' # Define\nphpBackslashSequences: '' # SpecialChar\nphpBackslashDoubleQuote: '' # SpecialChar\nphpBackslashSingleQuote: '' # SpecialChar\nphpParent: '' # Delimiter\nphpBrackets: '' # Delimiter\nphpIdentifierConst: '' # Delimiter\nphpParentError: '' # Error\nphpOctalError: '' # Error\nphpInterpSimpleError: '' # Error\nphpInterpBogusDollarCurley: '' # Error\nphpInterpDollarCurly1: '' # Error\nphpInterpDollarCurly2: '' # Error\nphpInterpSimpleBracketsInner: '' # String\nphpInterpSimpleCurly: '' # Delimiter\nphpInterpVarname: '' # Identifier\nphpTodo: '' # Todo\nphpDocTodo: '' # Todo\nphpMemberSelector: '' # Structure\nphpIntVar: '' # Identifier\nphpEnvVar: '' # Identifier\nphpOperator: '' # Operator\nphpVarSelector: '' # Operator\nphpRelation: '' # Operator\nphpIdentifier: '' # Identifier\nphpIdentifierSimply: '' # Identifier\n",
+        "nerdtree.yml": "NERDTreePart: '' # Special\nNERDTreePartFile: '' # Type\nNERDTreeExecFile: '' # Title\nNERDTreeDirSlash: '' # Identifier\nNERDTreeBookmarksHeader: '' # statement\nNERDTreeBookmarksLeader: '' # ignore\nNERDTreeBookmarkName: '' # Identifier\nNERDTreeBookmark: '' # normal\nNERDTreeHelp: '' # String\nNERDTreeHelpKey: '' # Identifier\nNERDTreeHelpCommand: '' # Identifier\nNERDTreeHelpTitle: '' # Macro\nNERDTreeToggleOn: '' # Question\nNERDTreeToggleOff: '' # WarningMsg\nNERDTreeLinkTarget: '' # Type\nNERDTreeLinkFile: '' # Macro\nNERDTreeLinkDir: '' # Macro\nNERDTreeDir: '' # Directory\nNERDTreeUp: '' # Directory\nNERDTreeFile: '' # Normal\nNERDTreeCWD: '' # Statement\nNERDTreeOpenable: '' # Title\nNERDTreeClosable: '' # Title\nNERDTreeIgnore: '' # ignore\nNERDTreeRO: '' # WarningMsg\nNERDTreeFlags: '' # Number\n",
+        "fugitive.yml": "FugitiveblameBoundary: '' # Keyword\nFugitiveblameHash: '' # Identifier\nFugitiveblameUncommitted: '' # Ignore\nFugitiveblameTime: '' # PreProc\nFugitiveblameLineNumber: '' # Number\nFugitiveblameOriginalFile: '' # String\nFugitiveblameOriginalLineNumber: '' #\nFugitiveblameShort: '' # FugitiveblameDelimiter\nFugitiveblameDelimiter: '' # Delimiter\nFugitiveblameNotCommittedYet: '' # Comment\n",
+        "ruby.yml": "rubyClass: '' # rubyDefine\nrubyModule: '' # rubyDefine\nrubyMethodExceptional: '' # rubyDefine\nrubyDefine: '' # Define\nrubyFunction: '' # Function\nrubyConditional: '' # Conditional\nrubyConditionalModifier: '' # rubyConditional\nrubyExceptional: '' # rubyConditional\nrubyRepeat: '' # Repeat\nrubyRepeatModifier: '' # rubyRepeat\nrubyOptionalDo: '' # rubyRepeat\nrubyControl: '' # Statement\nrubyInclude: '' # Include\nrubyInteger: '' # Number\nrubyASCIICode: '' # Character\nrubyFloat: '' # Float\nrubyBoolean: '' # Boolean\nrubyException: '' # Exception\nrubyIdentifier: '' # Identifier\nrubyClassVariable: '' # rubyIdentifier\nrubyConstant: '' # Type\nrubyGlobalVariable: '' # rubyIdentifier\nrubyBlockParameter: '' # rubyIdentifier\nrubyInstanceVariable: '' # rubyIdentifier\nrubyPredefinedIdentifier: '' # rubyIdentifier\nrubyPredefinedConstant: '' # rubyPredefinedIdentifier\nrubyPredefinedVariable: '' # rubyPredefinedIdentifier\nrubySymbol: '' # Constant\nrubyKeyword: '' # Keyword\nrubyOperator: '' # Operator\nrubyBeginEnd: '' # Statement\nrubyAccess: '' # Statement\nrubyAttribute: '' # Statement\nrubyEval: '' # Statement\nrubyPseudoVariable: '' # Constant\nrubyComment: '' # Comment\nrubyData: '' # Comment\nrubyDataDirective: '' # Delimiter\nrubyDocumentation: '' # Comment\nrubyTodo: '' # Todo\nrubyQuoteEscape: '' # rubyStringEscape\nrubyStringEscape: '' # Special\nrubyInterpolationDelimiter: '' # Delimiter\nrubyNoInterpolation: '' # rubyString\nrubySharpBang: '' # PreProc\nrubyRegexpDelimiter: '' # rubyStringDelimiter\nrubySymbolDelimiter: '' # rubyStringDelimiter\nrubyStringDelimiter: '' # Delimiter\nrubyHeredoc: '' # rubyString\nrubyString: '' # String\nrubyRegexpEscape: '' # rubyRegexpSpecial\nrubyRegexpQuantifier: '' # rubyRegexpSpecial\nrubyRegexpAnchor: '' # rubyRegexpSpecial\nrubyRegexpDot: '' # rubyRegexpCharClass\nrubyRegexpCharClass: '' # rubyRegexpSpecial\nrubyRegexpSpecial: '' # Special\nrubyRegexpComment: '' # Comment\nrubyRegexp: '' # rubyString\nrubyInvalidVariable: '' # Error\nrubyError: '' # Error\nrubySpaceError: '' # rubyError\n",
+        "yajs.yml": "javascriptReserved: '' # Error\njavascriptReservedCase: '' # Error\njavascriptInvalidOp: '' # Error\njavascriptEndColons: '' # Statement\njavascriptOpSymbol: '' # Normal\njavascriptBraces: '' # Function\njavascriptBrackets: '' # Function\njavascriptParens: '' # Normal\njavascriptComment: '' # Comment\njavascriptLineComment: '' # Comment\njavascriptDocComment: '' # Comment\njavascriptCommentTodo: '' # Todo\njavascriptDocNotation: '' # SpecialComment\njavascriptDocTags: '' # SpecialComment\njavascriptDocNGParam: '' # javascriptDocParam\njavascriptDocParam: '' # Function\njavascriptDocNumParam: '' # Function\njavascriptDocEventRef: '' # Function\njavascriptDocNamedParamType: '' # Type\njavascriptDocParamName: '' # Type\njavascriptDocParamType: '' # Type\njavascriptString: '' # String\njavascriptTemplate: '' # String\njavascriptEventString: '' # String\njavascriptASCII: '' # Label\njavascriptTemplateSubstitution: '' # Label\njavascriptTemplateSB: '' # javascriptTemplateSubstitution\njavascriptRegexpString: '' # String\njavascriptGlobal: '' # Constant\njavascriptCharacter: '' # Character\njavascriptPrototype: '' # Type\njavascriptConditional: '' # Conditional\njavascriptConditionalElse: '' # Conditional\njavascriptSwitch: '' # Conditional\njavascriptCase: '' # Conditional\njavascriptDefault: '' # javascriptCase\njavascriptExportDefault: '' # javascriptCase\njavascriptBranch: '' # Conditional\njavascriptIdentifier: '' # Structure\njavascriptVariable: '' # Identifier\njavascriptRepeat: '' # Repeat\njavascriptForComprehension: '' # Repeat\njavascriptIfComprehension: '' # Repeat\njavascriptOfComprehension: '' # Repeat\njavascriptForOperator: '' # Repeat\njavascriptStatementKeyword: '' # Statement\njavascriptReturn: '' # Statement\njavascriptYield: '' # Statement\njavascriptYieldGen: '' # Statement\njavascriptMessage: '' # Keyword\njavascriptOperator: '' # Identifier\njavascriptTarget: '' # Identifier\njavascriptNull: '' # Boolean\njavascriptNumber: '' # Number\njavascriptBoolean: '' # Boolean\njavascriptObjectLabel: '' # javascriptLabel\njavascriptObjectLabelColon: '' # javascriptLabel\njavascriptLabel: '' # Label\njavascriptPropertyName: '' # Label\njavascriptImport: '' # Special\njavascriptExport: '' # Special\njavascriptTry: '' # Statement\njavascriptExceptions: '' # Statement\njavascriptMethodName: '' # Function\njavascriptMethodAccessor: '' # Operator\njavascriptObjectMethodName: '' # Function\njavascriptFuncKeyword: '' # Keyword\njavascriptAsyncFunc: '' # Keyword\njavascriptArrowFunc: '' # Type\njavascriptFuncName: '' # Function\njavascriptFuncArg: '' # Special\njavascriptArrowFuncArg: '' # javascriptFuncArg\njavascriptComma: '' # Normal\njavascriptClassKeyword: '' # Keyword\njavascriptClassExtends: '' # Keyword\njavascriptClassName: '' # Function\njavascriptClassSuperName: '' # Function\njavascriptClassStatic: '' # StorageClass\njavascriptClassSuper: '' # keyword\nshellbang: '' # Comment\n",
+        "less.yml": "lessEndOfLineComment: '' # lessComment\nlessCssComment: '' # lessComment\nlessComment: '' # Comment\nlessDefault: '' # cssImportant\nlessVariable: '' # Identifier\nlessFunction: '' # PreProc\nlessTodo: '' # Todo\nlessInclude: '' # Include\nlessIdChar: '' # Special\nlessClassChar: '' # Special\nlessAmpersand: '' # Character\nlessId: '' # Identifier\nlessClass: '' # Type\nlessCssAttribute: '' # PreProc\nlessClassCall: '' # Type\nlessClassIdCall: '' # Type\nlessTagName: '' # cssTagName\nlessDeprecated: '' # cssDeprecated\nlessMedia: '' # cssMedia\n",
+        "python.yml": "pythonStatement: '' # Statement\npythonConditional: '' # Conditional\npythonRepeat: '' # Repeat\npythonOperator: '' # Operator\npythonException: '' # Exception\npythonInclude: '' # Include\npythonDecorator: '' # Define\npythonFunction: '' # Function\npythonComment: '' # Comment\npythonTodo: '' # Todo\npythonString: '' # String\npythonRawString: '' # String\npythonQuotes: '' # String\npythonTripleQuotes: '' # pythonQuotes\npythonEscape: '' # Special\npythonNumber: '' # Number\npythonBuiltin: '' # Function\npythonExceptions: '' # Structure\npythonSpaceError: '' # Error\npythonDoctest: '' # Special\npythonDoctestValue: '' # Define\n",
         "gitconfig.yml": "gitconfigComment: '' # Comment\ngitconfigSection: '' # Keyword\ngitconfigVariable: '' # Identifier\ngitconfigBoolean: '' # Boolean\ngitconfigNumber: '' # Number\ngitconfigString: '' # String\ngitconfigDelim: '' # Delimiter\ngitconfigEscape: '' # Delimiter\ngitconfigError: '' # Error\n",
         "gitcommit.yml": "gitcommitSummary: '' # Keyword\ngitcommitComment: '' # Comment\ngitcommitUntracked: '' # gitcommitComment\ngitcommitDiscarded: '' # gitcommitComment\ngitcommitSelected: '' # gitcommitComment\ngitcommitUnmerged: '' # gitcommitComment\ngitcommitOnBranch: '' # Comment\ngitcommitBranch: '' # Special\ngitcommitNoBranch: '' # gitCommitBranch\ngitcommitDiscardedType: '' # gitcommitType\ngitcommitSelectedType: '' # gitcommitType\ngitcommitUnmergedType: '' # gitcommitType\ngitcommitType: '' # Type\ngitcommitNoChanges: '' # gitcommitHeader\ngitcommitHeader: '' # PreProc\ngitcommitUntrackedFile: '' # gitcommitFile\ngitcommitDiscardedFile: '' # gitcommitFile\ngitcommitSelectedFile: '' # gitcommitFile\ngitcommitUnmergedFile: '' # gitcommitFile\ngitcommitFile: '' # Constant\ngitcommitDiscardedArrow: '' # gitcommitArrow\ngitcommitSelectedArrow: '' # gitcommitArrow\ngitcommitUnmergedArrow: '' # gitcommitArrow\ngitcommitArrow: '' # gitcommitComment\ngitcommitOverflow: '' # none\ngitcommitBlank: '' # Error\n",
-        "unite.yml": "uniteError: '' # Error\nuniteMarkedLine: '' # Statement\nuniteCandidateSourceName: '' # Type\nuniteQuickMatchText: '' # Special\nuniteCandidateIcon: '' # Special\nuniteMarkedIcon: '' # Statement\nuniteCandidateInputKeyword: '' # Function\nuniteChooseAction: '' # NONE\nuniteChooseCandidate: '' # NONE\nuniteChooseKey: '' # SpecialKey\nuniteChooseMessage: '' # NONE\nuniteChoosePrompt: '' # uniteSourcePrompt\nuniteChooseSource: '' # uniteSourceNames\nuniteInputPrompt: '' # Normal\nuniteInputLine: '' # Identifier\nuniteInputCommand: '' # Statement\nuniteStatusNormal: '' # StatusLine\nuniteStatusHead: '' # Statement\nuniteStatusSourceNames: '' # PreProc\nuniteStatusSourceCandidates: '' # Constant\nuniteStatusMessage: '' # Comment\nuniteStatusLineNR: '' # LineNR\n",
-        "css.yml": "cssComment: '' # Comment\ncssVendor: '' # Comment\ncssHacks: '' # Comment\ncssTagName: '' # Statement\ncssDeprecated: '' # Error\ncssSelectorOp: '' # Special\ncssSelectorOp2: '' # Special\ncssAttrComma: '' # Special\ncssAnimationProp: '' # cssProp\ncssBackgroundProp: '' # cssProp\ncssBorderProp: '' # cssProp\ncssBoxProp: '' # cssProp\ncssColorProp: '' # cssProp\ncssContentForPagedMediaProp: '' # cssProp\ncssDimensionProp: '' # cssProp\ncssFlexibleBoxProp: '' # cssProp\ncssFontProp: '' # cssProp\ncssGeneratedContentProp: '' # cssProp\ncssGridProp: '' # cssProp\ncssHyerlinkProp: '' # cssProp\ncssLineboxProp: '' # cssProp\ncssListProp: '' # cssProp\ncssMarqueeProp: '' # cssProp\ncssMultiColumnProp: '' # cssProp\ncssPagedMediaProp: '' # cssProp\ncssPositioningProp: '' # cssProp\ncssPrintProp: '' # cssProp\ncssRubyProp: '' # cssProp\ncssSpeechProp: '' # cssProp\ncssTableProp: '' # cssProp\ncssTextProp: '' # cssProp\ncssTransformProp: '' # cssProp\ncssTransitionProp: '' # cssProp\ncssUIProp: '' # cssProp\ncssIEUIProp: '' # cssProp\ncssAuralProp: '' # cssProp\ncssRenderProp: '' # cssProp\ncssMobileTextProp: '' # cssProp\ncssAnimationAttr: '' # cssAttr\ncssBackgroundAttr: '' # cssAttr\ncssBorderAttr: '' # cssAttr\ncssBoxAttr: '' # cssAttr\ncssContentForPagedMediaAttr: '' # cssAttr\ncssDimensionAttr: '' # cssAttr\ncssFlexibleBoxAttr: '' # cssAttr\ncssFontAttr: '' # cssAttr\ncssGeneratedContentAttr: '' # cssAttr\ncssGridAttr: '' # cssAttr\ncssHyerlinkAttr: '' # cssAttr\ncssLineboxAttr: '' # cssAttr\ncssListAttr: '' # cssAttr\ncssMarginAttr: '' # cssAttr\ncssMarqueeAttr: '' # cssAttr\ncssMultiColumnAttr: '' # cssAttr\ncssPaddingAttr: '' # cssAttr\ncssPagedMediaAttr: '' # cssAttr\ncssPositioningAttr: '' # cssAttr\ncssGradientAttr: '' # cssAttr\ncssPrintAttr: '' # cssAttr\ncssRubyAttr: '' # cssAttr\ncssSpeechAttr: '' # cssAttr\ncssTableAttr: '' # cssAttr\ncssTextAttr: '' # cssAttr\ncssTransformAttr: '' # cssAttr\ncssTransitionAttr: '' # cssAttr\ncssUIAttr: '' # cssAttr\ncssIEUIAttr: '' # cssAttr\ncssAuralAttr: '' # cssAttr\ncssRenderAttr: '' # cssAttr\ncssCommonAttr: '' # cssAttr\ncssPseudoClassId: '' # PreProc\ncssPseudoClassLang: '' # Constant\ncssValueLength: '' # Number\ncssValueInteger: '' # Number\ncssValueNumber: '' # Number\ncssValueAngle: '' # Number\ncssValueTime: '' # Number\ncssValueFrequency: '' # Number\ncssFunction: '' # Constant\ncssURL: '' # String\ncssFunctionName: '' # Function\ncssFunctionComma: '' # Function\ncssColor: '' # Constant\ncssIdentifier: '' # Function\ncssInclude: '' # Include\ncssIncludeKeyword: '' # atKeyword\ncssImportant: '' # Special\ncssBraces: '' # Function\ncssBraceError: '' # Error\ncssError: '' # Error\ncssUnicodeEscape: '' # Special\ncssStringQQ: '' # String\ncssStringQ: '' # String\ncssAttributeSelector: '' # String\ncssMedia: '' # atKeyword\ncssMediaType: '' # Special\ncssMediaComma: '' # Normal\ncssMediaKeyword: '' # Statement\ncssMediaProp: '' # cssProp\ncssMediaAttr: '' # cssAttr\ncssPage: '' # atKeyword\ncssPagePseudo: '' # PreProc\ncssPageMargin: '' # atKeyword\ncssPageProp: '' # cssProp\ncssKeyFrame: '' # atKeyword\ncssKeyFrameSelector: '' # Constant\ncssFontDescriptor: '' # Special\ncssFontDescriptorFunction: '' # Constant\ncssFontDescriptorProp: '' # cssProp\ncssFontDescriptorAttr: '' # cssAttr\ncssUnicodeRange: '' # Constant\ncssClassName: '' # Function\ncssClassNameDot: '' # Function\ncssProp: '' # StorageClass\ncssAttr: '' # Constant\ncssUnitDecorators: '' # Number\ncssNoise: '' # Noise\natKeyword: '' # PreProc\n",
-        "php.yml": "phpConstant: '' # Constant\nphpCoreConstant: '' # Constant\nphpComment: '' # Comment\nphpDocTags: '' # PreProc\nphpDocCustomTags: '' # Type\nphpException: '' # Exception\nphpBoolean: '' # Boolean\nphpStorageClass: '' # StorageClass\nphpSCKeyword: '' # StorageClass\nphpFCKeyword: '' # Define\nphpStructure: '' # Structure\nphpStringSingle: '' # String\nphpStringDouble: '' # String\nphpBacktick: '' # String\nphpNumber: '' # Number\nphpFloat: '' # Float\nphpMethods: '' # Function\nphpFunctions: '' # Function\nphpBaselib: '' # Function\nphpRepeat: '' # Repeat\nphpConditional: '' # Conditional\nphpLabel: '' # Label\nphpStatement: '' # Statement\nphpKeyword: '' # Statement\nphpType: '' # Type\nphpInclude: '' # Include\nphpDefine: '' # Define\nphpBackslashSequences: '' # SpecialChar\nphpBackslashDoubleQuote: '' # SpecialChar\nphpBackslashSingleQuote: '' # SpecialChar\nphpParent: '' # Delimiter\nphpBrackets: '' # Delimiter\nphpIdentifierConst: '' # Delimiter\nphpParentError: '' # Error\nphpOctalError: '' # Error\nphpInterpSimpleError: '' # Error\nphpInterpBogusDollarCurley: '' # Error\nphpInterpDollarCurly1: '' # Error\nphpInterpDollarCurly2: '' # Error\nphpInterpSimpleBracketsInner: '' # String\nphpInterpSimpleCurly: '' # Delimiter\nphpInterpVarname: '' # Identifier\nphpTodo: '' # Todo\nphpDocTodo: '' # Todo\nphpMemberSelector: '' # Structure\nphpIntVar: '' # Identifier\nphpEnvVar: '' # Identifier\nphpOperator: '' # Operator\nphpVarSelector: '' # Operator\nphpRelation: '' # Operator\nphpIdentifier: '' # Identifier\nphpIdentifierSimply: '' # Identifier\n",
-        "vim-mustache-handlebars.yml": "mustacheVariable: '' # Number\nmustacheVariableUnescape: '' # Number\nmustachePartial: '' # Number\nmustacheSection: '' # Number\nmustacheMarkerSet: '' # Number\nmustacheComment: '' # Comment\nmustacheBlockComment: '' # Comment\nmustacheError: '' # Error\nmustacheInsideError: '' # Error\nmustacheHandlebars: '' # Special\nmustacheUnescape: '' # Identifier\nmustacheOperators: '' # Operator\nmustacheConditionals: '' # Conditional\nmustacheHelpers: '' # Repeat\nmustacheQString: '' # String\nmustacheDQString: '' # String\n",
-        "vim-plug.yml": "plug1: '' # Title\nplug2: '' # Repeat\nplugH2: '' # Type\nplugX: '' # Exception\nplugBracket: '' # Structure\nplugNumber: '' # Number\nplugDash: '' # Special\nplugPlus: '' # Constant\nplugStar: '' # Boolean\nplugMessage: '' # Function\nplugName: '' # Label\nplugInstall: '' # Function\nplugUpdate: '' # Type\nplugError: '' # Error\nplugRelDate: '' # Comment\nplugEdge: '' # PreProc\nplugSha: '' # Identifier\nplugTag: '' # Constant\nplugNotLoaded: '' # Comment\n",
-        "gitrebase.yml": "gitrebaseCommit: '' # gitrebaseHash\ngitrebaseHash: '' # Identifier\ngitrebasePick: '' # Statement\ngitrebaseReword: '' # Number\ngitrebaseEdit: '' # PreProc\ngitrebaseSquash: '' # Type\ngitrebaseFixup: '' # Special\ngitrebaseExec: '' # Function\ngitrebaseSummary: '' # String\ngitrebaseComment: '' # Comment\ngitrebaseSquashError: '' # Error\n",
-        "elixir.yml": "# Elixir\nelixirComment: '' # Comment\nelixirUnusedVariable: '' # Comment\nelixirAtom: '' # Constant\nelixirBoolean: '' # Constant\nelixirPseudoVariable: '' # Constant\nelixirNumber: '' # Constant\nelixirString: '' # Constant\nelixirRegex: '' # Constant\nelixirDocString: '' # Constant\nelixirAtomInterpolated: '' # Constant\nelixirSigil: '' # Constant\nelixirRegexDelimiter: '' # Delimiter\nelixirStringDelimiter: '' # Delimiter\nelixirInterpolationDelimiter: '' # Delimiter\nelixirSigilDelimiter: '' # Delimiter\nelixirSpecial: '' # Delimiter\nelixirRegexEscape: '' # Delimiter\nelixirRegexEscapePunctuation: '' # Delimiter\nelixirRegexQuantifier: '' # Delimiter\nelixirRegexCharClass: '' # Delimiter\nelixirSelf: '' # Identifier\nelixirVariable: '' # Identifier\nelixirFunctionDeclaration: '' # Identifier\nelixirBlockDefinition: '' # Statement\nelixirKeyword: '' # Statement\nelixirOperator: '' # Statement\nelixirInclude: '' # Preproc\nelixirDefine: '' # Preproc\nelixirPrivateDefine: '' # Preproc\nelixirModuleDefine: '' # Preproc\nelixirProtocolDefine: '' # Preproc\nelixirImplDefine: '' # Preproc\nelixirRecordDefine: '' # Preproc\nelixirPrivateRecordDefine: '' # Preproc\nelixirMacroDefine: '' # Preproc\nelixirMacroDeclaration: '' # Preproc\nelixirPrivateMacroDefine: '' # Preproc\nelixirDelegateDefine: '' # Preproc\nelixirOverridableDefine: '' # Preproc\nelixirExceptionDefine: '' # Preproc\nelixirCallbackDefine: '' # Preproc\nelixirStructDefine: '' # Preproc\nelixirAlias: '' # Type\nelixirTodo: '' # Todo\nelixirArguments: ''\nelixirGuard: ''\nelixirId: ''\nelixirInterpolation: ''\nelixirDocStringStar: ''\nelixirBlock: ''\nelixirAnonymousFunction: ''\nelixirDelimEscape: ''\nelixirModuleDeclaration: ''\nelixirProtocolDeclaration: ''\nelixirImplDeclaration: ''\nelixirRecordDeclaration: ''\nelixirDelegateDeclaration: ''\nelixirOverridableDeclaratio: ''\nelixirExceptionDeclaration: ''\nelixirCallbackDeclaration: ''\nelixirStructDeclaration: ''\n",
-        "vim-stylus.yml": "stylusComment: '' # Comment\nstylusVariable: '' # Identifier\nstylusControl: '' # PreProc\nstylusFunction: '' # Function\nstylusInterpolation: '' # Delimiter\nstylusAmpersand: '' # Character\nstylusClass: '' # Type\nstylusClassChar: '' # Special\nstylusEscape: '' # Special\nstylusId: '' # Identifier\nstylusIdChar: '' # Special\n",
         "vim-javascript-syntax.yml": "# jelera/vim-javascript-syntax\njavaScriptEndColons: '' # Operator\njavaScriptOpSymbols: '' # Operator\njavaScriptLogicSymbols: '' # Boolean\njavaScriptParens: '' # Operator\njavaScriptTemplateDelim: '' # Operator\njavaScriptDocComment: '' # Comment\njavaScriptDocTags: '' # Special\njavaScriptDocSeeTag: '' # Function\njavaScriptDocParam: '' # Function\njavaScriptString: '' # String\njavaScriptTemplateString: '' # String\njavaScriptFloat: '' # Number\njavaScriptPrototype: '' # Type\njavaScriptSpecial: '' # Special\njavaScriptSource: '' # Special\njavaScriptGlobalObjects: '' # Special\njavaScriptExceptions: '' # Special\njavaScriptParensErrA: '' # Error\njavaScriptParensErrB: '' # Error\njavaScriptParensErrC: '' # Error\njavaScriptDomErrNo: '' # Error\njavaScriptDomNodeConsts: '' # Constant\njavaScriptDomElemAttrs: '' # Label\njavaScriptDomElemFuncs: '' # Type\njavaScriptWebAPI: '' # Type\njavaScriptHtmlElemAttrs: '' # Label\njavaScriptHtmlElemFuncs: '' # Type\njavaScriptCssStyles: '' # Type\njavaScriptBrowserObjects: '' # Constant\njavaScriptDOMObjects: '' # Constant\njavaScriptDOMMethods: '' # Type\njavaScriptDOMProperties: '' # Label\njavaScriptAjaxObjects: '' # Constant\njavaScriptAjaxMethods: '' # Type\njavaScriptAjaxProperties: '' # Label\njavaScriptFuncKeyword: '' # Function\njavaScriptFuncDef: '' # PreProc\njavaScriptFuncExp: '' # Title\njavaScriptFuncArg: '' # Special\njavaScriptFuncComma: '' # Operator\njavaScriptFuncEq: '' # Operator\njavaScriptHtmlEvents: '' # Constant\njavaScriptHtmlElemProperties: '' # Label\njavaScriptEventListenerKeywords: '' # Type\njavaScriptPropietaryObjects: '' # Constant\n",
-        "sh.yml": "shArithRegion: '' # shShellVariables\nshAtExpr: '' # shSetList\nshBeginHere: '' # shRedir\nshCaseBar: '' # shConditional\nshCaseCommandSub: '' # shCommandSub\nshCaseDoubleQuote: '' # shDoubleQuote\nshCaseIn: '' # shConditional\nshQuote: '' # shOperator\nshCaseSingleQuote: '' # shSingleQuote\nshCaseStart: '' # shConditional\nshCmdSubRegion: '' # shShellVariables\nshColon: '' # shComment\nshDerefOp: '' # shOperator\nshDerefPOL: '' # shDerefOp\nshDerefPPS: '' # shDerefOp\nshDeref: '' # shShellVariables\nshDerefDelim: '' # shOperator\nshDerefSimple: '' # shDeref\nshDerefSpecial: '' # shDeref\nshDerefString: '' # shDoubleQuote\nshDerefVar: '' # shDeref\nshDoubleQuote: '' # shString\nshEcho: '' # shString\nshEchoDelim: '' # shOperator\nshEchoQuote: '' # shString\nshForPP: '' # shLoop\nshEmbeddedEcho: '' # shString\nshEscape: '' # shCommandSub\nshExDoubleQuote: '' # shDoubleQuote\nshExSingleQuote: '' # shSingleQuote\nshFunction: '' # Function\nshHereDoc: '' # shString\nshHerePayload: '' # shHereDoc\nshLoop: '' # shStatement\nshMoreSpecial: '' # shSpecial\nshOption: '' # shCommandSub\nshPattern: '' # shString\nshParen: '' # shArithmetic\nshPosnParm: '' # shShellVariables\nshQuickComment: '' # shComment\nshRange: '' # shOperator\nshRedir: '' # shOperator\nshSetListDelim: '' # shOperator\nshSetOption: '' # shOption\nshSingleQuote: '' # shString\nshSource: '' # shOperator\nshStringSpecial: '' # shSpecial\nshSubShRegion: '' # shOperator\nshTestOpr: '' # shConditional\nshTestPattern: '' # shString\nshTestDoubleQuote: '' # shString\nshTestSingleQuote: '' # shString\nshVariable: '' # shSetList\nshWrapLineOperator: '' # shOperator\nbashAdminStatement: '' # shStatement if exists(\"b:is_bash\")\nbashSpecialVariables: '' # shShellVariables if exists(\"b:is_bash\")\nbashStatement: '' # shStatement if exists(\"b:is_bash\")\nshFunctionParen: '' # Delimiter if exists(\"b:is_bash\")\nshFunctionDelim: '' # Delimiter if exists(\"b:is_bash\")\nkshSpecialVariables: '' # shShellVariables if exists(\"b:is_kornshell\")\nkshStatement: '' # shStatement if exists(\"b:is_kornshell\")\nshCaseError: '' # Error if !exists(\"g:sh_no_error\")\nshCondError: '' # Error if !exists(\"g:sh_no_error\")\nshCurlyError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefOpError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefWordError: '' # Error if !exists(\"g:sh_no_error\")\nshDoError: '' # Error if !exists(\"g:sh_no_error\")\nshEsacError: '' # Error if !exists(\"g:sh_no_error\")\nshIfError: '' # Error if !exists(\"g:sh_no_error\")\nshInError: '' # Error if !exists(\"g:sh_no_error\")\nshParenError: '' # Error if !exists(\"g:sh_no_error\")\nshTestError: '' # Error if !exists(\"g:sh_no_error\")\nshDTestError: '' # Error if exists(\"b:is_kornshell\")\nshArithmetic: '' # Special\nshCharClass: '' # Identifier\nshSnglCase: '' # Statement\nshCommandSub: '' # Special\nshComment: '' # Comment\nshConditional: '' # Conditional\nshCtrlSeq: '' # Special\nshExprRegion: '' # Delimiter\nshFunctionKey: '' # Function\nshFunctionName: '' # Function\nshNumber: '' # Number\nshOperator: '' # Operator\nshRepeat: '' # Repeat\nshSet: '' # Statement\nshSetList: '' # Identifier\nshShellVariables: '' # PreProc\nshSpecial: '' # Special\nshStatement: '' # Statement\nshString: '' # String\nshTodo: '' # Todo\nshAlias: '' # Identifier\nshHereDoc01: '' # shRedir\nshHereDoc02: '' # shRedir\nshHereDoc03: '' # shRedir\nshHereDoc04: '' # shRedir\nshHereDoc05: '' # shRedir\nshHereDoc06: '' # shRedir\nshHereDoc07: '' # shRedir\nshHereDoc08: '' # shRedir\nshHereDoc09: '' # shRedir\nshHereDoc10: '' # shRedir\nshHereDoc11: '' # shRedir\nshHereDoc12: '' # shRedir\nshHereDoc13: '' # shRedir\nshHereDoc14: '' # shRedir\nshHereDoc15: '' # shRedir\nshHereDoc16: '' # shRedir\nshHereDoc17: '' # shRedir\nshHereDoc18: '' # shRedir\nshHereDoc19: '' # shRedir\nshHereDoc20: '' # shRedir\nshHereDoc21: '' # shRedir\nshHereDoc22: '' # shRedir\nshHereDoc23: '' # shRedir\nshHereDoc24: '' # shRedir\nshHereDoc25: '' # shRedir\nshHereDoc26: '' # shRedir\nshHereDoc27: '' # shRedir\nshHereDoc28: '' # shRedir\nshHereDoc29: '' # shRedir\nshHereDoc30: '' # shRedir\nshHereDoc31: '' # shRedir\nshHereDoc32: '' # shRedir\n",
-        "go.yml": "goDirective: '' # Statement\ngoDeclaration: '' # Keyword\ngoDeclType: '' # Keyword\ngoStatement: '' # Statement\ngoConditional: '' # Conditional\ngoLabel: '' # Label\ngoRepeat: '' # Repeat\ngoType: '' # Type\ngoSignedInts: '' # Type\ngoUnsignedInts: '' # Type\ngoFloats: '' # Type\ngoComplexes: '' # Type\ngoBuiltins: '' # Keyword\ngoConstants: '' # Keyword\ngoComment: '' # Comment\ngoTodo: '' # Todo\ngoEscapeOctal: '' # goSpecialString\ngoEscapeC: '' # goSpecialString\ngoEscapeX: '' # goSpecialString\ngoEscapeU: '' # goSpecialString\ngoEscapeBigU: '' # goSpecialString\ngoSpecialString: '' # Special\ngoEscapeError: '' # Error\ngoString: '' # String\ngoRawString: '' # String\ngoCharacter: '' # Character\ngoDecimalInt: '' # Integer\ngoHexadecimalInt: '' # Integer\ngoOctalInt: '' # Integer\nInteger: '' # Number\ngoFloat: '' # Float\ngoImaginary: '' # Number\ngoExtraType: '' # Type\ngoSpaceError: '' # Error\n",
-        "elm.vim.yml": "elmKeyword: '' # Keyword\nelmBuiltinOp: '' # Special\nelmType: '' # Type\nelmTodo: '' # Todo\nelmLineComment: '' # Comment\nelmComment: '' # Comment\nelmString: '' # String\nelmNumber: '' # Number\nspecialName: '' # Special\n",
-        "help.yml": "helpIgnore: '' # Ignore\nhelpHyperTextJump: '' # Identifier\nhelpBar: '' # Ignore\nhelpBacktick: '' # Ignore\nhelpStar: '' # Ignore\nhelpHyperTextEntry: '' # String\nhelpHeadline: '' # Statement\nhelpHeader: '' # PreProc\nhelpSectionDelim: '' # PreProc\nhelpVim: '' # Identifier\nhelpCommand: '' # Comment\nhelpExample: '' # Comment\nhelpOption: '' # Type\nhelpSpecial: '' # Special\nhelpNote: '' # Todo\nhelpComment: '' # Comment\nhelpConstant: '' # Constant\nhelpString: '' # String\nhelpCharacter: '' # Character\nhelpNumber: '' # Number\nhelpBoolean: '' # Boolean\nhelpFloat: '' # Float\nhelpIdentifier: '' # Identifier\nhelpFunction: '' # Function\nhelpStatement: '' # Statement\nhelpConditional: '' # Conditional\nhelpRepeat: '' # Repeat\nhelpLabel: '' # Label\nhelpOperator: '' # Operator\nhelpKeyword: '' # Keyword\nhelpException: '' # Exception\nhelpPreProc: '' # PreProc\nhelpInclude: '' # Include\nhelpDefine: '' # Define\nhelpMacro: '' # Macro\nhelpPreCondit: '' # PreCondit\nhelpType: '' # Type\nhelpStorageClass: '' # StorageClass\nhelpStructure: '' # Structure\nhelpTypedef: '' # Typedef\nhelpSpecialChar: '' # SpecialChar\nhelpTag: '' # Tag\nhelpDelimiter: '' # Delimiter\nhelpSpecialComment: '' # SpecialComment\nhelpDebug: '' # Debug\nhelpUnderlined: '' # Underlined\nhelpError: '' # Error\nhelpTodo: '' # Todo\nhelpURL: '' # String\n",
-        "html.yml": "htmlTag: '' # Function\nhtmlEndTag: '' # Identifier\nhtmlArg: '' # Type\nhtmlTagName: '' # htmlStatement\nhtmlSpecialTagName: '' # Exception\nhtmlValue: '' # String\nhtmlH1: '' # Title\nhtmlH2: '' # htmlH1\nhtmlH3: '' # htmlH2\nhtmlH4: '' # htmlH3\nhtmlH5: '' # htmlH4\nhtmlH6: '' # htmlH5\nhtmlHead: '' # PreProc\nhtmlTitle: '' # Title\nhtmlBoldItalicUnderline: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBold: '' # htmlBoldUnderline\nhtmlUnderlineItalicBold: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBoldItalic: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderline: '' # htmlUnderlineItalic\nhtmlItalicBold: '' # htmlBoldItalic\nhtmlItalicBoldUnderline: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderlineBold: '' # htmlBoldUnderlineItalic\nhtmlLink: '' # Underlined\nhtmlLeadingSpace: '' # None\nhtmlPreStmt: '' # PreProc\nhtmlPreError: '' # Error\nhtmlPreProc: '' # PreProc\nhtmlPreAttr: '' # String\nhtmlPreProcAttrName: '' # PreProc\nhtmlPreProcAttrError: '' # Error\nhtmlSpecial: '' # Special\nhtmlSpecialChar: '' # Special\nhtmlString: '' # String\nhtmlStatement: '' # Statement\nhtmlComment: '' # Comment\nhtmlCommentPart: '' # Comment\nhtmlCommentError: '' # htmlError\nhtmlTagError: '' # htmlError\nhtmlEvent: '' # javaScript\nhtmlError: '' # Error\njavaScript: '' # Special\njavaScriptExpression: '' # javaScript\nhtmlCssStyleComment: '' # Comment\nhtmlCssDefinition: '' # Special\n",
-        "base.yml": "# BASE UI\nColorColumn: ''\nConceal: ''\nCursor: ''\nCursorIM: ''\nCursorColumn: ''\nCursorLine: ''\nCursorLineNr: ''\nDirectory: ''\nDiffAdd: ''\nDiffChange: ''\nDiffDelete: ''\nDiffText: ''\nErrorMsg: ''\nVertSplit: ''\nFolded: ''\nFoldColumn: ''\nSignColumn: ''\nIncSearch: ''\nLineNr: ''\nMatchParen: ''\nModeMsg: ''\nMoreMsg: ''\nNonText: ''\nNormal: ''\nPMenu: ''\nPMenuSel: ''\nPmenuSbar: ''\nPmenuThumb: ''\nQuestion: ''\nSearch: ''\nSpecialKey: ''\nSpellBad: ''\nSpellLocal: ''\nSpellCap: ''\nSpellRare: ''\nStatusLine: ''\nStatusLineNC: ''\nTabLine: ''\nTabLineFill: ''\nTabLineSel: ''\nTitle: ''\nVisual: ''\nVisualNOS: ''\nWarningMsg: ''\nWildMenu: ''\n# BASE SYNTAX\nComment: ''\nConstant: ''\nString: '' # Constant\nCharacter: '' # Constant\nBoolean: '' # Constant\nNumber: '' # Constant\nFloat: '' # Constant\nIdentifier: ''\nFunction: '' # Identifier\nStatement: ''\nConditional: '' # Statement\nRepeat: '' # Statement\nLabel: '' # Statement\nOperator: '' # Statement\nKeyword: '' # Statement\nException: '' # Statement\nPreProc: ''\nInclude: '' # PreProc\nDefine: '' # PreProc\nMacro: '' # PreProc\nPreCondit: '' # PreProc\nType: ''\nStorageClass: '' # Type\nStructure: '' # Type\nTypedef: '' # Type\nSpecial: ''\nSpecialChar: '' # Special\nTag: '' # Special\nDelimiter: '' # Special\nSpecialComment: '' # Special\nDebug: '' # Special\nUnderlined: ''\nIgnore: ''\nError: ''\nTodo: ''\n",
-        "less.yml": "lessEndOfLineComment: '' # lessComment\nlessCssComment: '' # lessComment\nlessComment: '' # Comment\nlessDefault: '' # cssImportant\nlessVariable: '' # Identifier\nlessFunction: '' # PreProc\nlessTodo: '' # Todo\nlessInclude: '' # Include\nlessIdChar: '' # Special\nlessClassChar: '' # Special\nlessAmpersand: '' # Character\nlessId: '' # Identifier\nlessClass: '' # Type\nlessCssAttribute: '' # PreProc\nlessClassCall: '' # Type\nlessClassIdCall: '' # Type\nlessTagName: '' # cssTagName\nlessDeprecated: '' # cssDeprecated\nlessMedia: '' # cssMedia\n",
-        "yaml.yml": "yamlTodo: '' # Todo\nyamlComment: '' # Comment\nyamlDocumentStart: '' # PreProc\nyamlDocumentEnd: '' # PreProc\nyamlDirectiveName: '' # Keyword\nyamlTAGDirective: '' # yamlDirectiveName\nyamlTagHandle: '' # String\nyamlTagPrefix: '' # String\nyamlYAMLDirective: '' # yamlDirectiveName\nyamlReservedDirective: '' # Error\nyamlYAMLVersion: '' # Number\nyamlString: '' # String\nyamlFlowString: '' # yamlString\nyamlFlowStringDelimiter: '' # yamlString\nyamlEscape: '' # SpecialChar\nyamlSingleEscape: '' # SpecialChar\nyamlBlockCollectionItemStart: '' # Label\nyamlBlockMappingKey: '' # Identifier\nyamlBlockMappingMerge: '' # Special\nyamlFlowMappingKey: '' # Identifier\nyamlFlowMappingMerge: '' # Special\nyamlMappingKeyStart: '' # Special\nyamlFlowIndicator: '' # Special\nyamlKeyValueDelimiter: '' # Special\nyamlConstant: '' # Constant\nyamlNull: '' # yamlConstant\nyamlBool: '' # yamlConstant\nyamlAnchor: '' # Type\nyamlAlias: '' # Type\nyamlNodeTag: '' # Type\nyamlInteger: '' # Number\nyamlFloat: '' # Float\nyamlTimestamp: '' # Number\n",
-        "viminfo.yml": "viminfoComment: '' # Comment\nviminfoError: '' # Error\nviminfoStatement: '' # Statement\n",
-        "pug.yml": "pugPlainChar: '' # Special\npugScriptConditional: '' # PreProc\npugScriptLoopKeywords: '' # PreProc\npugScriptStatement: '' # PreProc\npugHtmlArg: '' # htmlArg\npugAttributeString: '' # String\npugAttributesDelimiter: '' # Identifier\npugIdChar: '' # Special\npugClassChar: '' # Special\npugBlockExpansionChar: '' # Special\npugPipeChar: '' # Special\npugTagBlockChar: '' # Special\npugId: '' # Identifier\npugClass: '' # Type\npugInterpolationDelimiter: '' # Delimiter\npugInlineDelimiter: '' # Delimiter\npugFilter: '' # PreProc\npugDocType: '' # PreProc\npugComment: '' # Comment\npugCommentBlock: '' # Comment\npugHtmlConditionalComment: '' # pugComment\n",
-        "xml.yml": "xmlTodo: '' # Todo\nxmlTag: '' # Function\nxmlTagName: '' # Function\nxmlEndTag: '' # Identifier\nxmlNamespace: '' # Tag\nxmlEntity: '' # Statement\nxmlEntityPunct: '' # Type\nxmlAttribPunct: '' # Comment\nxmlAttrib: '' # Type\nxmlString: '' # String\nxmlComment: '' # Comment\nxmlCommentStart: '' # xmlComment\nxmlCommentPart: '' # Comment\nxmlCommentError: '' # Error\nxmlError: '' # Error\nxmlProcessingDelim: '' # Comment\nxmlProcessing: '' # Type\nxmlCdata: '' # String\nxmlCdataCdata: '' # Statement\nxmlCdataStart: '' # Type\nxmlCdataEnd: '' # Type\nxmlDocTypeDecl: '' # Function\nxmlDocTypeKeyword: '' # Statement\nxmlInlineDTD: '' # Function\n",
+        "gitrebase.yml": "gitrebaseCommit: '' # gitrebaseHash\ngitrebaseHash: '' # Identifier\ngitrebasePick: '' # Statement\ngitrebaseReword: '' # Number\ngitrebaseEdit: '' # PreProc\ngitrebaseSquash: '' # Type\ngitrebaseFixup: '' # Special\ngitrebaseExec: '' # Function\ngitrebaseSummary: '' # String\ngitrebaseComment: '' # Comment\ngitrebaseSquashError: '' # Error\n",
         "javascript.yml": "javaScriptComment: '' # Comment\njavaScriptLineComment: '' # Comment\njavaScriptCommentTodo: '' # Todo\njavaScriptSpecial: '' # Special\njavaScriptStringS: '' # String\njavaScriptStringD: '' # String\njavaScriptCharacter: '' # Character\njavaScriptSpecialCharacter: '' # javaScriptSpecial\njavaScriptNumber: '' # javaScriptValue\njavaScriptConditional: '' # Conditional\njavaScriptRepeat: '' # Repeat\njavaScriptBranch: '' # Conditional\njavaScriptOperator: '' # Operator\njavaScriptType: '' # Type\njavaScriptStatement: '' # Statement\njavaScriptFunction: '' # Function\njavaScriptBraces: '' # Function\njavaScriptError: '' # Error\njavaScriptParensError: '' # Error\njavaScriptNull: '' # Keyword\njavaScriptBoolean: '' # Boolean\njavaScriptRegexpString: '' # String\njavaScriptIdentifier: '' # Identifier\njavaScriptLabel: '' # Label\njavaScriptException: '' # Exception\njavaScriptMessage: '' # Keyword\njavaScriptGlobal: '' # Keyword\njavaScriptMember: '' # Keyword\njavaScriptDeprecated: '' # Exception\njavaScriptReserved: '' # Keyword\njavaScriptDebug: '' # Debug\njavaScriptConstant: '' # Label\n",
-        "fugitive.yml": "FugitiveblameBoundary: '' # Keyword\nFugitiveblameHash: '' # Identifier\nFugitiveblameUncommitted: '' # Ignore\nFugitiveblameTime: '' # PreProc\nFugitiveblameLineNumber: '' # Number\nFugitiveblameOriginalFile: '' # String\nFugitiveblameOriginalLineNumber: '' #\nFugitiveblameShort: '' # FugitiveblameDelimiter\nFugitiveblameDelimiter: '' # Delimiter\nFugitiveblameNotCommittedYet: '' # Comment\n",
-        "markdown.yml": "markdownH1: '' # htmlH1\nmarkdownH2: '' # htmlH2\nmarkdownH3: '' # htmlH3\nmarkdownH4: '' # htmlH4\nmarkdownH5: '' # htmlH5\nmarkdownH6: '' # htmlH6\nmarkdownHeadingRule: '' # markdownRule\nmarkdownHeadingDelimiter: '' # Delimiter\nmarkdownOrderedListMarker: '' # markdownListMarker\nmarkdownListMarker: '' # htmlTagName\nmarkdownBlockquote: '' # Comment\nmarkdownRule: '' # PreProc\nmarkdownLinkText: '' # htmlLink\nmarkdownIdDeclaration: '' # Typedef\nmarkdownId: '' # Type\nmarkdownAutomaticLink: '' # markdownUrl\nmarkdownUrl: '' # Float\nmarkdownUrlTitle: '' # String\nmarkdownIdDelimiter: '' # markdownLinkDelimiter\nmarkdownUrlDelimiter: '' # htmlTag\nmarkdownUrlTitleDelimiter: '' # Delimiter\nmarkdownItalic: '' # htmlItalic\nmarkdownBold: '' # htmlBold\nmarkdownBoldItalic: '' # htmlBoldItalic\nmarkdownCodeDelimiter: '' # Delimiter\nmarkdownEscape: '' # Special\nmarkdownError: '' # Error\n",
-        "yajs.yml": "javascriptReserved: '' # Error\njavascriptReservedCase: '' # Error\njavascriptInvalidOp: '' # Error\njavascriptEndColons: '' # Statement\njavascriptOpSymbol: '' # Normal\njavascriptBraces: '' # Function\njavascriptBrackets: '' # Function\njavascriptParens: '' # Normal\njavascriptComment: '' # Comment\njavascriptLineComment: '' # Comment\njavascriptDocComment: '' # Comment\njavascriptCommentTodo: '' # Todo\njavascriptDocNotation: '' # SpecialComment\njavascriptDocTags: '' # SpecialComment\njavascriptDocNGParam: '' # javascriptDocParam\njavascriptDocParam: '' # Function\njavascriptDocNumParam: '' # Function\njavascriptDocEventRef: '' # Function\njavascriptDocNamedParamType: '' # Type\njavascriptDocParamName: '' # Type\njavascriptDocParamType: '' # Type\njavascriptString: '' # String\njavascriptTemplate: '' # String\njavascriptEventString: '' # String\njavascriptASCII: '' # Label\njavascriptTemplateSubstitution: '' # Label\njavascriptTemplateSB: '' # javascriptTemplateSubstitution\njavascriptRegexpString: '' # String\njavascriptGlobal: '' # Constant\njavascriptCharacter: '' # Character\njavascriptPrototype: '' # Type\njavascriptConditional: '' # Conditional\njavascriptConditionalElse: '' # Conditional\njavascriptSwitch: '' # Conditional\njavascriptCase: '' # Conditional\njavascriptDefault: '' # javascriptCase\njavascriptExportDefault: '' # javascriptCase\njavascriptBranch: '' # Conditional\njavascriptIdentifier: '' # Structure\njavascriptVariable: '' # Identifier\njavascriptRepeat: '' # Repeat\njavascriptForComprehension: '' # Repeat\njavascriptIfComprehension: '' # Repeat\njavascriptOfComprehension: '' # Repeat\njavascriptForOperator: '' # Repeat\njavascriptStatementKeyword: '' # Statement\njavascriptReturn: '' # Statement\njavascriptYield: '' # Statement\njavascriptYieldGen: '' # Statement\njavascriptMessage: '' # Keyword\njavascriptOperator: '' # Identifier\njavascriptTarget: '' # Identifier\njavascriptNull: '' # Boolean\njavascriptNumber: '' # Number\njavascriptBoolean: '' # Boolean\njavascriptObjectLabel: '' # javascriptLabel\njavascriptObjectLabelColon: '' # javascriptLabel\njavascriptLabel: '' # Label\njavascriptPropertyName: '' # Label\njavascriptImport: '' # Special\njavascriptExport: '' # Special\njavascriptTry: '' # Statement\njavascriptExceptions: '' # Statement\njavascriptMethodName: '' # Function\njavascriptMethodAccessor: '' # Operator\njavascriptObjectMethodName: '' # Function\njavascriptFuncKeyword: '' # Keyword\njavascriptAsyncFunc: '' # Keyword\njavascriptArrowFunc: '' # Type\njavascriptFuncName: '' # Function\njavascriptFuncArg: '' # Special\njavascriptArrowFuncArg: '' # javascriptFuncArg\njavascriptComma: '' # Normal\njavascriptClassKeyword: '' # Keyword\njavascriptClassExtends: '' # Keyword\njavascriptClassName: '' # Function\njavascriptClassSuperName: '' # Function\njavascriptClassStatic: '' # StorageClass\njavascriptClassSuper: '' # keyword\nshellbang: '' # Comment\n",
-        "nerdtree.yml": "NERDTreePart: '' # Special\nNERDTreePartFile: '' # Type\nNERDTreeExecFile: '' # Title\nNERDTreeDirSlash: '' # Identifier\nNERDTreeBookmarksHeader: '' # statement\nNERDTreeBookmarksLeader: '' # ignore\nNERDTreeBookmarkName: '' # Identifier\nNERDTreeBookmark: '' # normal\nNERDTreeHelp: '' # String\nNERDTreeHelpKey: '' # Identifier\nNERDTreeHelpCommand: '' # Identifier\nNERDTreeHelpTitle: '' # Macro\nNERDTreeToggleOn: '' # Question\nNERDTreeToggleOff: '' # WarningMsg\nNERDTreeLinkTarget: '' # Type\nNERDTreeLinkFile: '' # Macro\nNERDTreeLinkDir: '' # Macro\nNERDTreeDir: '' # Directory\nNERDTreeUp: '' # Directory\nNERDTreeFile: '' # Normal\nNERDTreeCWD: '' # Statement\nNERDTreeOpenable: '' # Title\nNERDTreeClosable: '' # Title\nNERDTreeIgnore: '' # ignore\nNERDTreeRO: '' # WarningMsg\nNERDTreeFlags: '' # Number\n",
-        "git.yml": "gitDateHeader: '' # gitIdentityHeader\ngitIdentityHeader: '' # gitIdentityKeyword\ngitIdentityKeyword: '' # Label\ngitNotesHeader: '' # gitKeyword\ngitReflogHeader: '' # gitKeyword\ngitKeyword: '' # Keyword\ngitIdentity: '' # String\ngitEmailDelimiter: '' # Delimiter\ngitEmail: '' # Special\ngitDate: '' # Number\ngitMode: '' # Number\ngitHashAbbrev: '' # gitHash\ngitHash: '' # Identifier\ngitReflogMiddle: '' # gitReference\ngitReference: '' # Function\ngitStage: '' # gitType\ngitType: '' # Type\ngitDiffAdded: '' # diffAdded\ngitDiffRemoved: '' # diffRemoved\n",
-        "diff.yml": "diffOldFile: '' # diffFile\ndiffNewFile: '' # diffFile\ndiffFile: '' # Type\ndiffOnly: '' # Constant\ndiffIdentical: '' # Constant\ndiffDiffer: '' # Constant\ndiffBDiffer: '' # Constant\ndiffIsA: '' # Constant\ndiffNoEOL: '' # Constant\ndiffCommon: '' # Constant\ndiffRemoved: '' # Special\ndiffChanged: '' # PreProc\ndiffAdded: '' # Identifier\ndiffLine: '' # Statement\ndiffSubname: '' # PreProc\ndiffComment: '' # Comment\n",
-        "python.yml": "pythonStatement: '' # Statement\npythonConditional: '' # Conditional\npythonRepeat: '' # Repeat\npythonOperator: '' # Operator\npythonException: '' # Exception\npythonInclude: '' # Include\npythonDecorator: '' # Define\npythonFunction: '' # Function\npythonComment: '' # Comment\npythonTodo: '' # Todo\npythonString: '' # String\npythonRawString: '' # String\npythonQuotes: '' # String\npythonTripleQuotes: '' # pythonQuotes\npythonEscape: '' # Special\npythonNumber: '' # Number\npythonBuiltin: '' # Function\npythonExceptions: '' # Structure\npythonSpaceError: '' # Error\npythonDoctest: '' # Special\npythonDoctestValue: '' # Define\n",
-        "vim-signify.yml": "# mhinz/vim-signify\nSignifyLineAdd: ''\nSignifyLineDelete: ''\nSignifyLineDeleteFirstLine: ''\nSignifyLineChange: ''\nSignifyLineChangeDelete: ''\n\nSignifySignAdd: ''\nSignifySignDelete: ''\nSignifySignDeleteFirstLine: ''\nSignifySignChange: ''\nSignifySignChangeDelete: ''\n",
-        "json.yml": "jsonPadding: '' # Operator\njsonString: '' # String\njsonTest: '' # Label\njsonEscape: '' # Special\njsonNumber: '' # Number\njsonBraces: '' # Delimiter\njsonNull: '' # Function\njsonBoolean: '' # Boolean\njsonKeyword: '' # Label\njsonNumError: '' # Error\njsonCommentError: '' # Error\njsonSemicolonError: '' # Error\njsonTrailingCommaError: '' # Error\njsonMissingCommaError: '' # Error\njsonStringSQError: '' # Error\njsonNoQuotesError: '' # Error\njsonTripleQuotesError: '' # Error\njsonQuote: '' # Quote\njsonNoise: '' # Noise\n",
-        "ruby.yml": "rubyClass: '' # rubyDefine\nrubyModule: '' # rubyDefine\nrubyMethodExceptional: '' # rubyDefine\nrubyDefine: '' # Define\nrubyFunction: '' # Function\nrubyConditional: '' # Conditional\nrubyConditionalModifier: '' # rubyConditional\nrubyExceptional: '' # rubyConditional\nrubyRepeat: '' # Repeat\nrubyRepeatModifier: '' # rubyRepeat\nrubyOptionalDo: '' # rubyRepeat\nrubyControl: '' # Statement\nrubyInclude: '' # Include\nrubyInteger: '' # Number\nrubyASCIICode: '' # Character\nrubyFloat: '' # Float\nrubyBoolean: '' # Boolean\nrubyException: '' # Exception\nrubyIdentifier: '' # Identifier\nrubyClassVariable: '' # rubyIdentifier\nrubyConstant: '' # Type\nrubyGlobalVariable: '' # rubyIdentifier\nrubyBlockParameter: '' # rubyIdentifier\nrubyInstanceVariable: '' # rubyIdentifier\nrubyPredefinedIdentifier: '' # rubyIdentifier\nrubyPredefinedConstant: '' # rubyPredefinedIdentifier\nrubyPredefinedVariable: '' # rubyPredefinedIdentifier\nrubySymbol: '' # Constant\nrubyKeyword: '' # Keyword\nrubyOperator: '' # Operator\nrubyBeginEnd: '' # Statement\nrubyAccess: '' # Statement\nrubyAttribute: '' # Statement\nrubyEval: '' # Statement\nrubyPseudoVariable: '' # Constant\nrubyComment: '' # Comment\nrubyData: '' # Comment\nrubyDataDirective: '' # Delimiter\nrubyDocumentation: '' # Comment\nrubyTodo: '' # Todo\nrubyQuoteEscape: '' # rubyStringEscape\nrubyStringEscape: '' # Special\nrubyInterpolationDelimiter: '' # Delimiter\nrubyNoInterpolation: '' # rubyString\nrubySharpBang: '' # PreProc\nrubyRegexpDelimiter: '' # rubyStringDelimiter\nrubySymbolDelimiter: '' # rubyStringDelimiter\nrubyStringDelimiter: '' # Delimiter\nrubyHeredoc: '' # rubyString\nrubyString: '' # String\nrubyRegexpEscape: '' # rubyRegexpSpecial\nrubyRegexpQuantifier: '' # rubyRegexpSpecial\nrubyRegexpAnchor: '' # rubyRegexpSpecial\nrubyRegexpDot: '' # rubyRegexpCharClass\nrubyRegexpCharClass: '' # rubyRegexpSpecial\nrubyRegexpSpecial: '' # Special\nrubyRegexpComment: '' # Comment\nrubyRegexp: '' # rubyString\nrubyInvalidVariable: '' # Error\nrubyError: '' # Error\nrubySpaceError: '' # rubyError\n",
-        "vim-gitgutter.yml": "# GitGutter airblade/vim-gitgutter\nGitGutterAdd: ''\nGitGutterChange: ''\nGitGutterDelete: ''\nGitGutterChangeDelete: ''\n",
-        "elm-vim.yml": "elmTopLevelDecl: '' # Function\nelmTupleFunction: '' # Normal\nelmTodo: '' # Todo\nelmComment: '' # Comment\nelmLineComment: '' # Comment\nelmString: '' # String\nelmTripleString: '' # String\nelmChar: '' # String\nelmStringEscape: '' # Special\nelmInt: '' # Number\nelmFloat: '' # Float\nelmDelimiter: '' # Comment\nelmTypedef: '' # Keyword\nelmImport: '' # Keyword\nelmConditional: '' # Keyword\nelmAlias: '' # Keyword\nelmOperator: '' # Operator\nelmType: '' # Type\nelmNumberType: '' # Type\nelmBraces: '' # Delimiter\n"
+        "yaml.yml": "yamlTodo: '' # Todo\nyamlComment: '' # Comment\nyamlDocumentStart: '' # PreProc\nyamlDocumentEnd: '' # PreProc\nyamlDirectiveName: '' # Keyword\nyamlTAGDirective: '' # yamlDirectiveName\nyamlTagHandle: '' # String\nyamlTagPrefix: '' # String\nyamlYAMLDirective: '' # yamlDirectiveName\nyamlReservedDirective: '' # Error\nyamlYAMLVersion: '' # Number\nyamlString: '' # String\nyamlFlowString: '' # yamlString\nyamlFlowStringDelimiter: '' # yamlString\nyamlEscape: '' # SpecialChar\nyamlSingleEscape: '' # SpecialChar\nyamlBlockCollectionItemStart: '' # Label\nyamlBlockMappingKey: '' # Identifier\nyamlBlockMappingMerge: '' # Special\nyamlFlowMappingKey: '' # Identifier\nyamlFlowMappingMerge: '' # Special\nyamlMappingKeyStart: '' # Special\nyamlFlowIndicator: '' # Special\nyamlKeyValueDelimiter: '' # Special\nyamlConstant: '' # Constant\nyamlNull: '' # yamlConstant\nyamlBool: '' # yamlConstant\nyamlAnchor: '' # Type\nyamlAlias: '' # Type\nyamlNodeTag: '' # Type\nyamlInteger: '' # Number\nyamlFloat: '' # Float\nyamlTimestamp: '' # Number\n",
+        "go.yml": "goDirective: '' # Statement\ngoDeclaration: '' # Keyword\ngoDeclType: '' # Keyword\ngoStatement: '' # Statement\ngoConditional: '' # Conditional\ngoLabel: '' # Label\ngoRepeat: '' # Repeat\ngoType: '' # Type\ngoSignedInts: '' # Type\ngoUnsignedInts: '' # Type\ngoFloats: '' # Type\ngoComplexes: '' # Type\ngoBuiltins: '' # Keyword\ngoConstants: '' # Keyword\ngoComment: '' # Comment\ngoTodo: '' # Todo\ngoEscapeOctal: '' # goSpecialString\ngoEscapeC: '' # goSpecialString\ngoEscapeX: '' # goSpecialString\ngoEscapeU: '' # goSpecialString\ngoEscapeBigU: '' # goSpecialString\ngoSpecialString: '' # Special\ngoEscapeError: '' # Error\ngoString: '' # String\ngoRawString: '' # String\ngoCharacter: '' # Character\ngoDecimalInt: '' # Integer\ngoHexadecimalInt: '' # Integer\ngoOctalInt: '' # Integer\nInteger: '' # Number\ngoFloat: '' # Float\ngoImaginary: '' # Number\ngoExtraType: '' # Type\ngoSpaceError: '' # Error\n",
+        "unite.yml": "uniteError: '' # Error\nuniteMarkedLine: '' # Statement\nuniteCandidateSourceName: '' # Type\nuniteQuickMatchText: '' # Special\nuniteCandidateIcon: '' # Special\nuniteMarkedIcon: '' # Statement\nuniteCandidateInputKeyword: '' # Function\nuniteChooseAction: '' # NONE\nuniteChooseCandidate: '' # NONE\nuniteChooseKey: '' # SpecialKey\nuniteChooseMessage: '' # NONE\nuniteChoosePrompt: '' # uniteSourcePrompt\nuniteChooseSource: '' # uniteSourceNames\nuniteInputPrompt: '' # Normal\nuniteInputLine: '' # Identifier\nuniteInputCommand: '' # Statement\nuniteStatusNormal: '' # StatusLine\nuniteStatusHead: '' # Statement\nuniteStatusSourceNames: '' # PreProc\nuniteStatusSourceCandidates: '' # Constant\nuniteStatusMessage: '' # Comment\nuniteStatusLineNR: '' # LineNR\n"
     },
     "addons": {
         "terminal.yml": "color_foreground: ''\ncolor_background: ''\ncolor_0: ''\ncolor_1: ''\ncolor_2: ''\ncolor_3: ''\ncolor_4: ''\ncolor_5: ''\ncolor_6: ''\ncolor_7: ''\ncolor_8: ''\ncolor_9: ''\ncolor_10: ''\ncolor_11: ''\ncolor_12: ''\ncolor_13: ''\ncolor_14: ''\ncolor_15: ''\n",
-        "airline.yml": "normal1: ''\nnormal2: ''\nnormal3: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nctrlp1: '' # optional\nctrlp2: '' # optional\nctrlp3: '' # optional\n",
-        "lightline.yml": "normal1: ''\nnormal2: ''\nnormal3: ''\nnormal4: ''\nnormal5: ''\nnormalError: ''\nnormalWarning: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninactive4: ''\ninactive5: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\ninsert4: ''\ninsert5: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nreplace4: ''\nreplace5: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nvisual4: ''\nvisual5: ''\ntablineLeft: ''\ntablineSelected: ''\ntablineMiddle: ''\ntablineRight: ''\n"
+        "lightline.yml": "normal1: ''\nnormal2: ''\nnormal3: ''\nnormal4: ''\nnormal5: ''\nnormalError: ''\nnormalWarning: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninactive4: ''\ninactive5: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\ninsert4: ''\ninsert5: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nreplace4: ''\nreplace5: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nvisual4: ''\nvisual5: ''\ntablineLeft: ''\ntablineSelected: ''\ntablineMiddle: ''\ntablineRight: ''\n",
+        "airline.yml": "normal1: ''\nnormal2: ''\nnormal3: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nctrlp1: '' # optional\nctrlp2: '' # optional\nctrlp3: '' # optional\n"
     }
 };
 const tick = green("✓");
-function installTemplates(projectPath, templates1) {
-    templates1.forEach((name19)=>{
-        const destination = resolve5(projectPath, "estilos/syntax", name19);
+function installTemplates(projectPath, templates) {
+    templates.forEach((name)=>{
+        const destination = resolve5(projectPath, "estilos/syntax", name);
         try {
-            Deno.writeTextFileSync(destination, __default1.syntax[name19]);
+            Deno.writeTextFileSync(destination, __default1.syntax[name]);
         } catch (err) {
             console.error(err);
         }
     });
-    console.log(green(`Added ${templates1.length} templates:`));
-    console.log(templates1.map((name19)=>name19.slice(0, -4)
-    ).map((name19)=>`${tick} ${name19}\n`
+    console.log(green(`Added ${templates.length} templates:`));
+    console.log(templates.map((name)=>name.slice(0, -4)
+    ).map((name)=>`${tick} ${name}\n`
     ).join(""));
 }
 const defaultPalette = "myblue: '#99ccff'";
 async function createProject(projectPath, noQuestions) {
-    const options8 = noQuestions ? getDefaultConfig(projectPath) : await askConfig(projectPath);
-    await createBoilerplate(projectPath, options8);
+    const options = noQuestions ? getDefaultConfig(projectPath) : await askConfig(projectPath);
+    await createBoilerplate(projectPath, options);
 }
 function getDefaultConfig(projectPath) {
     return {
@@ -11148,8 +10944,8 @@ async function askConfig(projectPath) {
         }, 
     ]);
 }
-async function createBoilerplate(projectPath, options8) {
-    const estiloStr = await renderConfigFile(options8);
+async function createBoilerplate(projectPath, options) {
+    const estiloStr = await renderConfigFile(options);
     const estilosFolder = resolve5(projectPath, "estilos");
     const syntaxFolder = resolve5(estilosFolder, "syntax");
     const palettesFolder = resolve5(estilosFolder, "palettes");
@@ -11158,20 +10954,20 @@ async function createBoilerplate(projectPath, options8) {
     ensureDirSync(palettesFolder);
     Deno.writeTextFileSync(resolve5(projectPath, "estilo.yml"), estiloStr);
     Deno.writeTextFileSync(resolve5(estilosFolder, "terminal.yml"), __default1.addons["terminal.yml"]);
-    Deno.writeTextFileSync(resolve5(palettesFolder, options8.name + ".yml"), defaultPalette);
+    Deno.writeTextFileSync(resolve5(palettesFolder, options.name + ".yml"), defaultPalette);
     installTemplates(projectPath, [
         "base.yml"
     ]);
     console.log(green("✓  Your project is ready\n"));
 }
-async function renderConfigFile(options8) {
-    return await render(__default1.mustaches["project.ejs"], options8);
+async function renderConfigFile(options) {
+    return await render(__default1.mustaches["project.ejs"], options);
 }
 function isHexColor1(color) {
     return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
 }
-function loadYml(folderPath, filename1) {
-    const filepath = resolve5(folderPath, filename1 || "");
+function loadYml(folderPath, filename) {
+    const filepath = resolve5(folderPath, filename || "");
     const content = parse8(Deno.readTextFileSync(filepath));
     if (typeof content !== "object") {
         crash("Content of file is not an object", {
@@ -11183,9 +10979,9 @@ function loadYml(folderPath, filename1) {
         content
     };
 }
-function buildPalettes(paletteFiles, common1 = {
+function buildPalettes(paletteFiles, common = {
 }) {
-    const commonPalette = buildMainPalette(common1);
+    const commonPalette = buildMainPalette(common);
     const paleteEntries = paletteFiles.map((paletteFile)=>{
         const palette = buildPalette(paletteFile, commonPalette);
         return [
@@ -11196,15 +10992,15 @@ function buildPalettes(paletteFiles, common1 = {
     return Object.fromEntries(paleteEntries);
 }
 function buildMainPalette(content) {
-    const colors = Object.keys(content).map((name19)=>{
-        const hexcolor = content[name19].trim();
+    const colors = Object.keys(content).map((name)=>{
+        const hexcolor = content[name].trim();
         if (!isHexColor1(hexcolor)) {
             crash("Wrong color in common palette", {
-                name: name19
+                name
             });
         }
         return [
-            name19,
+            name,
             getColorObj(hexcolor)
         ];
     });
@@ -11216,7 +11012,7 @@ function getColorObj(hexcolor) {
         xterm: hexterm(hexcolor).toString()
     };
 }
-function buildPalette(paletteFile, common1) {
+function buildPalette(paletteFile, common) {
     const { filepath , content  } = paletteFile;
     const palette = {
         filepath,
@@ -11224,37 +11020,37 @@ function buildPalette(paletteFile, common1) {
         colors: {
         }
     };
-    Object.entries(content).forEach(([name19, value4])=>{
-        const hexcolor = value4.trim();
+    Object.entries(content).forEach(([name, value])=>{
+        const hexcolor = value.trim();
         if (hexcolor.startsWith("@")) {
             const propName = hexcolor.slice(1);
-            const color = common1[propName];
+            const color = common[propName];
             if (!color) crash("Missing common color", {
                 color: propName
             });
-            palette.colors[name19] = color;
+            palette.colors[name] = color;
             return;
         }
         if (!isHexColor1(hexcolor)) crash("Wrong color", {
             filepath,
-            name: name19,
+            name,
             hexcolor
         });
-        palette.colors[name19] = {
+        palette.colors[name] = {
             hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
             xterm: hexterm(hexcolor).toString()
         };
     });
     palette.colors = Object.assign({
-    }, common1, palette.colors);
+    }, common, palette.colors);
     return palette;
 }
 function formatSyntaxFile(file) {
     const filepath = file.filepath;
-    return Object.entries(file.content).map(([name19, value4])=>({
+    return Object.entries(file.content).map(([name, value])=>({
             filepath,
-            name: name19,
-            rule: value4.trim()
+            name,
+            rule: value.trim()
         })
     ).filter((rule)=>rule.rule
     );
@@ -11324,14 +11120,14 @@ const statusParts = {
     ]
 };
 function formatStatusStyles(statusFiles, brand) {
-    const files1 = statusFiles.map(({ filepath , content  })=>{
+    const files = statusFiles.map(({ filepath , content  })=>{
         const style = formatStatusStyle(content, brand, filepath);
         return [
             style.name,
             style
         ];
     });
-    return Object.fromEntries(files1);
+    return Object.fromEntries(files);
 }
 function formatStatusStyle(content, brand, filepath) {
     const statusStyle = {
@@ -11340,9 +11136,9 @@ function formatStatusStyle(content, brand, filepath) {
         syntax: {
         }
     };
-    Object.keys(content).forEach((name19)=>{
-        const txt = content[name19].trim();
-        statusStyle.syntax[name19] = txt.split(/\s+/);
+    Object.keys(content).forEach((name)=>{
+        const txt = content[name].trim();
+        statusStyle.syntax[name] = txt.split(/\s+/);
     });
     statusParts[brand].forEach((part)=>{
         const block = statusStyle.syntax[part];
@@ -11366,7 +11162,7 @@ function formatStatusStyle(content, brand, filepath) {
     return statusStyle;
 }
 function loadProjectFiles(projectUrl) {
-    const config1 = loadYml(projectUrl, "estilo.yml").content;
+    const config = loadYml(projectUrl, "estilo.yml").content;
     const airlineFiles = loadYmlsInFolder(projectUrl, "airline");
     const lightlineFiles = loadYmlsInFolder(projectUrl, "lightline");
     const syntaxFiles = loadYmlsInFolder(projectUrl, "syntax");
@@ -11374,8 +11170,8 @@ function loadProjectFiles(projectUrl) {
     const terminalFile = loadYml(projectUrl, "estilos/terminal.yml");
     return {
         projectUrl,
-        config: config1,
-        palettes: buildPalettes(paletteFiles, config1.commonPalette),
+        config,
+        palettes: buildPalettes(paletteFiles, config.commonPalette),
         syntax: formatSyntax(syntaxFiles),
         terminalSyntax: formatTerminal(terminalFile.content),
         airlineStyles: formatStatusStyles(airlineFiles, "airline"),
@@ -11398,8 +11194,8 @@ async function selectSyntax(projectPath, all = false) {
     const destFolder = resolve5(projectPath, "estilos/syntax");
     const libFiles = Object.keys(__default1.syntax);
     const destFiles = getFileNamesFromFolder(destFolder);
-    const templates1 = all ? getMissingTemplates(libFiles, destFiles) : (await askForTemplates(libFiles, destFiles)).templates;
-    installTemplates(projectPath, templates1);
+    const templates = all ? getMissingTemplates(libFiles, destFiles) : (await askForTemplates(libFiles, destFiles)).templates;
+    installTemplates(projectPath, templates);
 }
 function getFileNamesFromFolder(folder) {
     return Array.from(Deno.readDirSync(folder)).map((file)=>file.name
@@ -11410,12 +11206,12 @@ function getMissingTemplates(libFiles, destFiles) {
     );
 }
 async function askForTemplates(libFiles, destFiles) {
-    const options8 = libFiles.map((value4)=>{
-        const disabled = destFiles.includes(value4);
-        const name19 = value4.slice(0, -4);
+    const options = libFiles.map((value)=>{
+        const disabled = destFiles.includes(value);
+        const name = value.slice(0, -4);
         return {
-            name: name19 + (disabled ? " (installed)" : ""),
-            value: value4,
+            name: name + (disabled ? " (installed)" : ""),
+            value,
             disabled
         };
     });
@@ -11424,7 +11220,7 @@ async function askForTemplates(libFiles, destFiles) {
             type: Checkbox,
             message: "Select some extra syntax templates",
             name: "templates",
-            options: options8
+            options
         }, 
     ]);
 }
@@ -11444,8 +11240,8 @@ const uiValues = {
     c: "undercurl",
     s: "standout"
 };
-function isLegacyUi(value4) {
-    return !value4.split("").some((character)=>{
+function isLegacyUi(value) {
+    return !value.split("").some((character)=>{
         return !uis.has(character);
     });
 }
@@ -11453,22 +11249,22 @@ function parseLegacyUi(style) {
     return style.split("").map((val)=>uiValues[val]
     ).join(",");
 }
-async function renderColorscheme(config1, project) {
-    const palette = project.palettes[config1.palette];
+async function renderColorscheme(config, project) {
+    const palette = project.palettes[config.palette];
     if (!palette) {
         crash("Colorscheme palette does not exist", {
-            colorscheme: config1.name,
-            palette: config1.palette
+            colorscheme: config.name,
+            palette: config.palette
         });
     }
     return await render(__default1.mustaches["colorscheme.ejs"], {
         info: {
-            name: config1.name,
-            description: config1.description,
+            name: config.name,
+            description: config.description,
             url: project.config.url,
             author: project.config.author,
             license: project.config.license,
-            background: config1.background,
+            background: config.background,
             estiloVersion: __default
         },
         stacks: parseSyntaxColors(project.syntax, palette),
@@ -11476,10 +11272,10 @@ async function renderColorscheme(config1, project) {
     });
 }
 function parseTermColors(termSyntax, palette) {
-    const values1 = Object.keys(termSyntax).map((prop)=>{
+    const values = Object.keys(termSyntax).map((prop)=>{
         const colorName = termSyntax[prop];
-        const value4 = palette.colors[colorName];
-        if (!value4) {
+        const value = palette.colors[colorName];
+        if (!value) {
             crash("Missing terminal color", {
                 colorName,
                 property: prop,
@@ -11488,23 +11284,23 @@ function parseTermColors(termSyntax, palette) {
         }
         return [
             prop,
-            value4.hex
+            value.hex
         ];
     });
-    return Object.fromEntries(values1);
+    return Object.fromEntries(values);
 }
 function parseSyntaxColors(syntax, palette) {
-    const values1 = {
+    const values = {
     };
     syntax.forEach((rule)=>{
         const [fgColor, bgColor, ui, curlColor] = rule.rule.split(/\s+/);
         const filepath = rule.filepath;
         if (fgColor.startsWith("@")) {
-            values1[rule.name] = {
+            values[rule.name] = {
                 link: fgColor.slice(1)
             };
         } else {
-            values1[rule.name] = {
+            values[rule.name] = {
                 fore: getColorCode(fgColor, palette, filepath),
                 back: getColorCode(bgColor, palette, filepath),
                 ui: getUI(ui),
@@ -11512,7 +11308,7 @@ function parseSyntaxColors(syntax, palette) {
             };
         }
     });
-    return values1;
+    return values;
 }
 function getColorCode(color, palette, filepath) {
     if (color === ".") return false;
@@ -11577,30 +11373,30 @@ function parseStatusColors(syntax, palette) {
     });
     return out;
 }
-async function renderStatus(config1, project, brand) {
-    const palette = project.palettes[config1.palette];
+async function renderStatus(config, project, brand) {
+    const palette = project.palettes[config.palette];
     if (!palette) {
         crash("Palette does not exist", {
-            palette: config1.palette,
+            palette: config.palette,
             brand,
-            style: config1.style
+            style: config.style
         });
     }
     const brandStyles = {
         airline: project.airlineStyles,
         lightline: project.lightlineStyles
     };
-    const syntaxFile = brandStyles[brand][config1.style];
+    const syntaxFile = brandStyles[brand][config.style];
     if (!syntaxFile) {
         crash("Cannot find status style file", {
-            name: config1.name
+            name: config.name
         });
     }
     const syntax = syntaxFile.syntax;
     const c = parseStatusColors(syntax, palette);
     const info = {
-        name: config1.name,
-        description: config1.description,
+        name: config.name,
+        description: config.description,
         url: project.config.url,
         author: project.config.author,
         license: project.config.license,
@@ -11613,20 +11409,20 @@ async function renderStatus(config1, project, brand) {
 }
 async function renderProject(project) {
     const { config: projectConfig  } = project;
-    for (const config1 of projectConfig.colorschemes){
-        const rendered = await renderColorscheme(config1, project);
-        writeScheme(rendered, config1.name, project.projectUrl);
+    for (const config of projectConfig.colorschemes){
+        const rendered = await renderColorscheme(config, project);
+        writeScheme(rendered, config.name, project.projectUrl);
     }
     if (projectConfig.airline) {
-        for (const config2 of projectConfig.airline){
-            const rendered = await renderStatus(config2, project, "airline");
-            writeStatus("airline", rendered, config2.name, project.projectUrl);
+        for (const config of projectConfig.airline){
+            const rendered = await renderStatus(config, project, "airline");
+            writeStatus("airline", rendered, config.name, project.projectUrl);
         }
     }
     if (projectConfig.lightline) {
-        for (const config2 of projectConfig.lightline){
-            const rendered = await renderStatus(config2, project, "lightline");
-            writeStatus("lightline", rendered, config2.name, project.projectUrl);
+        for (const config of projectConfig.lightline){
+            const rendered = await renderStatus(config, project, "lightline");
+            writeStatus("lightline", rendered, config.name, project.projectUrl);
         }
     }
     console.log(green("✓  Done, your theme is ready\n"));
@@ -11635,15 +11431,15 @@ const paths = {
     airline: "autoload/airline/themes",
     lightline: "autoload/lightline/colorscheme"
 };
-function writeScheme(txt, name19, projectPath) {
+function writeScheme(txt, name, projectPath) {
     const folderPath = resolve5(projectPath, "colors");
-    const filepath = resolve5(folderPath, name19 + ".vim");
+    const filepath = resolve5(folderPath, name + ".vim");
     ensureDirSync(folderPath);
     Deno.writeTextFileSync(filepath, txt);
 }
-function writeStatus(kind, txt, name19, projectPath) {
+function writeStatus(kind, txt, name, projectPath) {
     const folderPath = resolve5(projectPath, paths[kind]);
-    const filepath = resolve5(folderPath, name19 + ".vim");
+    const filepath = resolve5(folderPath, name + ".vim");
     ensureDirSync(folderPath);
     Deno.writeTextFileSync(filepath, txt);
 }
@@ -11660,8 +11456,8 @@ async function installStatus(projectPath, brand, styleName) {
             type: Input,
             message: `Enter ${brand} style name:`,
             name: "stylename",
-            validate: (input1)=>{
-                const stylename = input1.trim();
+            validate: (input)=>{
+                const stylename = input.trim();
                 if (!stylename) return "That's not a name";
                 return installedStyles.includes(stylename) ? "That style already exists" : true;
             }
@@ -11678,32 +11474,32 @@ function addStatus(projectPath, brand, styleName) {
     console.log(`==> ${filepath}`);
 }
 const estiloCommand = new Command();
-const result = await estiloCommand.command("help", new HelpCommand().global()).reset().name("estilo").version(__default).description("Generate colorschemes for (neo)vim, airline and lightline").command("create [folder]").description("Initialize an estilo project in [folder] or current folder").option("-y, --yes", "Skip questions").action((options8, folder = ".")=>{
-    createProject(resolve5(folder), !!options8.yes);
+const result1 = await estiloCommand.command("help", new HelpCommand().global()).reset().name("estilo").version(__default).description("Generate colorschemes for (neo)vim, airline and lightline").command("create [folder]").description("Initialize an estilo project in [folder] or current folder").option("-y, --yes", "Skip questions").action((options, folder = ".")=>{
+    createProject(resolve5(folder), !!options.yes);
 }).reset().command("render [folder]").description("Render project").action((_, folder = ".")=>{
     const projectPath = resolve5(folder);
     checkProject(projectPath);
     const project = loadProjectFiles(projectPath);
     renderProject(project);
-}).reset().command("add-syntax").description("Add syntax templates.").option("-a, --all [all:boolean]", "Add add available syntax templates").action((options8)=>{
-    selectSyntax(".", !!options8.all);
+}).reset().command("add-syntax").description("Add syntax templates.").option("-a, --all [all:boolean]", "Add add available syntax templates").action((options)=>{
+    selectSyntax(".", !!options.all);
 }).reset().command("add-lightline [styleName]").description("Add new Lightline style").action((_, styleName)=>{
     installStatus(".", "lightline", styleName);
 }).reset().command("add-airline [styleName]").description("Add new Airline style").action((_, styleName)=>{
     installStatus(".", "airline", styleName);
 }).reset().parse(Deno.args);
-if (!Object.entries(result.options).length && result.cmd._name === "estilo") {
+if (!Object.entries(result1.options).length && result1.cmd._name === "estilo") {
     estiloCommand.showHelp();
 }
 function checkProject(projectPath) {
-    const paths1 = [
+    const paths = [
         "estilo.yml",
         "estilos/syntax",
         "estilos/palettes",
         "estilos/terminal.yml", 
     ];
-    const notOk = paths1.map((path4)=>resolve5(projectPath, path4)
-    ).filter((path4)=>!existsSync1(path4)
+    const notOk = paths.map((path)=>resolve5(projectPath, path)
+    ).filter((path)=>!existsSync1(path)
     );
     if (notOk.length) {
         if (existsSync1(resolve5(projectPath, "estilo"))) {
