@@ -1,3 +1,4 @@
+const __default = "2.0.0-beta.4";
 function setPrototypeOf(obj, proto) {
     if (Object.setPrototypeOf) {
         Object.setPrototypeOf(obj, proto);
@@ -25,8 +26,7 @@ function ParseErr(message, str, indx) {
 }
 const promiseImpl = Promise;
 function getAsyncFunctionConstructor() {
-    return (async function() {
-    }).constructor;
+    return (async function() {}).constructor;
 }
 function trimLeft(str) {
     return str.trimLeft();
@@ -133,7 +133,7 @@ function parse(str, config) {
     const prefixes = [
         parseOptions.exec,
         parseOptions.interpolate,
-        parseOptions.raw, 
+        parseOptions.raw
     ].reduce(function(accumulator, prefix) {
         if (accumulator && prefix) {
             return accumulator + "|" + escapeRegExp(prefix);
@@ -209,10 +209,10 @@ function parse(str, config) {
     }
     pushString(str.slice(lastIndex, str.length), false);
     if (config.plugins) {
-        for(let i = 0; i < config.plugins.length; i++){
-            const plugin = config.plugins[i];
-            if (plugin.processAST) {
-                buffer = plugin.processAST(buffer, config);
+        for(let i1 = 0; i1 < config.plugins.length; i1++){
+            const plugin1 = config.plugins[i1];
+            if (plugin1.processAST) {
+                buffer = plugin1.processAST(buffer, config);
             }
         }
     }
@@ -264,7 +264,6 @@ function compileScope(buff, config) {
     return returnStr;
 }
 class Cacher {
-    cache;
     constructor(cache){
         this.cache = cache;
     }
@@ -278,15 +277,14 @@ class Cacher {
         delete this.cache[key];
     }
     reset() {
-        this.cache = {
-        };
+        this.cache = {};
     }
     load(cacheObj) {
         copyProps(this.cache, cacheObj);
     }
+    cache;
 }
-const templates = new Cacher({
-});
+const templates = new Cacher({});
 function includeHelper(templateNameOrPath, data) {
     const template = this.templates.get(templateNameOrPath);
     if (!template) {
@@ -320,8 +318,7 @@ const config = {
     varName: "it"
 };
 function getConfig(override, baseConfig) {
-    const res = {
-    };
+    const res = {};
     copyProps(res, config);
     if (baseConfig) {
         copyProps(res, baseConfig);
@@ -332,8 +329,7 @@ function getConfig(override, baseConfig) {
     return res;
 }
 function compile(str, config) {
-    const options = getConfig(config || {
-    });
+    const options = getConfig(config || {});
     const ctor = options.async ? getAsyncFunctionConstructor() : Function;
     try {
         return new ctor(options.varName, "E", "cb", compileToString(str, options));
@@ -393,8 +389,7 @@ function normalizeString(path, allowAboveRoot, separator, isPathSeparator) {
         else if (isPathSeparator(code)) break;
         else code = CHAR_FORWARD_SLASH;
         if (isPathSeparator(code)) {
-            if (lastSlash === i - 1 || dots === 1) {
-            } else if (lastSlash !== i - 1 && dots === 2) {
+            if (lastSlash === i - 1 || dots === 1) {} else if (lastSlash !== i - 1 && dots === 2) {
                 if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== 46 || res.charCodeAt(res.length - 2) !== 46) {
                     if (res.length > 2) {
                         const lastSlashIndex = res.lastIndexOf(separator);
@@ -469,7 +464,7 @@ function assert(expr, msg = "") {
 }
 const sep = "\\";
 const delimiter = ";";
-function resolve6(...pathSegments) {
+function resolve(...pathSegments) {
     let resolvedDevice = "";
     let resolvedTail = "";
     let resolvedAbsolute = false;
@@ -701,8 +696,8 @@ function relative(from, to) {
     assertPath(from);
     assertPath(to);
     if (from === to) return "";
-    const fromOrig = resolve6(from);
-    const toOrig = resolve6(to);
+    const fromOrig = resolve(from);
+    const toOrig = resolve(to);
     if (fromOrig === toOrig) return "";
     from = fromOrig.toLowerCase();
     to = toOrig.toLowerCase();
@@ -773,7 +768,7 @@ function relative(from, to) {
 function toNamespacedPath(path) {
     if (typeof path !== "string") return path;
     if (path.length === 0) return "";
-    const resolvedPath = resolve6(path);
+    const resolvedPath = resolve(path);
     if (resolvedPath.length >= 3) {
         if (resolvedPath.charCodeAt(0) === 92) {
             if (resolvedPath.charCodeAt(1) === 92) {
@@ -1089,7 +1084,7 @@ function toFileUrl(path) {
 const mod = {
     sep: sep,
     delimiter: delimiter,
-    resolve: resolve6,
+    resolve: resolve,
     normalize: normalize,
     isAbsolute: isAbsolute,
     join: join,
@@ -1479,8 +1474,7 @@ const rangeEscapeChars = [
     "\\",
     "]"
 ];
-function globToRegExp(glob, { extended =true , globstar: globstarOption = true , os =osType , caseInsensitive =false  } = {
-}) {
+function globToRegExp(glob, { extended =true , globstar: globstarOption = true , os =osType , caseInsensitive =false  } = {}) {
     if (glob == "") {
         return /(?!)/;
     }
@@ -1703,8 +1697,7 @@ function isGlob(str) {
     }
     return false;
 }
-function normalizeGlob(glob, { globstar =false  } = {
-}) {
+function normalizeGlob(glob, { globstar =false  } = {}) {
     if (glob.match(/\0/g)) {
         throw new Error(`Glob contains invalid characters: "${glob}"`);
     }
@@ -1715,8 +1708,7 @@ function normalizeGlob(glob, { globstar =false  } = {
     const badParentPattern = new RegExp(`(?<=(${s}|^)\\*\\*${s})\\.\\.(?=${s}|$)`, "g");
     return normalize2(glob.replace(badParentPattern, "\0")).replace(/\0/g, "..");
 }
-function joinGlobs(globs, { extended =false , globstar =false  } = {
-}) {
+function joinGlobs(globs, { extended =false , globstar =false  } = {}) {
     if (!globstar || globs.length == 0) {
         return join2(...globs);
     }
@@ -1736,7 +1728,7 @@ function joinGlobs(globs, { extended =false , globstar =false  } = {
     });
 }
 const path1 = isWindows ? mod : mod1;
-const { basename: basename2 , delimiter: delimiter2 , dirname: dirname2 , extname: extname2 , format: format2 , fromFileUrl: fromFileUrl2 , isAbsolute: isAbsolute2 , join: join3 , normalize: normalize3 , parse: parse3 , relative: relative2 , resolve: resolve2 , sep: sep2 , toFileUrl: toFileUrl2 , toNamespacedPath: toNamespacedPath2 ,  } = path1;
+const { basename: basename2 , delimiter: delimiter2 , dirname: dirname2 , extname: extname2 , format: format2 , fromFileUrl: fromFileUrl2 , isAbsolute: isAbsolute2 , join: join3 , normalize: normalize3 , parse: parse3 , relative: relative2 , resolve: resolve2 , sep: sep2 , toFileUrl: toFileUrl2 , toNamespacedPath: toNamespacedPath2  } = path1;
 const mod2 = {
     SEP: SEP,
     SEP_PATTERN: SEP_PATTERN,
@@ -1888,8 +1880,7 @@ function handleCache1(template, options) {
     return templateFunc;
 }
 function render(template, data, config, cb) {
-    const options = getConfig(config || {
-    });
+    const options = getConfig(config || {});
     if (options.async) {
         if (cb) {
             try {
@@ -1916,16 +1907,14 @@ function render(template, data, config, cb) {
     }
 }
 config.includeFile = includeFileHelper;
-config.filepathCache = {
-};
-const __default = "2.0.0-beta.3";
+config.filepathCache = {};
 const osType1 = (()=>{
-    const { Deno  } = globalThis;
-    if (typeof Deno?.build?.os === "string") {
-        return Deno.build.os;
+    const { Deno: Deno1  } = globalThis;
+    if (typeof Deno1?.build?.os === "string") {
+        return Deno1.build.os;
     }
     const { navigator  } = globalThis;
-    if (navigator?.appVersion?.includes?.("Win") ?? false) {
+    if (navigator?.appVersion?.includes?.("Win")) {
         return "windows";
     }
     return "linux";
@@ -1957,8 +1946,7 @@ function normalizeString1(path, allowAboveRoot, separator, isPathSeparator) {
         else if (isPathSeparator(code)) break;
         else code = CHAR_FORWARD_SLASH1;
         if (isPathSeparator(code)) {
-            if (lastSlash === i - 1 || dots === 1) {
-            } else if (lastSlash !== i - 1 && dots === 2) {
+            if (lastSlash === i - 1 || dots === 1) {} else if (lastSlash !== i - 1 && dots === 2) {
                 if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== 46 || res.charCodeAt(res.length - 2) !== 46) {
                     if (res.length > 2) {
                         const lastSlashIndex = res.lastIndexOf(separator);
@@ -2039,19 +2027,19 @@ function resolve3(...pathSegments) {
     let resolvedAbsolute = false;
     for(let i = pathSegments.length - 1; i >= -1; i--){
         let path;
-        const { Deno  } = globalThis;
+        const { Deno: Deno1  } = globalThis;
         if (i >= 0) {
             path = pathSegments[i];
         } else if (!resolvedDevice) {
-            if (typeof Deno?.cwd !== "function") {
+            if (typeof Deno1?.cwd !== "function") {
                 throw new TypeError("Resolved a drive-letter-less path without a CWD.");
             }
-            path = Deno.cwd();
+            path = Deno1.cwd();
         } else {
-            if (typeof Deno?.env?.get !== "function" || typeof Deno?.cwd !== "function") {
+            if (typeof Deno1?.env?.get !== "function" || typeof Deno1?.cwd !== "function") {
                 throw new TypeError("Resolved a relative path without a CWD.");
             }
-            path = Deno.env.get(`=${resolvedDevice}`) || Deno.cwd();
+            path = Deno1.cwd();
             if (path === undefined || path.slice(0, 3).toLowerCase() !== `${resolvedDevice.toLowerCase()}\\`) {
                 path = `${resolvedDevice}\\`;
             }
@@ -2677,11 +2665,11 @@ function resolve4(...pathSegments) {
         let path;
         if (i >= 0) path = pathSegments[i];
         else {
-            const { Deno  } = globalThis;
-            if (typeof Deno?.cwd !== "function") {
+            const { Deno: Deno1  } = globalThis;
+            if (typeof Deno1?.cwd !== "function") {
                 throw new TypeError("Resolved a relative path without a CWD.");
             }
-            path = Deno.cwd();
+            path = Deno1.cwd();
         }
         assertPath1(path);
         if (path.length === 0) {
@@ -3002,7 +2990,7 @@ const mod4 = {
 const path2 = isWindows1 ? mod3 : mod4;
 const { join: join6 , normalize: normalize6  } = path2;
 const path3 = isWindows1 ? mod3 : mod4;
-const { basename: basename5 , delimiter: delimiter5 , dirname: dirname5 , extname: extname5 , format: format5 , fromFileUrl: fromFileUrl5 , isAbsolute: isAbsolute5 , join: join7 , normalize: normalize7 , parse: parse6 , relative: relative5 , resolve: resolve5 , sep: sep5 , toFileUrl: toFileUrl5 , toNamespacedPath: toNamespacedPath5 ,  } = path3;
+const { basename: basename5 , delimiter: delimiter5 , dirname: dirname5 , extname: extname5 , format: format5 , fromFileUrl: fromFileUrl5 , isAbsolute: isAbsolute5 , join: join7 , normalize: normalize7 , parse: parse6 , relative: relative5 , resolve: resolve5 , sep: sep5 , toFileUrl: toFileUrl5 , toNamespacedPath: toNamespacedPath5  } = path3;
 function getFileInfoType(fileInfo) {
     return fileInfo.isFile ? "file" : fileInfo.isDirectory ? "dir" : fileInfo.isSymlink ? "symlink" : undefined;
 }
@@ -3026,19 +3014,19 @@ function existsSync1(filePath) {
     try {
         Deno.lstatSync(filePath);
         return true;
-    } catch (err) {
-        if (err instanceof Deno.errors.NotFound) {
+    } catch (error) {
+        if (error instanceof Deno.errors.NotFound) {
             return false;
         }
-        throw err;
+        throw error;
     }
 }
+new Deno.errors.AlreadyExists("dest already exists.");
 var EOL;
 (function(EOL) {
     EOL["LF"] = "\n";
     EOL["CRLF"] = "\r\n";
-})(EOL || (EOL = {
-}));
+})(EOL || (EOL = {}));
 const main = {
     ARROW_UP: "↑",
     ARROW_DOWN: "↓",
@@ -3075,6 +3063,27 @@ const win = {
     POINTER_SMALL: "»"
 };
 const Figures = Deno.build.os === "windows" ? win : main;
+const keyMap = {
+    up: "ARROW_UP",
+    down: "ARROW_DOWN",
+    left: "ARROW_LEFT",
+    right: "ARROW_RIGHT",
+    pageup: "PAGE_UP",
+    pagedown: "PAGE_DOWN",
+    tab: "TAB_RIGHT",
+    enter: "ENTER",
+    return: "ENTER"
+};
+function getFiguresByKeys(keys) {
+    const figures = [];
+    for (const key of keys){
+        const figure = Figures[keyMap[key]] ?? key;
+        if (!figures.includes(figure)) {
+            figures.push(figure);
+        }
+    }
+    return figures;
+}
 const base64abc = [
     "A",
     "B",
@@ -3147,19 +3156,19 @@ function encode(data) {
     const l = uint8.length;
     for(i = 2; i < l; i += 3){
         result += base64abc[uint8[i - 2] >> 2];
-        result += base64abc[(uint8[i - 2] & 3) << 4 | uint8[i - 1] >> 4];
-        result += base64abc[(uint8[i - 1] & 15) << 2 | uint8[i] >> 6];
-        result += base64abc[uint8[i] & 63];
+        result += base64abc[(uint8[i - 2] & 0x03) << 4 | uint8[i - 1] >> 4];
+        result += base64abc[(uint8[i - 1] & 0x0f) << 2 | uint8[i] >> 6];
+        result += base64abc[uint8[i] & 0x3f];
     }
     if (i === l + 1) {
         result += base64abc[uint8[i - 2] >> 2];
-        result += base64abc[(uint8[i - 2] & 3) << 4];
+        result += base64abc[(uint8[i - 2] & 0x03) << 4];
         result += "==";
     }
     if (i === l) {
         result += base64abc[uint8[i - 2] >> 2];
-        result += base64abc[(uint8[i - 2] & 3) << 4 | uint8[i - 1] >> 4];
-        result += base64abc[(uint8[i - 1] & 15) << 2];
+        result += base64abc[(uint8[i - 2] & 0x03) << 4 | uint8[i - 1] >> 4];
+        result += base64abc[(uint8[i - 1] & 0x0f) << 2];
         result += "=";
     }
     return result;
@@ -3252,7 +3261,7 @@ function link(text, url) {
         "8",
         SEP1,
         SEP1,
-        bel, 
+        bel
     ].join("");
 }
 function image(buffer, options) {
@@ -3298,13 +3307,12 @@ const mod5 = {
     link: link,
     image: image
 };
-function getCursorPosition({ stdin =Deno.stdin , stdout =Deno.stdout  } = {
-}) {
+function getCursorPosition({ stdin =Deno.stdin , stdout =Deno.stdout  } = {}) {
     const data = new Uint8Array(8);
-    Deno.setRaw(stdin.rid, true);
+    Deno.stdin.setRaw(true);
     stdout.writeSync(new TextEncoder().encode(cursorPosition));
     stdin.readSync(data);
-    Deno.setRaw(stdin.rid, false);
+    Deno.stdin.setRaw(false);
     const [y, x] = new TextDecoder().decode(data).match(/\[(\d+);(\d+)R/)?.slice(1, 3).map(Number) ?? [
         0,
         0
@@ -3314,7 +3322,7 @@ function getCursorPosition({ stdin =Deno.stdin , stdout =Deno.stdout  } = {
         y
     };
 }
-const tty1 = factory();
+const tty = factory();
 function factory(options) {
     let result = "";
     let stack = [];
@@ -3340,8 +3348,7 @@ function factory(options) {
     tty.getCursorPosition = ()=>getCursorPosition({
             stdout,
             stdin
-        })
-    ;
+        });
     const methodList = Object.entries(mod5);
     for (const [name, method] of methodList){
         if (name === "cursorPosition") {
@@ -3365,8 +3372,7 @@ function factory(options) {
         if (args) {
             stack[stack.length - 1][1] = args;
         }
-        result = stack.reduce((prev, [cur, args])=>prev + (typeof cur === "string" ? cur : cur.call(tty, ...args))
-        , "");
+        result = stack.reduce((prev, [cur, args])=>prev + (typeof cur === "string" ? cur : cur.call(tty, ...args)), "");
         stack = [];
     }
 }
@@ -3462,10 +3468,8 @@ function parse7(data) {
     let index = -1;
     const keys = [];
     const input = data instanceof Uint8Array ? new TextDecoder().decode(data) : data;
-    const hasNext = ()=>input.length - 1 >= index + 1
-    ;
-    const next = ()=>input[++index]
-    ;
+    const hasNext = ()=>input.length - 1 >= index + 1;
+    const next = ()=>input[++index];
     parseNext();
     return keys;
     function parseNext() {
@@ -3575,7 +3579,7 @@ function charLengthAt(str, i) {
     if (typeof pos === "undefined") {
         return 1;
     }
-    return pos >= 65536 ? 2 : 1;
+    return pos >= 0x10000 ? 2 : 1;
 }
 const { Deno: Deno1  } = globalThis;
 const noColor = typeof Deno1?.noColor === "boolean" ? Deno1.noColor : true;
@@ -3645,16 +3649,1099 @@ function magenta(str) {
     ], 39));
 }
 const ANSI_PATTERN = new RegExp([
-    "[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:[a-zA-Z\\d]*(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)",
-    "(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))", 
+    "[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)",
+    "(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))"
 ].join("|"), "g");
 function stripColor(string) {
     return string.replace(ANSI_PATTERN, "");
 }
+const osType2 = (()=>{
+    const { Deno: Deno1  } = globalThis;
+    if (typeof Deno1?.build?.os === "string") {
+        return Deno1.build.os;
+    }
+    const { navigator  } = globalThis;
+    if (navigator?.appVersion?.includes?.("Win")) {
+        return "windows";
+    }
+    return "linux";
+})();
+const isWindows2 = osType2 === "windows";
+const CHAR_FORWARD_SLASH2 = 47;
+function assertPath2(path) {
+    if (typeof path !== "string") {
+        throw new TypeError(`Path must be a string. Received ${JSON.stringify(path)}`);
+    }
+}
+function isPosixPathSeparator2(code) {
+    return code === 47;
+}
+function isPathSeparator2(code) {
+    return isPosixPathSeparator2(code) || code === 92;
+}
+function isWindowsDeviceRoot2(code) {
+    return code >= 97 && code <= 122 || code >= 65 && code <= 90;
+}
+function normalizeString2(path, allowAboveRoot, separator, isPathSeparator) {
+    let res = "";
+    let lastSegmentLength = 0;
+    let lastSlash = -1;
+    let dots = 0;
+    let code;
+    for(let i = 0, len = path.length; i <= len; ++i){
+        if (i < len) code = path.charCodeAt(i);
+        else if (isPathSeparator(code)) break;
+        else code = CHAR_FORWARD_SLASH2;
+        if (isPathSeparator(code)) {
+            if (lastSlash === i - 1 || dots === 1) {} else if (lastSlash !== i - 1 && dots === 2) {
+                if (res.length < 2 || lastSegmentLength !== 2 || res.charCodeAt(res.length - 1) !== 46 || res.charCodeAt(res.length - 2) !== 46) {
+                    if (res.length > 2) {
+                        const lastSlashIndex = res.lastIndexOf(separator);
+                        if (lastSlashIndex === -1) {
+                            res = "";
+                            lastSegmentLength = 0;
+                        } else {
+                            res = res.slice(0, lastSlashIndex);
+                            lastSegmentLength = res.length - 1 - res.lastIndexOf(separator);
+                        }
+                        lastSlash = i;
+                        dots = 0;
+                        continue;
+                    } else if (res.length === 2 || res.length === 1) {
+                        res = "";
+                        lastSegmentLength = 0;
+                        lastSlash = i;
+                        dots = 0;
+                        continue;
+                    }
+                }
+                if (allowAboveRoot) {
+                    if (res.length > 0) res += `${separator}..`;
+                    else res = "..";
+                    lastSegmentLength = 2;
+                }
+            } else {
+                if (res.length > 0) res += separator + path.slice(lastSlash + 1, i);
+                else res = path.slice(lastSlash + 1, i);
+                lastSegmentLength = i - lastSlash - 1;
+            }
+            lastSlash = i;
+            dots = 0;
+        } else if (code === 46 && dots !== -1) {
+            ++dots;
+        } else {
+            dots = -1;
+        }
+    }
+    return res;
+}
+function _format2(sep, pathObject) {
+    const dir = pathObject.dir || pathObject.root;
+    const base = pathObject.base || (pathObject.name || "") + (pathObject.ext || "");
+    if (!dir) return base;
+    if (dir === pathObject.root) return dir + base;
+    return dir + sep + base;
+}
+const WHITESPACE_ENCODINGS2 = {
+    "\u0009": "%09",
+    "\u000A": "%0A",
+    "\u000B": "%0B",
+    "\u000C": "%0C",
+    "\u000D": "%0D",
+    "\u0020": "%20"
+};
+function encodeWhitespace2(string) {
+    return string.replaceAll(/[\s]/g, (c)=>{
+        return WHITESPACE_ENCODINGS2[c] ?? c;
+    });
+}
+class DenoStdInternalError2 extends Error {
+    constructor(message){
+        super(message);
+        this.name = "DenoStdInternalError";
+    }
+}
+function assert2(expr, msg = "") {
+    if (!expr) {
+        throw new DenoStdInternalError2(msg);
+    }
+}
+const sep6 = "\\";
+const delimiter6 = ";";
+function resolve6(...pathSegments) {
+    let resolvedDevice = "";
+    let resolvedTail = "";
+    let resolvedAbsolute = false;
+    for(let i = pathSegments.length - 1; i >= -1; i--){
+        let path;
+        const { Deno: Deno1  } = globalThis;
+        if (i >= 0) {
+            path = pathSegments[i];
+        } else if (!resolvedDevice) {
+            if (typeof Deno1?.cwd !== "function") {
+                throw new TypeError("Resolved a drive-letter-less path without a CWD.");
+            }
+            path = Deno1.cwd();
+        } else {
+            if (typeof Deno1?.env?.get !== "function" || typeof Deno1?.cwd !== "function") {
+                throw new TypeError("Resolved a relative path without a CWD.");
+            }
+            path = Deno1.cwd();
+            if (path === undefined || path.slice(0, 3).toLowerCase() !== `${resolvedDevice.toLowerCase()}\\`) {
+                path = `${resolvedDevice}\\`;
+            }
+        }
+        assertPath2(path);
+        const len = path.length;
+        if (len === 0) continue;
+        let rootEnd = 0;
+        let device = "";
+        let isAbsolute = false;
+        const code = path.charCodeAt(0);
+        if (len > 1) {
+            if (isPathSeparator2(code)) {
+                isAbsolute = true;
+                if (isPathSeparator2(path.charCodeAt(1))) {
+                    let j = 2;
+                    let last = j;
+                    for(; j < len; ++j){
+                        if (isPathSeparator2(path.charCodeAt(j))) break;
+                    }
+                    if (j < len && j !== last) {
+                        const firstPart = path.slice(last, j);
+                        last = j;
+                        for(; j < len; ++j){
+                            if (!isPathSeparator2(path.charCodeAt(j))) break;
+                        }
+                        if (j < len && j !== last) {
+                            last = j;
+                            for(; j < len; ++j){
+                                if (isPathSeparator2(path.charCodeAt(j))) break;
+                            }
+                            if (j === len) {
+                                device = `\\\\${firstPart}\\${path.slice(last)}`;
+                                rootEnd = j;
+                            } else if (j !== last) {
+                                device = `\\\\${firstPart}\\${path.slice(last, j)}`;
+                                rootEnd = j;
+                            }
+                        }
+                    }
+                } else {
+                    rootEnd = 1;
+                }
+            } else if (isWindowsDeviceRoot2(code)) {
+                if (path.charCodeAt(1) === 58) {
+                    device = path.slice(0, 2);
+                    rootEnd = 2;
+                    if (len > 2) {
+                        if (isPathSeparator2(path.charCodeAt(2))) {
+                            isAbsolute = true;
+                            rootEnd = 3;
+                        }
+                    }
+                }
+            }
+        } else if (isPathSeparator2(code)) {
+            rootEnd = 1;
+            isAbsolute = true;
+        }
+        if (device.length > 0 && resolvedDevice.length > 0 && device.toLowerCase() !== resolvedDevice.toLowerCase()) {
+            continue;
+        }
+        if (resolvedDevice.length === 0 && device.length > 0) {
+            resolvedDevice = device;
+        }
+        if (!resolvedAbsolute) {
+            resolvedTail = `${path.slice(rootEnd)}\\${resolvedTail}`;
+            resolvedAbsolute = isAbsolute;
+        }
+        if (resolvedAbsolute && resolvedDevice.length > 0) break;
+    }
+    resolvedTail = normalizeString2(resolvedTail, !resolvedAbsolute, "\\", isPathSeparator2);
+    return resolvedDevice + (resolvedAbsolute ? "\\" : "") + resolvedTail || ".";
+}
+function normalize8(path) {
+    assertPath2(path);
+    const len = path.length;
+    if (len === 0) return ".";
+    let rootEnd = 0;
+    let device;
+    let isAbsolute = false;
+    const code = path.charCodeAt(0);
+    if (len > 1) {
+        if (isPathSeparator2(code)) {
+            isAbsolute = true;
+            if (isPathSeparator2(path.charCodeAt(1))) {
+                let j = 2;
+                let last = j;
+                for(; j < len; ++j){
+                    if (isPathSeparator2(path.charCodeAt(j))) break;
+                }
+                if (j < len && j !== last) {
+                    const firstPart = path.slice(last, j);
+                    last = j;
+                    for(; j < len; ++j){
+                        if (!isPathSeparator2(path.charCodeAt(j))) break;
+                    }
+                    if (j < len && j !== last) {
+                        last = j;
+                        for(; j < len; ++j){
+                            if (isPathSeparator2(path.charCodeAt(j))) break;
+                        }
+                        if (j === len) {
+                            return `\\\\${firstPart}\\${path.slice(last)}\\`;
+                        } else if (j !== last) {
+                            device = `\\\\${firstPart}\\${path.slice(last, j)}`;
+                            rootEnd = j;
+                        }
+                    }
+                }
+            } else {
+                rootEnd = 1;
+            }
+        } else if (isWindowsDeviceRoot2(code)) {
+            if (path.charCodeAt(1) === 58) {
+                device = path.slice(0, 2);
+                rootEnd = 2;
+                if (len > 2) {
+                    if (isPathSeparator2(path.charCodeAt(2))) {
+                        isAbsolute = true;
+                        rootEnd = 3;
+                    }
+                }
+            }
+        }
+    } else if (isPathSeparator2(code)) {
+        return "\\";
+    }
+    let tail;
+    if (rootEnd < len) {
+        tail = normalizeString2(path.slice(rootEnd), !isAbsolute, "\\", isPathSeparator2);
+    } else {
+        tail = "";
+    }
+    if (tail.length === 0 && !isAbsolute) tail = ".";
+    if (tail.length > 0 && isPathSeparator2(path.charCodeAt(len - 1))) {
+        tail += "\\";
+    }
+    if (device === undefined) {
+        if (isAbsolute) {
+            if (tail.length > 0) return `\\${tail}`;
+            else return "\\";
+        } else if (tail.length > 0) {
+            return tail;
+        } else {
+            return "";
+        }
+    } else if (isAbsolute) {
+        if (tail.length > 0) return `${device}\\${tail}`;
+        else return `${device}\\`;
+    } else if (tail.length > 0) {
+        return device + tail;
+    } else {
+        return device;
+    }
+}
+function isAbsolute6(path) {
+    assertPath2(path);
+    const len = path.length;
+    if (len === 0) return false;
+    const code = path.charCodeAt(0);
+    if (isPathSeparator2(code)) {
+        return true;
+    } else if (isWindowsDeviceRoot2(code)) {
+        if (len > 2 && path.charCodeAt(1) === 58) {
+            if (isPathSeparator2(path.charCodeAt(2))) return true;
+        }
+    }
+    return false;
+}
+function join8(...paths) {
+    const pathsCount = paths.length;
+    if (pathsCount === 0) return ".";
+    let joined;
+    let firstPart = null;
+    for(let i = 0; i < pathsCount; ++i){
+        const path = paths[i];
+        assertPath2(path);
+        if (path.length > 0) {
+            if (joined === undefined) joined = firstPart = path;
+            else joined += `\\${path}`;
+        }
+    }
+    if (joined === undefined) return ".";
+    let needsReplace = true;
+    let slashCount = 0;
+    assert2(firstPart != null);
+    if (isPathSeparator2(firstPart.charCodeAt(0))) {
+        ++slashCount;
+        const firstLen = firstPart.length;
+        if (firstLen > 1) {
+            if (isPathSeparator2(firstPart.charCodeAt(1))) {
+                ++slashCount;
+                if (firstLen > 2) {
+                    if (isPathSeparator2(firstPart.charCodeAt(2))) ++slashCount;
+                    else {
+                        needsReplace = false;
+                    }
+                }
+            }
+        }
+    }
+    if (needsReplace) {
+        for(; slashCount < joined.length; ++slashCount){
+            if (!isPathSeparator2(joined.charCodeAt(slashCount))) break;
+        }
+        if (slashCount >= 2) joined = `\\${joined.slice(slashCount)}`;
+    }
+    return normalize8(joined);
+}
+function relative6(from, to) {
+    assertPath2(from);
+    assertPath2(to);
+    if (from === to) return "";
+    const fromOrig = resolve6(from);
+    const toOrig = resolve6(to);
+    if (fromOrig === toOrig) return "";
+    from = fromOrig.toLowerCase();
+    to = toOrig.toLowerCase();
+    if (from === to) return "";
+    let fromStart = 0;
+    let fromEnd = from.length;
+    for(; fromStart < fromEnd; ++fromStart){
+        if (from.charCodeAt(fromStart) !== 92) break;
+    }
+    for(; fromEnd - 1 > fromStart; --fromEnd){
+        if (from.charCodeAt(fromEnd - 1) !== 92) break;
+    }
+    const fromLen = fromEnd - fromStart;
+    let toStart = 0;
+    let toEnd = to.length;
+    for(; toStart < toEnd; ++toStart){
+        if (to.charCodeAt(toStart) !== 92) break;
+    }
+    for(; toEnd - 1 > toStart; --toEnd){
+        if (to.charCodeAt(toEnd - 1) !== 92) break;
+    }
+    const toLen = toEnd - toStart;
+    const length = fromLen < toLen ? fromLen : toLen;
+    let lastCommonSep = -1;
+    let i = 0;
+    for(; i <= length; ++i){
+        if (i === length) {
+            if (toLen > length) {
+                if (to.charCodeAt(toStart + i) === 92) {
+                    return toOrig.slice(toStart + i + 1);
+                } else if (i === 2) {
+                    return toOrig.slice(toStart + i);
+                }
+            }
+            if (fromLen > length) {
+                if (from.charCodeAt(fromStart + i) === 92) {
+                    lastCommonSep = i;
+                } else if (i === 2) {
+                    lastCommonSep = 3;
+                }
+            }
+            break;
+        }
+        const fromCode = from.charCodeAt(fromStart + i);
+        const toCode = to.charCodeAt(toStart + i);
+        if (fromCode !== toCode) break;
+        else if (fromCode === 92) lastCommonSep = i;
+    }
+    if (i !== length && lastCommonSep === -1) {
+        return toOrig;
+    }
+    let out = "";
+    if (lastCommonSep === -1) lastCommonSep = 0;
+    for(i = fromStart + lastCommonSep + 1; i <= fromEnd; ++i){
+        if (i === fromEnd || from.charCodeAt(i) === 92) {
+            if (out.length === 0) out += "..";
+            else out += "\\..";
+        }
+    }
+    if (out.length > 0) {
+        return out + toOrig.slice(toStart + lastCommonSep, toEnd);
+    } else {
+        toStart += lastCommonSep;
+        if (toOrig.charCodeAt(toStart) === 92) ++toStart;
+        return toOrig.slice(toStart, toEnd);
+    }
+}
+function toNamespacedPath6(path) {
+    if (typeof path !== "string") return path;
+    if (path.length === 0) return "";
+    const resolvedPath = resolve6(path);
+    if (resolvedPath.length >= 3) {
+        if (resolvedPath.charCodeAt(0) === 92) {
+            if (resolvedPath.charCodeAt(1) === 92) {
+                const code = resolvedPath.charCodeAt(2);
+                if (code !== 63 && code !== 46) {
+                    return `\\\\?\\UNC\\${resolvedPath.slice(2)}`;
+                }
+            }
+        } else if (isWindowsDeviceRoot2(resolvedPath.charCodeAt(0))) {
+            if (resolvedPath.charCodeAt(1) === 58 && resolvedPath.charCodeAt(2) === 92) {
+                return `\\\\?\\${resolvedPath}`;
+            }
+        }
+    }
+    return path;
+}
+function dirname6(path) {
+    assertPath2(path);
+    const len = path.length;
+    if (len === 0) return ".";
+    let rootEnd = -1;
+    let end = -1;
+    let matchedSlash = true;
+    let offset = 0;
+    const code = path.charCodeAt(0);
+    if (len > 1) {
+        if (isPathSeparator2(code)) {
+            rootEnd = offset = 1;
+            if (isPathSeparator2(path.charCodeAt(1))) {
+                let j = 2;
+                let last = j;
+                for(; j < len; ++j){
+                    if (isPathSeparator2(path.charCodeAt(j))) break;
+                }
+                if (j < len && j !== last) {
+                    last = j;
+                    for(; j < len; ++j){
+                        if (!isPathSeparator2(path.charCodeAt(j))) break;
+                    }
+                    if (j < len && j !== last) {
+                        last = j;
+                        for(; j < len; ++j){
+                            if (isPathSeparator2(path.charCodeAt(j))) break;
+                        }
+                        if (j === len) {
+                            return path;
+                        }
+                        if (j !== last) {
+                            rootEnd = offset = j + 1;
+                        }
+                    }
+                }
+            }
+        } else if (isWindowsDeviceRoot2(code)) {
+            if (path.charCodeAt(1) === 58) {
+                rootEnd = offset = 2;
+                if (len > 2) {
+                    if (isPathSeparator2(path.charCodeAt(2))) rootEnd = offset = 3;
+                }
+            }
+        }
+    } else if (isPathSeparator2(code)) {
+        return path;
+    }
+    for(let i = len - 1; i >= offset; --i){
+        if (isPathSeparator2(path.charCodeAt(i))) {
+            if (!matchedSlash) {
+                end = i;
+                break;
+            }
+        } else {
+            matchedSlash = false;
+        }
+    }
+    if (end === -1) {
+        if (rootEnd === -1) return ".";
+        else end = rootEnd;
+    }
+    return path.slice(0, end);
+}
+function basename6(path, ext = "") {
+    if (ext !== undefined && typeof ext !== "string") {
+        throw new TypeError('"ext" argument must be a string');
+    }
+    assertPath2(path);
+    let start = 0;
+    let end = -1;
+    let matchedSlash = true;
+    let i;
+    if (path.length >= 2) {
+        const drive = path.charCodeAt(0);
+        if (isWindowsDeviceRoot2(drive)) {
+            if (path.charCodeAt(1) === 58) start = 2;
+        }
+    }
+    if (ext !== undefined && ext.length > 0 && ext.length <= path.length) {
+        if (ext.length === path.length && ext === path) return "";
+        let extIdx = ext.length - 1;
+        let firstNonSlashEnd = -1;
+        for(i = path.length - 1; i >= start; --i){
+            const code = path.charCodeAt(i);
+            if (isPathSeparator2(code)) {
+                if (!matchedSlash) {
+                    start = i + 1;
+                    break;
+                }
+            } else {
+                if (firstNonSlashEnd === -1) {
+                    matchedSlash = false;
+                    firstNonSlashEnd = i + 1;
+                }
+                if (extIdx >= 0) {
+                    if (code === ext.charCodeAt(extIdx)) {
+                        if (--extIdx === -1) {
+                            end = i;
+                        }
+                    } else {
+                        extIdx = -1;
+                        end = firstNonSlashEnd;
+                    }
+                }
+            }
+        }
+        if (start === end) end = firstNonSlashEnd;
+        else if (end === -1) end = path.length;
+        return path.slice(start, end);
+    } else {
+        for(i = path.length - 1; i >= start; --i){
+            if (isPathSeparator2(path.charCodeAt(i))) {
+                if (!matchedSlash) {
+                    start = i + 1;
+                    break;
+                }
+            } else if (end === -1) {
+                matchedSlash = false;
+                end = i + 1;
+            }
+        }
+        if (end === -1) return "";
+        return path.slice(start, end);
+    }
+}
+function extname6(path) {
+    assertPath2(path);
+    let start = 0;
+    let startDot = -1;
+    let startPart = 0;
+    let end = -1;
+    let matchedSlash = true;
+    let preDotState = 0;
+    if (path.length >= 2 && path.charCodeAt(1) === 58 && isWindowsDeviceRoot2(path.charCodeAt(0))) {
+        start = startPart = 2;
+    }
+    for(let i = path.length - 1; i >= start; --i){
+        const code = path.charCodeAt(i);
+        if (isPathSeparator2(code)) {
+            if (!matchedSlash) {
+                startPart = i + 1;
+                break;
+            }
+            continue;
+        }
+        if (end === -1) {
+            matchedSlash = false;
+            end = i + 1;
+        }
+        if (code === 46) {
+            if (startDot === -1) startDot = i;
+            else if (preDotState !== 1) preDotState = 1;
+        } else if (startDot !== -1) {
+            preDotState = -1;
+        }
+    }
+    if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+        return "";
+    }
+    return path.slice(startDot, end);
+}
+function format6(pathObject) {
+    if (pathObject === null || typeof pathObject !== "object") {
+        throw new TypeError(`The "pathObject" argument must be of type Object. Received type ${typeof pathObject}`);
+    }
+    return _format2("\\", pathObject);
+}
+function parse8(path) {
+    assertPath2(path);
+    const ret = {
+        root: "",
+        dir: "",
+        base: "",
+        ext: "",
+        name: ""
+    };
+    const len = path.length;
+    if (len === 0) return ret;
+    let rootEnd = 0;
+    let code = path.charCodeAt(0);
+    if (len > 1) {
+        if (isPathSeparator2(code)) {
+            rootEnd = 1;
+            if (isPathSeparator2(path.charCodeAt(1))) {
+                let j = 2;
+                let last = j;
+                for(; j < len; ++j){
+                    if (isPathSeparator2(path.charCodeAt(j))) break;
+                }
+                if (j < len && j !== last) {
+                    last = j;
+                    for(; j < len; ++j){
+                        if (!isPathSeparator2(path.charCodeAt(j))) break;
+                    }
+                    if (j < len && j !== last) {
+                        last = j;
+                        for(; j < len; ++j){
+                            if (isPathSeparator2(path.charCodeAt(j))) break;
+                        }
+                        if (j === len) {
+                            rootEnd = j;
+                        } else if (j !== last) {
+                            rootEnd = j + 1;
+                        }
+                    }
+                }
+            }
+        } else if (isWindowsDeviceRoot2(code)) {
+            if (path.charCodeAt(1) === 58) {
+                rootEnd = 2;
+                if (len > 2) {
+                    if (isPathSeparator2(path.charCodeAt(2))) {
+                        if (len === 3) {
+                            ret.root = ret.dir = path;
+                            return ret;
+                        }
+                        rootEnd = 3;
+                    }
+                } else {
+                    ret.root = ret.dir = path;
+                    return ret;
+                }
+            }
+        }
+    } else if (isPathSeparator2(code)) {
+        ret.root = ret.dir = path;
+        return ret;
+    }
+    if (rootEnd > 0) ret.root = path.slice(0, rootEnd);
+    let startDot = -1;
+    let startPart = rootEnd;
+    let end = -1;
+    let matchedSlash = true;
+    let i = path.length - 1;
+    let preDotState = 0;
+    for(; i >= rootEnd; --i){
+        code = path.charCodeAt(i);
+        if (isPathSeparator2(code)) {
+            if (!matchedSlash) {
+                startPart = i + 1;
+                break;
+            }
+            continue;
+        }
+        if (end === -1) {
+            matchedSlash = false;
+            end = i + 1;
+        }
+        if (code === 46) {
+            if (startDot === -1) startDot = i;
+            else if (preDotState !== 1) preDotState = 1;
+        } else if (startDot !== -1) {
+            preDotState = -1;
+        }
+    }
+    if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+        if (end !== -1) {
+            ret.base = ret.name = path.slice(startPart, end);
+        }
+    } else {
+        ret.name = path.slice(startPart, startDot);
+        ret.base = path.slice(startPart, end);
+        ret.ext = path.slice(startDot, end);
+    }
+    if (startPart > 0 && startPart !== rootEnd) {
+        ret.dir = path.slice(0, startPart - 1);
+    } else ret.dir = ret.root;
+    return ret;
+}
+function fromFileUrl6(url) {
+    url = url instanceof URL ? url : new URL(url);
+    if (url.protocol != "file:") {
+        throw new TypeError("Must be a file URL.");
+    }
+    let path = decodeURIComponent(url.pathname.replace(/\//g, "\\").replace(/%(?![0-9A-Fa-f]{2})/g, "%25")).replace(/^\\*([A-Za-z]:)(\\|$)/, "$1\\");
+    if (url.hostname != "") {
+        path = `\\\\${url.hostname}${path}`;
+    }
+    return path;
+}
+function toFileUrl6(path) {
+    if (!isAbsolute6(path)) {
+        throw new TypeError("Must be an absolute path.");
+    }
+    const [, hostname, pathname] = path.match(/^(?:[/\\]{2}([^/\\]+)(?=[/\\](?:[^/\\]|$)))?(.*)/);
+    const url = new URL("file:///");
+    url.pathname = encodeWhitespace2(pathname.replace(/%/g, "%25"));
+    if (hostname != null && hostname != "localhost") {
+        url.hostname = hostname;
+        if (!url.hostname) {
+            throw new TypeError("Invalid hostname.");
+        }
+    }
+    return url;
+}
+const mod6 = {
+    sep: sep6,
+    delimiter: delimiter6,
+    resolve: resolve6,
+    normalize: normalize8,
+    isAbsolute: isAbsolute6,
+    join: join8,
+    relative: relative6,
+    toNamespacedPath: toNamespacedPath6,
+    dirname: dirname6,
+    basename: basename6,
+    extname: extname6,
+    format: format6,
+    parse: parse8,
+    fromFileUrl: fromFileUrl6,
+    toFileUrl: toFileUrl6
+};
+const sep7 = "/";
+const delimiter7 = ":";
+function resolve7(...pathSegments) {
+    let resolvedPath = "";
+    let resolvedAbsolute = false;
+    for(let i = pathSegments.length - 1; i >= -1 && !resolvedAbsolute; i--){
+        let path;
+        if (i >= 0) path = pathSegments[i];
+        else {
+            const { Deno: Deno1  } = globalThis;
+            if (typeof Deno1?.cwd !== "function") {
+                throw new TypeError("Resolved a relative path without a CWD.");
+            }
+            path = Deno1.cwd();
+        }
+        assertPath2(path);
+        if (path.length === 0) {
+            continue;
+        }
+        resolvedPath = `${path}/${resolvedPath}`;
+        resolvedAbsolute = path.charCodeAt(0) === CHAR_FORWARD_SLASH2;
+    }
+    resolvedPath = normalizeString2(resolvedPath, !resolvedAbsolute, "/", isPosixPathSeparator2);
+    if (resolvedAbsolute) {
+        if (resolvedPath.length > 0) return `/${resolvedPath}`;
+        else return "/";
+    } else if (resolvedPath.length > 0) return resolvedPath;
+    else return ".";
+}
+function normalize9(path) {
+    assertPath2(path);
+    if (path.length === 0) return ".";
+    const isAbsolute = path.charCodeAt(0) === 47;
+    const trailingSeparator = path.charCodeAt(path.length - 1) === 47;
+    path = normalizeString2(path, !isAbsolute, "/", isPosixPathSeparator2);
+    if (path.length === 0 && !isAbsolute) path = ".";
+    if (path.length > 0 && trailingSeparator) path += "/";
+    if (isAbsolute) return `/${path}`;
+    return path;
+}
+function isAbsolute7(path) {
+    assertPath2(path);
+    return path.length > 0 && path.charCodeAt(0) === 47;
+}
+function join9(...paths) {
+    if (paths.length === 0) return ".";
+    let joined;
+    for(let i = 0, len = paths.length; i < len; ++i){
+        const path = paths[i];
+        assertPath2(path);
+        if (path.length > 0) {
+            if (!joined) joined = path;
+            else joined += `/${path}`;
+        }
+    }
+    if (!joined) return ".";
+    return normalize9(joined);
+}
+function relative7(from, to) {
+    assertPath2(from);
+    assertPath2(to);
+    if (from === to) return "";
+    from = resolve7(from);
+    to = resolve7(to);
+    if (from === to) return "";
+    let fromStart = 1;
+    const fromEnd = from.length;
+    for(; fromStart < fromEnd; ++fromStart){
+        if (from.charCodeAt(fromStart) !== 47) break;
+    }
+    const fromLen = fromEnd - fromStart;
+    let toStart = 1;
+    const toEnd = to.length;
+    for(; toStart < toEnd; ++toStart){
+        if (to.charCodeAt(toStart) !== 47) break;
+    }
+    const toLen = toEnd - toStart;
+    const length = fromLen < toLen ? fromLen : toLen;
+    let lastCommonSep = -1;
+    let i = 0;
+    for(; i <= length; ++i){
+        if (i === length) {
+            if (toLen > length) {
+                if (to.charCodeAt(toStart + i) === 47) {
+                    return to.slice(toStart + i + 1);
+                } else if (i === 0) {
+                    return to.slice(toStart + i);
+                }
+            } else if (fromLen > length) {
+                if (from.charCodeAt(fromStart + i) === 47) {
+                    lastCommonSep = i;
+                } else if (i === 0) {
+                    lastCommonSep = 0;
+                }
+            }
+            break;
+        }
+        const fromCode = from.charCodeAt(fromStart + i);
+        const toCode = to.charCodeAt(toStart + i);
+        if (fromCode !== toCode) break;
+        else if (fromCode === 47) lastCommonSep = i;
+    }
+    let out = "";
+    for(i = fromStart + lastCommonSep + 1; i <= fromEnd; ++i){
+        if (i === fromEnd || from.charCodeAt(i) === 47) {
+            if (out.length === 0) out += "..";
+            else out += "/..";
+        }
+    }
+    if (out.length > 0) return out + to.slice(toStart + lastCommonSep);
+    else {
+        toStart += lastCommonSep;
+        if (to.charCodeAt(toStart) === 47) ++toStart;
+        return to.slice(toStart);
+    }
+}
+function toNamespacedPath7(path) {
+    return path;
+}
+function dirname7(path) {
+    assertPath2(path);
+    if (path.length === 0) return ".";
+    const hasRoot = path.charCodeAt(0) === 47;
+    let end = -1;
+    let matchedSlash = true;
+    for(let i = path.length - 1; i >= 1; --i){
+        if (path.charCodeAt(i) === 47) {
+            if (!matchedSlash) {
+                end = i;
+                break;
+            }
+        } else {
+            matchedSlash = false;
+        }
+    }
+    if (end === -1) return hasRoot ? "/" : ".";
+    if (hasRoot && end === 1) return "//";
+    return path.slice(0, end);
+}
+function basename7(path, ext = "") {
+    if (ext !== undefined && typeof ext !== "string") {
+        throw new TypeError('"ext" argument must be a string');
+    }
+    assertPath2(path);
+    let start = 0;
+    let end = -1;
+    let matchedSlash = true;
+    let i;
+    if (ext !== undefined && ext.length > 0 && ext.length <= path.length) {
+        if (ext.length === path.length && ext === path) return "";
+        let extIdx = ext.length - 1;
+        let firstNonSlashEnd = -1;
+        for(i = path.length - 1; i >= 0; --i){
+            const code = path.charCodeAt(i);
+            if (code === 47) {
+                if (!matchedSlash) {
+                    start = i + 1;
+                    break;
+                }
+            } else {
+                if (firstNonSlashEnd === -1) {
+                    matchedSlash = false;
+                    firstNonSlashEnd = i + 1;
+                }
+                if (extIdx >= 0) {
+                    if (code === ext.charCodeAt(extIdx)) {
+                        if (--extIdx === -1) {
+                            end = i;
+                        }
+                    } else {
+                        extIdx = -1;
+                        end = firstNonSlashEnd;
+                    }
+                }
+            }
+        }
+        if (start === end) end = firstNonSlashEnd;
+        else if (end === -1) end = path.length;
+        return path.slice(start, end);
+    } else {
+        for(i = path.length - 1; i >= 0; --i){
+            if (path.charCodeAt(i) === 47) {
+                if (!matchedSlash) {
+                    start = i + 1;
+                    break;
+                }
+            } else if (end === -1) {
+                matchedSlash = false;
+                end = i + 1;
+            }
+        }
+        if (end === -1) return "";
+        return path.slice(start, end);
+    }
+}
+function extname7(path) {
+    assertPath2(path);
+    let startDot = -1;
+    let startPart = 0;
+    let end = -1;
+    let matchedSlash = true;
+    let preDotState = 0;
+    for(let i = path.length - 1; i >= 0; --i){
+        const code = path.charCodeAt(i);
+        if (code === 47) {
+            if (!matchedSlash) {
+                startPart = i + 1;
+                break;
+            }
+            continue;
+        }
+        if (end === -1) {
+            matchedSlash = false;
+            end = i + 1;
+        }
+        if (code === 46) {
+            if (startDot === -1) startDot = i;
+            else if (preDotState !== 1) preDotState = 1;
+        } else if (startDot !== -1) {
+            preDotState = -1;
+        }
+    }
+    if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+        return "";
+    }
+    return path.slice(startDot, end);
+}
+function format7(pathObject) {
+    if (pathObject === null || typeof pathObject !== "object") {
+        throw new TypeError(`The "pathObject" argument must be of type Object. Received type ${typeof pathObject}`);
+    }
+    return _format2("/", pathObject);
+}
+function parse9(path) {
+    assertPath2(path);
+    const ret = {
+        root: "",
+        dir: "",
+        base: "",
+        ext: "",
+        name: ""
+    };
+    if (path.length === 0) return ret;
+    const isAbsolute = path.charCodeAt(0) === 47;
+    let start;
+    if (isAbsolute) {
+        ret.root = "/";
+        start = 1;
+    } else {
+        start = 0;
+    }
+    let startDot = -1;
+    let startPart = 0;
+    let end = -1;
+    let matchedSlash = true;
+    let i = path.length - 1;
+    let preDotState = 0;
+    for(; i >= start; --i){
+        const code = path.charCodeAt(i);
+        if (code === 47) {
+            if (!matchedSlash) {
+                startPart = i + 1;
+                break;
+            }
+            continue;
+        }
+        if (end === -1) {
+            matchedSlash = false;
+            end = i + 1;
+        }
+        if (code === 46) {
+            if (startDot === -1) startDot = i;
+            else if (preDotState !== 1) preDotState = 1;
+        } else if (startDot !== -1) {
+            preDotState = -1;
+        }
+    }
+    if (startDot === -1 || end === -1 || preDotState === 0 || preDotState === 1 && startDot === end - 1 && startDot === startPart + 1) {
+        if (end !== -1) {
+            if (startPart === 0 && isAbsolute) {
+                ret.base = ret.name = path.slice(1, end);
+            } else {
+                ret.base = ret.name = path.slice(startPart, end);
+            }
+        }
+    } else {
+        if (startPart === 0 && isAbsolute) {
+            ret.name = path.slice(1, startDot);
+            ret.base = path.slice(1, end);
+        } else {
+            ret.name = path.slice(startPart, startDot);
+            ret.base = path.slice(startPart, end);
+        }
+        ret.ext = path.slice(startDot, end);
+    }
+    if (startPart > 0) ret.dir = path.slice(0, startPart - 1);
+    else if (isAbsolute) ret.dir = "/";
+    return ret;
+}
+function fromFileUrl7(url) {
+    url = url instanceof URL ? url : new URL(url);
+    if (url.protocol != "file:") {
+        throw new TypeError("Must be a file URL.");
+    }
+    return decodeURIComponent(url.pathname.replace(/%(?![0-9A-Fa-f]{2})/g, "%25"));
+}
+function toFileUrl7(path) {
+    if (!isAbsolute7(path)) {
+        throw new TypeError("Must be an absolute path.");
+    }
+    const url = new URL("file:///");
+    url.pathname = encodeWhitespace2(path.replace(/%/g, "%25").replace(/\\/g, "%5C"));
+    return url;
+}
+const mod7 = {
+    sep: sep7,
+    delimiter: delimiter7,
+    resolve: resolve7,
+    normalize: normalize9,
+    isAbsolute: isAbsolute7,
+    join: join9,
+    relative: relative7,
+    toNamespacedPath: toNamespacedPath7,
+    dirname: dirname7,
+    basename: basename7,
+    extname: extname7,
+    format: format7,
+    parse: parse9,
+    fromFileUrl: fromFileUrl7,
+    toFileUrl: toFileUrl7
+};
+const path4 = isWindows2 ? mod6 : mod7;
+const { join: join10 , normalize: normalize10  } = path4;
+const path5 = isWindows2 ? mod6 : mod7;
+const { basename: basename8 , delimiter: delimiter8 , dirname: dirname8 , extname: extname8 , format: format8 , fromFileUrl: fromFileUrl8 , isAbsolute: isAbsolute8 , join: join11 , normalize: normalize11 , parse: parse10 , relative: relative8 , resolve: resolve8 , sep: sep8 , toFileUrl: toFileUrl8 , toNamespacedPath: toNamespacedPath8  } = path5;
 class GenericPrompt {
     static injectedValue;
     settings;
-    tty = tty1;
+    tty = tty;
     indent;
     cursor = {
         x: 0,
@@ -3663,6 +4750,7 @@ class GenericPrompt {
     #value;
     #lastError;
     #isFirstRun = true;
+    #encoder = new TextEncoder();
     static inject(value) {
         GenericPrompt.injectedValue = value;
     }
@@ -3674,8 +4762,7 @@ class GenericPrompt {
                     "enter",
                     "return"
                 ],
-                ...settings.keys ?? {
-                }
+                ...settings.keys ?? {}
             }
         };
         this.indent = this.settings.indent ?? " ";
@@ -3715,10 +4802,16 @@ class GenericPrompt {
         const result = await Promise.all([
             this.message(),
             this.body?.(),
-            this.footer(), 
+            this.footer()
         ]);
         const content = result.filter(Boolean).join("\n");
-        const y = content.split("\n").length - this.cursor.y - 1;
+        const lines = content.split("\n");
+        const columns = getColumns();
+        const linesCount = columns ? lines.reduce((prev, next)=>{
+            const length = stripColor(next).length;
+            return prev + (length > columns ? Math.ceil(length / columns) : 1);
+        }, 0) : content.split("\n").length;
+        const y = linesCount - this.cursor.y - 1;
         if (!this.#isFirstRun || this.#lastError) {
             this.clear();
         }
@@ -3727,7 +4820,7 @@ class GenericPrompt {
             console.log(content);
             this.tty.cursorUp();
         } else {
-            Deno.stdout.writeSync(new TextEncoder().encode(content));
+            Deno.stdout.writeSync(this.#encoder.encode(content));
         }
         if (y) {
             this.tty.cursorUp(y);
@@ -3757,7 +4850,7 @@ class GenericPrompt {
     }
     defaults() {
         let defaultMessage = "";
-        if (typeof this.settings.default !== "undefined") {
+        if (typeof this.settings.default !== "undefined" && !this.settings.hideDefault) {
             defaultMessage += dim(` (${this.format(this.settings.default)})`);
         }
         return defaultMessage;
@@ -3773,6 +4866,9 @@ class GenericPrompt {
     }
     hint() {
         return this.settings.hint ? this.settings.indent + italic(blue(dim(`${Figures.POINTER} `) + this.settings.hint)) : undefined;
+    }
+    setErrorMessage(message) {
+        this.#lastError = message;
     }
     async handleEvent(event) {
         switch(true){
@@ -3794,13 +4890,13 @@ class GenericPrompt {
         const buffer = new Uint8Array(8);
         const isTty = Deno.isatty(Deno.stdin.rid);
         if (isTty) {
-            Deno.setRaw(Deno.stdin.rid, true, {
+            Deno.stdin.setRaw(true, {
                 cbreak: this.settings.cbreak === true
             });
         }
         const nread = await Deno.stdin.read(buffer);
         if (isTty) {
-            Deno.setRaw(Deno.stdin.rid, false);
+            Deno.stdin.setRaw(false);
         }
         if (nread === null) {
             return buffer;
@@ -3831,6 +4927,13 @@ class GenericPrompt {
         return typeof keyNames !== "undefined" && (typeof event.name !== "undefined" && keyNames.indexOf(event.name) !== -1 || typeof event.sequence !== "undefined" && keyNames.indexOf(event.sequence) !== -1);
     }
 }
+function getColumns() {
+    try {
+        return Deno.consoleSize(Deno.stdout.rid).columns;
+    } catch (_error) {
+        return null;
+    }
+}
 class GenericInput extends GenericPrompt {
     inputValue = "";
     inputIndex = 0;
@@ -3850,8 +4953,7 @@ class GenericInput extends GenericPrompt {
                 deleteCharRight: [
                     "delete"
                 ],
-                ...settings.keys ?? {
-                }
+                ...settings.keys ?? {}
             }
         });
     }
@@ -3945,11 +5047,11 @@ function distance(a, b) {
         matrix[0][j] = j;
     }
     for(let i1 = 1; i1 <= b.length; i1++){
-        for(let j = 1; j <= a.length; j++){
-            if (b.charAt(i1 - 1) == a.charAt(j - 1)) {
-                matrix[i1][j] = matrix[i1 - 1][j - 1];
+        for(let j1 = 1; j1 <= a.length; j1++){
+            if (b.charAt(i1 - 1) == a.charAt(j1 - 1)) {
+                matrix[i1][j1] = matrix[i1 - 1][j1 - 1];
             } else {
-                matrix[i1][j] = Math.min(matrix[i1 - 1][j - 1] + 1, Math.min(matrix[i1][j - 1] + 1, matrix[i1 - 1][j] + 1));
+                matrix[i1][j1] = Math.min(matrix[i1 - 1][j1 - 1] + 1, Math.min(matrix[i1][j1 - 1] + 1, matrix[i1 - 1][j1] + 1));
             }
         }
     }
@@ -3981,6 +5083,7 @@ class GenericList extends GenericInput {
                 ] : [
                     "up",
                     "u",
+                    "p",
                     "8"
                 ],
                 next: settings.search ? [
@@ -3988,16 +5091,18 @@ class GenericList extends GenericInput {
                 ] : [
                     "down",
                     "d",
+                    "n",
                     "2"
                 ],
                 previousPage: [
-                    "pageup"
+                    "pageup",
+                    "left"
                 ],
                 nextPage: [
-                    "pagedown"
+                    "pagedown",
+                    "right"
                 ],
-                ...settings.keys ?? {
-                }
+                ...settings.keys ?? {}
             }
         });
     }
@@ -4006,9 +5111,7 @@ class GenericList extends GenericInput {
         if (!input.length) {
             this.options = this.settings.options.slice();
         } else {
-            this.options = this.settings.options.filter((option)=>match(option.name) || option.name !== option.value && match(option.value)
-            ).sort((a, b)=>distance(a.name, input) - distance(b.name, input)
-            );
+            this.options = this.settings.options.filter((option)=>match(option.name) || option.name !== option.value && match(option.value)).sort((a, b)=>distance(a.name, input) - distance(b.name, input));
         }
         this.listIndex = Math.max(0, Math.min(this.options.length - 1, this.listIndex));
         this.listOffset = Math.max(0, Math.min(this.options.length - this.getListHeight(), this.listOffset));
@@ -4035,37 +5138,26 @@ class GenericList extends GenericInput {
         const actions = [
             [
                 "Next",
-                [
-                    Figures.ARROW_DOWN
-                ]
+                getFiguresByKeys(this.settings.keys?.next ?? [])
             ],
             [
                 "Previous",
-                [
-                    Figures.ARROW_UP
-                ]
+                getFiguresByKeys(this.settings.keys?.previous ?? [])
             ],
             [
                 "Next Page",
-                [
-                    Figures.PAGE_DOWN
-                ]
+                getFiguresByKeys(this.settings.keys?.nextPage ?? [])
             ],
             [
                 "Previous Page",
-                [
-                    Figures.PAGE_UP
-                ]
+                getFiguresByKeys(this.settings.keys?.previousPage ?? [])
             ],
             [
                 "Submit",
-                [
-                    Figures.ENTER
-                ]
-            ], 
+                getFiguresByKeys(this.settings.keys?.submit ?? [])
+            ]
         ];
-        return "\n" + this.settings.indent + blue(Figures.INFO) + bold(` ${selected}/${this.options.length} `) + actions.map((cur)=>`${cur[0]}: ${bold(cur[1].join(" "))}`
-        ).join(", ");
+        return "\n" + this.settings.indent + blue(Figures.INFO) + bold(` ${selected}/${this.options.length} `) + actions.map((cur)=>`${cur[0]}: ${bold(cur[1].join(", "))}`).join(", ");
     }
     getList() {
         const list = [];
@@ -4082,9 +5174,7 @@ class GenericList extends GenericInput {
         return Math.min(this.options.length, this.settings.maxRows || this.options.length);
     }
     getListIndex(value) {
-        return typeof value === "undefined" ? this.options.findIndex((item)=>!item.disabled
-        ) || 0 : this.options.findIndex((item)=>item.value === value
-        ) || 0;
+        return Math.max(0, typeof value === "undefined" ? this.options.findIndex((item)=>!item.disabled) || 0 : this.options.findIndex((item)=>item.value === value) || 0);
     }
     getPageOffset(index) {
         if (index === 0) {
@@ -4094,8 +5184,7 @@ class GenericList extends GenericInput {
         return Math.floor(index / height) * height;
     }
     getOptionByValue(value) {
-        return this.options.find((option)=>option.value === value
-        );
+        return this.options.find((option)=>option.value === value);
     }
     read() {
         if (!this.settings.search) {
@@ -4234,8 +5323,7 @@ class Checkbox extends GenericList {
                 check: [
                     "space"
                 ],
-                ...options.keys ?? {
-                }
+                ...options.keys ?? {}
             },
             options: Checkbox.mapOptions(options)
         }).prompt();
@@ -4249,13 +5337,11 @@ class Checkbox extends GenericList {
     static mapOptions(options) {
         return options.options.map((item)=>typeof item === "string" ? {
                 value: item
-            } : item
-        ).map((item)=>({
+            } : item).map((item)=>({
                 ...this.mapOption(item),
                 checked: typeof item.checked === "undefined" && options.default && options.default.indexOf(item.value) !== -1 ? true : !!item.checked,
                 icon: typeof item.icon === "undefined" ? true : item.icon
-            })
-        );
+            }));
     }
     getListItem(item, isSelected) {
         let line = this.settings.indent;
@@ -4269,14 +5355,11 @@ class Checkbox extends GenericList {
         } else {
             line += "  ";
         }
-        line += `${isSelected ? this.highlight(item.name, (val)=>val
-        ) : this.highlight(item.name)}`;
+        line += `${isSelected && !item.disabled ? this.highlight(item.name, (val)=>val) : this.highlight(item.name)}`;
         return line;
     }
     getValue() {
-        return this.settings.options.filter((item)=>item.checked
-        ).map((item)=>item.value
-        );
+        return this.settings.options.filter((item)=>item.checked).map((item)=>item.value);
     }
     async handleEvent(event) {
         switch(true){
@@ -4289,12 +5372,14 @@ class Checkbox extends GenericList {
     }
     checkValue() {
         const item = this.options[this.listIndex];
-        item.checked = !item.checked;
+        if (item.disabled) {
+            this.setErrorMessage("This option is disabled and cannot be changed.");
+        } else {
+            item.checked = !item.checked;
+        }
     }
     validate(value) {
-        const isValidValue = Array.isArray(value) && value.every((val)=>typeof val === "string" && val.length > 0 && this.settings.options.findIndex((option)=>option.value === val
-            ) !== -1
-        );
+        const isValidValue = Array.isArray(value) && value.every((val)=>typeof val === "string" && val.length > 0 && this.settings.options.findIndex((option)=>option.value === val) !== -1);
         if (!isValidValue) {
             return false;
         }
@@ -4307,18 +5392,18 @@ class Checkbox extends GenericList {
         return true;
     }
     transform(value) {
-        return value.map((val)=>val.trim()
-        );
+        return value.map((val)=>val.trim());
     }
     format(value) {
-        return value.map((val)=>this.getOptionByValue(val)?.name ?? val
-        ).join(", ");
+        return value.map((val)=>this.getOptionByValue(val)?.name ?? val).join(", ");
     }
 }
+const sep9 = Deno.build.os === "windows" ? "\\" : "/";
 class GenericSuggestions extends GenericInput {
     suggestionsIndex = -1;
     suggestionsOffset = 0;
     suggestions = [];
+    #hasReadPermissions;
     constructor(settings){
         super({
             ...settings,
@@ -4338,24 +5423,15 @@ class GenericSuggestions extends GenericInput {
                 previousPage: [
                     "pagedown"
                 ],
-                ...settings.keys ?? {
-                }
+                ...settings.keys ?? {}
             }
         });
-        const suggestions = this.loadSuggestions();
-        if (suggestions.length || this.settings.suggestions) {
-            this.settings.suggestions = [
-                ...suggestions,
-                ...this.settings.suggestions ?? [], 
-            ].filter(uniqueSuggestions);
-        }
     }
     get localStorage() {
         if (this.settings.id && "localStorage" in window) {
             try {
                 return window.localStorage;
-            } catch (_) {
-            }
+            } catch (_) {}
         }
         return null;
     }
@@ -4374,26 +5450,22 @@ class GenericSuggestions extends GenericInput {
         if (this.settings.id) {
             this.localStorage?.setItem(this.settings.id, JSON.stringify([
                 ...suggestions,
-                ...this.loadSuggestions(), 
+                ...this.loadSuggestions()
             ].filter(uniqueSuggestions)));
         }
     }
-    render() {
-        this.match();
+    async render() {
+        if (this.settings.files && this.#hasReadPermissions === undefined) {
+            const status = await Deno.permissions.request({
+                name: "read"
+            });
+            this.#hasReadPermissions = status.state === "granted";
+        }
+        await this.match();
         return super.render();
     }
-    match() {
-        if (!this.settings.suggestions?.length) {
-            return;
-        }
-        const input = this.getCurrentInputValue().toLowerCase();
-        if (!input.length) {
-            this.suggestions = this.settings.suggestions.slice();
-        } else {
-            this.suggestions = this.settings.suggestions.filter((value)=>stripColor(value.toString()).toLowerCase().startsWith(input)
-            ).sort((a, b)=>distance((a || a).toString(), input) - distance((b || b).toString(), input)
-            );
-        }
+    async match() {
+        this.suggestions = await this.getSuggestions();
         this.suggestionsIndex = Math.max(this.getCurrentInputValue().trim().length === 0 ? -1 : 0, Math.min(this.suggestions.length - 1, this.suggestionsIndex));
         this.suggestionsOffset = Math.max(0, Math.min(this.suggestions.length - this.getListHeight(), this.suggestionsOffset));
     }
@@ -4402,6 +5474,31 @@ class GenericSuggestions extends GenericInput {
     }
     getSuggestion() {
         return this.suggestions[this.suggestionsIndex]?.toString().substr(this.getCurrentInputValue().length) ?? "";
+    }
+    async getUserSuggestions(input) {
+        return typeof this.settings.suggestions === "function" ? await this.settings.suggestions(input) : this.settings.suggestions ?? [];
+    }
+    #isFileModeEnabled() {
+        return !!this.settings.files && this.#hasReadPermissions === true;
+    }
+    async getFileSuggestions(input) {
+        if (!this.#isFileModeEnabled()) {
+            return [];
+        }
+        const path = await Deno.stat(input).then((file)=>file.isDirectory ? input : dirname8(input)).catch(()=>dirname8(input));
+        return await listDir(path, this.settings.files);
+    }
+    async getSuggestions() {
+        const input = this.getCurrentInputValue();
+        const suggestions = [
+            ...this.loadSuggestions(),
+            ...await this.getUserSuggestions(input),
+            ...await this.getFileSuggestions(input)
+        ].filter(uniqueSuggestions);
+        if (!input.length) {
+            return suggestions;
+        }
+        return suggestions.filter((value)=>stripColor(value.toString()).toLowerCase().startsWith(input)).sort((a, b)=>distance((a || a).toString(), input) - distance((b || b).toString(), input));
     }
     body() {
         return this.getList() + this.getInfo();
@@ -4413,67 +5510,48 @@ class GenericSuggestions extends GenericInput {
         const selected = this.suggestionsIndex + 1;
         const matched = this.suggestions.length;
         const actions = [];
-        if (this.settings.suggestions?.length) {
+        if (this.suggestions.length) {
             if (this.settings.list) {
                 actions.push([
                     "Next",
-                    [
-                        Figures.ARROW_DOWN
-                    ]
+                    getFiguresByKeys(this.settings.keys?.next ?? [])
                 ], [
                     "Previous",
-                    [
-                        Figures.ARROW_UP
-                    ]
+                    getFiguresByKeys(this.settings.keys?.previous ?? [])
                 ], [
                     "Next Page",
-                    [
-                        Figures.PAGE_DOWN
-                    ]
+                    getFiguresByKeys(this.settings.keys?.nextPage ?? [])
                 ], [
                     "Previous Page",
-                    [
-                        Figures.PAGE_UP
-                    ]
+                    getFiguresByKeys(this.settings.keys?.previousPage ?? [])
                 ]);
             } else {
                 actions.push([
                     "Next",
-                    [
-                        Figures.ARROW_UP
-                    ]
+                    getFiguresByKeys(this.settings.keys?.next ?? [])
                 ], [
                     "Previous",
-                    [
-                        Figures.ARROW_DOWN
-                    ]
+                    getFiguresByKeys(this.settings.keys?.previous ?? [])
                 ]);
             }
             actions.push([
                 "Complete",
-                [
-                    Figures.TAB_RIGHT,
-                    dim(" or"),
-                    Figures.ARROW_RIGHT
-                ]
+                getFiguresByKeys(this.settings.keys?.complete ?? [])
             ]);
         }
         actions.push([
             "Submit",
-            [
-                Figures.ENTER
-            ]
+            getFiguresByKeys(this.settings.keys?.submit ?? [])
         ]);
         let info = this.settings.indent;
-        if (this.settings.suggestions?.length) {
+        if (this.suggestions.length) {
             info += blue(Figures.INFO) + bold(` ${selected}/${matched} `);
         }
-        info += actions.map((cur)=>`${cur[0]}: ${bold(cur[1].join(" "))}`
-        ).join(", ");
+        info += actions.map((cur)=>`${cur[0]}: ${bold(cur[1].join(" "))}`).join(", ");
         return info;
     }
     getList() {
-        if (!this.settings.suggestions?.length || !this.settings.list) {
+        if (!this.suggestions.length || !this.settings.list) {
             return "";
         }
         const list = [];
@@ -4530,13 +5608,13 @@ class GenericSuggestions extends GenericInput {
                 }
                 break;
             case this.isKey(this.settings.keys, "complete", event):
-                this.complete();
+                await this.#completeValue();
                 break;
             case this.isKey(this.settings.keys, "moveCursorRight", event):
                 if (this.inputIndex < this.inputValue.length) {
                     this.moveCursorRight();
                 } else {
-                    this.complete();
+                    await this.#completeValue();
                 }
                 break;
             default:
@@ -4552,16 +5630,29 @@ class GenericSuggestions extends GenericInput {
             }
         }
     }
-    complete() {
-        if (this.suggestions.length && this.suggestions[this.suggestionsIndex]) {
-            this.inputValue = this.suggestions[this.suggestionsIndex].toString();
-            this.inputIndex = this.inputValue.length;
-            this.suggestionsIndex = 0;
-            this.suggestionsOffset = 0;
+    async #completeValue() {
+        this.inputValue = await this.complete();
+        this.inputIndex = this.inputValue.length;
+        this.suggestionsIndex = 0;
+        this.suggestionsOffset = 0;
+    }
+    async complete() {
+        let input = this.getCurrentInputValue();
+        if (!input.length) {
+            return input;
         }
+        const suggestion = this.suggestions[this.suggestionsIndex]?.toString();
+        if (this.settings.complete) {
+            input = await this.settings.complete(input, suggestion);
+        } else if (this.#isFileModeEnabled() && input.at(-1) !== sep9 && await isDirectory(input) && (this.getCurrentInputValue().at(-1) !== "." || this.getCurrentInputValue().endsWith(".."))) {
+            input += sep9;
+        } else if (suggestion) {
+            input = suggestion;
+        }
+        return this.#isFileModeEnabled() ? normalize11(input) : input;
     }
     selectPreviousSuggestion() {
-        if (this.suggestions?.length) {
+        if (this.suggestions.length) {
             if (this.suggestionsIndex > -1) {
                 this.suggestionsIndex--;
                 if (this.suggestionsIndex < this.suggestionsOffset) {
@@ -4571,7 +5662,7 @@ class GenericSuggestions extends GenericInput {
         }
     }
     selectNextSuggestion() {
-        if (this.suggestions?.length) {
+        if (this.suggestions.length) {
             if (this.suggestionsIndex < this.suggestions.length - 1) {
                 this.suggestionsIndex++;
                 if (this.suggestionsIndex >= this.suggestionsOffset + this.getListHeight()) {
@@ -4581,7 +5672,7 @@ class GenericSuggestions extends GenericInput {
         }
     }
     selectPreviousSuggestionsPage() {
-        if (this.suggestions?.length) {
+        if (this.suggestions.length) {
             const height = this.getListHeight();
             if (this.suggestionsOffset >= height) {
                 this.suggestionsIndex -= height;
@@ -4593,7 +5684,7 @@ class GenericSuggestions extends GenericInput {
         }
     }
     selectNextSuggestionsPage() {
-        if (this.suggestions?.length) {
+        if (this.suggestions.length) {
             const height = this.getListHeight();
             if (this.suggestionsOffset + height + height < this.suggestions.length) {
                 this.suggestionsIndex += height;
@@ -4608,6 +5699,25 @@ class GenericSuggestions extends GenericInput {
 }
 function uniqueSuggestions(value, index, self) {
     return typeof value !== "undefined" && value !== "" && self.indexOf(value) === index;
+}
+function isDirectory(path) {
+    return Deno.stat(path).then((file)=>file.isDirectory).catch(()=>false);
+}
+async function listDir(path, mode) {
+    const fileNames = [];
+    for await (const file of Deno.readDir(path || ".")){
+        if (mode === true && (file.name.startsWith(".") || file.name.endsWith("~"))) {
+            continue;
+        }
+        const filePath = join11(path, file.name);
+        if (mode instanceof RegExp && !mode.test(filePath)) {
+            continue;
+        }
+        fileNames.push(filePath);
+    }
+    return fileNames.sort(function(a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
 }
 class Input extends GenericSuggestions {
     static prompt(options) {
@@ -4635,7 +5745,7 @@ class Input extends GenericSuggestions {
         return super.success(value);
     }
     getValue() {
-        return this.inputValue;
+        return this.settings.files ? normalize11(this.inputValue) : this.inputValue;
     }
     validate(value) {
         if (typeof value !== "string") {
@@ -4676,9 +5786,7 @@ class Select extends GenericList {
     static mapOptions(options) {
         return options.options.map((item)=>typeof item === "string" ? {
                 value: item
-            } : item
-        ).map((item)=>this.mapOption(item)
-        );
+            } : item).map((item)=>this.mapOption(item));
     }
     input() {
         return underline(blue(this.inputValue));
@@ -4686,16 +5794,14 @@ class Select extends GenericList {
     getListItem(item, isSelected) {
         let line = this.settings.indent;
         line += isSelected ? `${this.settings.listPointer} ` : "  ";
-        line += `${isSelected ? this.highlight(item.name, (val)=>val
-        ) : this.highlight(item.name)}`;
+        line += `${isSelected && !item.disabled ? this.highlight(item.name, (val)=>val) : this.highlight(item.name)}`;
         return line;
     }
     getValue() {
         return this.options[this.listIndex]?.value ?? this.settings.default;
     }
     validate(value) {
-        return typeof value === "string" && value.length > 0 && this.options.findIndex((option)=>option.value === value
-        ) !== -1;
+        return typeof value === "string" && value.length > 0 && this.options.findIndex((option)=>option.value === value) !== -1;
     }
     transform(value) {
         return value.trim();
@@ -4704,32 +5810,116 @@ class Select extends GenericList {
         return this.getOptionByValue(value)?.name ?? value;
     }
 }
+class Toggle extends GenericPrompt {
+    status = typeof this.settings.default !== "undefined" ? this.format(this.settings.default) : "";
+    static prompt(options) {
+        if (typeof options === "string") {
+            options = {
+                message: options
+            };
+        }
+        return new this({
+            pointer: blue(Figures.POINTER_SMALL),
+            prefix: yellow("? "),
+            indent: " ",
+            active: "Yes",
+            inactive: "No",
+            ...options,
+            keys: {
+                active: [
+                    "right",
+                    "y",
+                    "j",
+                    "s",
+                    "o"
+                ],
+                inactive: [
+                    "left",
+                    "n"
+                ],
+                ...options.keys ?? {}
+            }
+        }).prompt();
+    }
+    message() {
+        let message = super.message() + " " + this.settings.pointer + " ";
+        if (this.status === this.settings.active) {
+            message += dim(this.settings.inactive + " / ") + underline(this.settings.active);
+        } else if (this.status === this.settings.inactive) {
+            message += underline(this.settings.inactive) + dim(" / " + this.settings.active);
+        } else {
+            message += dim(this.settings.inactive + " / " + this.settings.active);
+        }
+        return message;
+    }
+    read() {
+        this.tty.cursorHide();
+        return super.read();
+    }
+    async handleEvent(event) {
+        switch(true){
+            case event.sequence === this.settings.inactive[0].toLowerCase():
+            case this.isKey(this.settings.keys, "inactive", event):
+                this.selectInactive();
+                break;
+            case event.sequence === this.settings.active[0].toLowerCase():
+            case this.isKey(this.settings.keys, "active", event):
+                this.selectActive();
+                break;
+            default:
+                await super.handleEvent(event);
+        }
+    }
+    selectActive() {
+        this.status = this.settings.active;
+    }
+    selectInactive() {
+        this.status = this.settings.inactive;
+    }
+    validate(value) {
+        return [
+            this.settings.active,
+            this.settings.inactive
+        ].indexOf(value) !== -1;
+    }
+    transform(value) {
+        switch(value){
+            case this.settings.active:
+                return true;
+            case this.settings.inactive:
+                return false;
+        }
+    }
+    format(value) {
+        return value ? this.settings.active : this.settings.inactive;
+    }
+    getValue() {
+        return this.status;
+    }
+}
 function prompt(prompts, options) {
     return new PromptList(prompts, options).run(options?.initial);
 }
-let injected = {
-};
+let injected = {};
 class PromptList {
-    prompts;
-    options;
-    result = {
-    };
-    index = -1;
+    result;
+    index;
     names;
-    isInBeforeHook = false;
+    isInBeforeHook;
     get prompt() {
         return this.prompts[this.index];
     }
     constructor(prompts, options){
         this.prompts = prompts;
         this.options = options;
-        this.names = this.prompts.map((prompt)=>prompt.name
-        );
+        this.result = {};
+        this.index = -1;
+        this.isInBeforeHook = false;
+        this.names = this.prompts.map((prompt)=>prompt.name);
     }
     async run(name) {
         this.index = -1;
-        this.result = {
-        };
+        this.result = {};
         this.isInBeforeHook = false;
         await this.next(name);
         return this.result;
@@ -4811,7 +6001,7 @@ class PromptList {
                 ...this.prompt
             });
         } finally{
-            tty1.cursorShow();
+            tty.cursorShow();
         }
     }
     async runAfterHook() {
@@ -4820,23 +6010,25 @@ class PromptList {
                 if (name) {
                     return this.next(name);
                 } else if (this.prompt.after) {
-                    await this.prompt.after(this.result, (name)=>this.next(name)
-                    );
+                    await this.prompt.after(this.result, (name)=>this.next(name));
                 } else {
                     await this.next();
                 }
             });
         } else if (this.prompt.after) {
-            await this.prompt.after(this.result, (name)=>this.next(name)
-            );
+            await this.prompt.after(this.result, (name)=>this.next(name));
         } else {
             await this.next();
         }
     }
+    prompts;
+    options;
 }
 function paramCaseToCamelCase(str) {
-    return str.replace(/-([a-z])/g, (g)=>g[1].toUpperCase()
-    );
+    return str.replace(/-([a-z])/g, (g)=>g[1].toUpperCase());
+}
+function underscoreToCamelCase(str) {
+    return str.replace(/([a-z])([A-Z])/g, "$1_$2").toLowerCase().replace(/_([a-z])/g, (g)=>g[1].toUpperCase());
 }
 function getOption(flags, name) {
     while(name[0] === "-"){
@@ -4853,9 +6045,7 @@ function didYouMeanOption(option, options) {
     const optionNames = options.map((option)=>[
             option.name,
             ...option.aliases ?? []
-        ]
-    ).flat().map((option)=>getFlag(option)
-    );
+        ]).flat().map((option)=>getFlag(option));
     return didYouMean(" Did you mean option", getFlag(option), optionNames);
 }
 function didYouMeanType(type, types) {
@@ -4876,6 +6066,36 @@ function getFlag(name) {
 }
 function isOption(option, name) {
     return option.name === name || option.aliases && option.aliases.indexOf(name) !== -1;
+}
+function matchWildCardOptions(name, flags) {
+    for (const option of flags){
+        if (option.name.indexOf("*") === -1) {
+            continue;
+        }
+        let matched = matchWildCardOption(name, option);
+        if (matched) {
+            matched = {
+                ...matched,
+                name
+            };
+            flags.push(matched);
+            return matched;
+        }
+    }
+}
+function matchWildCardOption(name, option) {
+    const parts = option.name.split(".");
+    const parts2 = name.split(".");
+    if (parts.length !== parts2.length) {
+        return false;
+    }
+    const count = Math.max(parts.length, parts2.length);
+    for(let i = 0; i < count; i++){
+        if (parts[i] !== parts2[i] && parts[i] !== "*") {
+            return false;
+        }
+    }
+    return option;
 }
 function closest(str, arr) {
     let minDistance = Infinity;
@@ -4898,22 +6118,22 @@ class FlagsError extends Error {
         Object.setPrototypeOf(this, FlagsError.prototype);
     }
 }
-class UnknownRequiredOption extends FlagsError {
+class UnknownRequiredOptionError extends FlagsError {
     constructor(option, options){
         super(`Unknown required option "${getFlag(option)}".${didYouMeanOption(option, options)}`);
-        Object.setPrototypeOf(this, UnknownRequiredOption.prototype);
+        Object.setPrototypeOf(this, UnknownRequiredOptionError.prototype);
     }
 }
-class UnknownConflictingOption extends FlagsError {
+class UnknownConflictingOptionError extends FlagsError {
     constructor(option, options){
         super(`Unknown conflicting option "${getFlag(option)}".${didYouMeanOption(option, options)}`);
-        Object.setPrototypeOf(this, UnknownConflictingOption.prototype);
+        Object.setPrototypeOf(this, UnknownConflictingOptionError.prototype);
     }
 }
-class UnknownType extends FlagsError {
+class UnknownTypeError extends FlagsError {
     constructor(type, types){
         super(`Unknown type "${type}".${didYouMeanType(type, types)}`);
-        Object.setPrototypeOf(this, UnknownType.prototype);
+        Object.setPrototypeOf(this, UnknownTypeError.prototype);
     }
 }
 class ValidationError extends FlagsError {
@@ -4922,119 +6142,82 @@ class ValidationError extends FlagsError {
         Object.setPrototypeOf(this, ValidationError.prototype);
     }
 }
-class DuplicateOption extends ValidationError {
+class DuplicateOptionError extends ValidationError {
     constructor(name){
         super(`Option "${getFlag(name).replace(/^--no-/, "--")}" can only occur once, but was found several times.`);
-        Object.setPrototypeOf(this, DuplicateOption.prototype);
+        Object.setPrototypeOf(this, DuplicateOptionError.prototype);
     }
 }
-class UnknownOption extends ValidationError {
+class InvalidOptionError extends ValidationError {
+    constructor(option, options){
+        super(`Invalid option "${getFlag(option)}".${didYouMeanOption(option, options)}`);
+        Object.setPrototypeOf(this, InvalidOptionError.prototype);
+    }
+}
+class UnknownOptionError extends ValidationError {
     constructor(option, options){
         super(`Unknown option "${getFlag(option)}".${didYouMeanOption(option, options)}`);
-        Object.setPrototypeOf(this, UnknownOption.prototype);
+        Object.setPrototypeOf(this, UnknownOptionError.prototype);
     }
 }
-class MissingOptionValue extends ValidationError {
+class MissingOptionValueError extends ValidationError {
     constructor(option){
         super(`Missing value for option "${getFlag(option)}".`);
-        Object.setPrototypeOf(this, MissingOptionValue.prototype);
+        Object.setPrototypeOf(this, MissingOptionValueError.prototype);
     }
 }
-class InvalidOptionValue extends ValidationError {
+class InvalidOptionValueError extends ValidationError {
     constructor(option, expected, value){
         super(`Option "${getFlag(option)}" must be of type "${expected}", but got "${value}".`);
-        Object.setPrototypeOf(this, InvalidOptionValue.prototype);
+        Object.setPrototypeOf(this, InvalidOptionValueError.prototype);
     }
 }
-class OptionNotCombinable extends ValidationError {
+class UnexpectedOptionValueError extends ValidationError {
+    constructor(option, value){
+        super(`Option "${getFlag(option)}" doesn't take a value, but got "${value}".`);
+        Object.setPrototypeOf(this, InvalidOptionValueError.prototype);
+    }
+}
+class OptionNotCombinableError extends ValidationError {
     constructor(option){
         super(`Option "${getFlag(option)}" cannot be combined with other options.`);
-        Object.setPrototypeOf(this, OptionNotCombinable.prototype);
+        Object.setPrototypeOf(this, OptionNotCombinableError.prototype);
     }
 }
-class ConflictingOption extends ValidationError {
+class ConflictingOptionError extends ValidationError {
     constructor(option, conflictingOption){
         super(`Option "${getFlag(option)}" conflicts with option "${getFlag(conflictingOption)}".`);
-        Object.setPrototypeOf(this, ConflictingOption.prototype);
+        Object.setPrototypeOf(this, ConflictingOptionError.prototype);
     }
 }
-class DependingOption extends ValidationError {
+class DependingOptionError extends ValidationError {
     constructor(option, dependingOption){
         super(`Option "${getFlag(option)}" depends on option "${getFlag(dependingOption)}".`);
-        Object.setPrototypeOf(this, DependingOption.prototype);
+        Object.setPrototypeOf(this, DependingOptionError.prototype);
     }
 }
-class MissingRequiredOption extends ValidationError {
+class MissingRequiredOptionError extends ValidationError {
     constructor(option){
         super(`Missing required option "${getFlag(option)}".`);
-        Object.setPrototypeOf(this, MissingRequiredOption.prototype);
+        Object.setPrototypeOf(this, MissingRequiredOptionError.prototype);
     }
 }
-class RequiredArgumentFollowsOptionalArgument extends ValidationError {
+class UnexpectedRequiredArgumentError extends ValidationError {
     constructor(arg){
         super(`An required argument cannot follow an optional argument, but "${arg}"  is defined as required.`);
-        Object.setPrototypeOf(this, RequiredArgumentFollowsOptionalArgument.prototype);
+        Object.setPrototypeOf(this, UnexpectedRequiredArgumentError.prototype);
     }
 }
-class ArgumentFollowsVariadicArgument extends ValidationError {
+class UnexpectedArgumentAfterVariadicArgumentError extends ValidationError {
     constructor(arg){
         super(`An argument cannot follow an variadic argument, but got "${arg}".`);
-        Object.setPrototypeOf(this, ArgumentFollowsVariadicArgument.prototype);
-    }
-}
-class NoArguments extends ValidationError {
-    constructor(){
-        super(`No arguments.`);
-        Object.setPrototypeOf(this, NoArguments.prototype);
+        Object.setPrototypeOf(this, UnexpectedArgumentAfterVariadicArgumentError.prototype);
     }
 }
 class InvalidTypeError extends ValidationError {
     constructor({ label , name , value , type  }, expected){
-        super(`${label} "${name}" must be of type "${type}", but got "${value}".` + (expected ? ` Expected values: ${expected.map((value)=>`"${value}"`
-        ).join(", ")}` : ""));
-        Object.setPrototypeOf(this, MissingOptionValue.prototype);
-    }
-}
-function normalize8(args) {
-    const normalized = [];
-    let inLiteral = false;
-    for (const arg of args){
-        if (inLiteral) {
-            normalized.push(arg);
-        } else if (arg === "--") {
-            inLiteral = true;
-            normalized.push(arg);
-        } else if (arg.length > 1 && arg[0] === "-") {
-            const isLong = arg[1] === "-";
-            const isDotted = !isLong && arg[2] === ".";
-            if (arg.includes("=")) {
-                const parts = arg.split("=");
-                const flag = parts.shift();
-                if (isLong) {
-                    normalized.push(flag);
-                } else {
-                    normalizeShortFlags(flag);
-                }
-                normalized.push(parts.join("="));
-            } else if (isLong || isDotted) {
-                normalized.push(arg);
-            } else {
-                normalizeShortFlags(arg);
-            }
-        } else {
-            normalized.push(arg);
-        }
-    }
-    return normalized;
-    function normalizeShortFlags(flag) {
-        const flags = flag.slice(1).split("");
-        if (isNaN(Number(flag[flag.length - 1]))) {
-            flags.forEach((val)=>normalized.push(`-${val}`)
-            );
-        } else {
-            normalized.push(`-${flags.shift()}`);
-            normalized.push(flags.join(""));
-        }
+        super(`${label} "${name}" must be of type "${type}", but got "${value}".` + (expected ? ` Expected values: ${expected.map((value)=>`"${value}"`).join(", ")}` : ""));
+        Object.setPrototypeOf(this, MissingOptionValueError.prototype);
     }
 }
 var OptionType;
@@ -5043,8 +6226,226 @@ var OptionType;
     OptionType["NUMBER"] = "number";
     OptionType["INTEGER"] = "integer";
     OptionType["BOOLEAN"] = "boolean";
-})(OptionType || (OptionType = {
-}));
+})(OptionType || (OptionType = {}));
+function didYouMeanCommand(command, commands, excludes = []) {
+    const commandNames = commands.map((command)=>command.getName()).filter((command)=>!excludes.includes(command));
+    return didYouMean(" Did you mean command", command, commandNames);
+}
+const ARGUMENT_REGEX = /^[<\[].+[\]>]$/;
+const ARGUMENT_DETAILS_REGEX = /[<\[:>\]]/;
+function splitArguments(args) {
+    const parts = args.trim().split(/[, =] */g);
+    const typeParts = [];
+    while(parts[parts.length - 1] && ARGUMENT_REGEX.test(parts[parts.length - 1])){
+        typeParts.unshift(parts.pop());
+    }
+    const typeDefinition = typeParts.join(" ");
+    return {
+        flags: parts,
+        typeDefinition,
+        equalsSign: args.includes("=")
+    };
+}
+function parseArgumentsDefinition(argsDefinition, validate = true, all) {
+    const argumentDetails = [];
+    let hasOptional = false;
+    let hasVariadic = false;
+    const parts = argsDefinition.split(/ +/);
+    for (const arg of parts){
+        if (validate && hasVariadic) {
+            throw new UnexpectedArgumentAfterVariadicArgumentError(arg);
+        }
+        const parts1 = arg.split(ARGUMENT_DETAILS_REGEX);
+        if (!parts1[1]) {
+            if (all) {
+                argumentDetails.push(parts1[0]);
+            }
+            continue;
+        }
+        const type = parts1[2] || OptionType.STRING;
+        const details = {
+            optionalValue: arg[0] === "[",
+            requiredValue: arg[0] === "<",
+            name: parts1[1],
+            action: parts1[3] || type,
+            variadic: false,
+            list: type ? arg.indexOf(type + "[]") !== -1 : false,
+            type
+        };
+        if (validate && !details.optionalValue && hasOptional) {
+            throw new UnexpectedRequiredArgumentError(details.name);
+        }
+        if (arg[0] === "[") {
+            hasOptional = true;
+        }
+        if (details.name.length > 3) {
+            const istVariadicLeft = details.name.slice(0, 3) === "...";
+            const istVariadicRight = details.name.slice(-3) === "...";
+            hasVariadic = details.variadic = istVariadicLeft || istVariadicRight;
+            if (istVariadicLeft) {
+                details.name = details.name.slice(3);
+            } else if (istVariadicRight) {
+                details.name = details.name.slice(0, -3);
+            }
+        }
+        argumentDetails.push(details);
+    }
+    return argumentDetails;
+}
+function dedent(str) {
+    const lines = str.split(/\r?\n|\r/g);
+    let text = "";
+    let indent = 0;
+    for (const line of lines){
+        if (text || line.trim()) {
+            if (!text) {
+                text = line.trimStart();
+                indent = line.length - text.length;
+            } else {
+                text += line.slice(indent);
+            }
+            text += "\n";
+        }
+    }
+    return text.trimEnd();
+}
+function getDescription(description, __short) {
+    return __short ? description.trim().split("\n", 1)[0] : dedent(description);
+}
+class CommandError extends Error {
+    constructor(message){
+        super(message);
+        Object.setPrototypeOf(this, CommandError.prototype);
+    }
+}
+class ValidationError1 extends CommandError {
+    exitCode;
+    constructor(message, { exitCode  } = {}){
+        super(message);
+        Object.setPrototypeOf(this, ValidationError1.prototype);
+        this.exitCode = exitCode ?? 1;
+    }
+}
+class DuplicateOptionNameError extends CommandError {
+    constructor(name){
+        super(`Option with name "${getFlag(name)}" already exists.`);
+        Object.setPrototypeOf(this, DuplicateOptionNameError.prototype);
+    }
+}
+class MissingCommandNameError extends CommandError {
+    constructor(){
+        super("Missing command name.");
+        Object.setPrototypeOf(this, MissingCommandNameError.prototype);
+    }
+}
+class DuplicateCommandNameError extends CommandError {
+    constructor(name){
+        super(`Duplicate command name "${name}".`);
+        Object.setPrototypeOf(this, DuplicateCommandNameError.prototype);
+    }
+}
+class DuplicateCommandAliasError extends CommandError {
+    constructor(alias){
+        super(`Duplicate command alias "${alias}".`);
+        Object.setPrototypeOf(this, DuplicateCommandAliasError.prototype);
+    }
+}
+class CommandNotFoundError extends CommandError {
+    constructor(name, commands, excluded){
+        super(`Unknown command "${name}".${didYouMeanCommand(name, commands, excluded)}`);
+        Object.setPrototypeOf(this, CommandNotFoundError.prototype);
+    }
+}
+class DuplicateTypeError extends CommandError {
+    constructor(name){
+        super(`Type with name "${name}" already exists.`);
+        Object.setPrototypeOf(this, DuplicateTypeError.prototype);
+    }
+}
+class DuplicateCompletionError extends CommandError {
+    constructor(name){
+        super(`Completion with name "${name}" already exists.`);
+        Object.setPrototypeOf(this, DuplicateCompletionError.prototype);
+    }
+}
+class DuplicateExampleError extends CommandError {
+    constructor(name){
+        super(`Example with name "${name}" already exists.`);
+        Object.setPrototypeOf(this, DuplicateExampleError.prototype);
+    }
+}
+class DuplicateEnvVarError extends CommandError {
+    constructor(name){
+        super(`Environment variable with name "${name}" already exists.`);
+        Object.setPrototypeOf(this, DuplicateEnvVarError.prototype);
+    }
+}
+class MissingRequiredEnvVarError extends ValidationError1 {
+    constructor(envVar){
+        super(`Missing required environment variable "${envVar.names[0]}".`);
+        Object.setPrototypeOf(this, MissingRequiredEnvVarError.prototype);
+    }
+}
+class TooManyEnvVarValuesError extends CommandError {
+    constructor(name){
+        super(`An environment variable can only have one value, but "${name}" has more than one.`);
+        Object.setPrototypeOf(this, TooManyEnvVarValuesError.prototype);
+    }
+}
+class UnexpectedOptionalEnvVarValueError extends CommandError {
+    constructor(name){
+        super(`An environment variable cannot have an optional value, but "${name}" is defined as optional.`);
+        Object.setPrototypeOf(this, UnexpectedOptionalEnvVarValueError.prototype);
+    }
+}
+class UnexpectedVariadicEnvVarValueError extends CommandError {
+    constructor(name){
+        super(`An environment variable cannot have an variadic value, but "${name}" is defined as variadic.`);
+        Object.setPrototypeOf(this, UnexpectedVariadicEnvVarValueError.prototype);
+    }
+}
+class DefaultCommandNotFoundError extends CommandError {
+    constructor(name, commands){
+        super(`Default command "${name}" not found.${didYouMeanCommand(name, commands)}`);
+        Object.setPrototypeOf(this, DefaultCommandNotFoundError.prototype);
+    }
+}
+class CommandExecutableNotFoundError extends CommandError {
+    constructor(name){
+        super(`Command executable not found: ${name}`);
+        Object.setPrototypeOf(this, CommandExecutableNotFoundError.prototype);
+    }
+}
+class UnknownCommandError extends ValidationError1 {
+    constructor(name, commands, excluded){
+        super(`Unknown command "${name}".${didYouMeanCommand(name, commands, excluded)}`);
+        Object.setPrototypeOf(this, UnknownCommandError.prototype);
+    }
+}
+class NoArgumentsAllowedError extends ValidationError1 {
+    constructor(name){
+        super(`No arguments allowed for command "${name}".`);
+        Object.setPrototypeOf(this, NoArgumentsAllowedError.prototype);
+    }
+}
+class MissingArgumentsError extends ValidationError1 {
+    constructor(names){
+        super(`Missing argument(s): ${names.join(", ")}`);
+        Object.setPrototypeOf(this, MissingArgumentsError.prototype);
+    }
+}
+class MissingArgumentError extends ValidationError1 {
+    constructor(name){
+        super(`Missing argument: ${name}`);
+        Object.setPrototypeOf(this, MissingArgumentError.prototype);
+    }
+}
+class TooManyArgumentsError extends ValidationError1 {
+    constructor(args){
+        super(`Too many arguments: ${args.join(" ")}`);
+        Object.setPrototypeOf(this, TooManyArgumentsError.prototype);
+    }
+}
 const __boolean = (type)=>{
     if (~[
         "1",
@@ -5070,19 +6471,46 @@ const number = (type)=>{
 const string = ({ value  })=>{
     return value;
 };
-function validateFlags(flags, values, _knownFlaks, allowEmpty, optionNames = {
-}) {
-    const defaultValues = {
-    };
-    for (const option of flags){
+function validateFlags(ctx, opts, options = new Map()) {
+    if (!opts.flags) {
+        return;
+    }
+    const defaultValues = setDefaultValues(ctx, opts);
+    const optionNames = Object.keys(ctx.flags);
+    if (!optionNames.length && opts.allowEmpty) {
+        return;
+    }
+    if (ctx.standalone) {
+        validateStandaloneOption(ctx, options, optionNames, defaultValues);
+        return;
+    }
+    for (const [name, option] of options){
+        validateUnknownOption(option, opts);
+        validateConflictingOptions(ctx, option);
+        validateDependingOptions(ctx, option, defaultValues);
+        validateRequiredValues(ctx, option, name);
+    }
+    validateRequiredOptions(ctx, options, opts);
+}
+function validateUnknownOption(option, opts) {
+    if (!getOption(opts.flags ?? [], option.name)) {
+        throw new UnknownOptionError(option.name, opts.flags ?? []);
+    }
+}
+function setDefaultValues(ctx, opts) {
+    const defaultValues = {};
+    if (!opts.flags?.length) {
+        return defaultValues;
+    }
+    for (const option of opts.flags){
         let name;
         let defaultValue = undefined;
         if (option.name.startsWith("no-")) {
             const propName = option.name.replace(/^no-/, "");
-            if (propName in values) {
+            if (typeof ctx.flags[propName] !== "undefined") {
                 continue;
             }
-            const positiveOption = getOption(flags, propName);
+            const positiveOption = getOption(opts.flags, propName);
             if (positiveOption) {
                 continue;
             }
@@ -5092,75 +6520,86 @@ function validateFlags(flags, values, _knownFlaks, allowEmpty, optionNames = {
         if (!name) {
             name = paramCaseToCamelCase(option.name);
         }
-        if (!(name in optionNames)) {
-            optionNames[name] = option.name;
-        }
-        const hasDefaultValue = typeof values[name] === "undefined" && (typeof option.default !== "undefined" || typeof defaultValue !== "undefined");
+        const hasDefaultValue = (!opts.ignoreDefaults || typeof opts.ignoreDefaults[name] === "undefined") && typeof ctx.flags[name] === "undefined" && (typeof option.default !== "undefined" || typeof defaultValue !== "undefined");
         if (hasDefaultValue) {
-            values[name] = getDefaultValue(option) ?? defaultValue;
+            ctx.flags[name] = getDefaultValue(option) ?? defaultValue;
             defaultValues[option.name] = true;
             if (typeof option.value === "function") {
-                values[name] = option.value(values[name]);
+                ctx.flags[name] = option.value(ctx.flags[name]);
             }
         }
     }
-    const keys = Object.keys(values);
-    if (keys.length === 0 && allowEmpty) {
+    return defaultValues;
+}
+function validateStandaloneOption(ctx, options, optionNames, defaultValues) {
+    if (!ctx.standalone || optionNames.length === 1) {
         return;
     }
-    const options = keys.map((name)=>({
-            name,
-            option: getOption(flags, optionNames[name])
-        })
-    );
-    for (const { name , option: option1  } of options){
-        if (!option1) {
-            throw new UnknownOption(name, flags);
+    for (const [_, opt] of options){
+        if (!defaultValues[opt.name] && opt !== ctx.standalone) {
+            throw new OptionNotCombinableError(ctx.standalone.name);
         }
-        if (option1.standalone) {
-            if (keys.length > 1) {
-                if (options.every(({ option: opt  })=>opt && (option1 === opt || defaultValues[opt.name])
-                )) {
-                    return;
-                }
-                throw new OptionNotCombinable(option1.name);
-            }
-            return;
-        }
-        option1.conflicts?.forEach((flag)=>{
-            if (isset(flag, values)) {
-                throw new ConflictingOption(option1.name, flag);
-            }
-        });
-        option1.depends?.forEach((flag)=>{
-            if (!isset(flag, values) && !defaultValues[option1.name]) {
-                throw new DependingOption(option1.name, flag);
-            }
-        });
-        const isArray = (option1.args?.length || 0) > 1;
-        option1.args?.forEach((arg, i)=>{
-            if (arg.requiredValue && (typeof values[name] === "undefined" || isArray && typeof values[name][i] === "undefined")) {
-                throw new MissingOptionValue(option1.name);
-            }
-        });
-    }
-    for (const option2 of flags){
-        if (option2.required && !(paramCaseToCamelCase(option2.name) in values)) {
-            if ((!option2.conflicts || !option2.conflicts.find((flag)=>!!values[flag]
-            )) && !options.find((opt)=>opt.option?.conflicts?.find((flag)=>flag === option2.name
-                )
-            )) {
-                throw new MissingRequiredOption(option2.name);
-            }
-        }
-    }
-    if (keys.length === 0 && !allowEmpty) {
-        throw new NoArguments();
     }
 }
-function isset(flag, values) {
-    const name = paramCaseToCamelCase(flag);
-    return typeof values[name] !== "undefined";
+function validateConflictingOptions(ctx, option) {
+    if (!option.conflicts?.length) {
+        return;
+    }
+    for (const flag of option.conflicts){
+        if (isset(flag, ctx.flags)) {
+            throw new ConflictingOptionError(option.name, flag);
+        }
+    }
+}
+function validateDependingOptions(ctx, option, defaultValues) {
+    if (!option.depends) {
+        return;
+    }
+    for (const flag of option.depends){
+        if (!isset(flag, ctx.flags) && !defaultValues[option.name]) {
+            throw new DependingOptionError(option.name, flag);
+        }
+    }
+}
+function validateRequiredValues(ctx, option, name) {
+    if (!option.args) {
+        return;
+    }
+    const isArray = option.args.length > 1;
+    for(let i = 0; i < option.args.length; i++){
+        const arg = option.args[i];
+        if (!arg.requiredValue) {
+            continue;
+        }
+        const hasValue = isArray ? typeof ctx.flags[name][i] !== "undefined" : typeof ctx.flags[name] !== "undefined";
+        if (!hasValue) {
+            throw new MissingOptionValueError(option.name);
+        }
+    }
+}
+function validateRequiredOptions(ctx, options, opts) {
+    if (!opts.flags?.length) {
+        return;
+    }
+    const optionsValues = [
+        ...options.values()
+    ];
+    for (const option of opts.flags){
+        if (!option.required || paramCaseToCamelCase(option.name) in ctx.flags) {
+            continue;
+        }
+        const conflicts = option.conflicts ?? [];
+        const hasConflict = conflicts.find((flag)=>!!ctx.flags[flag]);
+        const hasConflicts = hasConflict || optionsValues.find((opt)=>opt.conflicts?.find((flag)=>flag === option.name));
+        if (hasConflicts) {
+            continue;
+        }
+        throw new MissingRequiredOptionError(option.name);
+    }
+}
+function isset(flagName, flags) {
+    const name = paramCaseToCamelCase(flagName);
+    return typeof flags[name] !== "undefined";
 }
 const integer = (type)=>{
     const value = Number(type.value);
@@ -5169,74 +6608,129 @@ const integer = (type)=>{
     }
     throw new InvalidTypeError(type);
 };
-const Types = {
-    [OptionType.STRING]: string,
-    [OptionType.NUMBER]: number,
-    [OptionType.INTEGER]: integer,
-    [OptionType.BOOLEAN]: __boolean
+const DefaultTypes = {
+    string,
+    number,
+    integer,
+    boolean: __boolean
 };
-function parseFlags(args, opts = {
-}) {
-    !opts.flags && (opts.flags = []);
-    const normalized = normalize8(args);
-    let inLiteral = false;
-    let negate = false;
-    const flags = {
-    };
-    const optionNames = {
-    };
-    let literal = [];
-    let unknown = [];
-    let stopEarly = null;
-    opts.flags.forEach((opt)=>{
+function parseFlags(argsOrCtx, opts = {}) {
+    let args;
+    let ctx;
+    if (Array.isArray(argsOrCtx)) {
+        ctx = {};
+        args = argsOrCtx;
+    } else {
+        ctx = argsOrCtx;
+        args = argsOrCtx.unknown;
+        argsOrCtx.unknown = [];
+    }
+    args = args.slice();
+    ctx.flags ??= {};
+    ctx.literal ??= [];
+    ctx.unknown ??= [];
+    ctx.stopEarly = false;
+    ctx.stopOnUnknown = false;
+    opts.dotted ??= true;
+    validateOptions(opts);
+    const options = parseArgs(ctx, args, opts);
+    validateFlags(ctx, opts, options);
+    if (opts.dotted) {
+        parseDottedOptions(ctx);
+    }
+    return ctx;
+}
+function validateOptions(opts) {
+    opts.flags?.forEach((opt)=>{
         opt.depends?.forEach((flag)=>{
             if (!opts.flags || !getOption(opts.flags, flag)) {
-                throw new UnknownRequiredOption(flag, opts.flags ?? []);
+                throw new UnknownRequiredOptionError(flag, opts.flags ?? []);
             }
         });
         opt.conflicts?.forEach((flag)=>{
             if (!opts.flags || !getOption(opts.flags, flag)) {
-                throw new UnknownConflictingOption(flag, opts.flags ?? []);
+                throw new UnknownConflictingOptionError(flag, opts.flags ?? []);
             }
         });
     });
-    for(let i = 0; i < normalized.length; i++){
+}
+function parseArgs(ctx, args, opts) {
+    const optionsMap = new Map();
+    let inLiteral = false;
+    for(let argsIndex = 0; argsIndex < args.length; argsIndex++){
         let option;
-        let args;
-        const current = normalized[i];
+        let current = args[argsIndex];
+        let currentValue;
+        let negate = false;
         if (inLiteral) {
-            literal.push(current);
+            ctx.literal.push(current);
             continue;
-        }
-        if (current === "--") {
+        } else if (current === "--") {
             inLiteral = true;
+            continue;
+        } else if (ctx.stopEarly || ctx.stopOnUnknown) {
+            ctx.unknown.push(current);
             continue;
         }
         const isFlag = current.length > 1 && current[0] === "-";
-        const next = ()=>normalized[i + 1]
-        ;
-        if (isFlag) {
-            if (current[2] === "-" || current[1] === "-" && current.length === 3) {
-                throw new UnknownOption(current, opts.flags);
+        if (!isFlag) {
+            if (opts.stopEarly) {
+                ctx.stopEarly = true;
             }
-            negate = current.startsWith("--no-");
+            ctx.unknown.push(current);
+            continue;
+        }
+        const isShort = current[1] !== "-";
+        const isLong = isShort ? false : current.length > 3 && current[2] !== "-";
+        if (!isShort && !isLong) {
+            throw new InvalidOptionError(current, opts.flags ?? []);
+        }
+        if (isShort && current.length > 2 && current[2] !== ".") {
+            args.splice(argsIndex, 1, ...splitFlags(current));
+            current = args[argsIndex];
+        } else if (isLong && current.startsWith("--no-")) {
+            negate = true;
+        }
+        const equalSignIndex = current.indexOf("=");
+        if (equalSignIndex !== -1) {
+            currentValue = current.slice(equalSignIndex + 1) || undefined;
+            current = current.slice(0, equalSignIndex);
+        }
+        if (opts.flags) {
             option = getOption(opts.flags, current);
             if (!option) {
-                if (opts.flags.length) {
-                    throw new UnknownOption(current, opts.flags);
+                const name = current.replace(/^-+/, "");
+                option = matchWildCardOptions(name, opts.flags);
+                if (!option) {
+                    if (opts.stopOnUnknown) {
+                        ctx.stopOnUnknown = true;
+                        ctx.unknown.push(args[argsIndex]);
+                        continue;
+                    }
+                    throw new UnknownOptionError(current, opts.flags);
                 }
-                option = {
-                    name: current.replace(/^-+/, ""),
-                    optionalValue: true,
-                    type: OptionType.STRING
-                };
             }
-            const positiveName = option.name.replace(/^no-?/, "");
-            const propName = paramCaseToCamelCase(positiveName);
-            if (typeof flags[propName] !== "undefined" && !option.collect) {
-                throw new DuplicateOption(current);
+        } else {
+            option = {
+                name: current.replace(/^-+/, ""),
+                optionalValue: true,
+                type: OptionType.STRING
+            };
+        }
+        if (option.standalone) {
+            ctx.standalone = option;
+        }
+        const positiveName = negate ? option.name.replace(/^no-?/, "") : option.name;
+        const propName = paramCaseToCamelCase(positiveName);
+        if (typeof ctx.flags[propName] !== "undefined") {
+            if (!opts.flags?.length) {
+                option.collect = true;
+            } else if (!option.collect) {
+                throw new DuplicateOptionError(current);
             }
-            args = option.args?.length ? option.args : [
+        }
+        if (option.type && !option.args?.length) {
+            option.args = [
                 {
                     type: option.type,
                     requiredValue: option.requiredValue,
@@ -5246,162 +6740,182 @@ function parseFlags(args, opts = {
                     separator: option.separator
                 }
             ];
-            let argIndex = 0;
-            let inOptionalArg = false;
-            const previous = flags[propName];
-            parseNext(option, args);
-            if (typeof flags[propName] === "undefined") {
-                if (typeof option.default !== "undefined") {
-                    flags[propName] = getDefaultValue(option);
-                } else if (args[argIndex].requiredValue) {
-                    throw new MissingOptionValue(option.name);
-                } else {
-                    flags[propName] = true;
+        }
+        if (opts.flags?.length && !option.args?.length && typeof currentValue !== "undefined") {
+            throw new UnexpectedOptionValueError(option.name, currentValue);
+        }
+        let optionArgsIndex = 0;
+        let inOptionalArg = false;
+        const next = ()=>currentValue ?? args[argsIndex + 1];
+        const previous = ctx.flags[propName];
+        parseNext(option);
+        if (typeof ctx.flags[propName] === "undefined") {
+            if (option.args?.[optionArgsIndex]?.requiredValue) {
+                throw new MissingOptionValueError(option.name);
+            } else if (typeof option.default !== "undefined") {
+                ctx.flags[propName] = getDefaultValue(option);
+            } else {
+                ctx.flags[propName] = true;
+            }
+        }
+        if (option.value) {
+            ctx.flags[propName] = option.value(ctx.flags[propName], previous);
+        } else if (option.collect) {
+            const value = typeof previous !== "undefined" ? Array.isArray(previous) ? previous : [
+                previous
+            ] : [];
+            value.push(ctx.flags[propName]);
+            ctx.flags[propName] = value;
+        }
+        optionsMap.set(propName, option);
+        opts.option?.(option, ctx.flags[propName]);
+        function parseNext(option) {
+            if (negate) {
+                ctx.flags[propName] = false;
+                return;
+            } else if (!option.args?.length) {
+                ctx.flags[propName] = undefined;
+                return;
+            }
+            const arg = option.args[optionArgsIndex];
+            if (!arg) {
+                const flag = next();
+                throw new UnknownOptionError(flag, opts.flags ?? []);
+            }
+            if (!arg.type) {
+                arg.type = OptionType.BOOLEAN;
+            }
+            if (option.args?.length && !option.type) {
+                if ((typeof arg.optionalValue === "undefined" || arg.optionalValue === false) && typeof arg.requiredValue === "undefined") {
+                    arg.requiredValue = true;
+                }
+            } else {
+                if (arg.type !== OptionType.BOOLEAN && (typeof arg.optionalValue === "undefined" || arg.optionalValue === false) && typeof arg.requiredValue === "undefined") {
+                    arg.requiredValue = true;
                 }
             }
-            if (option.value) {
-                flags[propName] = option.value(flags[propName], previous);
-            } else if (option.collect) {
-                const value = Array.isArray(previous) ? previous : [];
-                value.push(flags[propName]);
-                flags[propName] = value;
+            if (!arg.requiredValue) {
+                inOptionalArg = true;
+            } else if (inOptionalArg) {
+                throw new UnexpectedRequiredArgumentError(option.name);
             }
-            optionNames[propName] = option.name;
-            opts.option?.(option, flags[propName]);
-            function parseNext(option, args) {
-                const arg = args[argIndex];
-                if (!arg) {
-                    const flag = next();
-                    throw new UnknownOption(flag, opts.flags ?? []);
-                }
-                if (!arg.type) {
-                    arg.type = OptionType.BOOLEAN;
-                }
-                if (option.args?.length) {
-                    if ((typeof arg.optionalValue === "undefined" || arg.optionalValue === false) && typeof arg.requiredValue === "undefined") {
-                        arg.requiredValue = true;
+            let result;
+            let increase = false;
+            if (arg.list && hasNext(arg)) {
+                const parsed = next().split(arg.separator || ",").map((nextValue)=>{
+                    const value = parseValue(option, arg, nextValue);
+                    if (typeof value === "undefined") {
+                        throw new InvalidOptionValueError(option.name, arg.type ?? "?", nextValue);
                     }
-                } else {
-                    if (arg.type !== OptionType.BOOLEAN && (typeof arg.optionalValue === "undefined" || arg.optionalValue === false) && typeof arg.requiredValue === "undefined") {
-                        arg.requiredValue = true;
-                    }
+                    return value;
+                });
+                if (parsed?.length) {
+                    result = parsed;
+                }
+            } else {
+                if (hasNext(arg)) {
+                    result = parseValue(option, arg, next());
+                } else if (arg.optionalValue && arg.type === OptionType.BOOLEAN) {
+                    result = true;
+                }
+            }
+            if (increase && typeof currentValue === "undefined") {
+                argsIndex++;
+                if (!arg.variadic) {
+                    optionArgsIndex++;
+                } else if (option.args[optionArgsIndex + 1]) {
+                    throw new UnexpectedArgumentAfterVariadicArgumentError(next());
+                }
+            }
+            if (typeof result !== "undefined" && (option.args.length > 1 || arg.variadic)) {
+                if (!ctx.flags[propName]) {
+                    ctx.flags[propName] = [];
+                }
+                ctx.flags[propName].push(result);
+                if (hasNext(arg)) {
+                    parseNext(option);
+                }
+            } else {
+                ctx.flags[propName] = result;
+            }
+            function hasNext(arg) {
+                if (!option.args?.length) {
+                    return false;
+                }
+                const nextValue = currentValue ?? args[argsIndex + 1];
+                if (!nextValue) {
+                    return false;
+                }
+                if (option.args.length > 1 && optionArgsIndex >= option.args.length) {
+                    return false;
                 }
                 if (arg.requiredValue) {
-                    if (inOptionalArg) {
-                        throw new RequiredArgumentFollowsOptionalArgument(option.name);
-                    }
-                } else {
-                    inOptionalArg = true;
+                    return true;
                 }
-                if (negate) {
-                    flags[propName] = false;
-                    return;
+                if (option.equalsSign && arg.optionalValue && !arg.variadic && typeof currentValue === "undefined") {
+                    return false;
                 }
-                let result;
-                let increase = false;
-                if (arg.list && hasNext(arg)) {
-                    const parsed = next().split(arg.separator || ",").map((nextValue)=>{
-                        const value = parseValue(option, arg, nextValue);
-                        if (typeof value === "undefined") {
-                            throw new InvalidOptionValue(option.name, arg.type ?? "?", nextValue);
-                        }
-                        return value;
-                    });
-                    if (parsed?.length) {
-                        result = parsed;
-                    }
-                } else {
-                    if (hasNext(arg)) {
-                        result = parseValue(option, arg, next());
-                    } else if (arg.optionalValue && arg.type === OptionType.BOOLEAN) {
-                        result = true;
-                    }
+                if (arg.optionalValue || arg.variadic) {
+                    return nextValue[0] !== "-" || typeof currentValue !== "undefined" || arg.type === OptionType.NUMBER && !isNaN(Number(nextValue));
                 }
-                if (increase) {
-                    i++;
-                    if (!arg.variadic) {
-                        argIndex++;
-                    } else if (args[argIndex + 1]) {
-                        throw new ArgumentFollowsVariadicArgument(next());
-                    }
-                }
-                if (typeof result !== "undefined" && (args.length > 1 || arg.variadic)) {
-                    if (!flags[propName]) {
-                        flags[propName] = [];
-                    }
-                    flags[propName].push(result);
-                    if (hasNext(arg)) {
-                        parseNext(option, args);
-                    }
-                } else {
-                    flags[propName] = result;
-                }
-                function hasNext(arg) {
-                    return !!(normalized[i + 1] && (arg.optionalValue || arg.requiredValue || arg.variadic) && (normalized[i + 1][0] !== "-" || arg.type === OptionType.NUMBER && !isNaN(Number(normalized[i + 1]))) && arg);
-                }
-                function parseValue(option, arg, value) {
-                    const type = arg.type || OptionType.STRING;
-                    const result = opts.parse ? opts.parse({
-                        label: "Option",
-                        type,
-                        name: `--${option.name}`,
-                        value
-                    }) : parseFlagValue(option, arg, value);
-                    if (typeof result !== "undefined") {
-                        increase = true;
-                    }
-                    return result;
-                }
+                return false;
             }
-        } else {
-            if (opts.stopEarly) {
-                stopEarly = current;
-                break;
-            }
-            unknown.push(current);
-        }
-    }
-    if (stopEarly) {
-        const stopEarlyArgIndex = args.indexOf(stopEarly);
-        if (stopEarlyArgIndex !== -1) {
-            const doubleDashIndex = args.indexOf("--");
-            unknown = args.slice(stopEarlyArgIndex, doubleDashIndex === -1 ? undefined : doubleDashIndex);
-            if (doubleDashIndex !== -1) {
-                literal = args.slice(doubleDashIndex + 1);
+            function parseValue(option, arg, value) {
+                const result = opts.parse ? opts.parse({
+                    label: "Option",
+                    type: arg.type || OptionType.STRING,
+                    name: `--${option.name}`,
+                    value
+                }) : parseDefaultType(option, arg, value);
+                if (typeof result !== "undefined") {
+                    increase = true;
+                }
+                return result;
             }
         }
     }
-    if (opts.flags?.length) {
-        validateFlags(opts.flags, flags, opts.knownFlaks, opts.allowEmpty, optionNames);
-    }
-    const result = Object.keys(flags).reduce((result, key)=>{
+    return optionsMap;
+}
+function parseDottedOptions(ctx) {
+    ctx.flags = Object.keys(ctx.flags).reduce((result, key)=>{
         if (~key.indexOf(".")) {
             key.split(".").reduce((result, subKey, index, parts)=>{
                 if (index === parts.length - 1) {
-                    result[subKey] = flags[key];
+                    result[subKey] = ctx.flags[key];
                 } else {
-                    result[subKey] = result[subKey] ?? {
-                    };
+                    result[subKey] = result[subKey] ?? {};
                 }
                 return result[subKey];
             }, result);
         } else {
-            result[key] = flags[key];
+            result[key] = ctx.flags[key];
         }
         return result;
-    }, {
-    });
-    return {
-        flags: result,
-        unknown,
-        literal
-    };
+    }, {});
 }
-function parseFlagValue(option, arg, value) {
+function splitFlags(flag) {
+    flag = flag.slice(1);
+    const normalized = [];
+    const index = flag.indexOf("=");
+    const flags = (index !== -1 ? flag.slice(0, index) : flag).split("");
+    if (isNaN(Number(flag[flag.length - 1]))) {
+        flags.forEach((val)=>normalized.push(`-${val}`));
+    } else {
+        normalized.push(`-${flags.shift()}`);
+        if (flags.length) {
+            normalized.push(flags.join(""));
+        }
+    }
+    if (index !== -1) {
+        normalized[normalized.length - 1] += flag.slice(index);
+    }
+    return normalized;
+}
+function parseDefaultType(option, arg, value) {
     const type = arg.type || OptionType.STRING;
-    const parseType = Types[type];
+    const parseType = DefaultTypes[type];
     if (!parseType) {
-        throw new UnknownType(type, Object.keys(Types));
+        throw new UnknownTypeError(type, Object.keys(DefaultTypes));
     }
     return parseType({
         label: "Option",
@@ -5409,233 +6923,6 @@ function parseFlagValue(option, arg, value) {
         name: `--${option.name}`,
         value
     });
-}
-function getPermissions() {
-    return hasPermissions([
-        "env",
-        "hrtime",
-        "net",
-        "plugin",
-        "read",
-        "run",
-        "write", 
-    ]);
-}
-function isUnstable() {
-    return !!Deno.permissions;
-}
-function didYouMeanCommand(command, commands, excludes = []) {
-    const commandNames = commands.map((command)=>command.getName()
-    ).filter((command)=>!excludes.includes(command)
-    );
-    return didYouMean(" Did you mean command", command, commandNames);
-}
-async function hasPermission(permission) {
-    try {
-        return (await Deno.permissions?.query?.({
-            name: permission
-        }))?.state === "granted";
-    } catch  {
-        return false;
-    }
-}
-async function hasPermissions(names) {
-    const permissions = {
-    };
-    await Promise.all(names.map((name)=>hasPermission(name).then((hasPermission)=>permissions[name] = hasPermission
-        )
-    ));
-    return permissions;
-}
-const ARGUMENT_REGEX = /^[<\[].+[\]>]$/;
-const ARGUMENT_DETAILS_REGEX = /[<\[:>\]]/;
-function splitArguments(args) {
-    const parts = args.trim().split(/[, =] */g);
-    const typeParts = [];
-    while(parts[parts.length - 1] && ARGUMENT_REGEX.test(parts[parts.length - 1])){
-        typeParts.unshift(parts.pop());
-    }
-    const typeDefinition = typeParts.join(" ");
-    return {
-        flags: parts,
-        typeDefinition
-    };
-}
-function parseArgumentsDefinition(argsDefinition) {
-    const argumentDetails = [];
-    let hasOptional = false;
-    let hasVariadic = false;
-    const parts = argsDefinition.split(/ +/);
-    for (const arg of parts){
-        if (hasVariadic) {
-            throw new ArgumentFollowsVariadicArgument(arg);
-        }
-        const parts = arg.split(ARGUMENT_DETAILS_REGEX);
-        const type = parts[2] || OptionType.STRING;
-        const details = {
-            optionalValue: arg[0] !== "<",
-            name: parts[1],
-            action: parts[3] || type,
-            variadic: false,
-            list: type ? arg.indexOf(type + "[]") !== -1 : false,
-            type
-        };
-        if (!details.optionalValue && hasOptional) {
-            throw new RequiredArgumentFollowsOptionalArgument(details.name);
-        }
-        if (arg[0] === "[") {
-            hasOptional = true;
-        }
-        if (details.name.length > 3) {
-            const istVariadicLeft = details.name.slice(0, 3) === "...";
-            const istVariadicRight = details.name.slice(-3) === "...";
-            hasVariadic = details.variadic = istVariadicLeft || istVariadicRight;
-            if (istVariadicLeft) {
-                details.name = details.name.slice(3);
-            } else if (istVariadicRight) {
-                details.name = details.name.slice(0, -3);
-            }
-        }
-        if (details.name) {
-            argumentDetails.push(details);
-        }
-    }
-    return argumentDetails;
-}
-class CommandError extends Error {
-    constructor(message){
-        super(message);
-        Object.setPrototypeOf(this, CommandError.prototype);
-    }
-}
-class ValidationError1 extends CommandError {
-    exitCode;
-    constructor(message, { exitCode  } = {
-    }){
-        super(message);
-        Object.setPrototypeOf(this, ValidationError1.prototype);
-        this.exitCode = exitCode ?? 1;
-    }
-}
-class DuplicateOptionName extends CommandError {
-    constructor(name){
-        super(`Option with name "${getFlag(name)}" already exists.`);
-        Object.setPrototypeOf(this, DuplicateOptionName.prototype);
-    }
-}
-class MissingCommandName extends CommandError {
-    constructor(){
-        super("Missing command name.");
-        Object.setPrototypeOf(this, MissingCommandName.prototype);
-    }
-}
-class DuplicateCommandName extends CommandError {
-    constructor(name){
-        super(`Duplicate command name "${name}".`);
-        Object.setPrototypeOf(this, DuplicateCommandName.prototype);
-    }
-}
-class DuplicateCommandAlias extends CommandError {
-    constructor(alias){
-        super(`Duplicate command alias "${alias}".`);
-        Object.setPrototypeOf(this, DuplicateCommandAlias.prototype);
-    }
-}
-class CommandNotFound extends CommandError {
-    constructor(name, commands, excluded){
-        super(`Unknown command "${name}".${didYouMeanCommand(name, commands, excluded)}`);
-        Object.setPrototypeOf(this, UnknownCommand.prototype);
-    }
-}
-class DuplicateType extends CommandError {
-    constructor(name){
-        super(`Type with name "${name}" already exists.`);
-        Object.setPrototypeOf(this, DuplicateType.prototype);
-    }
-}
-class DuplicateCompletion extends CommandError {
-    constructor(name){
-        super(`Completion with name "${name}" already exists.`);
-        Object.setPrototypeOf(this, DuplicateCompletion.prototype);
-    }
-}
-class DuplicateExample extends CommandError {
-    constructor(name){
-        super(`Example with name "${name}" already exists.`);
-        Object.setPrototypeOf(this, DuplicateExample.prototype);
-    }
-}
-class DuplicateEnvironmentVariable extends CommandError {
-    constructor(name){
-        super(`Environment variable with name "${name}" already exists.`);
-        Object.setPrototypeOf(this, DuplicateEnvironmentVariable.prototype);
-    }
-}
-class EnvironmentVariableSingleValue extends CommandError {
-    constructor(name){
-        super(`An environment variable can only have one value, but "${name}" has more than one.`);
-        Object.setPrototypeOf(this, EnvironmentVariableSingleValue.prototype);
-    }
-}
-class EnvironmentVariableOptionalValue extends CommandError {
-    constructor(name){
-        super(`An environment variable cannot have an optional value, but "${name}" is defined as optional.`);
-        Object.setPrototypeOf(this, EnvironmentVariableOptionalValue.prototype);
-    }
-}
-class EnvironmentVariableVariadicValue extends CommandError {
-    constructor(name){
-        super(`An environment variable cannot have an variadic value, but "${name}" is defined as variadic.`);
-        Object.setPrototypeOf(this, EnvironmentVariableVariadicValue.prototype);
-    }
-}
-class DefaultCommandNotFound extends CommandError {
-    constructor(name, commands){
-        super(`Default command "${name}" not found.${didYouMeanCommand(name, commands)}`);
-        Object.setPrototypeOf(this, DefaultCommandNotFound.prototype);
-    }
-}
-class CommandExecutableNotFound extends CommandError {
-    constructor(name, files){
-        super(`Command executable not found: ${name}:\n    - ${files.join("\\n    - ")}`);
-        Object.setPrototypeOf(this, CommandExecutableNotFound.prototype);
-    }
-}
-class UnknownCompletionCommand extends CommandError {
-    constructor(name, commands){
-        super(`Auto-completion failed. Unknown command "${name}".${didYouMeanCommand(name, commands)}`);
-        Object.setPrototypeOf(this, UnknownCompletionCommand.prototype);
-    }
-}
-class UnknownCommand extends ValidationError1 {
-    constructor(name, commands, excluded){
-        super(`Unknown command "${name}".${didYouMeanCommand(name, commands, excluded)}`);
-        Object.setPrototypeOf(this, UnknownCommand.prototype);
-    }
-}
-class NoArgumentsAllowed extends ValidationError1 {
-    constructor(name){
-        super(`No arguments allowed for command "${name}".`);
-        Object.setPrototypeOf(this, NoArgumentsAllowed.prototype);
-    }
-}
-class MissingArguments extends ValidationError1 {
-    constructor(args){
-        super("Missing argument(s): " + args.join(", "));
-        Object.setPrototypeOf(this, MissingArguments.prototype);
-    }
-}
-class MissingArgument extends ValidationError1 {
-    constructor(arg){
-        super(`Missing argument "${arg}".`);
-        Object.setPrototypeOf(this, MissingArgument.prototype);
-    }
-}
-class TooManyArguments extends ValidationError1 {
-    constructor(args){
-        super(`Too many arguments: ${args.join(" ")}`);
-        Object.setPrototypeOf(this, TooManyArguments.prototype);
-    }
 }
 class Type {
 }
@@ -5650,14 +6937,19 @@ class BooleanType extends Type {
         ];
     }
 }
-class NumberType extends Type {
-    parse(type) {
-        return number(type);
-    }
-}
 class StringType extends Type {
     parse(type) {
         return string(type);
+    }
+}
+class FileType extends StringType {
+    constructor(){
+        super();
+    }
+}
+class NumberType extends Type {
+    parse(type) {
+        return number(type);
     }
 }
 const border = {
@@ -5678,9 +6970,7 @@ const border = {
     middle: "│"
 };
 class Cell {
-    value;
-    options = {
-    };
+    options;
     get length() {
         return this.toString().length;
     }
@@ -5695,6 +6985,7 @@ class Cell {
     }
     constructor(value){
         this.value = value;
+        this.options = {};
     }
     toString() {
         return this.value.toString();
@@ -5746,10 +7037,10 @@ class Cell {
     getAlign() {
         return this.options.align ?? "left";
     }
+    value;
 }
 class Row extends Array {
-    options = {
-    };
+    options = {};
     static from(cells) {
         const row = new this(...cells);
         if (cells instanceof Row) {
@@ -5760,8 +7051,7 @@ class Row extends Array {
         return row;
     }
     clone() {
-        const row = new Row(...this.map((cell)=>cell instanceof Cell ? cell.clone() : cell
-        ));
+        const row = new Row(...this.map((cell)=>cell instanceof Cell ? cell.clone() : cell));
         row.options = {
             ...this.options
         };
@@ -5783,8 +7073,7 @@ class Row extends Array {
         return this.options.border === true;
     }
     hasBorder() {
-        return this.getBorder() || this.some((cell)=>cell instanceof Cell && cell.getBorder()
-        );
+        return this.getBorder() || this.some((cell)=>cell instanceof Cell && cell.getBorder());
     }
     getAlign() {
         return this.options.align ?? "left";
@@ -5792,37 +7081,45 @@ class Row extends Array {
 }
 function consumeWords(length, content) {
     let consumed = "";
-    const words = content.split(/ /g);
+    const words = content.split("\n")[0]?.split(/ /g);
     for(let i = 0; i < words.length; i++){
-        let word = words[i];
-        const hasLineBreak = word.indexOf("\n") !== -1;
-        if (hasLineBreak) {
-            word = word.split("\n").shift();
-        }
+        const word = words[i];
         if (consumed) {
-            const nextLength = stripColor(word).length;
-            const consumedLength = stripColor(consumed).length;
+            const nextLength = strLength(word);
+            const consumedLength = strLength(consumed);
             if (consumedLength + nextLength >= length) {
                 break;
             }
         }
         consumed += (i > 0 ? " " : "") + word;
-        if (hasLineBreak) {
-            break;
-        }
     }
     return consumed;
 }
 function longest(index, rows, maxWidth) {
-    return Math.max(...rows.map((row)=>(row[index] instanceof Cell && row[index].getColSpan() > 1 ? "" : row[index]?.toString() || "").split("\n").map((r)=>{
-            const str = typeof maxWidth === "undefined" ? r : consumeWords(maxWidth, r);
-            return stripColor(str).length || 0;
-        })
-    ).flat());
+    const cellLengths = rows.map((row)=>{
+        const cell = row[index];
+        const cellValue = cell instanceof Cell && cell.getColSpan() > 1 ? "" : cell?.toString() || "";
+        return cellValue.split("\n").map((line)=>{
+            const str = typeof maxWidth === "undefined" ? line : consumeWords(maxWidth, line);
+            return strLength(str) || 0;
+        });
+    }).flat();
+    return Math.max(...cellLengths);
 }
+const strLength = (str)=>{
+    str = stripColor(str);
+    let length = 0;
+    for(let i = 0; i < str.length; i++){
+        const charCode = str.charCodeAt(i);
+        if (charCode >= 19968 && charCode <= 40869) {
+            length += 2;
+        } else {
+            length += 1;
+        }
+    }
+    return length;
+};
 class TableLayout {
-    table;
-    options;
     constructor(table, options){
         this.table = table;
         this.options = options;
@@ -5840,13 +7137,8 @@ class TableLayout {
         const hasBodyBorder = this.table.getBorder() || this.table.hasBodyBorder();
         const hasHeaderBorder = this.table.hasHeaderBorder();
         const hasBorder = hasHeaderBorder || hasBodyBorder;
-        const header = this.table.getHeader();
-        const rows = this.spanRows(header ? [
-            header,
-            ...this.table
-        ] : this.table.slice());
-        const columns = Math.max(...rows.map((row)=>row.length
-        ));
+        const rows = this.#getRows();
+        const columns = Math.max(...rows.map((row)=>row.length));
         for (const row of rows){
             const length = row.length;
             if (length < columns) {
@@ -5875,32 +7167,60 @@ class TableLayout {
             hasHeaderBorder
         };
     }
-    spanRows(_rows, rowIndex = 0, colIndex = 0, rowSpan = [], colSpan = 1) {
-        const rows = _rows;
-        if (rowIndex >= rows.length && rowSpan.every((span)=>span === 1
-        )) {
-            return rows;
-        } else if (rows[rowIndex] && colIndex >= rows[rowIndex].length && colIndex >= rowSpan.length && colSpan === 1) {
-            return this.spanRows(rows, ++rowIndex, 0, rowSpan, 1);
+    #getRows() {
+        const header = this.table.getHeader();
+        const rows = header ? [
+            header,
+            ...this.table
+        ] : this.table.slice();
+        const hasSpan = rows.some((row)=>row.some((cell)=>cell instanceof Cell && (cell.getColSpan() > 1 || cell.getRowSpan() > 1)));
+        if (hasSpan) {
+            return this.spanRows(rows);
         }
-        if (colSpan > 1) {
-            colSpan--;
-            rowSpan[colIndex] = rowSpan[colIndex - 1];
-            rows[rowIndex].splice(colIndex - 1, 0, rows[rowIndex][colIndex - 1]);
-            return this.spanRows(rows, rowIndex, ++colIndex, rowSpan, colSpan);
+        return rows.map((row)=>{
+            const newRow = this.createRow(row);
+            for(let i = 0; i < row.length; i++){
+                newRow[i] = this.createCell(row[i], newRow);
+            }
+            return newRow;
+        });
+    }
+    spanRows(rows) {
+        const rowSpan = [];
+        let colSpan = 1;
+        let rowIndex = -1;
+        while(true){
+            rowIndex++;
+            if (rowIndex === rows.length && rowSpan.every((span)=>span === 1)) {
+                break;
+            }
+            const row = rows[rowIndex] = this.createRow(rows[rowIndex] || []);
+            let colIndex = -1;
+            while(true){
+                colIndex++;
+                if (colIndex === row.length && colIndex === rowSpan.length && colSpan === 1) {
+                    break;
+                }
+                if (colSpan > 1) {
+                    colSpan--;
+                    rowSpan[colIndex] = rowSpan[colIndex - 1];
+                    row.splice(colIndex, this.getDeleteCount(rows, rowIndex, colIndex), row[colIndex - 1]);
+                    continue;
+                }
+                if (rowSpan[colIndex] > 1) {
+                    rowSpan[colIndex]--;
+                    rows[rowIndex].splice(colIndex, this.getDeleteCount(rows, rowIndex, colIndex), rows[rowIndex - 1][colIndex]);
+                    continue;
+                }
+                const cell = row[colIndex] = this.createCell(row[colIndex] || null, row);
+                colSpan = cell.getColSpan();
+                rowSpan[colIndex] = cell.getRowSpan();
+            }
         }
-        if (colIndex === 0) {
-            rows[rowIndex] = this.createRow(rows[rowIndex] || []);
-        }
-        if (rowSpan[colIndex] > 1) {
-            rowSpan[colIndex]--;
-            rows[rowIndex].splice(colIndex, 0, rows[rowIndex - 1][colIndex]);
-            return this.spanRows(rows, rowIndex, ++colIndex, rowSpan, colSpan);
-        }
-        rows[rowIndex][colIndex] = this.createCell(rows[rowIndex][colIndex] || null, rows[rowIndex]);
-        colSpan = rows[rowIndex][colIndex].getColSpan();
-        rowSpan[colIndex] = rows[rowIndex][colIndex].getRowSpan();
-        return this.spanRows(rows, rowIndex, ++colIndex, rowSpan, colSpan);
+        return rows;
+    }
+    getDeleteCount(rows, rowIndex, colIndex) {
+        return colIndex <= rows[rowIndex].length - 1 && typeof rows[rowIndex][colIndex] === "undefined" ? 1 : 0;
     }
     createRow(row) {
         return Row.from(row).border(this.table.getBorder(), false).align(this.table.getAlign(), false);
@@ -6006,14 +7326,14 @@ class TableLayout {
         return result;
     }
     renderCellValue(cell, maxLength) {
-        const length = Math.min(maxLength, stripColor(cell.toString()).length);
+        const length = Math.min(maxLength, strLength(cell.toString()));
         let words = consumeWords(length, cell.toString());
-        const breakWord = stripColor(words).length > length;
+        const breakWord = strLength(words) > length;
         if (breakWord) {
             words = words.slice(0, length);
         }
         const next = cell.toString().slice(words.length + (breakWord ? 0 : 1));
-        const fillLength = maxLength - stripColor(words).length;
+        const fillLength = maxLength - strLength(words);
         const align = cell.getAlign();
         let current;
         if (fillLength === 0) {
@@ -6059,10 +7379,8 @@ class TableLayout {
         const a2Border = !!a2?.getBorder();
         const b1Border = !!b1?.getBorder();
         const b2Border = !!b2?.getBorder();
-        const hasColSpan = (cell)=>(cell?.getColSpan() ?? 1) > 1
-        ;
-        const hasRowSpan = (cell)=>(cell?.getRowSpan() ?? 1) > 1
-        ;
+        const hasColSpan = (cell)=>(cell?.getColSpan() ?? 1) > 1;
+        const hasRowSpan = (cell)=>(cell?.getRowSpan() ?? 1) > 1;
         let result = "";
         if (colIndex === 0) {
             if (rowSpan[colIndex] > 1) {
@@ -6177,6 +7495,8 @@ class TableLayout {
         }
         return result;
     }
+    table;
+    options;
 }
 class Table extends Array {
     static _chars = {
@@ -6215,8 +7535,7 @@ class Table extends Array {
     }
     fromJson(rows) {
         this.header(Object.keys(rows[0]));
-        this.body(rows.map((row)=>Object.values(row)
-        ));
+        this.body(rows.map((row)=>Object.values(row)));
         return this;
     }
     header(header) {
@@ -6229,8 +7548,7 @@ class Table extends Array {
         return this;
     }
     clone() {
-        const table = new Table(...this.map((row)=>row instanceof Row ? row.clone() : Row.from(row).clone()
-        ));
+        const table = new Table(...this.map((row)=>row instanceof Row ? row.clone() : Row.from(row).clone()));
         table.options = {
             ...this.options
         };
@@ -6241,7 +7559,7 @@ class Table extends Array {
         return new TableLayout(this, this.options).toString();
     }
     render() {
-        Deno.stdout.writeSync(new TextEncoder().encode(this.toString() + "\n"));
+        console.log(this.toString());
         return this;
     }
     maxColWidth(width, override = true) {
@@ -6312,9 +7630,7 @@ class Table extends Array {
         return hasBorder === true || this.getBorder() && hasBorder !== false;
     }
     hasBodyBorder() {
-        return this.getBorder() || this.some((row)=>row instanceof Row ? row.hasBorder() : row.some((cell)=>cell instanceof Cell ? cell.getBorder : false
-            )
-        );
+        return this.getBorder() || this.some((row)=>row instanceof Row ? row.hasBorder() : row.some((cell)=>cell instanceof Cell ? cell.getBorder : false));
     }
     hasBorder() {
         return this.hasHeaderBorder() || this.hasBodyBorder();
@@ -6324,35 +7640,36 @@ class Table extends Array {
     }
 }
 class HelpGenerator {
-    cmd;
-    indent = 2;
+    indent;
     options;
     static generate(cmd, options) {
         return new HelpGenerator(cmd, options).generate();
     }
-    constructor(cmd, options = {
-    }){
+    constructor(cmd, options = {}){
         this.cmd = cmd;
+        this.indent = 2;
         this.options = {
             types: false,
             hints: true,
             colors: true,
+            long: false,
             ...options
         };
     }
     generate() {
         const areColorsEnabled = getColorEnabled();
         setColorEnabled(this.options.colors);
-        const result = this.generateHeader() + this.generateDescription() + this.generateOptions() + this.generateCommands() + this.generateEnvironmentVariables() + this.generateExamples() + "\n";
+        const result = this.generateHeader() + this.generateMeta() + this.generateDescription() + this.generateOptions() + this.generateCommands() + this.generateEnvironmentVariables() + this.generateExamples();
         setColorEnabled(areColorsEnabled);
         return result;
     }
     generateHeader() {
+        const usage = this.cmd.getUsage();
         const rows = [
             [
                 bold("Usage:"),
-                magenta(`${this.cmd.getPath()}${this.cmd.getArgsDefinition() ? " " + this.cmd.getArgsDefinition() : ""}`), 
-            ], 
+                magenta(this.cmd.getPath() + (usage ? " " + highlightArguments(usage, this.options.types) : ""))
+            ]
         ];
         const version = this.cmd.getVersion();
         if (version) {
@@ -6363,14 +7680,27 @@ class HelpGenerator {
         }
         return "\n" + Table.from(rows).indent(this.indent).padding(1).toString() + "\n";
     }
+    generateMeta() {
+        const meta = Object.entries(this.cmd.getMeta());
+        if (!meta.length) {
+            return "";
+        }
+        const rows = [];
+        for (const [name, value] of meta){
+            rows.push([
+                bold(`${name}: `) + value
+            ]);
+        }
+        return "\n" + Table.from(rows).indent(this.indent).padding(1).toString() + "\n";
+    }
     generateDescription() {
         if (!this.cmd.getDescription()) {
             return "";
         }
         return this.label("Description") + Table.from([
             [
-                this.cmd.getDescription()
-            ], 
+                dedent(this.cmd.getDescription())
+            ]
         ]).indent(this.indent * 2).maxColWidth(140).padding(1).toString() + "\n";
     }
     generateOptions() {
@@ -6378,44 +7708,77 @@ class HelpGenerator {
         if (!options.length) {
             return "";
         }
-        const hasTypeDefinitions = !!options.find((option)=>!!option.typeDefinition
-        );
+        let groups = [];
+        const hasGroups = options.some((option)=>option.groupName);
+        if (hasGroups) {
+            for (const option of options){
+                let group = groups.find((group)=>group.name === option.groupName);
+                if (!group) {
+                    group = {
+                        name: option.groupName,
+                        options: []
+                    };
+                    groups.push(group);
+                }
+                group.options.push(option);
+            }
+        } else {
+            groups = [
+                {
+                    name: "Options",
+                    options
+                }
+            ];
+        }
+        let result = "";
+        for (const group1 of groups){
+            result += this.generateOptionGroup(group1);
+        }
+        return result;
+    }
+    generateOptionGroup(group) {
+        if (!group.options.length) {
+            return "";
+        }
+        const hasTypeDefinitions = !!group.options.find((option)=>!!option.typeDefinition);
         if (hasTypeDefinitions) {
-            return this.label("Options") + Table.from([
-                ...options.map((option)=>[
-                        option.flags.map((flag)=>blue(flag)
-                        ).join(", "),
+            return this.label(group.name ?? "Options") + Table.from([
+                ...group.options.map((option)=>[
+                        option.flags.map((flag)=>blue(flag)).join(", "),
                         highlightArguments(option.typeDefinition || "", this.options.types),
-                        red(bold("-")) + " " + option.description.split("\n").shift(),
-                        this.generateHints(option), 
-                    ]
-                ), 
+                        red(bold("-")),
+                        getDescription(option.description, !this.options.long),
+                        this.generateHints(option)
+                    ])
             ]).padding([
                 2,
                 2,
+                1,
                 2
             ]).indent(this.indent * 2).maxColWidth([
                 60,
                 60,
+                1,
                 80,
                 60
             ]).toString() + "\n";
         }
-        return this.label("Options") + Table.from([
-            ...options.map((option)=>[
-                    option.flags.map((flag)=>blue(flag)
-                    ).join(", "),
-                    red(bold("-")) + " " + option.description.split("\n").shift(),
-                    this.generateHints(option), 
-                ]
-            ), 
-        ]).padding([
-            2,
-            2
+        return this.label(group.name ?? "Options") + Table.from([
+            ...group.options.map((option)=>[
+                    option.flags.map((flag)=>blue(flag)).join(", "),
+                    red(bold("-")),
+                    getDescription(option.description, !this.options.long),
+                    this.generateHints(option)
+                ])
         ]).indent(this.indent * 2).maxColWidth([
             60,
+            1,
             80,
             60
+        ]).padding([
+            2,
+            1,
+            2
         ]).toString() + "\n";
     }
     generateCommands() {
@@ -6423,38 +7786,46 @@ class HelpGenerator {
         if (!commands.length) {
             return "";
         }
-        const hasTypeDefinitions = !!commands.find((command)=>!!command.getArgsDefinition()
-        );
+        const hasTypeDefinitions = !!commands.find((command)=>!!command.getArgsDefinition());
         if (hasTypeDefinitions) {
             return this.label("Commands") + Table.from([
                 ...commands.map((command)=>[
                         [
                             command.getName(),
                             ...command.getAliases()
-                        ].map((name)=>blue(name)
-                        ).join(", "),
+                        ].map((name)=>blue(name)).join(", "),
                         highlightArguments(command.getArgsDefinition() || "", this.options.types),
-                        red(bold("-")) + " " + command.getDescription().split("\n").shift(), 
-                    ]
-                ), 
+                        red(bold("-")),
+                        command.getShortDescription()
+                    ])
+            ]).indent(this.indent * 2).maxColWidth([
+                60,
+                60,
+                1,
+                80
             ]).padding([
                 2,
                 2,
+                1,
                 2
-            ]).indent(this.indent * 2).toString() + "\n";
+            ]).toString() + "\n";
         }
         return this.label("Commands") + Table.from([
             ...commands.map((command)=>[
                     [
                         command.getName(),
                         ...command.getAliases()
-                    ].map((name)=>blue(name)
-                    ).join(", "),
-                    red(bold("-")) + " " + command.getDescription().split("\n").shift(), 
-                ]
-            ), 
+                    ].map((name)=>blue(name)).join(", "),
+                    red(bold("-")),
+                    command.getShortDescription()
+                ])
+        ]).maxColWidth([
+            60,
+            1,
+            80
         ]).padding([
             2,
+            1,
             2
         ]).indent(this.indent * 2).toString() + "\n";
     }
@@ -6465,13 +7836,24 @@ class HelpGenerator {
         }
         return this.label("Environment variables") + Table.from([
             ...envVars.map((envVar)=>[
-                    envVar.names.map((name)=>blue(name)
-                    ).join(", "),
+                    envVar.names.map((name)=>blue(name)).join(", "),
                     highlightArgumentDetails(envVar.details, this.options.types),
-                    `${red(bold("-"))} ${envVar.description}`, 
-                ]
-            ), 
-        ]).padding(2).indent(this.indent * 2).toString() + "\n";
+                    red(bold("-")),
+                    this.options.long ? dedent(envVar.description) : envVar.description.trim().split("\n", 1)[0],
+                    envVar.required ? `(${yellow(`required`)})` : ""
+                ])
+        ]).padding([
+            2,
+            2,
+            1,
+            2
+        ]).indent(this.indent * 2).maxColWidth([
+            60,
+            60,
+            1,
+            80,
+            10
+        ]).toString() + "\n";
     }
     generateExamples() {
         const examples = this.cmd.getExamples();
@@ -6480,9 +7862,8 @@ class HelpGenerator {
         }
         return this.label("Examples") + Table.from(examples.map((example)=>[
                 dim(bold(`${capitalize(example.name)}:`)),
-                example.description, 
-            ]
-        )).padding(1).indent(this.indent * 2).maxColWidth(150).toString() + "\n";
+                dedent(example.description)
+            ])).padding(1).indent(this.indent * 2).maxColWidth(150).toString() + "\n";
     }
     generateHints(option) {
         if (!this.options.hints) {
@@ -6497,8 +7878,7 @@ class HelpGenerator {
         if (type instanceof Type) {
             const possibleValues = type.values?.(this.cmd, this.cmd.getParent());
             if (possibleValues?.length) {
-                hints.push(bold(`Values: `) + possibleValues.map((value)=>inspect(value, this.options.colors)
-                ).join(", "));
+                hints.push(bold(`Values: `) + possibleValues.map((value)=>inspect(value, this.options.colors)).join(", "));
             }
         }
         if (hints.length) {
@@ -6509,6 +7889,7 @@ class HelpGenerator {
     label(label) {
         return "\n" + " ".repeat(this.indent) + bold(`${label}:`) + "\n\n";
     }
+    cmd;
 }
 function capitalize(string) {
     return (string?.charAt(0).toUpperCase() + string.slice(1)) ?? "";
@@ -6524,8 +7905,7 @@ function highlightArguments(argsDefinition, types = true) {
     if (!argsDefinition) {
         return "";
     }
-    return parseArgumentsDefinition(argsDefinition).map((arg)=>highlightArgumentDetails(arg, types)
-    ).join(" ");
+    return parseArgumentsDefinition(argsDefinition, false, true).map((arg)=>typeof arg === "string" ? arg : highlightArgumentDetails(arg, types)).join(" ");
 }
 function highlightArgumentDetails(arg, types = true) {
     let str = "";
@@ -6540,9 +7920,9 @@ function highlightArgumentDetails(arg, types = true) {
     if (types) {
         str += yellow(":");
         str += red(arg.type);
-    }
-    if (arg.list) {
-        str += green("[]");
+        if (arg.list) {
+            str += green("[]");
+        }
     }
     str += yellow(arg.optionalValue ? "]" : ">");
     return str;
@@ -6561,6 +7941,7 @@ class Command {
     _globalParent;
     ver;
     desc = "";
+    _usage;
     fn;
     options = [];
     commands = new Map();
@@ -6572,7 +7953,7 @@ class Command {
     argsDefinition;
     isExecutable = false;
     throwOnError = false;
-    _allowEmpty = true;
+    _allowEmpty = false;
     _stopEarly = false;
     defaultCommand;
     _useRawArgs = false;
@@ -6580,11 +7961,17 @@ class Command {
     isHidden = false;
     isGlobal = false;
     hasDefaults = false;
+    _versionOptions;
+    _helpOptions;
     _versionOption;
     _helpOption;
     _help;
+    _shouldExit;
+    _meta = {};
+    _groupName;
+    _noGlobals = false;
     versionOption(flags, desc, opts) {
-        this._versionOption = flags === false ? flags : {
+        this._versionOptions = flags === false ? flags : {
             flags,
             desc,
             opts: typeof opts === "function" ? {
@@ -6594,7 +7981,7 @@ class Command {
         return this;
     }
     helpOption(flags, desc, opts) {
-        this._helpOption = flags === false ? flags : {
+        this._helpOptions = flags === false ? flags : {
             flags,
             desc,
             opts: typeof opts === "function" ? {
@@ -6604,15 +7991,16 @@ class Command {
         return this;
     }
     command(nameAndArguments, cmdOrDescription, override) {
+        this.reset();
         const result = splitArguments(nameAndArguments);
         const name = result.flags.shift();
         const aliases = result.flags;
         if (!name) {
-            throw new MissingCommandName();
+            throw new MissingCommandNameError();
         }
         if (this.getBaseCommand(name, true)) {
             if (!override) {
-                throw new DuplicateCommandName(name);
+                throw new DuplicateCommandNameError(name);
             }
             this.removeCommand(name);
         }
@@ -6634,27 +8022,27 @@ class Command {
         if (result.typeDefinition) {
             cmd.arguments(result.typeDefinition);
         }
-        aliases.forEach((alias)=>cmd.alias(alias)
-        );
+        aliases.forEach((alias)=>cmd.alias(alias));
         this.commands.set(name, cmd);
         this.select(name);
         return this;
     }
     alias(alias) {
         if (this.cmd._name === alias || this.cmd.aliases.includes(alias)) {
-            throw new DuplicateCommandAlias(alias);
+            throw new DuplicateCommandAliasError(alias);
         }
         this.cmd.aliases.push(alias);
         return this;
     }
     reset() {
+        this._groupName = undefined;
         this.cmd = this;
         return this;
     }
     select(name) {
         const cmd = this.getBaseCommand(name, true);
         if (!cmd) {
-            throw new CommandNotFound(name, this.getBaseCommands(true));
+            throw new CommandNotFoundError(name, this.getBaseCommands(true));
         }
         this.cmd = cmd;
         return this;
@@ -6665,27 +8053,38 @@ class Command {
     }
     version(version) {
         if (typeof version === "string") {
-            this.cmd.ver = ()=>version
-            ;
+            this.cmd.ver = ()=>version;
         } else if (typeof version === "function") {
             this.cmd.ver = version;
         }
         return this;
     }
+    meta(name, value) {
+        this.cmd._meta[name] = value;
+        return this;
+    }
+    getMeta(name) {
+        return typeof name === "undefined" ? this._meta : this._meta[name];
+    }
     help(help) {
         if (typeof help === "string") {
-            this.cmd._help = ()=>help
-            ;
+            this.cmd._help = ()=>help;
         } else if (typeof help === "function") {
             this.cmd._help = help;
         } else {
-            this.cmd._help = (cmd)=>HelpGenerator.generate(cmd, help)
-            ;
+            this.cmd._help = (cmd, options)=>HelpGenerator.generate(cmd, {
+                    ...help,
+                    ...options
+                });
         }
         return this;
     }
     description(description) {
         this.cmd.desc = description;
+        return this;
+    }
+    usage(usage) {
+        this.cmd._usage = usage;
         return this;
     }
     hidden() {
@@ -6708,8 +8107,8 @@ class Command {
         this.cmd.fn = fn;
         return this;
     }
-    allowEmpty(allowEmpty = true) {
-        this.cmd._allowEmpty = allowEmpty;
+    allowEmpty(allowEmpty) {
+        this.cmd._allowEmpty = allowEmpty !== false;
         return this;
     }
     stopEarly(stopEarly = true) {
@@ -6724,24 +8123,23 @@ class Command {
         this.cmd.defaultCommand = name;
         return this;
     }
-    globalType(name, type, options) {
-        return this.type(name, type, {
+    globalType(name, handler, options) {
+        return this.type(name, handler, {
             ...options,
             global: true
         });
     }
     type(name, handler, options) {
         if (this.cmd.types.get(name) && !options?.override) {
-            throw new DuplicateType(name);
+            throw new DuplicateTypeError(name);
         }
         this.cmd.types.set(name, {
             ...options,
             name,
-            handler
+            handler: handler
         });
         if (handler instanceof Type && (typeof handler.complete !== "undefined" || typeof handler.values !== "undefined")) {
-            const completeHandler = (cmd, parent)=>handler.complete?.(cmd, parent) || []
-            ;
+            const completeHandler = (cmd, parent)=>handler.complete?.(cmd, parent) || [];
             this.complete(name, completeHandler, options);
         }
         return this;
@@ -6754,7 +8152,7 @@ class Command {
     }
     complete(name, complete, options) {
         if (this.cmd.completions.has(name) && !options?.override) {
-            throw new DuplicateCompletion(name);
+            throw new DuplicateCompletionError(name);
         }
         this.cmd.completions.set(name, {
             name,
@@ -6767,8 +8165,20 @@ class Command {
         this.cmd.throwOnError = true;
         return this;
     }
+    noExit() {
+        this.cmd._shouldExit = false;
+        this.throwErrors();
+        return this;
+    }
+    noGlobals() {
+        this.cmd._noGlobals = true;
+        return this;
+    }
     shouldThrowErrors() {
-        return this.cmd.throwOnError || !!this.cmd._parent?.shouldThrowErrors();
+        return this.throwOnError || !!this._parent?.shouldThrowErrors();
+    }
+    shouldExit() {
+        return this._shouldExit ?? this._parent?.shouldExit() ?? true;
     }
     globalOption(flags, desc, opts) {
         if (typeof opts === "function") {
@@ -6781,6 +8191,10 @@ class Command {
             ...opts,
             global: true
         });
+    }
+    group(name) {
+        this.cmd._groupName = name;
+        return this;
     }
     option(flags, desc, opts) {
         if (typeof opts === "function") {
@@ -6796,7 +8210,9 @@ class Command {
             description: desc,
             args,
             flags: result.flags,
-            typeDefinition: result.typeDefinition
+            equalsSign: result.equalsSign,
+            typeDefinition: result.typeDefinition,
+            groupName: this._groupName
         };
         if (option.separator) {
             for (const arg of args){
@@ -6806,14 +8222,14 @@ class Command {
             }
         }
         for (const part of option.flags){
-            const arg = part.trim();
-            const isLong = /^--/.test(arg);
-            const name = isLong ? arg.slice(2) : arg.slice(1);
+            const arg1 = part.trim();
+            const isLong = /^--/.test(arg1);
+            const name = isLong ? arg1.slice(2) : arg1.slice(1);
             if (this.cmd.getBaseOption(name, true)) {
                 if (opts?.override) {
                     this.removeOption(name);
                 } else {
-                    throw new DuplicateOptionName(name);
+                    throw new DuplicateOptionNameError(name);
                 }
             }
             if (!option.name && isLong) {
@@ -6835,7 +8251,7 @@ class Command {
     }
     example(name, description) {
         if (this.cmd.hasExample(name)) {
-            throw new DuplicateExample(name);
+            throw new DuplicateExampleError(name);
         }
         this.cmd.examples.push({
             name,
@@ -6854,17 +8270,16 @@ class Command {
         if (!result.typeDefinition) {
             result.typeDefinition = "<value:boolean>";
         }
-        if (result.flags.some((envName)=>this.cmd.getBaseEnvVar(envName, true)
-        )) {
-            throw new DuplicateEnvironmentVariable(name);
+        if (result.flags.some((envName)=>this.cmd.getBaseEnvVar(envName, true))) {
+            throw new DuplicateEnvVarError(name);
         }
         const details = parseArgumentsDefinition(result.typeDefinition);
         if (details.length > 1) {
-            throw new EnvironmentVariableSingleValue(name);
+            throw new TooManyEnvVarValuesError(name);
         } else if (details.length && details[0].optionalValue) {
-            throw new EnvironmentVariableOptionalValue(name);
+            throw new UnexpectedOptionalEnvVarValueError(name);
         } else if (details.length && details[0].variadic) {
-            throw new EnvironmentVariableVariadicValue(name);
+            throw new UnexpectedVariadicEnvVarValueError(name);
         }
         this.cmd.envVars.push({
             name: result.flags[0],
@@ -6876,55 +8291,109 @@ class Command {
         });
         return this;
     }
-    async parse(args = Deno.args, dry) {
+    parse(args = Deno.args) {
+        const ctx = {
+            unknown: args.slice(),
+            flags: {},
+            env: {},
+            literal: [],
+            stopEarly: false,
+            stopOnUnknown: false
+        };
+        return this.parseCommand(ctx);
+    }
+    async parseCommand(ctx) {
         try {
             this.reset();
             this.registerDefaults();
-            this.rawArgs = args;
-            const subCommand = args.length > 0 && this.getCommand(args[0], true);
-            if (subCommand) {
-                subCommand._globalParent = this;
-                return await subCommand.parse(this.rawArgs.slice(1), dry);
-            }
-            const result = {
-                options: {
-                },
-                args: this.rawArgs,
-                cmd: this,
-                literal: this.literalArgs
-            };
+            this.rawArgs = ctx.unknown.slice();
             if (this.isExecutable) {
-                if (!dry) {
-                    await this.executeExecutable(this.rawArgs);
-                }
-                return result;
+                await this.executeExecutable(ctx.unknown);
+                return {
+                    options: {},
+                    args: [],
+                    cmd: this,
+                    literal: []
+                };
             } else if (this._useRawArgs) {
-                if (dry) {
-                    return result;
-                }
-                return await this.execute({
-                }, ...this.rawArgs);
-            } else {
-                const { action , flags , unknown , literal  } = this.parseFlags(this.rawArgs);
-                this.literalArgs = literal;
-                const params = this.parseArguments(unknown, flags);
-                await this.validateEnvVars();
-                if (dry || action) {
-                    if (action) {
-                        await action.call(this, flags, ...params);
+                await this.parseEnvVars(ctx, this.envVars);
+                return this.execute(ctx.env, ...ctx.unknown);
+            }
+            let preParseGlobals = false;
+            let subCommand;
+            if (ctx.unknown.length > 0) {
+                subCommand = this.getSubCommand(ctx);
+                if (!subCommand) {
+                    const optionName = ctx.unknown[0].replace(/^-+/, "");
+                    const option = this.getOption(optionName, true);
+                    if (option?.global) {
+                        preParseGlobals = true;
+                        await this.parseGlobalOptionsAndEnvVars(ctx);
                     }
+                }
+            }
+            if (subCommand || ctx.unknown.length > 0) {
+                subCommand ??= this.getSubCommand(ctx);
+                if (subCommand) {
+                    subCommand._globalParent = this;
+                    return subCommand.parseCommand(ctx);
+                }
+            }
+            await this.parseOptionsAndEnvVars(ctx, preParseGlobals);
+            const options = {
+                ...ctx.env,
+                ...ctx.flags
+            };
+            const args = this.parseArguments(ctx, options);
+            this.literalArgs = ctx.literal;
+            if (ctx.action) {
+                await ctx.action.action.call(this, options, ...args);
+                if (ctx.action.standalone) {
                     return {
-                        options: flags,
-                        args: params,
+                        options,
+                        args,
                         cmd: this,
                         literal: this.literalArgs
                     };
                 }
-                return await this.execute(flags, ...params);
             }
+            return this.execute(options, ...args);
         } catch (error) {
-            throw this.error(error);
+            this.throw(error instanceof ValidationError ? new ValidationError1(error.message) : error instanceof Error ? error : new Error(`[non-error-thrown] ${error}`));
         }
+    }
+    getSubCommand(ctx) {
+        const subCommand = this.getCommand(ctx.unknown[0], true);
+        if (subCommand) {
+            ctx.unknown.shift();
+        }
+        return subCommand;
+    }
+    async parseGlobalOptionsAndEnvVars(ctx) {
+        const isHelpOption = this.getHelpOption()?.flags.includes(ctx.unknown[0]);
+        const envVars = [
+            ...this.envVars.filter((envVar)=>envVar.global),
+            ...this.getGlobalEnvVars(true)
+        ];
+        await this.parseEnvVars(ctx, envVars, !isHelpOption);
+        const options = [
+            ...this.options.filter((option)=>option.global),
+            ...this.getGlobalOptions(true)
+        ];
+        this.parseOptions(ctx, options, {
+            stopEarly: true,
+            stopOnUnknown: true,
+            dotted: false
+        });
+    }
+    async parseOptionsAndEnvVars(ctx, preParseGlobals) {
+        const helpOption = this.getHelpOption();
+        const isVersionOption = this._versionOption?.flags.includes(ctx.unknown[0]);
+        const isHelpOption = helpOption && ctx.flags?.[helpOption.name] === true;
+        const envVars = preParseGlobals ? this.envVars.filter((envVar)=>!envVar.global) : this.getEnvVars(true);
+        await this.parseEnvVars(ctx, envVars, !isHelpOption && !isVersionOption);
+        const options = this.getOptions(true);
+        this.parseOptions(ctx, options);
     }
     registerDefaults() {
         if (this.hasDefaults || this.getParent()) {
@@ -6944,36 +8413,49 @@ class Command {
         !this.types.has("boolean") && this.type("boolean", new BooleanType(), {
             global: true
         });
+        !this.types.has("file") && this.type("file", new FileType(), {
+            global: true
+        });
         if (!this._help) {
             this.help({
                 hints: true,
                 types: false
             });
         }
-        if (this._versionOption !== false && (this._versionOption || this.ver)) {
-            this.option(this._versionOption?.flags || "-V, --version", this._versionOption?.desc || "Show the version number for this program.", {
+        if (this._versionOptions !== false && (this._versionOptions || this.ver)) {
+            this.option(this._versionOptions?.flags || "-V, --version", this._versionOptions?.desc || "Show the version number for this program.", {
                 standalone: true,
                 prepend: true,
-                action: function() {
-                    this.showVersion();
-                    Deno.exit(0);
+                action: async function() {
+                    const __long = this.getRawArgs().includes(`--${this._versionOption?.name}`);
+                    if (__long) {
+                        await this.checkVersion();
+                        this.showLongVersion();
+                    } else {
+                        this.showVersion();
+                    }
+                    this.exit();
                 },
-                ...this._versionOption?.opts ?? {
-                }
+                ...this._versionOptions?.opts ?? {}
             });
+            this._versionOption = this.options[0];
         }
-        if (this._helpOption !== false) {
-            this.option(this._helpOption?.flags || "-h, --help", this._helpOption?.desc || "Show this help.", {
+        if (this._helpOptions !== false) {
+            this.option(this._helpOptions?.flags || "-h, --help", this._helpOptions?.desc || "Show this help.", {
                 standalone: true,
                 global: true,
                 prepend: true,
-                action: function() {
-                    this.showHelp();
-                    Deno.exit(0);
+                action: async function() {
+                    const __long = this.getRawArgs().includes(`--${this.getHelpOption()?.name}`);
+                    await this.checkVersion();
+                    this.showHelp({
+                        long: __long
+                    });
+                    this.exit();
                 },
-                ...this._helpOption?.opts ?? {
-                }
+                ...this._helpOptions?.opts ?? {}
             });
+            this._helpOption = this.options[0];
         }
         return this;
     }
@@ -6983,10 +8465,10 @@ class Command {
         } else if (this.defaultCommand) {
             const cmd = this.getCommand(this.defaultCommand, true);
             if (!cmd) {
-                throw new DefaultCommandNotFound(this.defaultCommand, this.getCommands());
+                throw new DefaultCommandNotFoundError(this.defaultCommand, this.getCommands());
             }
             cmd._globalParent = this;
-            await cmd.execute(options, ...args);
+            return cmd.execute(options, ...args);
         }
         return {
             options,
@@ -6996,146 +8478,119 @@ class Command {
         };
     }
     async executeExecutable(args) {
-        const permissions = await getPermissions();
-        if (!permissions.read) {
-            await Deno.permissions?.request({
-                name: "read"
-            });
-        }
-        if (!permissions.run) {
-            await Deno.permissions?.request({
-                name: "run"
-            });
-        }
-        const [main, ...names] = this.getPath().split(" ");
-        names.unshift(main.replace(/\.ts$/, ""));
-        const executableName = names.join("-");
-        const files = [];
-        const parts = Deno.mainModule.replace(/^file:\/\//g, "").split("/");
-        if (Deno.build.os === "windows" && parts[0] === "") {
-            parts.shift();
-        }
-        parts.pop();
-        const path = parts.join("/");
-        files.push(path + "/" + executableName, path + "/" + executableName + ".ts");
-        files.push(executableName, executableName + ".ts");
-        const denoOpts = [];
-        if (isUnstable()) {
-            denoOpts.push("--unstable");
-        }
-        denoOpts.push("--allow-read", "--allow-run");
-        Object.keys(permissions).forEach((name)=>{
-            if (name === "read" || name === "run") {
-                return;
-            }
-            if (permissions[name]) {
-                denoOpts.push(`--allow-${name}`);
-            }
+        const command = this.getPath().replace(/\s+/g, "-");
+        await Deno.permissions.request({
+            name: "run",
+            command
         });
-        for (const file of files){
-            try {
-                Deno.lstatSync(file);
-            } catch (error) {
-                if (error instanceof Deno.errors.NotFound) {
-                    continue;
-                }
-                throw error;
-            }
-            const cmd = [
-                "deno",
-                "run",
-                ...denoOpts,
-                file,
-                ...args
-            ];
+        try {
             const process = Deno.run({
-                cmd: cmd
+                cmd: [
+                    command,
+                    ...args
+                ]
             });
             const status = await process.status();
             if (!status.success) {
                 Deno.exit(status.code);
             }
-            return;
-        }
-        throw new CommandExecutableNotFound(executableName, files);
-    }
-    parseFlags(args) {
-        try {
-            let action;
-            const result = parseFlags(args, {
-                stopEarly: this._stopEarly,
-                allowEmpty: this._allowEmpty,
-                flags: this.getOptions(true),
-                parse: (type)=>this.parseType(type)
-                ,
-                option: (option)=>{
-                    if (!action && option.action) {
-                        action = option.action;
-                    }
-                }
-            });
-            return {
-                ...result,
-                action
-            };
         } catch (error) {
-            if (error instanceof ValidationError) {
-                throw new ValidationError1(error.message);
+            if (error instanceof Deno.errors.NotFound) {
+                throw new CommandExecutableNotFoundError(command);
             }
             throw error;
         }
     }
-    parseType(type) {
-        const typeSettings = this.getType(type.type);
-        if (!typeSettings) {
-            throw new UnknownType(type.type, this.getTypes().map((type)=>type.name
-            ));
-        }
-        return typeSettings.handler instanceof Type ? typeSettings.handler.parse(type) : typeSettings.handler(type);
-    }
-    async validateEnvVars() {
-        if (!await hasPermission("env")) {
-            return;
-        }
-        const envVars = this.getEnvVars(true);
-        if (!envVars.length) {
-            return;
-        }
-        envVars.forEach((env)=>{
-            const name = env.names.find((name)=>!!Deno.env.get(name)
-            );
-            if (name) {
-                this.parseType({
-                    label: "Environment variable",
-                    type: env.type,
-                    name,
-                    value: Deno.env.get(name) ?? ""
-                });
+    parseOptions(ctx, options, { stopEarly =this._stopEarly , stopOnUnknown =false , dotted =true  } = {}) {
+        parseFlags(ctx, {
+            stopEarly,
+            stopOnUnknown,
+            dotted,
+            allowEmpty: this._allowEmpty,
+            flags: options,
+            ignoreDefaults: ctx.env,
+            parse: (type)=>this.parseType(type),
+            option: (option)=>{
+                if (!ctx.action && option.action) {
+                    ctx.action = option;
+                }
             }
         });
     }
-    parseArguments(args, flags) {
+    parseType(type) {
+        const typeSettings = this.getType(type.type);
+        if (!typeSettings) {
+            throw new UnknownTypeError(type.type, this.getTypes().map((type)=>type.name));
+        }
+        return typeSettings.handler instanceof Type ? typeSettings.handler.parse(type) : typeSettings.handler(type);
+    }
+    async parseEnvVars(ctx, envVars, validate = true) {
+        for (const envVar of envVars){
+            const env = await this.findEnvVar(envVar.names);
+            if (env) {
+                const parseType = (value)=>{
+                    return this.parseType({
+                        label: "Environment variable",
+                        type: envVar.type,
+                        name: env.name,
+                        value
+                    });
+                };
+                const propertyName = underscoreToCamelCase(envVar.prefix ? envVar.names[0].replace(new RegExp(`^${envVar.prefix}`), "") : envVar.names[0]);
+                if (envVar.details.list) {
+                    ctx.env[propertyName] = env.value.split(envVar.details.separator ?? ",").map(parseType);
+                } else {
+                    ctx.env[propertyName] = parseType(env.value);
+                }
+                if (envVar.value && typeof ctx.env[propertyName] !== "undefined") {
+                    ctx.env[propertyName] = envVar.value(ctx.env[propertyName]);
+                }
+            } else if (envVar.required && validate) {
+                throw new MissingRequiredEnvVarError(envVar);
+            }
+        }
+    }
+    async findEnvVar(names) {
+        for (const name of names){
+            const status = await Deno.permissions.query({
+                name: "env",
+                variable: name
+            });
+            if (status.state === "granted") {
+                const value = Deno.env.get(name);
+                if (value) {
+                    return {
+                        name,
+                        value
+                    };
+                }
+            }
+        }
+        return undefined;
+    }
+    parseArguments(ctx, options) {
         const params = [];
-        args = args.slice(0);
+        const args = ctx.unknown.slice();
         if (!this.hasArguments()) {
             if (args.length) {
                 if (this.hasCommands(true)) {
-                    throw new UnknownCommand(args[0], this.getCommands());
+                    if (this.hasCommand(args[0], true)) {
+                        throw new TooManyArgumentsError(args);
+                    } else {
+                        throw new UnknownCommandError(args[0], this.getCommands());
+                    }
                 } else {
-                    throw new NoArgumentsAllowed(this.getPath());
+                    throw new NoArgumentsAllowedError(this.getPath());
                 }
             }
         } else {
             if (!args.length) {
-                const required = this.getArguments().filter((expectedArg)=>!expectedArg.optionalValue
-                ).map((expectedArg)=>expectedArg.name
-                );
+                const required = this.getArguments().filter((expectedArg)=>!expectedArg.optionalValue).map((expectedArg)=>expectedArg.name);
                 if (required.length) {
-                    const flagNames = Object.keys(flags);
-                    const hasStandaloneOption = !!flagNames.find((name)=>this.getOption(name, true)?.standalone
-                    );
+                    const optionNames = Object.keys(options);
+                    const hasStandaloneOption = !!optionNames.find((name)=>this.getOption(name, true)?.standalone);
                     if (!hasStandaloneOption) {
-                        throw new MissingArguments(required);
+                        throw new MissingArgumentsError(required);
                     }
                 }
             } else {
@@ -7144,42 +8599,44 @@ class Command {
                         if (expectedArg.optionalValue) {
                             break;
                         }
-                        throw new MissingArgument(`Missing argument: ${expectedArg.name}`);
+                        throw new MissingArgumentError(expectedArg.name);
                     }
                     let arg;
-                    if (expectedArg.variadic) {
-                        arg = args.splice(0, args.length).map((value)=>this.parseType({
-                                label: "Argument",
-                                type: expectedArg.type,
-                                name: expectedArg.name,
-                                value
-                            })
-                        );
-                    } else {
-                        arg = this.parseType({
+                    const parseArgValue = (value)=>{
+                        return expectedArg.list ? value.split(",").map((value)=>parseArgType(value)) : parseArgType(value);
+                    };
+                    const parseArgType = (value)=>{
+                        return this.parseType({
                             label: "Argument",
                             type: expectedArg.type,
                             name: expectedArg.name,
-                            value: args.shift()
+                            value
                         });
+                    };
+                    if (expectedArg.variadic) {
+                        arg = args.splice(0, args.length).map((value)=>parseArgValue(value));
+                    } else {
+                        arg = parseArgValue(args.shift());
                     }
-                    if (arg) {
+                    if (expectedArg.variadic && Array.isArray(arg)) {
+                        params.push(...arg);
+                    } else if (typeof arg !== "undefined") {
                         params.push(arg);
                     }
                 }
                 if (args.length) {
-                    throw new TooManyArguments(args);
+                    throw new TooManyArgumentsError(args);
                 }
             }
         }
         return params;
     }
-    error(error) {
+    throw(error) {
         if (this.shouldThrowErrors() || !(error instanceof ValidationError1)) {
-            return error;
+            throw error;
         }
         this.showHelp();
-        Deno.stderr.writeSync(new TextEncoder().encode(red(`  ${bold("error")}: ${error.message}\n`) + "\n"));
+        console.error(red(`  ${bold("error")}: ${error.message}\n`));
         Deno.exit(error instanceof ValidationError1 ? error.exitCode : 1);
     }
     getName() {
@@ -7204,8 +8661,7 @@ class Command {
         return this.argsDefinition;
     }
     getArgument(name) {
-        return this.getArguments().find((arg)=>arg.name === name
-        );
+        return this.getArguments().find((arg)=>arg.name === name);
     }
     getArguments() {
         if (!this.args.length && this.argsDefinition) {
@@ -7225,8 +8681,11 @@ class Command {
     getDescription() {
         return typeof this.desc === "function" ? this.desc = this.desc() : this.desc;
     }
+    getUsage() {
+        return this._usage ?? this.getArgsDefinition();
+    }
     getShortDescription() {
-        return this.getDescription().trim().split("\n").shift();
+        return getDescription(this.getDescription(), true);
     }
     getRawArgs() {
         return this.rawArgs;
@@ -7235,17 +8694,42 @@ class Command {
         return this.literalArgs;
     }
     showVersion() {
-        Deno.stdout.writeSync(new TextEncoder().encode(this.getVersion()));
+        console.log(this.getVersion());
     }
-    showHelp() {
-        Deno.stdout.writeSync(new TextEncoder().encode(this.getHelp()));
+    getLongVersion() {
+        return `${bold(this.getMainCommand().getName())} ${blue(this.getVersion() ?? "")}` + Object.entries(this.getMeta()).map(([k, v])=>`\n${bold(k)} ${blue(v)}`).join("");
     }
-    getHelp() {
+    showLongVersion() {
+        console.log(this.getLongVersion());
+    }
+    showHelp(options) {
+        console.log(this.getHelp(options));
+    }
+    getHelp(options) {
         this.registerDefaults();
-        return this.getHelpHandler().call(this, this);
+        return this.getHelpHandler().call(this, this, options ?? {});
     }
     getHelpHandler() {
         return this._help ?? this._parent?.getHelpHandler();
+    }
+    exit(code = 0) {
+        if (this.shouldExit()) {
+            Deno.exit(code);
+        }
+    }
+    async checkVersion() {
+        const mainCommand = this.getMainCommand();
+        const upgradeCommand = mainCommand.getCommand("upgrade");
+        if (!isUpgradeCommand(upgradeCommand)) {
+            return;
+        }
+        const latestVersion = await upgradeCommand.getLatestVersion();
+        const currentVersion = mainCommand.getVersion();
+        if (currentVersion === latestVersion) {
+            return;
+        }
+        const versionHelpText = `(New version available: ${latestVersion}. Run '${mainCommand.getName()} upgrade' to upgrade to the latest version!)`;
+        mainCommand.version(`${currentVersion}  ${bold(yellow(versionHelpText))}`);
     }
     hasOptions(hidden) {
         return this.getOptions(hidden).length > 0;
@@ -7257,26 +8741,25 @@ class Command {
         if (!this.options.length) {
             return [];
         }
-        return hidden ? this.options.slice(0) : this.options.filter((opt)=>!opt.hidden
-        );
+        return hidden ? this.options.slice(0) : this.options.filter((opt)=>!opt.hidden);
     }
     getGlobalOptions(hidden) {
-        const getOptions = (cmd, options = [], names = [])=>{
-            if (cmd) {
-                if (cmd.options.length) {
-                    cmd.options.forEach((option)=>{
-                        if (option.global && !this.options.find((opt)=>opt.name === option.name
-                        ) && names.indexOf(option.name) === -1 && (hidden || !option.hidden)) {
-                            names.push(option.name);
-                            options.push(option);
+        const helpOption = this.getHelpOption();
+        const getGlobals = (cmd, noGlobals, options = [], names = [])=>{
+            if (cmd.options.length) {
+                for (const option of cmd.options){
+                    if (option.global && !this.options.find((opt)=>opt.name === option.name) && names.indexOf(option.name) === -1 && (hidden || !option.hidden)) {
+                        if (noGlobals && option !== helpOption) {
+                            continue;
                         }
-                    });
+                        names.push(option.name);
+                        options.push(option);
+                    }
                 }
-                return getOptions(cmd._parent, options, names);
             }
-            return options;
+            return cmd._parent ? getGlobals(cmd._parent, noGlobals || cmd._noGlobals, options, names) : options;
         };
-        return getOptions(this._parent);
+        return this._parent ? getGlobals(this._parent, this._noGlobals) : [];
     }
     hasOption(name, hidden) {
         return !!this.getOption(name, hidden);
@@ -7285,23 +8768,25 @@ class Command {
         return this.getBaseOption(name, hidden) ?? this.getGlobalOption(name, hidden);
     }
     getBaseOption(name, hidden) {
-        const option = this.options.find((option)=>option.name === name
-        );
+        const option = this.options.find((option)=>option.name === name || option.aliases?.includes(name));
         return option && (hidden || !option.hidden) ? option : undefined;
     }
     getGlobalOption(name, hidden) {
-        if (!this._parent) {
-            return;
-        }
-        const option = this._parent.getBaseOption(name, hidden);
-        if (!option || !option.global) {
-            return this._parent.getGlobalOption(name, hidden);
-        }
-        return option;
+        const helpOption = this.getHelpOption();
+        const getGlobalOption = (parent, noGlobals)=>{
+            const option = parent.getBaseOption(name, hidden);
+            if (!option?.global) {
+                return parent._parent && getGlobalOption(parent._parent, noGlobals || parent._noGlobals);
+            }
+            if (noGlobals && option !== helpOption) {
+                return;
+            }
+            return option;
+        };
+        return this._parent && getGlobalOption(this._parent, this._noGlobals);
     }
     removeOption(name) {
-        const index = this.options.findIndex((option)=>option.name === name
-        );
+        const index = this.options.findIndex((option)=>option.name === name);
         if (index === -1) {
             return;
         }
@@ -7315,25 +8800,24 @@ class Command {
     }
     getBaseCommands(hidden) {
         const commands = Array.from(this.commands.values());
-        return hidden ? commands : commands.filter((cmd)=>!cmd.isHidden
-        );
+        return hidden ? commands : commands.filter((cmd)=>!cmd.isHidden);
     }
     getGlobalCommands(hidden) {
-        const getCommands = (cmd, commands = [], names = [])=>{
-            if (cmd) {
-                if (cmd.commands.size) {
-                    cmd.commands.forEach((cmd)=>{
-                        if (cmd.isGlobal && this !== cmd && !this.commands.has(cmd._name) && names.indexOf(cmd._name) === -1 && (hidden || !cmd.isHidden)) {
-                            names.push(cmd._name);
-                            commands.push(cmd);
+        const getCommands = (command, noGlobals, commands = [], names = [])=>{
+            if (command.commands.size) {
+                for (const [_, cmd] of command.commands){
+                    if (cmd.isGlobal && this !== cmd && !this.commands.has(cmd._name) && names.indexOf(cmd._name) === -1 && (hidden || !cmd.isHidden)) {
+                        if (noGlobals && cmd?.getName() !== "help") {
+                            continue;
                         }
-                    });
+                        names.push(cmd._name);
+                        commands.push(cmd);
+                    }
                 }
-                return getCommands(cmd._parent, commands, names);
             }
-            return commands;
+            return command._parent ? getCommands(command._parent, noGlobals || command._noGlobals, commands, names) : commands;
         };
-        return getCommands(this._parent);
+        return this._parent ? getCommands(this._parent, this._noGlobals) : [];
     }
     hasCommand(name, hidden) {
         return !!this.getCommand(name, hidden);
@@ -7349,14 +8833,17 @@ class Command {
         }
     }
     getGlobalCommand(name, hidden) {
-        if (!this._parent) {
-            return;
-        }
-        const cmd = this._parent.getBaseCommand(name, hidden);
-        if (!cmd?.isGlobal) {
-            return this._parent.getGlobalCommand(name, hidden);
-        }
-        return cmd;
+        const getGlobalCommand = (parent, noGlobals)=>{
+            const cmd = parent.getBaseCommand(name, hidden);
+            if (!cmd?.isGlobal) {
+                return parent._parent && getGlobalCommand(parent._parent, noGlobals || parent._noGlobals);
+            }
+            if (noGlobals && cmd.getName() !== "help") {
+                return;
+            }
+            return cmd;
+        };
+        return this._parent && getGlobalCommand(this._parent, this._noGlobals);
     }
     removeCommand(name) {
         const command = this.getBaseCommand(name, true);
@@ -7453,16 +8940,17 @@ class Command {
         if (!this.envVars.length) {
             return [];
         }
-        return hidden ? this.envVars.slice(0) : this.envVars.filter((env)=>!env.hidden
-        );
+        return hidden ? this.envVars.slice(0) : this.envVars.filter((env)=>!env.hidden);
     }
     getGlobalEnvVars(hidden) {
+        if (this._noGlobals) {
+            return [];
+        }
         const getEnvVars = (cmd, envVars = [], names = [])=>{
             if (cmd) {
                 if (cmd.envVars.length) {
                     cmd.envVars.forEach((envVar)=>{
-                        if (envVar.global && !this.envVars.find((env)=>env.names[0] === envVar.names[0]
-                        ) && names.indexOf(envVar.names[0]) === -1 && (hidden || !envVar.hidden)) {
+                        if (envVar.global && !this.envVars.find((env)=>env.names[0] === envVar.names[0]) && names.indexOf(envVar.names[0]) === -1 && (hidden || !envVar.hidden)) {
                             names.push(envVar.names[0]);
                             envVars.push(envVar);
                         }
@@ -7481,12 +8969,11 @@ class Command {
         return this.getBaseEnvVar(name, hidden) ?? this.getGlobalEnvVar(name, hidden);
     }
     getBaseEnvVar(name, hidden) {
-        const envVar = this.envVars.find((env)=>env.names.indexOf(name) !== -1
-        );
+        const envVar = this.envVars.find((env)=>env.names.indexOf(name) !== -1);
         return envVar && (hidden || !envVar.hidden) ? envVar : undefined;
     }
     getGlobalEnvVar(name, hidden) {
-        if (!this._parent) {
+        if (!this._parent || this._noGlobals) {
             return;
         }
         const envVar = this._parent.getBaseEnvVar(name, hidden);
@@ -7505,490 +8992,43 @@ class Command {
         return !!this.getExample(name);
     }
     getExample(name) {
-        return this.examples.find((example)=>example.name === name
-        );
+        return this.examples.find((example)=>example.name === name);
+    }
+    getHelpOption() {
+        return this._helpOption ?? this._parent?.getHelpOption();
     }
 }
-class BashCompletionsGenerator {
-    cmd;
-    static generate(cmd) {
-        return new BashCompletionsGenerator(cmd).generate();
-    }
-    constructor(cmd){
-        this.cmd = cmd;
-    }
-    generate() {
-        const path = this.cmd.getPath();
-        const version = this.cmd.getVersion() ? ` v${this.cmd.getVersion()}` : "";
-        return `#!/usr/bin/env bash
-# bash completion support for ${path}${version}
-
-_${replaceSpecialChars(path)}() {
-  local word cur prev
-  local -a opts
-  COMPREPLY=()
-  cur="\${COMP_WORDS[COMP_CWORD]}"
-  prev="\${COMP_WORDS[COMP_CWORD-1]}"
-  cmd="_"
-  opts=()
-
-  _${replaceSpecialChars(this.cmd.getName())}_complete() {
-    local action="$1"; shift
-    mapfile -t values < <( ${this.cmd.getName()} completions complete "\${action}" "\${@}" )
-    for i in "\${values[@]}"; do
-      opts+=("$i")
-    done
-  }
-
-  ${this.generateCompletions(this.cmd).trim()}
-
-  for word in "\${COMP_WORDS[@]}"; do
-    case "\${word}" in
-      -*) ;;
-      *)
-        cmd_tmp="\${cmd}_\${word//[^[:alnum:]]/_}"
-        if type "\${cmd_tmp}" &>/dev/null; then
-          cmd="\${cmd_tmp}"
-        fi
-    esac
-  done
-
-  \${cmd}
-
-  if [[ \${#opts[@]} -eq 0 ]]; then
-    # shellcheck disable=SC2207
-    COMPREPLY=($(compgen -f "\${cur}"))
-    return 0
-  fi
-
-  local values
-  values="$( printf "\\n%s" "\${opts[@]}" )"
-  local IFS=$'\\n'
-  # shellcheck disable=SC2207
-  local result=($(compgen -W "\${values[@]}" -- "\${cur}"))
-  if [[ \${#result[@]} -eq 0 ]]; then
-    # shellcheck disable=SC2207
-    COMPREPLY=($(compgen -f "\${cur}"))
-  else
-    # shellcheck disable=SC2207
-    COMPREPLY=($(printf '%q\\n' "\${result[@]}"))
-  fi
-
-  return 0
-}
-
-complete -F _${replaceSpecialChars(path)} -o bashdefault -o default ${path}
-`;
-    }
-    generateCompletions(command, path = "", index = 1) {
-        path = (path ? path + " " : "") + command.getName();
-        const commandCompletions = this.generateCommandCompletions(command, path, index);
-        const childCommandCompletions = command.getCommands(false).filter((subCommand)=>subCommand !== command
-        ).map((subCommand)=>this.generateCompletions(subCommand, path, index + 1)
-        ).join("");
-        return `${commandCompletions}
-
-${childCommandCompletions}`;
-    }
-    generateCommandCompletions(command, path, index) {
-        const flags = this.getFlags(command);
-        const childCommandNames = command.getCommands(false).map((childCommand)=>childCommand.getName()
-        );
-        const completionsPath = ~path.indexOf(" ") ? " " + path.split(" ").slice(1).join(" ") : "";
-        const optionArguments = this.generateOptionArguments(command, completionsPath);
-        const completionsCmd = this.generateCommandCompletionsCommand(command.getArguments(), completionsPath);
-        return `  __${replaceSpecialChars(path)}() {
-    opts=(${[
-            ...flags,
-            ...childCommandNames
-        ].join(" ")})
-    ${completionsCmd}
-    if [[ \${cur} == -* || \${COMP_CWORD} -eq ${index} ]] ; then
-      return 0
-    fi
-    ${optionArguments}
-  }`;
-    }
-    getFlags(command) {
-        return command.getOptions(false).map((option)=>option.flags
-        ).flat();
-    }
-    generateOptionArguments(command, completionsPath) {
-        let opts = "";
-        const options = command.getOptions(false);
-        if (options.length) {
-            opts += 'case "${prev}" in';
-            for (const option of options){
-                const flags = option.flags.map((flag)=>flag.trim()
-                ).join("|");
-                const completionsCmd = this.generateOptionCompletionsCommand(option.args, completionsPath, {
-                    standalone: option.standalone
-                });
-                opts += `\n      ${flags}) ${completionsCmd} ;;`;
-            }
-            opts += "\n    esac";
-        }
-        return opts;
-    }
-    generateCommandCompletionsCommand(args, path) {
-        if (args.length) {
-            return `_${replaceSpecialChars(this.cmd.getName())}_complete ${args[0].action}${path}`;
-        }
-        return "";
-    }
-    generateOptionCompletionsCommand(args, path, opts) {
-        if (args.length) {
-            return `opts=(); _${replaceSpecialChars(this.cmd.getName())}_complete ${args[0].action}${path}`;
-        }
-        if (opts?.standalone) {
-            return "opts=()";
-        }
-        return "";
-    }
-}
-function replaceSpecialChars(str) {
-    return str.replace(/[^a-zA-Z0-9]/g, "_");
-}
-class FishCompletionsGenerator {
-    cmd;
-    static generate(cmd) {
-        return new FishCompletionsGenerator(cmd).generate();
-    }
-    constructor(cmd){
-        this.cmd = cmd;
-    }
-    generate() {
-        const path = this.cmd.getPath();
-        const version = this.cmd.getVersion() ? ` v${this.cmd.getVersion()}` : "";
-        return `#!/usr/bin/env fish
-# fish completion support for ${path}${version}
-
-function __fish_${replaceSpecialChars1(this.cmd.getName())}_using_command
-  set cmds ${getCommandFnNames(this.cmd).join(" ")}
-  set words (commandline -opc)
-  set cmd "_"
-  for word in $words
-    switch $word
-      case '-*'
-        continue
-      case '*'
-        set word (string replace -r -a '\\W' '_' $word)
-        set cmd_tmp $cmd"_$word"
-        if contains $cmd_tmp $cmds
-          set cmd $cmd_tmp
-        end
-    end
-  end
-  if [ "$cmd" = "$argv[1]" ]
-    return 0
-  end
-  return 1
-end
-
-${this.generateCompletions(this.cmd).trim()}
-`;
-    }
-    generateCompletions(command) {
-        const parent = command.getParent();
-        let result = ``;
-        if (parent) {
-            result += "\n" + this.complete(parent, {
-                description: command.getShortDescription(),
-                arguments: command.getName()
-            });
-        }
-        const commandArgs = command.getArguments();
-        if (commandArgs.length) {
-            result += "\n" + this.complete(command, {
-                arguments: commandArgs.length ? this.getCompletionCommand(commandArgs[0].action + " " + getCompletionsPath(command)) : undefined
-            });
-        }
-        for (const option of command.getOptions(false)){
-            result += "\n" + this.completeOption(command, option);
-        }
-        for (const subCommand of command.getCommands(false)){
-            result += this.generateCompletions(subCommand);
-        }
-        return result;
-    }
-    completeOption(command, option) {
-        const shortOption = option.flags.find((flag)=>flag.length === 2
-        )?.replace(/^(-)+/, "");
-        const longOption = option.flags.find((flag)=>flag.length > 2
-        )?.replace(/^(-)+/, "");
-        return this.complete(command, {
-            description: option.description,
-            shortOption: shortOption,
-            longOption: longOption,
-            required: true,
-            standalone: option.standalone,
-            arguments: option.args.length ? this.getCompletionCommand(option.args[0].action + " " + getCompletionsPath(command)) : undefined
-        });
-    }
-    complete(command, options) {
-        const cmd = [
-            "complete"
-        ];
-        cmd.push("-c", this.cmd.getName());
-        cmd.push("-n", `'__fish_${replaceSpecialChars1(this.cmd.getName())}_using_command __${replaceSpecialChars1(command.getPath())}'`);
-        options.shortOption && cmd.push("-s", options.shortOption);
-        options.longOption && cmd.push("-l", options.longOption);
-        options.standalone && cmd.push("-x");
-        cmd.push("-k");
-        cmd.push("-f");
-        if (options.arguments) {
-            options.required && cmd.push("-r");
-            cmd.push("-a", options.arguments);
-        }
-        options.description && cmd.push("-d", `'${options.description}'`);
-        return cmd.join(" ");
-    }
-    getCompletionCommand(cmd) {
-        return `'(${this.cmd.getName()} completions complete ${cmd.trim()})'`;
-    }
-}
-function getCommandFnNames(cmd, cmds = []) {
-    cmds.push(`__${replaceSpecialChars1(cmd.getPath())}`);
-    cmd.getCommands(false).forEach((command)=>{
-        getCommandFnNames(command, cmds);
-    });
-    return cmds;
-}
-function getCompletionsPath(command) {
-    return command.getPath().split(" ").slice(1).join(" ");
-}
-function replaceSpecialChars1(str) {
-    return str.replace(/[^a-zA-Z0-9]/g, "_");
-}
-class ZshCompletionsGenerator {
-    cmd;
-    actions = new Map();
-    static generate(cmd) {
-        return new ZshCompletionsGenerator(cmd).generate();
-    }
-    constructor(cmd){
-        this.cmd = cmd;
-    }
-    generate() {
-        const path = this.cmd.getPath();
-        const name = this.cmd.getName();
-        const version = this.cmd.getVersion() ? ` v${this.cmd.getVersion()}` : "";
-        return `#!/usr/bin/env zsh
-# zsh completion support for ${path}${version}
-
-autoload -U is-at-least
-
-# shellcheck disable=SC2154
-(( $+functions[__${replaceSpecialChars2(name)}_complete] )) ||
-function __${replaceSpecialChars2(name)}_complete {
-  local name="$1"; shift
-  local action="$1"; shift
-  integer ret=1
-  local -a values
-  local expl lines
-  _tags "$name"
-  while _tags; do
-    if _requested "$name"; then
-      # shellcheck disable=SC2034
-      lines="$(${name} completions complete "\${action}" "\${@}")"
-      values=("\${(ps:\\n:)lines}")
-      if (( \${#values[@]} )); then
-        while _next_label "$name" expl "$action"; do
-          compadd -S '' "\${expl[@]}" "\${values[@]}"
-        done
-      fi
-    fi
-  done
-}
-
-${this.generateCompletions(this.cmd).trim()}
-
-# _${replaceSpecialChars2(path)} "\${@}"
-
-compdef _${replaceSpecialChars2(path)} ${path}
-
-`;
-    }
-    generateCompletions(command, path = "") {
-        if (!command.hasCommands(false) && !command.hasOptions(false) && !command.hasArguments()) {
-            return "";
-        }
-        path = (path ? path + " " : "") + command.getName();
-        return `# shellcheck disable=SC2154
-(( $+functions[_${replaceSpecialChars2(path)}] )) ||
-function _${replaceSpecialChars2(path)}() {` + (!command.getParent() ? `
-  local state` : "") + this.generateCommandCompletions(command, path) + this.generateSubCommandCompletions(command, path) + this.generateArgumentCompletions(command, path) + this.generateActions(command) + `\n}\n\n` + command.getCommands(false).filter((subCommand)=>subCommand !== command
-        ).map((subCommand)=>this.generateCompletions(subCommand, path)
-        ).join("");
-    }
-    generateCommandCompletions(command, path) {
-        const commands = command.getCommands(false);
-        let completions = commands.map((subCommand)=>`'${subCommand.getName()}:${subCommand.getShortDescription()}'`
-        ).join("\n      ");
-        if (completions) {
-            completions = `
-    local -a commands
-    # shellcheck disable=SC2034
-    commands=(
-      ${completions}
-    )
-    _describe 'command' commands`;
-        }
-        if (command.hasArguments()) {
-            const completionsPath = path.split(" ").slice(1).join(" ");
-            const arg = command.getArguments()[0];
-            const action = this.addAction(arg, completionsPath);
-            if (action && command.getCompletion(arg.action)) {
-                completions += `\n    __${replaceSpecialChars2(this.cmd.getName())}_complete ${action.arg.name} ${action.arg.action} ${action.cmd}`;
-            }
-        }
-        if (completions) {
-            completions = `\n\n  function _commands() {${completions}\n  }`;
-        }
-        return completions;
-    }
-    generateSubCommandCompletions(command, path) {
-        if (command.hasCommands(false)) {
-            const actions = command.getCommands(false).map((command)=>`${command.getName()}) _${replaceSpecialChars2(path + " " + command.getName())} ;;`
-            ).join("\n      ");
-            return `\n
-  function _command_args() {
-    case "\${words[1]}" in\n      ${actions}\n    esac
-  }`;
-        }
-        return "";
-    }
-    generateArgumentCompletions(command, path) {
-        this.actions.clear();
-        const options = this.generateOptions(command, path);
-        let argIndex = 0;
-        let argsCommand = "\n\n  _arguments -w -s -S -C";
-        if (command.hasOptions()) {
-            argsCommand += ` \\\n    ${options.join(" \\\n    ")}`;
-        }
-        if (command.hasCommands(false) || command.getArguments().filter((arg)=>command.getCompletion(arg.action)
-        ).length) {
-            argsCommand += ` \\\n    '${++argIndex}: :_commands'`;
-        }
-        if (command.hasArguments() || command.hasCommands(false)) {
-            const args = [];
-            for (const arg of command.getArguments().slice(1)){
-                const completionsPath = path.split(" ").slice(1).join(" ");
-                const action = this.addAction(arg, completionsPath);
-                args.push(`${++argIndex}${arg.optionalValue ? "::" : ":"}${action.name}`);
-            }
-            argsCommand += args.map((arg)=>`\\\n    '${arg}'`
-            ).join("");
-            if (command.hasCommands(false)) {
-                argsCommand += ` \\\n    '*:: :->command_args'`;
-            }
-        }
-        return argsCommand;
-    }
-    generateOptions(command, path) {
-        const options = [];
-        const cmdArgs = path.split(" ");
-        cmdArgs.shift();
-        const completionsPath = cmdArgs.join(" ");
-        const excludedFlags = command.getOptions(false).map((option)=>option.standalone ? option.flags : false
-        ).flat().filter((flag)=>typeof flag === "string"
-        );
-        for (const option of command.getOptions(false)){
-            options.push(this.generateOption(option, completionsPath, excludedFlags));
-        }
-        return options;
-    }
-    generateOption(option, completionsPath, excludedOptions) {
-        const flags = option.flags;
-        let excludedFlags = option.conflicts?.length ? [
-            ...excludedOptions,
-            ...option.conflicts.map((opt)=>"--" + opt.replace(/^--/, "")
-            ), 
-        ] : excludedOptions;
-        excludedFlags = option.collect ? excludedFlags : [
-            ...excludedFlags,
-            ...flags, 
-        ];
-        let args = "";
-        for (const arg of option.args){
-            const action = this.addAction(arg, completionsPath);
-            if (arg.variadic) {
-                args += `${arg.optionalValue ? "::" : ":"}${arg.name}:->${action.name}`;
-            } else {
-                args += `${arg.optionalValue ? "::" : ":"}${arg.name}:->${action.name}`;
-            }
-        }
-        let description = option.description.trim().split("\n").shift();
-        description = description.replace(/\[/g, "\\[").replace(/]/g, "\\]").replace(/"/g, '\\"').replace(/'/g, "'\"'\"'");
-        const collect = option.collect ? "*" : "";
-        if (option.standalone) {
-            return `'(- *)'{${collect}${flags}}'[${description}]${args}'`;
-        } else {
-            const excluded = excludedFlags.length ? `'(${excludedFlags.join(" ")})'` : "";
-            if (collect || flags.length > 1) {
-                return `${excluded}{${collect}${flags}}'[${description}]${args}'`;
-            } else {
-                return `${excluded}${flags}'[${description}]${args}'`;
-            }
-        }
-    }
-    addAction(arg, cmd) {
-        const action = `${arg.name}-${arg.action}`;
-        if (!this.actions.has(action)) {
-            this.actions.set(action, {
-                arg: arg,
-                label: `${arg.name}: ${arg.action}`,
-                name: action,
-                cmd
-            });
-        }
-        return this.actions.get(action);
-    }
-    generateActions(command) {
-        let actions = [];
-        if (this.actions.size) {
-            actions = Array.from(this.actions).map(([name, action])=>`${name}) __${replaceSpecialChars2(this.cmd.getName())}_complete ${action.arg.name} ${action.arg.action} ${action.cmd} ;;`
-            );
-        }
-        if (command.hasCommands(false)) {
-            actions.unshift(`command_args) _command_args ;;`);
-        }
-        if (actions.length) {
-            return `\n\n  case "$state" in\n    ${actions.join("\n    ")}\n  esac`;
-        }
-        return "";
-    }
-}
-function replaceSpecialChars2(str) {
-    return str.replace(/[^a-zA-Z0-9]/g, "_");
+function isUpgradeCommand(command) {
+    return command instanceof Command && "getLatestVersion" in command;
 }
 class CommandType extends StringType {
     complete(_cmd, parent) {
-        return parent?.getCommands(false).map((cmd)=>cmd.getName()
-        ) || [];
+        return parent?.getCommands(false).map((cmd)=>cmd.getName()) || [];
     }
 }
 class HelpCommand extends Command {
     constructor(cmd){
         super();
-        this.type("command", new CommandType()).arguments("[command:command]").description("Show this help or the help of a sub-command.").action((_, name)=>{
+        return this.type("command", new CommandType()).arguments("[command:command]").description("Show this help or the help of a sub-command.").noGlobals().action(async (_, name)=>{
             if (!cmd) {
                 cmd = name ? this.getGlobalParent()?.getBaseCommand(name) : this.getGlobalParent();
             }
             if (!cmd) {
                 const cmds = this.getGlobalParent()?.getCommands();
-                throw new UnknownCommand(name ?? "", cmds ?? [], [
+                throw new UnknownCommandError(name ?? "", cmds ?? [], [
                     this.getName(),
-                    ...this.getAliases(), 
+                    ...this.getAliases()
                 ]);
             }
+            await cmd.checkVersion();
             cmd.showHelp();
-            Deno.exit(0);
+            if (this.shouldExit()) {
+                Deno.exit(0);
+            }
         });
     }
 }
 class YAMLError extends Error {
-    mark;
     constructor(message = "(unknown reason)", mark = ""){
         super(`${message} ${mark}`);
         this.mark = mark;
@@ -7997,6 +9037,7 @@ class YAMLError extends Error {
     toString(_compact) {
         return `${this.name}: ${this.message} ${this.mark}`;
     }
+    mark;
 }
 function isBoolean(value) {
     return typeof value === "boolean" || value instanceof Boolean;
@@ -8015,11 +9056,6 @@ function isNegativeZero(i) {
     return i === 0 && Number.NEGATIVE_INFINITY === 1 / i;
 }
 class Mark {
-    name;
-    buffer;
-    position;
-    line;
-    column;
     constructor(name, buffer, position, line, column){
         this.name = name;
         this.buffer = buffer;
@@ -8066,6 +9102,11 @@ class Mark {
         }
         return where;
     }
+    name;
+    buffer;
+    position;
+    line;
+    column;
 }
 function compileList(schema, name, result) {
     const exclude = [];
@@ -8081,19 +9122,14 @@ function compileList(schema, name, result) {
         }
         result.push(currentType);
     }
-    return result.filter((_type, index)=>!exclude.includes(index)
-    );
+    return result.filter((_type, index)=>!exclude.includes(index));
 }
 function compileMap(...typesList) {
     const result = {
-        fallback: {
-        },
-        mapping: {
-        },
-        scalar: {
-        },
-        sequence: {
-        }
+        fallback: {},
+        mapping: {},
+        scalar: {},
+        sequence: {}
     };
     for (const types of typesList){
         for (const type of types){
@@ -8131,13 +9167,13 @@ class Schema {
                 ...new Set([
                     ...this.implicit,
                     ...definition?.implicit ?? []
-                ]), 
+                ])
             ],
             explicit: [
                 ...new Set([
                     ...this.explicit,
                     ...definition?.explicit ?? []
-                ]), 
+                ])
             ],
             include: [
                 ...new Set([
@@ -8147,13 +9183,10 @@ class Schema {
             ]
         });
     }
-    static create() {
-    }
+    static create() {}
 }
-const DEFAULT_RESOLVE = ()=>true
-;
-const DEFAULT_CONSTRUCT = (data)=>data
-;
+const DEFAULT_RESOLVE = ()=>true;
+const DEFAULT_CONSTRUCT = (data)=>data;
 function checkTagFormat(tag) {
     return tag;
 }
@@ -8179,10 +9212,8 @@ class Type1 {
             this.styleAliases = options.styleAliases;
         }
     }
-    resolve = ()=>true
-    ;
-    construct = (data)=>data
-    ;
+    resolve = ()=>true;
+    construct = (data)=>data;
 }
 function copy(src, dst, off = 0) {
     off = Math.max(0, Math.min(off, dst.byteLength));
@@ -8230,18 +9261,18 @@ class Buffer {
         this.#reslice(0);
         this.#off = 0;
     }
-    #tryGrowByReslice = (n)=>{
+    #tryGrowByReslice(n) {
         const l = this.#buf.byteLength;
         if (n <= this.capacity - l) {
             this.#reslice(l + n);
             return l;
         }
         return -1;
-    };
-    #reslice = (len)=>{
-        assert(len <= this.#buf.buffer.byteLength);
+    }
+    #reslice(len) {
+        assert1(len <= this.#buf.buffer.byteLength);
         this.#buf = new Uint8Array(this.#buf.buffer, 0, len);
-    };
+    }
     readSync(p) {
         if (this.empty()) {
             this.reset();
@@ -8266,29 +9297,29 @@ class Buffer {
         const n = this.writeSync(p);
         return Promise.resolve(n);
     }
-    #grow = (n)=>{
+    #grow(n1) {
         const m = this.length;
         if (m === 0 && this.#off !== 0) {
             this.reset();
         }
-        const i = this.#tryGrowByReslice(n);
+        const i = this.#tryGrowByReslice(n1);
         if (i >= 0) {
             return i;
         }
         const c = this.capacity;
-        if (n <= Math.floor(c / 2) - m) {
+        if (n1 <= Math.floor(c / 2) - m) {
             copy(this.#buf.subarray(this.#off), this.#buf);
-        } else if (c + n > MAX_SIZE) {
+        } else if (c + n1 > MAX_SIZE) {
             throw new Error("The buffer cannot be grown beyond the maximum size.");
         } else {
-            const buf = new Uint8Array(Math.min(2 * c + n, MAX_SIZE));
+            const buf = new Uint8Array(Math.min(2 * c + n1, MAX_SIZE));
             copy(this.#buf.subarray(this.#off), buf);
             this.#buf = buf;
         }
         this.#off = 0;
-        this.#reslice(Math.min(m + n, MAX_SIZE));
+        this.#reslice(Math.min(m + n1, MAX_SIZE));
         return m;
-    };
+    }
     grow(n) {
         if (n < 0) {
             throw Error("Buffer.grow: negative count");
@@ -8350,22 +9381,22 @@ function constructYamlBinary(data) {
     let bits = 0;
     for(let idx = 0; idx < max; idx++){
         if (idx % 4 === 0 && idx) {
-            result.push(bits >> 16 & 255);
-            result.push(bits >> 8 & 255);
-            result.push(bits & 255);
+            result.push(bits >> 16 & 0xff);
+            result.push(bits >> 8 & 0xff);
+            result.push(bits & 0xff);
         }
         bits = bits << 6 | map.indexOf(input.charAt(idx));
     }
     const tailbits = max % 4 * 6;
     if (tailbits === 0) {
-        result.push(bits >> 16 & 255);
-        result.push(bits >> 8 & 255);
-        result.push(bits & 255);
+        result.push(bits >> 16 & 0xff);
+        result.push(bits >> 8 & 0xff);
+        result.push(bits & 0xff);
     } else if (tailbits === 18) {
-        result.push(bits >> 10 & 255);
-        result.push(bits >> 2 & 255);
+        result.push(bits >> 10 & 0xff);
+        result.push(bits >> 2 & 0xff);
     } else if (tailbits === 12) {
-        result.push(bits >> 4 & 255);
+        result.push(bits >> 4 & 0xff);
     }
     return new Buffer(new Uint8Array(result));
 }
@@ -8376,27 +9407,27 @@ function representYamlBinary(object) {
     let bits = 0;
     for(let idx = 0; idx < max; idx++){
         if (idx % 3 === 0 && idx) {
-            result += map[bits >> 18 & 63];
-            result += map[bits >> 12 & 63];
-            result += map[bits >> 6 & 63];
-            result += map[bits & 63];
+            result += map[bits >> 18 & 0x3f];
+            result += map[bits >> 12 & 0x3f];
+            result += map[bits >> 6 & 0x3f];
+            result += map[bits & 0x3f];
         }
         bits = (bits << 8) + object[idx];
     }
     const tail = max % 3;
     if (tail === 0) {
-        result += map[bits >> 18 & 63];
-        result += map[bits >> 12 & 63];
-        result += map[bits >> 6 & 63];
-        result += map[bits & 63];
+        result += map[bits >> 18 & 0x3f];
+        result += map[bits >> 12 & 0x3f];
+        result += map[bits >> 6 & 0x3f];
+        result += map[bits & 0x3f];
     } else if (tail === 2) {
-        result += map[bits >> 10 & 63];
-        result += map[bits >> 4 & 63];
-        result += map[bits << 2 & 63];
+        result += map[bits >> 10 & 0x3f];
+        result += map[bits >> 4 & 0x3f];
+        result += map[bits << 2 & 0x3f];
         result += map[64];
     } else if (tail === 1) {
-        result += map[bits >> 2 & 63];
-        result += map[bits << 4 & 63];
+        result += map[bits >> 2 & 0x3f];
+        result += map[bits << 4 & 0x3f];
         result += map[64];
         result += map[64];
     }
@@ -8469,7 +9500,7 @@ function constructYamlFloat(data) {
         value.split(":").forEach((v)=>{
             digits.unshift(parseFloat(v));
         });
-        let valueNb = 0;
+        let valueNb = 0.0;
         let base = 1;
         digits.forEach((d)=>{
             valueNb += d * base;
@@ -8532,7 +9563,7 @@ function reconstructFunction(code) {
     }
     return func;
 }
-const func = new Type1("tag:yaml.org,2002:js/function", {
+new Type1("tag:yaml.org,2002:js/function", {
     kind: "scalar",
     resolve (data) {
         if (data === null) {
@@ -8556,13 +9587,13 @@ const func = new Type1("tag:yaml.org,2002:js/function", {
     }
 });
 function isHexCode(c) {
-    return 48 <= c && c <= 57 || 65 <= c && c <= 70 || 97 <= c && c <= 102;
+    return 0x30 <= c && c <= 0x39 || 0x41 <= c && c <= 0x46 || 0x61 <= c && c <= 0x66;
 }
 function isOctCode(c) {
-    return 48 <= c && c <= 55;
+    return 0x30 <= c && c <= 0x37;
 }
 function isDecCode(c) {
-    return 48 <= c && c <= 57;
+    return 0x30 <= c && c <= 0x39;
 }
 function resolveYamlInteger(data) {
     const max = data.length;
@@ -8695,8 +9726,7 @@ const __int = new Type1("tag:yaml.org,2002:int", {
 });
 const map = new Type1("tag:yaml.org,2002:map", {
     construct (data) {
-        return data !== null ? data : {
-        };
+        return data !== null ? data : {};
     },
     kind: "mapping"
 });
@@ -8738,7 +9768,7 @@ const nil = new Type1("tag:yaml.org,2002:null", {
     },
     resolve: resolveYamlNull
 });
-const _hasOwnProperty = Object.prototype.hasOwnProperty;
+const { hasOwn  } = Object;
 const _toString = Object.prototype.toString;
 function resolveYamlOmap(data) {
     const objectKeys = [];
@@ -8748,7 +9778,7 @@ function resolveYamlOmap(data) {
         pairHasKey = false;
         if (_toString.call(pair) !== "[object Object]") return false;
         for(pairKey in pair){
-            if (_hasOwnProperty.call(pair, pairKey)) {
+            if (hasOwn(pair, pairKey)) {
                 if (!pairHasKey) pairHasKey = true;
                 else return false;
             }
@@ -8769,7 +9799,9 @@ const omap = new Type1("tag:yaml.org,2002:omap", {
 });
 const _toString1 = Object.prototype.toString;
 function resolveYamlPairs(data) {
-    const result = new Array(data.length);
+    const result = Array.from({
+        length: data.length
+    });
     for(let index = 0; index < data.length; index++){
         const pair = data[index];
         if (_toString1.call(pair) !== "[object Object]") return false;
@@ -8784,7 +9816,9 @@ function resolveYamlPairs(data) {
 }
 function constructYamlPairs(data) {
     if (data === null) return [];
-    const result = new Array(data.length);
+    const result = Array.from({
+        length: data.length
+    });
     for(let index = 0; index < data.length; index += 1){
         const pair = data[index];
         const keys = Object.keys(pair);
@@ -8822,8 +9856,7 @@ const regexp = new Type1("tag:yaml.org,2002:js/regexp", {
         return true;
     },
     construct (data) {
-        const { regexp =`${data}` , modifiers =""  } = `${data}`.match(REGEXP)?.groups ?? {
-        };
+        const { regexp =`${data}` , modifiers =""  } = `${data}`.match(REGEXP)?.groups ?? {};
         return new RegExp(regexp, modifiers);
     },
     predicate (object) {
@@ -8839,19 +9872,18 @@ const seq = new Type1("tag:yaml.org,2002:seq", {
     },
     kind: "sequence"
 });
-const _hasOwnProperty1 = Object.prototype.hasOwnProperty;
+const { hasOwn: hasOwn1  } = Object;
 function resolveYamlSet(data) {
     if (data === null) return true;
     for(const key in data){
-        if (_hasOwnProperty1.call(data, key)) {
+        if (hasOwn1(data, key)) {
             if (data[key] !== null) return false;
         }
     }
     return true;
 }
 function constructYamlSet(data) {
-    return data !== null ? data : {
-    };
+    return data !== null ? data : {};
 }
 const set = new Type1("tag:yaml.org,2002:set", {
     construct: constructYamlSet,
@@ -8936,7 +9968,7 @@ const failsafe = new Schema({
         map
     ]
 });
-const json1 = new Schema({
+const json = new Schema({
     implicit: [
         nil,
         bool,
@@ -8949,7 +9981,7 @@ const json1 = new Schema({
 });
 const core = new Schema({
     include: [
-        json1
+        json
     ]
 });
 const def = new Schema({
@@ -8969,7 +10001,6 @@ const def = new Schema({
 });
 new Schema({
     explicit: [
-        func,
         regexp,
         undefinedType
     ],
@@ -8978,19 +10009,18 @@ new Schema({
     ]
 });
 class State {
-    schema;
     constructor(schema = def){
         this.schema = schema;
     }
+    schema;
 }
 class LoaderState extends State {
-    input;
-    documents = [];
+    documents;
     length;
-    lineIndent = 0;
-    lineStart = 0;
-    position = 0;
-    line = 0;
+    lineIndent;
+    lineStart;
+    position;
+    line;
     filename;
     onWarning;
     legacy;
@@ -9005,10 +10035,16 @@ class LoaderState extends State {
     tag;
     anchor;
     kind;
-    result = "";
+    result;
     constructor(input, { filename , schema , onWarning , legacy =false , json =false , listener =null  }){
         super(schema);
         this.input = input;
+        this.documents = [];
+        this.lineIndent = 0;
+        this.lineStart = 0;
+        this.position = 0;
+        this.line = 0;
+        this.result = "";
         this.filename = filename;
         this.onWarning = onWarning;
         this.legacy = legacy;
@@ -9018,8 +10054,9 @@ class LoaderState extends State {
         this.typeMap = this.schema.compiledTypeMap;
         this.length = input.length;
     }
+    input;
 }
-const _hasOwnProperty2 = Object.prototype.hasOwnProperty;
+const { hasOwn: hasOwn2  } = Object;
 const CONTEXT_BLOCK_IN = 3;
 const CONTEXT_BLOCK_OUT = 4;
 const CHOMPING_STRIP = 2;
@@ -9033,59 +10070,63 @@ function _class(obj) {
     return Object.prototype.toString.call(obj);
 }
 function isEOL(c) {
-    return c === 10 || c === 13;
+    return c === 0x0a || c === 0x0d;
 }
 function isWhiteSpace(c) {
-    return c === 9 || c === 32;
+    return c === 0x09 || c === 0x20;
 }
 function isWsOrEol(c) {
-    return c === 9 || c === 32 || c === 10 || c === 13;
+    return c === 0x09 || c === 0x20 || c === 0x0a || c === 0x0d;
 }
 function isFlowIndicator(c) {
-    return c === 44 || c === 91 || c === 93 || c === 123 || c === 125;
+    return c === 0x2c || c === 0x5b || c === 0x5d || c === 0x7b || c === 0x7d;
 }
 function fromHexCode(c) {
-    if (48 <= c && c <= 57) {
-        return c - 48;
+    if (0x30 <= c && c <= 0x39) {
+        return c - 0x30;
     }
-    const lc = c | 32;
-    if (97 <= lc && lc <= 102) {
-        return lc - 97 + 10;
+    const lc = c | 0x20;
+    if (0x61 <= lc && lc <= 0x66) {
+        return lc - 0x61 + 10;
     }
     return -1;
 }
 function escapedHexLen(c) {
-    if (c === 120) {
+    if (c === 0x78) {
         return 2;
     }
-    if (c === 117) {
+    if (c === 0x75) {
         return 4;
     }
-    if (c === 85) {
+    if (c === 0x55) {
         return 8;
     }
     return 0;
 }
 function fromDecimalCode(c) {
-    if (48 <= c && c <= 57) {
-        return c - 48;
+    if (0x30 <= c && c <= 0x39) {
+        return c - 0x30;
     }
     return -1;
 }
 function simpleEscapeSequence(c) {
-    return c === 48 ? "\x00" : c === 97 ? "\x07" : c === 98 ? "\x08" : c === 116 ? "\x09" : c === 9 ? "\x09" : c === 110 ? "\x0A" : c === 118 ? "\x0B" : c === 102 ? "\x0C" : c === 114 ? "\x0D" : c === 101 ? "\x1B" : c === 32 ? " " : c === 34 ? "\x22" : c === 47 ? "/" : c === 92 ? "\x5C" : c === 78 ? "\x85" : c === 95 ? "\xA0" : c === 76 ? "\u2028" : c === 80 ? "\u2029" : "";
+    return c === 0x30 ? "\x00" : c === 0x61 ? "\x07" : c === 0x62 ? "\x08" : c === 0x74 ? "\x09" : c === 0x09 ? "\x09" : c === 0x6e ? "\x0A" : c === 0x76 ? "\x0B" : c === 0x66 ? "\x0C" : c === 0x72 ? "\x0D" : c === 0x65 ? "\x1B" : c === 0x20 ? " " : c === 0x22 ? "\x22" : c === 0x2f ? "/" : c === 0x5c ? "\x5C" : c === 0x4e ? "\x85" : c === 0x5f ? "\xA0" : c === 0x4c ? "\u2028" : c === 0x50 ? "\u2029" : "";
 }
 function charFromCodepoint(c) {
-    if (c <= 65535) {
+    if (c <= 0xffff) {
         return String.fromCharCode(c);
     }
-    return String.fromCharCode((c - 65536 >> 10) + 55296, (c - 65536 & 1023) + 56320);
+    return String.fromCharCode((c - 0x010000 >> 10) + 0xd800, (c - 0x010000 & 0x03ff) + 0xdc00);
 }
-const simpleEscapeCheck = new Array(256);
-const simpleEscapeMap = new Array(256);
-for(let i = 0; i < 256; i++){
-    simpleEscapeCheck[i] = simpleEscapeSequence(i) ? 1 : 0;
-    simpleEscapeMap[i] = simpleEscapeSequence(i);
+const simpleEscapeCheck = Array.from({
+    length: 256
+});
+const simpleEscapeMap = Array.from({
+    length: 256
+});
+for(let i1 = 0; i1 < 256; i1++){
+    simpleEscapeCheck[i1] = simpleEscapeSequence(i1) ? 1 : 0;
+    simpleEscapeMap[i1] = simpleEscapeSequence(i1);
 }
 function generateError(state, message) {
     return new YAMLError(message, new Mark(state.filename, state.input, state.position, state.line, state.position - state.lineStart));
@@ -9130,15 +10171,14 @@ const directiveHandlers = {
         if (!PATTERN_TAG_HANDLE.test(handle)) {
             return throwError(state, "ill-formed tag handle (first argument) of the TAG directive");
         }
-        if (_hasOwnProperty2.call(state.tagMap, handle)) {
+        if (state.tagMap && hasOwn2(state.tagMap, handle)) {
             return throwError(state, `there is a previously declared suffix for "${handle}" tag handle`);
         }
         if (!PATTERN_TAG_URI.test(prefix)) {
             return throwError(state, "ill-formed tag prefix (second argument) of the TAG directive");
         }
         if (typeof state.tagMap === "undefined") {
-            state.tagMap = {
-            };
+            state.tagMap = {};
         }
         state.tagMap[handle] = prefix;
     }
@@ -9150,7 +10190,7 @@ function captureSegment(state, start, end, checkJson) {
         if (checkJson) {
             for(let position = 0, length = result.length; position < length; position++){
                 const character = result.charCodeAt(position);
-                if (!(character === 9 || 32 <= character && character <= 1114111)) {
+                if (!(character === 0x09 || 0x20 <= character && character <= 0x10ffff)) {
                     return throwError(state, "expected valid JSON character");
                 }
             }
@@ -9167,7 +10207,7 @@ function mergeMappings(state, destination, source, overridableKeys) {
     const keys = Object.keys(source);
     for(let i = 0, len = keys.length; i < len; i++){
         const key = keys[i];
-        if (!_hasOwnProperty2.call(destination, key)) {
+        if (!hasOwn2(destination, key)) {
             destination[key] = source[key];
             overridableKeys[key] = true;
         }
@@ -9190,19 +10230,18 @@ function storeMappingPair(state, result, overridableKeys, keyTag, keyNode, value
     }
     keyNode = String(keyNode);
     if (result === null) {
-        result = {
-        };
+        result = {};
     }
     if (keyTag === "tag:yaml.org,2002:merge") {
         if (Array.isArray(valueNode)) {
-            for(let index = 0, quantity = valueNode.length; index < quantity; index++){
-                mergeMappings(state, result, valueNode[index], overridableKeys);
+            for(let index1 = 0, quantity1 = valueNode.length; index1 < quantity1; index1++){
+                mergeMappings(state, result, valueNode[index1], overridableKeys);
             }
         } else {
             mergeMappings(state, result, valueNode, overridableKeys);
         }
     } else {
-        if (!state.json && !_hasOwnProperty2.call(overridableKeys, keyNode) && _hasOwnProperty2.call(result, keyNode)) {
+        if (!state.json && !hasOwn2(overridableKeys, keyNode) && hasOwn2(result, keyNode)) {
             state.line = startLine || state.line;
             state.position = startPos || state.position;
             return throwError(state, "duplicated mapping key");
@@ -9214,11 +10253,11 @@ function storeMappingPair(state, result, overridableKeys, keyTag, keyNode, value
 }
 function readLineBreak(state) {
     const ch = state.input.charCodeAt(state.position);
-    if (ch === 10) {
+    if (ch === 0x0a) {
         state.position++;
-    } else if (ch === 13) {
+    } else if (ch === 0x0d) {
         state.position++;
-        if (state.input.charCodeAt(state.position) === 10) {
+        if (state.input.charCodeAt(state.position) === 0x0a) {
             state.position++;
         }
     } else {
@@ -9233,17 +10272,17 @@ function skipSeparationSpace(state, allowComments, checkIndent) {
         while(isWhiteSpace(ch)){
             ch = state.input.charCodeAt(++state.position);
         }
-        if (allowComments && ch === 35) {
+        if (allowComments && ch === 0x23) {
             do {
                 ch = state.input.charCodeAt(++state.position);
-            }while (ch !== 10 && ch !== 13 && ch !== 0)
+            }while (ch !== 0x0a && ch !== 0x0d && ch !== 0)
         }
         if (isEOL(ch)) {
             readLineBreak(state);
             ch = state.input.charCodeAt(state.position);
             lineBreaks++;
             state.lineIndent = 0;
-            while(ch === 32){
+            while(ch === 0x20){
                 state.lineIndent++;
                 ch = state.input.charCodeAt(++state.position);
             }
@@ -9259,7 +10298,7 @@ function skipSeparationSpace(state, allowComments, checkIndent) {
 function testDocumentSeparator(state) {
     let _position = state.position;
     let ch = state.input.charCodeAt(_position);
-    if ((ch === 45 || ch === 46) && ch === state.input.charCodeAt(_position + 1) && ch === state.input.charCodeAt(_position + 2)) {
+    if ((ch === 0x2d || ch === 0x2e) && ch === state.input.charCodeAt(_position + 1) && ch === state.input.charCodeAt(_position + 2)) {
         _position += 3;
         ch = state.input.charCodeAt(_position);
         if (ch === 0 || isWsOrEol(ch)) {
@@ -9279,11 +10318,11 @@ function readPlainScalar(state, nodeIndent, withinFlowCollection) {
     const kind = state.kind;
     const result = state.result;
     let ch = state.input.charCodeAt(state.position);
-    if (isWsOrEol(ch) || isFlowIndicator(ch) || ch === 35 || ch === 38 || ch === 42 || ch === 33 || ch === 124 || ch === 62 || ch === 39 || ch === 34 || ch === 37 || ch === 64 || ch === 96) {
+    if (isWsOrEol(ch) || isFlowIndicator(ch) || ch === 0x23 || ch === 0x26 || ch === 0x2a || ch === 0x21 || ch === 0x7c || ch === 0x3e || ch === 0x27 || ch === 0x22 || ch === 0x25 || ch === 0x40 || ch === 0x60) {
         return false;
     }
     let following;
-    if (ch === 63 || ch === 45) {
+    if (ch === 0x3f || ch === 0x2d) {
         following = state.input.charCodeAt(state.position + 1);
         if (isWsOrEol(following) || withinFlowCollection && isFlowIndicator(following)) {
             return false;
@@ -9295,12 +10334,12 @@ function readPlainScalar(state, nodeIndent, withinFlowCollection) {
     let hasPendingContent = false;
     let line = 0;
     while(ch !== 0){
-        if (ch === 58) {
+        if (ch === 0x3a) {
             following = state.input.charCodeAt(state.position + 1);
             if (isWsOrEol(following) || withinFlowCollection && isFlowIndicator(following)) {
                 break;
             }
-        } else if (ch === 35) {
+        } else if (ch === 0x23) {
             const preceding = state.input.charCodeAt(state.position - 1);
             if (isWsOrEol(preceding)) {
                 break;
@@ -9346,7 +10385,7 @@ function readPlainScalar(state, nodeIndent, withinFlowCollection) {
 function readSingleQuotedScalar(state, nodeIndent) {
     let ch, captureStart, captureEnd;
     ch = state.input.charCodeAt(state.position);
-    if (ch !== 39) {
+    if (ch !== 0x27) {
         return false;
     }
     state.kind = "scalar";
@@ -9354,10 +10393,10 @@ function readSingleQuotedScalar(state, nodeIndent) {
     state.position++;
     captureStart = captureEnd = state.position;
     while((ch = state.input.charCodeAt(state.position)) !== 0){
-        if (ch === 39) {
+        if (ch === 0x27) {
             captureSegment(state, captureStart, state.position, true);
             ch = state.input.charCodeAt(++state.position);
-            if (ch === 39) {
+            if (ch === 0x27) {
                 captureStart = state.position;
                 state.position++;
                 captureEnd = state.position;
@@ -9379,7 +10418,7 @@ function readSingleQuotedScalar(state, nodeIndent) {
 }
 function readDoubleQuotedScalar(state, nodeIndent) {
     let ch = state.input.charCodeAt(state.position);
-    if (ch !== 34) {
+    if (ch !== 0x22) {
         return false;
     }
     state.kind = "scalar";
@@ -9388,12 +10427,12 @@ function readDoubleQuotedScalar(state, nodeIndent) {
     let captureEnd, captureStart = captureEnd = state.position;
     let tmp;
     while((ch = state.input.charCodeAt(state.position)) !== 0){
-        if (ch === 34) {
+        if (ch === 0x22) {
             captureSegment(state, captureStart, state.position, true);
             state.position++;
             return true;
         }
-        if (ch === 92) {
+        if (ch === 0x5c) {
             captureSegment(state, captureStart, state.position, true);
             ch = state.input.charCodeAt(++state.position);
             if (isEOL(ch)) {
@@ -9435,14 +10474,13 @@ function readFlowCollection(state, nodeIndent) {
     let ch = state.input.charCodeAt(state.position);
     let terminator;
     let isMapping = true;
-    let result = {
-    };
-    if (ch === 91) {
-        terminator = 93;
+    let result = {};
+    if (ch === 0x5b) {
+        terminator = 0x5d;
         isMapping = false;
         result = [];
-    } else if (ch === 123) {
-        terminator = 125;
+    } else if (ch === 0x7b) {
+        terminator = 0x7d;
     } else {
         return false;
     }
@@ -9454,8 +10492,7 @@ function readFlowCollection(state, nodeIndent) {
     let readNext = true;
     let valueNode, keyNode, keyTag = keyNode = valueNode = null, isExplicitPair, isPair = isExplicitPair = false;
     let following = 0, line = 0;
-    const overridableKeys = {
-    };
+    const overridableKeys = {};
     while(ch !== 0){
         skipSeparationSpace(state, true, nodeIndent);
         ch = state.input.charCodeAt(state.position);
@@ -9472,7 +10509,7 @@ function readFlowCollection(state, nodeIndent) {
         }
         keyTag = keyNode = valueNode = null;
         isPair = isExplicitPair = false;
-        if (ch === 63) {
+        if (ch === 0x3f) {
             following = state.input.charCodeAt(state.position + 1);
             if (isWsOrEol(following)) {
                 isPair = isExplicitPair = true;
@@ -9486,7 +10523,7 @@ function readFlowCollection(state, nodeIndent) {
         keyNode = state.result;
         skipSeparationSpace(state, true, nodeIndent);
         ch = state.input.charCodeAt(state.position);
-        if ((isExplicitPair || state.line === line) && ch === 58) {
+        if ((isExplicitPair || state.line === line) && ch === 0x3a) {
             isPair = true;
             ch = state.input.charCodeAt(++state.position);
             skipSeparationSpace(state, true, nodeIndent);
@@ -9502,7 +10539,7 @@ function readFlowCollection(state, nodeIndent) {
         }
         skipSeparationSpace(state, true, nodeIndent);
         ch = state.input.charCodeAt(state.position);
-        if (ch === 44) {
+        if (ch === 0x2c) {
             readNext = true;
             ch = state.input.charCodeAt(++state.position);
         } else {
@@ -9515,9 +10552,9 @@ function readBlockScalar(state, nodeIndent) {
     let chomping = 1, didReadContent = false, detectedIndent = false, textIndent = nodeIndent, emptyLines = 0, atMoreIndented = false;
     let ch = state.input.charCodeAt(state.position);
     let folding = false;
-    if (ch === 124) {
+    if (ch === 0x7c) {
         folding = false;
-    } else if (ch === 62) {
+    } else if (ch === 0x3e) {
         folding = true;
     } else {
         return false;
@@ -9527,9 +10564,9 @@ function readBlockScalar(state, nodeIndent) {
     let tmp = 0;
     while(ch !== 0){
         ch = state.input.charCodeAt(++state.position);
-        if (ch === 43 || ch === 45) {
+        if (ch === 0x2b || ch === 0x2d) {
             if (1 === chomping) {
-                chomping = ch === 43 ? CHOMPING_KEEP : CHOMPING_STRIP;
+                chomping = ch === 0x2b ? CHOMPING_KEEP : CHOMPING_STRIP;
             } else {
                 return throwError(state, "repeat of a chomping mode identifier");
             }
@@ -9550,7 +10587,7 @@ function readBlockScalar(state, nodeIndent) {
         do {
             ch = state.input.charCodeAt(++state.position);
         }while (isWhiteSpace(ch))
-        if (ch === 35) {
+        if (ch === 0x23) {
             do {
                 ch = state.input.charCodeAt(++state.position);
             }while (!isEOL(ch) && ch !== 0)
@@ -9560,7 +10597,7 @@ function readBlockScalar(state, nodeIndent) {
         readLineBreak(state);
         state.lineIndent = 0;
         ch = state.input.charCodeAt(state.position);
-        while((!detectedIndent || state.lineIndent < textIndent) && ch === 32){
+        while((!detectedIndent || state.lineIndent < textIndent) && ch === 0x20){
             state.lineIndent++;
             ch = state.input.charCodeAt(++state.position);
         }
@@ -9617,7 +10654,7 @@ function readBlockSequence(state, nodeIndent) {
     }
     ch = state.input.charCodeAt(state.position);
     while(ch !== 0){
-        if (ch !== 45) {
+        if (ch !== 0x2d) {
             break;
         }
         following = state.input.charCodeAt(state.position + 1);
@@ -9654,9 +10691,7 @@ function readBlockSequence(state, nodeIndent) {
     return false;
 }
 function readBlockMapping(state, nodeIndent, flowIndent) {
-    const tag = state.tag, anchor = state.anchor, result = {
-    }, overridableKeys = {
-    };
+    const tag = state.tag, anchor = state.anchor, result = {}, overridableKeys = {};
     let following, allowCompact = false, line, pos, keyTag = null, keyNode = null, valueNode = null, atExplicitKey = false, detected = false, ch;
     if (state.anchor !== null && typeof state.anchor !== "undefined" && typeof state.anchorMap !== "undefined") {
         state.anchorMap[state.anchor] = result;
@@ -9666,8 +10701,8 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
         following = state.input.charCodeAt(state.position + 1);
         line = state.line;
         pos = state.position;
-        if ((ch === 63 || ch === 58) && isWsOrEol(following)) {
-            if (ch === 63) {
+        if ((ch === 0x3f || ch === 0x3a) && isWsOrEol(following)) {
+            if (ch === 0x3f) {
                 if (atExplicitKey) {
                     storeMappingPair(state, result, overridableKeys, keyTag, keyNode, null);
                     keyTag = keyNode = valueNode = null;
@@ -9689,7 +10724,7 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
                 while(isWhiteSpace(ch)){
                     ch = state.input.charCodeAt(++state.position);
                 }
-                if (ch === 58) {
+                if (ch === 0x3a) {
                     ch = state.input.charCodeAt(++state.position);
                     if (!isWsOrEol(ch)) {
                         return throwError(state, "a whitespace character is expected after the key-value separator within a block mapping");
@@ -9755,15 +10790,15 @@ function readBlockMapping(state, nodeIndent, flowIndent) {
 function readTagProperty(state) {
     let position, isVerbatim = false, isNamed = false, tagHandle = "", tagName, ch;
     ch = state.input.charCodeAt(state.position);
-    if (ch !== 33) return false;
+    if (ch !== 0x21) return false;
     if (state.tag !== null) {
         return throwError(state, "duplication of a tag property");
     }
     ch = state.input.charCodeAt(++state.position);
-    if (ch === 60) {
+    if (ch === 0x3c) {
         isVerbatim = true;
         ch = state.input.charCodeAt(++state.position);
-    } else if (ch === 33) {
+    } else if (ch === 0x21) {
         isNamed = true;
         tagHandle = "!!";
         ch = state.input.charCodeAt(++state.position);
@@ -9774,7 +10809,7 @@ function readTagProperty(state) {
     if (isVerbatim) {
         do {
             ch = state.input.charCodeAt(++state.position);
-        }while (ch !== 0 && ch !== 62)
+        }while (ch !== 0 && ch !== 0x3e)
         if (state.position < state.length) {
             tagName = state.input.slice(position, state.position);
             ch = state.input.charCodeAt(++state.position);
@@ -9783,7 +10818,7 @@ function readTagProperty(state) {
         }
     } else {
         while(ch !== 0 && !isWsOrEol(ch)){
-            if (ch === 33) {
+            if (ch === 0x21) {
                 if (!isNamed) {
                     tagHandle = state.input.slice(position - 1, state.position + 1);
                     if (!PATTERN_TAG_HANDLE.test(tagHandle)) {
@@ -9807,7 +10842,7 @@ function readTagProperty(state) {
     }
     if (isVerbatim) {
         state.tag = tagName;
-    } else if (typeof state.tagMap !== "undefined" && _hasOwnProperty2.call(state.tagMap, tagHandle)) {
+    } else if (typeof state.tagMap !== "undefined" && hasOwn2(state.tagMap, tagHandle)) {
         state.tag = state.tagMap[tagHandle] + tagName;
     } else if (tagHandle === "!") {
         state.tag = `!${tagName}`;
@@ -9820,7 +10855,7 @@ function readTagProperty(state) {
 }
 function readAnchorProperty(state) {
     let ch = state.input.charCodeAt(state.position);
-    if (ch !== 38) return false;
+    if (ch !== 0x26) return false;
     if (state.anchor !== null) {
         return throwError(state, "duplication of an anchor property");
     }
@@ -9837,7 +10872,7 @@ function readAnchorProperty(state) {
 }
 function readAlias(state) {
     let ch = state.input.charCodeAt(state.position);
-    if (ch !== 42) return false;
+    if (ch !== 0x2a) return false;
     ch = state.input.charCodeAt(++state.position);
     const _position = state.position;
     while(ch !== 0 && !isWsOrEol(ch) && !isFlowIndicator(ch)){
@@ -9847,7 +10882,7 @@ function readAlias(state) {
         return throwError(state, "name of an alias node must contain at least one character");
     }
     const alias = state.input.slice(_position, state.position);
-    if (typeof state.anchorMap !== "undefined" && !Object.prototype.hasOwnProperty.call(state.anchorMap, alias)) {
+    if (typeof state.anchorMap !== "undefined" && !hasOwn2(state.anchorMap, alias)) {
         return throwError(state, `unidentified alias "${alias}"`);
     }
     if (typeof state.anchorMap !== "undefined") {
@@ -9940,7 +10975,7 @@ function composeNode(state, parentIndent, nodeContext, allowToSeek, allowCompact
                     break;
                 }
             }
-        } else if (_hasOwnProperty2.call(state.typeMap[state.kind || "fallback"], state.tag)) {
+        } else if (hasOwn2(state.typeMap[state.kind || "fallback"], state.tag)) {
             type = state.typeMap[state.kind || "fallback"][state.tag];
             if (state.result !== null && type.kind !== state.kind) {
                 return throwError(state, `unacceptable node kind for !<${state.tag}> tag; it should be "${type.kind}", not "${state.kind}"`);
@@ -9967,14 +11002,12 @@ function readDocument(state) {
     let position, directiveName, directiveArgs, hasDirectives = false, ch;
     state.version = null;
     state.checkLineBreaks = state.legacy;
-    state.tagMap = {
-    };
-    state.anchorMap = {
-    };
+    state.tagMap = {};
+    state.anchorMap = {};
     while((ch = state.input.charCodeAt(state.position)) !== 0){
         skipSeparationSpace(state, true, -1);
         ch = state.input.charCodeAt(state.position);
-        if (state.lineIndent > 0 || ch !== 37) {
+        if (state.lineIndent > 0 || ch !== 0x25) {
             break;
         }
         hasDirectives = true;
@@ -9992,7 +11025,7 @@ function readDocument(state) {
             while(isWhiteSpace(ch)){
                 ch = state.input.charCodeAt(++state.position);
             }
-            if (ch === 35) {
+            if (ch === 0x23) {
                 do {
                     ch = state.input.charCodeAt(++state.position);
                 }while (ch !== 0 && !isEOL(ch))
@@ -10006,14 +11039,14 @@ function readDocument(state) {
             directiveArgs.push(state.input.slice(position, state.position));
         }
         if (ch !== 0) readLineBreak(state);
-        if (_hasOwnProperty2.call(directiveHandlers, directiveName)) {
+        if (hasOwn2(directiveHandlers, directiveName)) {
             directiveHandlers[directiveName](state, directiveName, ...directiveArgs);
         } else {
             throwWarning(state, `unknown document directive "${directiveName}"`);
         }
     }
     skipSeparationSpace(state, true, -1);
-    if (state.lineIndent === 0 && state.input.charCodeAt(state.position) === 45 && state.input.charCodeAt(state.position + 1) === 45 && state.input.charCodeAt(state.position + 2) === 45) {
+    if (state.lineIndent === 0 && state.input.charCodeAt(state.position) === 0x2d && state.input.charCodeAt(state.position + 1) === 0x2d && state.input.charCodeAt(state.position + 2) === 0x2d) {
         state.position += 3;
         skipSeparationSpace(state, true, -1);
     } else if (hasDirectives) {
@@ -10026,7 +11059,7 @@ function readDocument(state) {
     }
     state.documents.push(state.result);
     if (state.position === state.lineStart && testDocumentSeparator(state)) {
-        if (state.input.charCodeAt(state.position) === 46) {
+        if (state.input.charCodeAt(state.position) === 0x2e) {
             state.position += 3;
             skipSeparationSpace(state, true, -1);
         }
@@ -10040,19 +11073,18 @@ function readDocument(state) {
 }
 function loadDocuments(input, options) {
     input = String(input);
-    options = options || {
-    };
+    options = options || {};
     if (input.length !== 0) {
-        if (input.charCodeAt(input.length - 1) !== 10 && input.charCodeAt(input.length - 1) !== 13) {
+        if (input.charCodeAt(input.length - 1) !== 0x0a && input.charCodeAt(input.length - 1) !== 0x0d) {
             input += "\n";
         }
-        if (input.charCodeAt(0) === 65279) {
+        if (input.charCodeAt(0) === 0xfeff) {
             input = input.slice(1);
         }
     }
     const state = new LoaderState(input, options);
     state.input += "\0";
-    while(state.input.charCodeAt(state.position) === 32){
+    while(state.input.charCodeAt(state.position) === 0x20){
         state.lineIndent += 1;
         state.position += 1;
     }
@@ -10071,452 +11103,66 @@ function load(input, options) {
     }
     throw new YAMLError("expected a single document in the stream, but found more");
 }
-function parse8(content, options) {
+function parse11(content, options) {
     return load(content, options);
 }
-Object.prototype.hasOwnProperty;
-const _toString2 = Object.prototype.toString;
-const _hasOwnProperty3 = Object.prototype.hasOwnProperty;
-const ESCAPE_SEQUENCES = {
-};
-ESCAPE_SEQUENCES[0] = "\\0";
-ESCAPE_SEQUENCES[7] = "\\a";
-ESCAPE_SEQUENCES[8] = "\\b";
-ESCAPE_SEQUENCES[9] = "\\t";
-ESCAPE_SEQUENCES[10] = "\\n";
-ESCAPE_SEQUENCES[11] = "\\v";
-ESCAPE_SEQUENCES[12] = "\\f";
-ESCAPE_SEQUENCES[13] = "\\r";
-ESCAPE_SEQUENCES[27] = "\\e";
-ESCAPE_SEQUENCES[34] = '\\"';
-ESCAPE_SEQUENCES[92] = "\\\\";
-ESCAPE_SEQUENCES[133] = "\\N";
-ESCAPE_SEQUENCES[160] = "\\_";
-ESCAPE_SEQUENCES[8232] = "\\L";
-ESCAPE_SEQUENCES[8233] = "\\P";
-const DEPRECATED_BOOLEANS_SYNTAX = [
-    "y",
-    "Y",
-    "yes",
-    "Yes",
-    "YES",
-    "on",
-    "On",
-    "ON",
-    "n",
-    "N",
-    "no",
-    "No",
-    "NO",
-    "off",
-    "Off",
-    "OFF", 
-];
-function encodeHex(character) {
-    const string = character.toString(16).toUpperCase();
-    let handle;
-    let length;
-    if (character <= 255) {
-        handle = "x";
-        length = 2;
-    } else if (character <= 65535) {
-        handle = "u";
-        length = 4;
-    } else if (character <= 4294967295) {
-        handle = "U";
-        length = 8;
-    } else {
-        throw new YAMLError("code point within a string may not be greater than 0xFFFFFFFF");
-    }
-    return `\\${handle}${repeat("0", length - string.length)}${string}`;
+const { hasOwn: hasOwn3  } = Object;
+Object.prototype.toString;
+const { hasOwn: hasOwn4  } = Object;
+const ESCAPE_SEQUENCES = {};
+ESCAPE_SEQUENCES[0x00] = "\\0";
+ESCAPE_SEQUENCES[0x07] = "\\a";
+ESCAPE_SEQUENCES[0x08] = "\\b";
+ESCAPE_SEQUENCES[0x09] = "\\t";
+ESCAPE_SEQUENCES[0x0a] = "\\n";
+ESCAPE_SEQUENCES[0x0b] = "\\v";
+ESCAPE_SEQUENCES[0x0c] = "\\f";
+ESCAPE_SEQUENCES[0x0d] = "\\r";
+ESCAPE_SEQUENCES[0x1b] = "\\e";
+ESCAPE_SEQUENCES[0x22] = '\\"';
+ESCAPE_SEQUENCES[0x5c] = "\\\\";
+ESCAPE_SEQUENCES[0x85] = "\\N";
+ESCAPE_SEQUENCES[0xa0] = "\\_";
+ESCAPE_SEQUENCES[0x2028] = "\\L";
+ESCAPE_SEQUENCES[0x2029] = "\\P";
+const { Deno: Deno2  } = globalThis;
+const noColor1 = typeof Deno2?.noColor === "boolean" ? Deno2.noColor : true;
+let enabled1 = !noColor1;
+function code1(open, close) {
+    return {
+        open: `\x1b[${open.join(";")}m`,
+        close: `\x1b[${close}m`,
+        regexp: new RegExp(`\\x1b\\[${close}m`, "g")
+    };
 }
-function indentString(string, spaces) {
-    const ind = repeat(" ", spaces), length = string.length;
-    let position = 0, next = -1, result = "", line;
-    while(position < length){
-        next = string.indexOf("\n", position);
-        if (next === -1) {
-            line = string.slice(position);
-            position = length;
-        } else {
-            line = string.slice(position, next + 1);
-            position = next + 1;
-        }
-        if (line.length && line !== "\n") result += ind;
-        result += line;
-    }
-    return result;
+function run1(str, code) {
+    return enabled1 ? `${code.open}${str.replace(code.regexp, code.open)}${code.close}` : str;
 }
-function generateNextLine(state, level) {
-    return `\n${repeat(" ", state.indent * level)}`;
+function red1(str) {
+    return run1(str, code1([
+        31
+    ], 39));
 }
-function testImplicitResolving(state, str) {
-    let type;
-    for(let index = 0, length = state.implicitTypes.length; index < length; index += 1){
-        type = state.implicitTypes[index];
-        if (type.resolve(str)) {
-            return true;
-        }
-    }
-    return false;
+function green1(str) {
+    return run1(str, code1([
+        32
+    ], 39));
 }
-function isWhitespace(c) {
-    return c === 32 || c === 9;
-}
-function isPrintable(c) {
-    return 32 <= c && c <= 126 || 161 <= c && c <= 55295 && c !== 8232 && c !== 8233 || 57344 <= c && c <= 65533 && c !== 65279 || 65536 <= c && c <= 1114111;
-}
-function isPlainSafe(c) {
-    return isPrintable(c) && c !== 65279 && c !== 44 && c !== 91 && c !== 93 && c !== 123 && c !== 125 && c !== 58 && c !== 35;
-}
-function isPlainSafeFirst(c) {
-    return isPrintable(c) && c !== 65279 && !isWhitespace(c) && c !== 45 && c !== 63 && c !== 58 && c !== 44 && c !== 91 && c !== 93 && c !== 123 && c !== 125 && c !== 35 && c !== 38 && c !== 42 && c !== 33 && c !== 124 && c !== 62 && c !== 39 && c !== 34 && c !== 37 && c !== 64 && c !== 96;
-}
-function needIndentIndicator(string) {
-    const leadingSpaceRe = /^\n* /;
-    return leadingSpaceRe.test(string);
-}
-const STYLE_PLAIN = 1, STYLE_SINGLE = 2, STYLE_LITERAL = 3, STYLE_FOLDED = 4, STYLE_DOUBLE = 5;
-function chooseScalarStyle(string, singleLineOnly, indentPerLevel, lineWidth, testAmbiguousType) {
-    const shouldTrackWidth = lineWidth !== -1;
-    let hasLineBreak = false, hasFoldableLine = false, previousLineBreak = -1, plain = isPlainSafeFirst(string.charCodeAt(0)) && !isWhitespace(string.charCodeAt(string.length - 1));
-    let __char, i;
-    if (singleLineOnly) {
-        for(i = 0; i < string.length; i++){
-            __char = string.charCodeAt(i);
-            if (!isPrintable(__char)) {
-                return 5;
-            }
-            plain = plain && isPlainSafe(__char);
-        }
-    } else {
-        for(i = 0; i < string.length; i++){
-            __char = string.charCodeAt(i);
-            if (__char === 10) {
-                hasLineBreak = true;
-                if (shouldTrackWidth) {
-                    hasFoldableLine = hasFoldableLine || i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
-                    previousLineBreak = i;
-                }
-            } else if (!isPrintable(__char)) {
-                return 5;
-            }
-            plain = plain && isPlainSafe(__char);
-        }
-        hasFoldableLine = hasFoldableLine || shouldTrackWidth && i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
-    }
-    if (!hasLineBreak && !hasFoldableLine) {
-        return plain && !testAmbiguousType(string) ? 1 : 2;
-    }
-    if (indentPerLevel > 9 && needIndentIndicator(string)) {
-        return 5;
-    }
-    return hasFoldableLine ? 4 : 3;
-}
-function foldLine(line, width) {
-    if (line === "" || line[0] === " ") return line;
-    const breakRe = / [^ ]/g;
-    let match;
-    let start = 0, end, curr = 0, next = 0;
-    let result = "";
-    while(match = breakRe.exec(line)){
-        next = match.index;
-        if (next - start > width) {
-            end = curr > start ? curr : next;
-            result += `\n${line.slice(start, end)}`;
-            start = end + 1;
-        }
-        curr = next;
-    }
-    result += "\n";
-    if (line.length - start > width && curr > start) {
-        result += `${line.slice(start, curr)}\n${line.slice(curr + 1)}`;
-    } else {
-        result += line.slice(start);
-    }
-    return result.slice(1);
-}
-function dropEndingNewline(string) {
-    return string[string.length - 1] === "\n" ? string.slice(0, -1) : string;
-}
-function foldString(string, width) {
-    const lineRe = /(\n+)([^\n]*)/g;
-    let result = (()=>{
-        let nextLF = string.indexOf("\n");
-        nextLF = nextLF !== -1 ? nextLF : string.length;
-        lineRe.lastIndex = nextLF;
-        return foldLine(string.slice(0, nextLF), width);
-    })();
-    let prevMoreIndented = string[0] === "\n" || string[0] === " ";
-    let moreIndented;
-    let match;
-    while(match = lineRe.exec(string)){
-        const prefix = match[1], line = match[2];
-        moreIndented = line[0] === " ";
-        result += prefix + (!prevMoreIndented && !moreIndented && line !== "" ? "\n" : "") + foldLine(line, width);
-        prevMoreIndented = moreIndented;
-    }
-    return result;
-}
-function escapeString(string) {
-    let result = "";
-    let __char, nextChar;
-    let escapeSeq;
-    for(let i = 0; i < string.length; i++){
-        __char = string.charCodeAt(i);
-        if (__char >= 55296 && __char <= 56319) {
-            nextChar = string.charCodeAt(i + 1);
-            if (nextChar >= 56320 && nextChar <= 57343) {
-                result += encodeHex((__char - 55296) * 1024 + nextChar - 56320 + 65536);
-                i++;
-                continue;
-            }
-        }
-        escapeSeq = ESCAPE_SEQUENCES[__char];
-        result += !escapeSeq && isPrintable(__char) ? string[i] : escapeSeq || encodeHex(__char);
-    }
-    return result;
-}
-function blockHeader(string, indentPerLevel) {
-    const indentIndicator = needIndentIndicator(string) ? String(indentPerLevel) : "";
-    const clip = string[string.length - 1] === "\n";
-    const keep = clip && (string[string.length - 2] === "\n" || string === "\n");
-    const chomp = keep ? "+" : clip ? "" : "-";
-    return `${indentIndicator}${chomp}\n`;
-}
-function writeScalar(state, string, level, iskey) {
-    state.dump = (()=>{
-        if (string.length === 0) {
-            return "''";
-        }
-        if (!state.noCompatMode && DEPRECATED_BOOLEANS_SYNTAX.indexOf(string) !== -1) {
-            return `'${string}'`;
-        }
-        const indent = state.indent * Math.max(1, level);
-        const lineWidth = state.lineWidth === -1 ? -1 : Math.max(Math.min(state.lineWidth, 40), state.lineWidth - indent);
-        const singleLineOnly = iskey || state.flowLevel > -1 && level >= state.flowLevel;
-        function testAmbiguity(str) {
-            return testImplicitResolving(state, str);
-        }
-        switch(chooseScalarStyle(string, singleLineOnly, state.indent, lineWidth, testAmbiguity)){
-            case STYLE_PLAIN:
-                return string;
-            case STYLE_SINGLE:
-                return `'${string.replace(/'/g, "''")}'`;
-            case STYLE_LITERAL:
-                return `|${blockHeader(string, state.indent)}${dropEndingNewline(indentString(string, indent))}`;
-            case STYLE_FOLDED:
-                return `>${blockHeader(string, state.indent)}${dropEndingNewline(indentString(foldString(string, lineWidth), indent))}`;
-            case STYLE_DOUBLE:
-                return `"${escapeString(string)}"`;
-            default:
-                throw new YAMLError("impossible error: invalid scalar style");
-        }
-    })();
-}
-function writeFlowSequence(state, level, object) {
-    let _result = "";
-    const _tag = state.tag;
-    for(let index = 0, length = object.length; index < length; index += 1){
-        if (writeNode(state, level, object[index], false, false)) {
-            if (index !== 0) _result += `,${!state.condenseFlow ? " " : ""}`;
-            _result += state.dump;
-        }
-    }
-    state.tag = _tag;
-    state.dump = `[${_result}]`;
-}
-function writeBlockSequence(state, level, object, compact = false) {
-    let _result = "";
-    const _tag = state.tag;
-    for(let index = 0, length = object.length; index < length; index += 1){
-        if (writeNode(state, level + 1, object[index], true, true)) {
-            if (!compact || index !== 0) {
-                _result += generateNextLine(state, level);
-            }
-            if (state.dump && 10 === state.dump.charCodeAt(0)) {
-                _result += "-";
-            } else {
-                _result += "- ";
-            }
-            _result += state.dump;
-        }
-    }
-    state.tag = _tag;
-    state.dump = _result || "[]";
-}
-function writeFlowMapping(state, level, object) {
-    let _result = "";
-    const _tag = state.tag, objectKeyList = Object.keys(object);
-    let pairBuffer, objectKey, objectValue;
-    for(let index = 0, length = objectKeyList.length; index < length; index += 1){
-        pairBuffer = state.condenseFlow ? '"' : "";
-        if (index !== 0) pairBuffer += ", ";
-        objectKey = objectKeyList[index];
-        objectValue = object[objectKey];
-        if (!writeNode(state, level, objectKey, false, false)) {
-            continue;
-        }
-        if (state.dump.length > 1024) pairBuffer += "? ";
-        pairBuffer += `${state.dump}${state.condenseFlow ? '"' : ""}:${state.condenseFlow ? "" : " "}`;
-        if (!writeNode(state, level, objectValue, false, false)) {
-            continue;
-        }
-        pairBuffer += state.dump;
-        _result += pairBuffer;
-    }
-    state.tag = _tag;
-    state.dump = `{${_result}}`;
-}
-function writeBlockMapping(state, level, object, compact = false) {
-    const _tag = state.tag, objectKeyList = Object.keys(object);
-    let _result = "";
-    if (state.sortKeys === true) {
-        objectKeyList.sort();
-    } else if (typeof state.sortKeys === "function") {
-        objectKeyList.sort(state.sortKeys);
-    } else if (state.sortKeys) {
-        throw new YAMLError("sortKeys must be a boolean or a function");
-    }
-    let pairBuffer = "", objectKey, objectValue, explicitPair;
-    for(let index = 0, length = objectKeyList.length; index < length; index += 1){
-        pairBuffer = "";
-        if (!compact || index !== 0) {
-            pairBuffer += generateNextLine(state, level);
-        }
-        objectKey = objectKeyList[index];
-        objectValue = object[objectKey];
-        if (!writeNode(state, level + 1, objectKey, true, true, true)) {
-            continue;
-        }
-        explicitPair = state.tag !== null && state.tag !== "?" || state.dump && state.dump.length > 1024;
-        if (explicitPair) {
-            if (state.dump && 10 === state.dump.charCodeAt(0)) {
-                pairBuffer += "?";
-            } else {
-                pairBuffer += "? ";
-            }
-        }
-        pairBuffer += state.dump;
-        if (explicitPair) {
-            pairBuffer += generateNextLine(state, level);
-        }
-        if (!writeNode(state, level + 1, objectValue, true, explicitPair)) {
-            continue;
-        }
-        if (state.dump && 10 === state.dump.charCodeAt(0)) {
-            pairBuffer += ":";
-        } else {
-            pairBuffer += ": ";
-        }
-        pairBuffer += state.dump;
-        _result += pairBuffer;
-    }
-    state.tag = _tag;
-    state.dump = _result || "{}";
-}
-function detectType(state, object, explicit = false) {
-    const typeList = explicit ? state.explicitTypes : state.implicitTypes;
-    let type;
-    let style;
-    let _result;
-    for(let index = 0, length = typeList.length; index < length; index += 1){
-        type = typeList[index];
-        if ((type.instanceOf || type.predicate) && (!type.instanceOf || typeof object === "object" && object instanceof type.instanceOf) && (!type.predicate || type.predicate(object))) {
-            state.tag = explicit ? type.tag : "?";
-            if (type.represent) {
-                style = state.styleMap[type.tag] || type.defaultStyle;
-                if (_toString2.call(type.represent) === "[object Function]") {
-                    _result = type.represent(object, style);
-                } else if (_hasOwnProperty3.call(type.represent, style)) {
-                    _result = type.represent[style](object, style);
-                } else {
-                    throw new YAMLError(`!<${type.tag}> tag resolver accepts not "${style}" style`);
-                }
-                state.dump = _result;
-            }
-            return true;
-        }
-    }
-    return false;
-}
-function writeNode(state, level, object, block, compact, iskey = false) {
-    state.tag = null;
-    state.dump = object;
-    if (!detectType(state, object, false)) {
-        detectType(state, object, true);
-    }
-    const type = _toString2.call(state.dump);
-    if (block) {
-        block = state.flowLevel < 0 || state.flowLevel > level;
-    }
-    const objectOrArray = type === "[object Object]" || type === "[object Array]";
-    let duplicateIndex = -1;
-    let duplicate = false;
-    if (objectOrArray) {
-        duplicateIndex = state.duplicates.indexOf(object);
-        duplicate = duplicateIndex !== -1;
-    }
-    if (state.tag !== null && state.tag !== "?" || duplicate || state.indent !== 2 && level > 0) {
-        compact = false;
-    }
-    if (duplicate && state.usedDuplicates[duplicateIndex]) {
-        state.dump = `*ref_${duplicateIndex}`;
-    } else {
-        if (objectOrArray && duplicate && !state.usedDuplicates[duplicateIndex]) {
-            state.usedDuplicates[duplicateIndex] = true;
-        }
-        if (type === "[object Object]") {
-            if (block && Object.keys(state.dump).length !== 0) {
-                writeBlockMapping(state, level, state.dump, compact);
-                if (duplicate) {
-                    state.dump = `&ref_${duplicateIndex}${state.dump}`;
-                }
-            } else {
-                writeFlowMapping(state, level, state.dump);
-                if (duplicate) {
-                    state.dump = `&ref_${duplicateIndex} ${state.dump}`;
-                }
-            }
-        } else if (type === "[object Array]") {
-            const arrayLevel = state.noArrayIndent && level > 0 ? level - 1 : level;
-            if (block && state.dump.length !== 0) {
-                writeBlockSequence(state, arrayLevel, state.dump, compact);
-                if (duplicate) {
-                    state.dump = `&ref_${duplicateIndex}${state.dump}`;
-                }
-            } else {
-                writeFlowSequence(state, arrayLevel, state.dump);
-                if (duplicate) {
-                    state.dump = `&ref_${duplicateIndex} ${state.dump}`;
-                }
-            }
-        } else if (type === "[object String]") {
-            if (state.tag !== "?") {
-                writeScalar(state, state.dump, level, iskey);
-            }
-        } else {
-            if (state.skipInvalid) return false;
-            throw new YAMLError(`unacceptable kind of an object to dump ${type}`);
-        }
-        if (state.tag !== null && state.tag !== "?") {
-            state.dump = `!<${state.tag}> ${state.dump}`;
-        }
-    }
-    return true;
-}
-const cache1 = {
-};
+new RegExp([
+    "[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)",
+    "(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))"
+].join("|"), "g");
+const cache = {};
 function isHexColor(color) {
     return /^([0-9A-F]{6}|[0-9A-F]{3})$/i.test(color);
 }
 function hexColorDelta(hex1, hex2) {
-    const r1 = parseInt(hex1.substring(0, 2), 16);
-    const g1 = parseInt(hex1.substring(2, 4), 16);
-    const b1 = parseInt(hex1.substring(4, 6), 16);
-    const r2 = parseInt(hex2.substring(0, 2), 16);
-    const g2 = parseInt(hex2.substring(2, 4), 16);
-    const b2 = parseInt(hex2.substring(4, 6), 16);
+    const r1 = parseInt(hex1.slice(0, 2), 16);
+    const g1 = parseInt(hex1.slice(2, 4), 16);
+    const b1 = parseInt(hex1.slice(4, 6), 16);
+    const r2 = parseInt(hex2.slice(0, 2), 16);
+    const g2 = parseInt(hex2.slice(2, 4), 16);
+    const b2 = parseInt(hex2.slice(4, 6), 16);
     let r = 255 - Math.abs(r1 - r2);
     let g = 255 - Math.abs(g1 - g2);
     let b = 255 - Math.abs(b1 - b2);
@@ -10526,28 +11172,26 @@ function hexColorDelta(hex1, hex2) {
     return (r + g + b) / 3;
 }
 function hexterm(hex) {
-    if (typeof hex !== 'string') {
-        throw new Error('hex value has to be a string');
+    if (typeof hex !== "string") {
+        throw new Error("hex value has to be a string");
     }
     hex = hex.trim();
-    if (hex.startsWith('#')) {
+    if (hex.startsWith("#")) {
         hex = hex.slice(1);
     }
     if (!isHexColor(hex)) {
-        throw new Error('wrong hexadecimal color code');
+        throw new Error("wrong hexadecimal color code");
     }
     if (hex.length === 3) {
-        hex = '' + hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        hex = "" + hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
     }
     hex = hex.toLowerCase();
-    const direct = xtermcolors.findIndex((color)=>color === hex
-    );
+    const direct = xtermcolors.findIndex((color)=>color === hex);
     if (direct !== -1) return direct;
-    const cached = cache1[hex];
+    const cached = cache[hex];
     if (cached) return cached;
     let similar = 0;
-    const closest = {
-    };
+    const closest = {};
     xtermcolors.forEach((hexcode, i)=>{
         const res = hexColorDelta(hex, hexcode);
         if (res > similar) {
@@ -10556,327 +11200,326 @@ function hexterm(hex) {
             closest.x = i;
         }
     });
-    cache1[closest.hex] = closest.x;
+    cache[closest.hex] = closest.x;
     return closest.x;
 }
 const xtermcolors = [
-    '000000',
-    '800000',
-    '008000',
-    '808000',
-    '000080',
-    '800080',
-    '008080',
-    'c0c0c0',
-    '808080',
-    'ff0000',
-    '00ff00',
-    'ffff00',
-    '0000ff',
-    'ff00ff',
-    '00ffff',
-    'ffffff',
-    '000000',
-    '00005f',
-    '000087',
-    '0000af',
-    '0000d7',
-    '0000ff',
-    '005f00',
-    '005f5f',
-    '005f87',
-    '005faf',
-    '005fd7',
-    '005fff',
-    '008700',
-    '00875f',
-    '008787',
-    '0087af',
-    '0087d7',
-    '0087ff',
-    '00af00',
-    '00af5f',
-    '00af87',
-    '00afaf',
-    '00afd7',
-    '00afff',
-    '00d700',
-    '00d75f',
-    '00d787',
-    '00d7af',
-    '00d7d7',
-    '00d7ff',
-    '00ff00',
-    '00ff5f',
-    '00ff87',
-    '00ffaf',
-    '00ffd7',
-    '00ffff',
-    '5f0000',
-    '5f005f',
-    '5f0087',
-    '5f00af',
-    '5f00d7',
-    '5f00ff',
-    '5f5f00',
-    '5f5f5f',
-    '5f5f87',
-    '5f5faf',
-    '5f5fd7',
-    '5f5fff',
-    '5f8700',
-    '5f875f',
-    '5f8787',
-    '5f87af',
-    '5f87d7',
-    '5f87ff',
-    '5faf00',
-    '5faf5f',
-    '5faf87',
-    '5fafaf',
-    '5fafd7',
-    '5fafff',
-    '5fd700',
-    '5fd75f',
-    '5fd787',
-    '5fd7af',
-    '5fd7d7',
-    '5fd7ff',
-    '5fff00',
-    '5fff5f',
-    '5fff87',
-    '5fffaf',
-    '5fffd7',
-    '5fffff',
-    '870000',
-    '87005f',
-    '870087',
-    '8700af',
-    '8700d7',
-    '8700ff',
-    '875f00',
-    '875f5f',
-    '875f87',
-    '875faf',
-    '875fd7',
-    '875fff',
-    '878700',
-    '87875f',
-    '878787',
-    '8787af',
-    '8787d7',
-    '8787ff',
-    '87af00',
-    '87af5f',
-    '87af87',
-    '87afaf',
-    '87afd7',
-    '87afff',
-    '87d700',
-    '87d75f',
-    '87d787',
-    '87d7af',
-    '87d7d7',
-    '87d7ff',
-    '87ff00',
-    '87ff5f',
-    '87ff87',
-    '87ffaf',
-    '87ffd7',
-    '87ffff',
-    'af0000',
-    'af005f',
-    'af0087',
-    'af00af',
-    'af00d7',
-    'af00ff',
-    'af5f00',
-    'af5f5f',
-    'af5f87',
-    'af5faf',
-    'af5fd7',
-    'af5fff',
-    'af8700',
-    'af875f',
-    'af8787',
-    'af87af',
-    'af87d7',
-    'af87ff',
-    'afaf00',
-    'afaf5f',
-    'afaf87',
-    'afafaf',
-    'afafd7',
-    'afafff',
-    'afd700',
-    'afd75f',
-    'afd787',
-    'afd7af',
-    'afd7d7',
-    'afd7ff',
-    'afff00',
-    'afff5f',
-    'afff87',
-    'afffaf',
-    'afffd7',
-    'afffff',
-    'd70000',
-    'd7005f',
-    'd70087',
-    'd700af',
-    'd700d7',
-    'd700ff',
-    'd75f00',
-    'd75f5f',
-    'd75f87',
-    'd75faf',
-    'd75fd7',
-    'd75fff',
-    'd78700',
-    'd7875f',
-    'd78787',
-    'd787af',
-    'd787d7',
-    'd787ff',
-    'd7af00',
-    'd7af5f',
-    'd7af87',
-    'd7afaf',
-    'd7afd7',
-    'd7afff',
-    'd7d700',
-    'd7d75f',
-    'd7d787',
-    'd7d7af',
-    'd7d7d7',
-    'd7d7ff',
-    'd7ff00',
-    'd7ff5f',
-    'd7ff87',
-    'd7ffaf',
-    'd7ffd7',
-    'd7ffff',
-    'ff0000',
-    'ff005f',
-    'ff0087',
-    'ff00af',
-    'ff00d7',
-    'ff00ff',
-    'ff5f00',
-    'ff5f5f',
-    'ff5f87',
-    'ff5faf',
-    'ff5fd7',
-    'ff5fff',
-    'ff8700',
-    'ff875f',
-    'ff8787',
-    'ff87af',
-    'ff87d7',
-    'ff87ff',
-    'ffaf00',
-    'ffaf5f',
-    'ffaf87',
-    'ffafaf',
-    'ffafd7',
-    'ffafff',
-    'ffd700',
-    'ffd75f',
-    'ffd787',
-    'ffd7af',
-    'ffd7d7',
-    'ffd7ff',
-    'ffff00',
-    'ffff5f',
-    'ffff87',
-    'ffffaf',
-    'ffffd7',
-    'ffffff',
-    '080808',
-    '121212',
-    '1c1c1c',
-    '262626',
-    '303030',
-    '3a3a3a',
-    '444444',
-    '4e4e4e',
-    '585858',
-    '606060',
-    '666666',
-    '767676',
-    '808080',
-    '8a8a8a',
-    '949494',
-    '9e9e9e',
-    'a8a8a8',
-    'b2b2b2',
-    'bcbcbc',
-    'c6c6c6',
-    'd0d0d0',
-    'dadada',
-    'e4e4e4',
-    'eeeeee'
+    "000000",
+    "800000",
+    "008000",
+    "808000",
+    "000080",
+    "800080",
+    "008080",
+    "c0c0c0",
+    "808080",
+    "ff0000",
+    "00ff00",
+    "ffff00",
+    "0000ff",
+    "ff00ff",
+    "00ffff",
+    "ffffff",
+    "000000",
+    "00005f",
+    "000087",
+    "0000af",
+    "0000d7",
+    "0000ff",
+    "005f00",
+    "005f5f",
+    "005f87",
+    "005faf",
+    "005fd7",
+    "005fff",
+    "008700",
+    "00875f",
+    "008787",
+    "0087af",
+    "0087d7",
+    "0087ff",
+    "00af00",
+    "00af5f",
+    "00af87",
+    "00afaf",
+    "00afd7",
+    "00afff",
+    "00d700",
+    "00d75f",
+    "00d787",
+    "00d7af",
+    "00d7d7",
+    "00d7ff",
+    "00ff00",
+    "00ff5f",
+    "00ff87",
+    "00ffaf",
+    "00ffd7",
+    "00ffff",
+    "5f0000",
+    "5f005f",
+    "5f0087",
+    "5f00af",
+    "5f00d7",
+    "5f00ff",
+    "5f5f00",
+    "5f5f5f",
+    "5f5f87",
+    "5f5faf",
+    "5f5fd7",
+    "5f5fff",
+    "5f8700",
+    "5f875f",
+    "5f8787",
+    "5f87af",
+    "5f87d7",
+    "5f87ff",
+    "5faf00",
+    "5faf5f",
+    "5faf87",
+    "5fafaf",
+    "5fafd7",
+    "5fafff",
+    "5fd700",
+    "5fd75f",
+    "5fd787",
+    "5fd7af",
+    "5fd7d7",
+    "5fd7ff",
+    "5fff00",
+    "5fff5f",
+    "5fff87",
+    "5fffaf",
+    "5fffd7",
+    "5fffff",
+    "870000",
+    "87005f",
+    "870087",
+    "8700af",
+    "8700d7",
+    "8700ff",
+    "875f00",
+    "875f5f",
+    "875f87",
+    "875faf",
+    "875fd7",
+    "875fff",
+    "878700",
+    "87875f",
+    "878787",
+    "8787af",
+    "8787d7",
+    "8787ff",
+    "87af00",
+    "87af5f",
+    "87af87",
+    "87afaf",
+    "87afd7",
+    "87afff",
+    "87d700",
+    "87d75f",
+    "87d787",
+    "87d7af",
+    "87d7d7",
+    "87d7ff",
+    "87ff00",
+    "87ff5f",
+    "87ff87",
+    "87ffaf",
+    "87ffd7",
+    "87ffff",
+    "af0000",
+    "af005f",
+    "af0087",
+    "af00af",
+    "af00d7",
+    "af00ff",
+    "af5f00",
+    "af5f5f",
+    "af5f87",
+    "af5faf",
+    "af5fd7",
+    "af5fff",
+    "af8700",
+    "af875f",
+    "af8787",
+    "af87af",
+    "af87d7",
+    "af87ff",
+    "afaf00",
+    "afaf5f",
+    "afaf87",
+    "afafaf",
+    "afafd7",
+    "afafff",
+    "afd700",
+    "afd75f",
+    "afd787",
+    "afd7af",
+    "afd7d7",
+    "afd7ff",
+    "afff00",
+    "afff5f",
+    "afff87",
+    "afffaf",
+    "afffd7",
+    "afffff",
+    "d70000",
+    "d7005f",
+    "d70087",
+    "d700af",
+    "d700d7",
+    "d700ff",
+    "d75f00",
+    "d75f5f",
+    "d75f87",
+    "d75faf",
+    "d75fd7",
+    "d75fff",
+    "d78700",
+    "d7875f",
+    "d78787",
+    "d787af",
+    "d787d7",
+    "d787ff",
+    "d7af00",
+    "d7af5f",
+    "d7af87",
+    "d7afaf",
+    "d7afd7",
+    "d7afff",
+    "d7d700",
+    "d7d75f",
+    "d7d787",
+    "d7d7af",
+    "d7d7d7",
+    "d7d7ff",
+    "d7ff00",
+    "d7ff5f",
+    "d7ff87",
+    "d7ffaf",
+    "d7ffd7",
+    "d7ffff",
+    "ff0000",
+    "ff005f",
+    "ff0087",
+    "ff00af",
+    "ff00d7",
+    "ff00ff",
+    "ff5f00",
+    "ff5f5f",
+    "ff5f87",
+    "ff5faf",
+    "ff5fd7",
+    "ff5fff",
+    "ff8700",
+    "ff875f",
+    "ff8787",
+    "ff87af",
+    "ff87d7",
+    "ff87ff",
+    "ffaf00",
+    "ffaf5f",
+    "ffaf87",
+    "ffafaf",
+    "ffafd7",
+    "ffafff",
+    "ffd700",
+    "ffd75f",
+    "ffd787",
+    "ffd7af",
+    "ffd7d7",
+    "ffd7ff",
+    "ffff00",
+    "ffff5f",
+    "ffff87",
+    "ffffaf",
+    "ffffd7",
+    "ffffff",
+    "080808",
+    "121212",
+    "1c1c1c",
+    "262626",
+    "303030",
+    "3a3a3a",
+    "444444",
+    "4e4e4e",
+    "585858",
+    "606060",
+    "666666",
+    "767676",
+    "808080",
+    "8a8a8a",
+    "949494",
+    "9e9e9e",
+    "a8a8a8",
+    "b2b2b2",
+    "bcbcbc",
+    "c6c6c6",
+    "d0d0d0",
+    "dadada",
+    "e4e4e4",
+    "eeeeee"
 ];
 function crash(message, data) {
-    console.log(red("Error: " + message));
-    if (data) console.log(red(dataToText(data)));
+    console.log(red1("Error: " + message));
+    if (data) console.log(red1(dataToText(data)));
     Deno.exit(1);
 }
 function dataToText(data) {
-    return Object.keys(data).map((key)=>`- ${key}: ${data[key]}`
-    ).join("\n");
+    return Object.keys(data).map((key)=>`- ${key}: ${data[key]}`).join("\n");
 }
 const __default1 = {
     "mustaches": {
+        "colorscheme.ejs": "<% const info = it.info; %>\n\"\"\n\" Colorscheme: <% info.name %>\n<% if(it.info.description) { %>\" Description: <%= it.info.description %>\n<% } %>\n<% if(it.info.url){ %>\" URL: <%= it.info.url %>\n<% } %>\n<% if(it.info.author){ %>\" Author: <%= it.info.author %>\n<% } %>\n<% if(it.info.license){%>\" License: <%= it.info.license %>\n<% } %>\n\"\"\n\nset background=<%= it.info.background %>\n\nhi clear\n\nif exists(\"syntax_on\")\n  syntax reset\nendif\nlet g:colors_name=\"<%= it.info.name %>\"\n\n\nlet Italic = \"\"\nif exists('g:<%= it.info.name %>_italic')\n  let Italic = \"italic\"\nendif\nlet g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)\n\nlet Bold = \"\"\nif exists('g:<%= info.name %>_bold')\n  let Bold = \"bold\"\nendif\n\nlet g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)\n\n<% Object.keys(it.stacks).forEach(function (key) {%>\n  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>\n<%- if(link){ -%>\nhi link <%=key%> <%=link%>\n<%- } else { -%>\nhi <%=key%>\n<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>\n<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>\n<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>\n<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>\n<% } %>\n\n<% }) %>\n\n<% if(it.term.color_0){ %>\nif has('terminal')\n  let g:terminal_ansi_colors = [\n  \\ \"<%= it.term.color_0 %>\",\n  \\ \"<%= it.term.color_1 %>\",\n  \\ \"<%= it.term.color_2 %>\",\n  \\ \"<%= it.term.color_3 %>\",\n  \\ \"<%= it.term.color_4 %>\",\n  \\ \"<%= it.term.color_5 %>\",\n  \\ \"<%= it.term.color_6 %>\",\n  \\ \"<%= it.term.color_7 %>\",\n  \\ \"<%= it.term.color_8 %>\",\n  \\ \"<%= it.term.color_9 %>\",\n  \\ \"<%= it.term.color_10 %>\",\n  \\ \"<%= it.term.color_11 %>\",\n  \\ \"<%= it.term.color_12 %>\",\n  \\ \"<%= it.term.color_13 %>\",\n  \\ \"<%= it.term.color_14 %>\",\n  \\ \"<%= it.term.color_15 %>\"\n  \\ ]\nendif\n\nif has('nvim')\n<% Object.keys(it.term).forEach(function (key) { %>\n  let g:terminal_<%= key %> = \"<%= it.term[key] %>\"\n<% }) %>\nendif\n<% } %>\n",
         "lightline.ejs": "<% const info = it.info; %>\n\"\"\n\" Lightline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){ %>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){ %>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){ %>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet s:p = {\"normal\": {}, \"inactive\": {}, \"insert\": {}, \"replace\": {}, \"visual\": {}, \"tabline\": {} }\n\nlet s:p.normal.left = [[[\"<%= it.normal1.fg.hex %>\", <%= it.normal1.fg.xterm %>], [\"<%= it.normal1.bg.hex %>\", <%= it.normal1.bg.xterm %>]], [[\"<%= it.normal2.fg.hex %>\", <%= it.normal2.fg.xterm %>], [\"<%= it.normal2.bg.hex %>\", <%= it.normal2.bg.xterm %>]]]\nlet s:p.normal.middle = [[[\"<%= it.normal3.fg.hex %>\", <%= it.normal3.fg.xterm %>], [\"<%= it.normal3.bg.hex %>\", <%= it.normal3.bg.xterm %>]]]\nlet s:p.normal.right = [[[\"<%= it.normal4.fg.hex %>\", <%= it.normal4.fg.xterm %>], [\"<%= it.normal4.bg.hex %>\", <%= it.normal4.bg.xterm %>]], [[\"<%= it.normal5.fg.hex %>\", <%= it.normal5.fg.xterm %>], [\"<%= it.normal5.bg.hex %>\", <%= it.normal5.bg.xterm %>]]]\nlet s:p.normal.error = [[[\"<%= it.normalError.fg.hex %>\", <%= it.normalError.fg.xterm %>], [\"<%= it.normalError.bg.hex %>\", <%= it.normalError.bg.xterm %>]]]\nlet s:p.normal.warning = [[[\"<%= it.normalWarning.fg.hex %>\", <%= it.normalWarning.fg.xterm %>], [\"<%= it.normalWarning.bg.hex %>\", <%= it.normalWarning.bg.xterm %>]]]\n\nlet s:p.inactive.left = [[[\"<%= it.inactive1.fg.hex %>\", <%= it.inactive1.fg.xterm %>], [\"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.bg.xterm %>]], [[\"<%= it.inactive2.fg.hex %>\", <%= it.inactive2.fg.xterm %>], [\"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.bg.xterm %>]]]\nlet s:p.inactive.middle = [[[\"<%= it.inactive3.fg.hex %>\", <%= it.inactive3.fg.xterm %>], [\"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.bg.xterm %>]]]\nlet s:p.inactive.right = [[[\"<%= it.inactive4.fg.hex %>\", <%= it.inactive4.fg.xterm %>], [\"<%= it.inactive4.bg.hex %>\", <%= it.inactive4.bg.xterm %>]], [[\"<%= it.inactive5.fg.hex %>\", <%= it.inactive5.fg.xterm %>], [\"<%= it.inactive5.bg.hex %>\", <%= it.inactive5.bg.xterm %>]]]\n\nlet s:p.insert.left = [[[\"<%= it.insert1.fg.hex %>\", <%= it.insert1.fg.xterm %>], [\"<%= it.insert1.bg.hex %>\", <%= it.insert1.bg.xterm %>]], [[\"<%= it.insert2.fg.hex %>\", <%= it.insert2.fg.xterm %>], [\"<%= it.insert2.bg.hex %>\", <%= it.insert2.bg.xterm %>]]]\nlet s:p.insert.middle = [[[\"<%= it.insert3.fg.hex %>\", <%= it.insert3.fg.xterm %>], [\"<%= it.insert3.bg.hex %>\", <%= it.insert3.bg.xterm %>]]]\nlet s:p.insert.right = [[[\"<%= it.insert4.fg.hex %>\", <%= it.insert4.fg.xterm %>], [\"<%= it.insert4.bg.hex %>\", <%= it.insert4.bg.xterm %>]], [[\"<%= it.insert5.fg.hex %>\", <%= it.insert5.fg.xterm %>], [\"<%= it.insert5.bg.hex %>\", <%= it.insert5.bg.xterm %>]]]\n\nlet s:p.replace.left = [[[\"<%= it.replace1.fg.hex %>\", <%= it.replace1.fg.xterm %>], [\"<%= it.replace1.bg.hex %>\", <%= it.replace1.bg.xterm %>]], [[\"<%= it.replace2.fg.hex %>\", <%= it.replace2.fg.xterm %>], [\"<%= it.replace2.bg.hex %>\", <%= it.replace2.bg.xterm %>]]]\nlet s:p.replace.middle = [[[\"<%= it.replace3.fg.hex %>\", <%= it.replace3.fg.xterm %>], [\"<%= it.replace3.bg.hex %>\", <%= it.replace3.bg.xterm %>]]]\nlet s:p.replace.right = [[[\"<%= it.replace4.fg.hex %>\", <%= it.replace4.fg.xterm %>], [\"<%= it.replace4.bg.hex %>\", <%= it.replace4.bg.xterm %>]], [[\"<%= it.replace5.fg.hex %>\", <%= it.replace5.fg.xterm %>], [\"<%= it.replace5.bg.hex %>\", <%= it.replace5.bg.xterm %>]]]\n\nlet s:p.visual.left = [[[\"<%= it.visual1.fg.hex %>\", <%= it.visual1.fg.xterm %>], [\"<%= it.visual1.bg.hex %>\", <%= it.visual1.bg.xterm %>]], [[\"<%= it.visual2.fg.hex %>\", <%= it.visual2.fg.xterm %>], [\"<%= it.visual2.bg.hex %>\", <%= it.visual2.bg.xterm %>]]]\nlet s:p.visual.middle = [[[\"<%= it.visual3.fg.hex %>\", <%= it.visual3.fg.xterm %>], [\"<%= it.visual3.bg.hex %>\", <%= it.visual3.bg.xterm %>]]]\nlet s:p.visual.right = [[[\"<%= it.visual4.fg.hex %>\", <%= it.visual4.fg.xterm %>], [\"<%= it.visual4.bg.hex %>\", <%= it.visual4.bg.xterm %>]], [[\"<%= it.visual5.fg.hex %>\", <%= it.visual5.fg.xterm %>], [\"<%= it.visual5.bg.hex %>\", <%= it.visual5.bg.xterm %>]]]\n\nlet s:p.tabline.left = [[[\"<%= it.tablineLeft.fg.hex %>\", <%= it.tablineLeft.fg.xterm %>], [\"<%= it.tablineLeft.bg.hex %>\", <%= it.tablineLeft.bg.xterm %>]]]\nlet s:p.tabline.tabsel = [[[\"<%= it.tablineSelected.fg.hex %>\", <%= it.tablineSelected.fg.xterm %>], [\"<%= it.tablineSelected.bg.hex %>\", <%= it.tablineSelected.bg.xterm %>]]]\nlet s:p.tabline.middle = [[[\"<%= it.tablineMiddle.fg.hex %>\", <%= it.tablineMiddle.fg.xterm %>], [\"<%= it.tablineMiddle.bg.hex %>\", <%= it.tablineMiddle.bg.xterm %>]]]\nlet s:p.tabline.right = [[[\"<%= it.tablineRight.fg.hex %>\", <%= it.tablineRight.fg.xterm %>], [\"<%= it.tablineRight.bg.hex %>\", <%= it.tablineRight.bg.xterm %>]]]\n\nlet g:lightline#colorscheme#<%= info.name %>#palette = lightline#colorscheme#flatten(s:p)\n",
         "project.ejs": "name: '<%= it.name %>'\nversion: '<%= it.version %>'\nlicense: '<%= it.license %>'\nauthor: '<%= it.author %>'\nurl: '<%= it.url %>'\ndescription: '<%= it.description %>'\ncolorschemes:\n- name: '<%= it.name %>'\n  background: 'dark'\n  palette: '<%= it.name %>'\n",
-        "colorscheme.ejs": "<% const info = it.info; %>\n\"\"\n\" Colorscheme: <% info.name %>\n<% if(it.info.description) { %>\" Description: <%= it.info.description %>\n<% } %>\n<% if(it.info.url){ %>\" URL: <%= it.info.url %>\n<% } %>\n<% if(it.info.author){ %>\" Author: <%= it.info.author %>\n<% } %>\n<% if(it.info.license){%>\" License: <%= it.info.license %>\n<% } %>\n\"\"\n\nset background=<%= it.info.background %>\n\nhi clear\n\nif exists(\"syntax_on\")\n  syntax reset\nendif\nlet g:colors_name=\"<%= it.info.name %>\"\n\n\nlet Italic = \"\"\nif exists('g:<%= it.info.name %>_italic')\n  let Italic = \"italic\"\nendif\nlet g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)\n\nlet Bold = \"\"\nif exists('g:<%= info.name %>_bold')\n  let Bold = \"bold\"\nendif\n\nlet g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)\n\n<% Object.keys(it.stacks).forEach(function (key) {%>\n  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>\n<%- if(link){ -%>\nhi link <%=key%> <%=link%>\n<%- } else { -%>\nhi <%=key%>\n<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>\n<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>\n<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>\n<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>\n<% } %>\n\n<% }) %>\n\n<% if(it.term.color_0){ %>\nif has('terminal')\n  let g:terminal_ansi_colors = [\n  \\ \"<%= it.term.color_0 %>\",\n  \\ \"<%= it.term.color_1 %>\",\n  \\ \"<%= it.term.color_2 %>\",\n  \\ \"<%= it.term.color_3 %>\",\n  \\ \"<%= it.term.color_4 %>\",\n  \\ \"<%= it.term.color_5 %>\",\n  \\ \"<%= it.term.color_6 %>\",\n  \\ \"<%= it.term.color_7 %>\",\n  \\ \"<%= it.term.color_8 %>\",\n  \\ \"<%= it.term.color_9 %>\",\n  \\ \"<%= it.term.color_10 %>\",\n  \\ \"<%= it.term.color_11 %>\",\n  \\ \"<%= it.term.color_12 %>\",\n  \\ \"<%= it.term.color_13 %>\",\n  \\ \"<%= it.term.color_14 %>\",\n  \\ \"<%= it.term.color_15 %>\"\n  \\ ]\nendif\n\nif has('nvim')\n<% Object.keys(it.term).forEach(function (key) { %>\n  let g:terminal_<%= key %> = \"<%= it.term[key] %>\"\n<% }) %>\nendif\n<% } %>\n",
         "airline.ejs": "<% const info = it.info; %>\n\"\"\n\" Airline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){%>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){%>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){%>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet g:airline#themes#<%= info.name %>#palette = {}\n\nlet s:normal1 = [ \"<%= it.normal1.fg.hex %>\", \"<%= it.normal1.bg.hex %>\", <%= it.normal1.fg.xterm %>, <%= it.normal1.bg.xterm %> ]\nlet s:normal2 = [ \"<%= it.normal2.fg.hex %>\", \"<%= it.normal2.bg.hex %>\", <%= it.normal2.fg.xterm %>, <%= it.normal2.bg.xterm %> ]\nlet s:normal3 = [ \"<%= it.normal3.fg.hex %>\", \"<%= it.normal3.bg.hex %>\", <%= it.normal3.fg.xterm %>, <%= it.normal3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)\n\nlet s:insert1 = [ \"<%= it.insert1.fg.hex %>\", \"<%= it.insert1.bg.hex %>\", <%= it.insert1.fg.xterm %>, <%= it.insert1.bg.xterm %> ]\nlet s:insert2 = [ \"<%= it.insert2.fg.hex %>\", \"<%= it.insert2.bg.hex %>\", <%= it.insert2.fg.xterm %>, <%= it.insert2.bg.xterm %> ]\nlet s:insert3 = [ \"<%= it.insert3.fg.hex %>\", \"<%= it.insert3.bg.hex %>\", <%= it.insert3.fg.xterm %>, <%= it.insert3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)\n\nlet s:replace1 = [ \"<%= it.replace1.fg.hex %>\", \"<%= it.replace1.bg.hex %>\", <%= it.replace1.fg.xterm %>, <%= it.replace1.bg.xterm %> ]\nlet s:replace2 = [ \"<%= it.replace2.fg.hex %>\", \"<%= it.replace2.bg.hex %>\", <%= it.replace2.fg.xterm %>, <%= it.replace2.bg.xterm %> ]\nlet s:replace3 = [ \"<%= it.replace3.fg.hex %>\", \"<%= it.replace3.bg.hex %>\", <%= it.replace3.fg.xterm %>, <%= it.replace3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)\n\nlet s:visual1 = [ \"<%= it.visual1.fg.hex %>\", \"<%= it.visual1.bg.hex %>\", <%= it.visual1.fg.xterm %>, <%= it.visual1.bg.xterm %> ]\nlet s:visual2 = [ \"<%= it.visual2.fg.hex %>\", \"<%= it.visual2.bg.hex %>\", <%= it.visual2.fg.xterm %>, <%= it.visual2.bg.xterm %> ]\nlet s:visual3 = [ \"<%= it.visual3.fg.hex %>\", \"<%= it.visual3.bg.hex %>\", <%= it.visual3.fg.xterm %>, <%= it.visual3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)\n\nlet s:inactive1 = [ \"<%= it.inactive1.fg.hex %>\", \"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.fg.xterm %>, <%= it.inactive1.bg.xterm %> ]\nlet s:inactive2 = [ \"<%= it.inactive2.fg.hex %>\", \"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.fg.xterm %>, <%= it.inactive2.bg.xterm %> ]\nlet s:inactive3 = [ \"<%= it.inactive3.fg.hex %>\", \"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.fg.xterm %>, <%= it.inactive3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)\n\n<% if(it.ctrlp1){ %>\nif !get(g:, 'loaded_ctrlp', 0)\n  finish\nendif\n\nlet s:CP1 = [ \"<%= it.ctrlp1.fg.hex %>\", \"<%= it.ctrlp1.bg.hex %>\", <%= it.ctrlp1.fg.xterm %>, <%= it.ctrlp1.bg.xterm %> ]\nlet s:CP2 = [ \"<%= it.ctrlp2.fg.hex %>\", \"<%= it.ctrlp2.bg.hex %>\", <%= it.ctrlp2.fg.xterm %>, <%= it.ctrlp2.bg.xterm %> ]\nlet s:CP3 = [ \"<%= it.ctrlp3.fg.hex %>\", \"<%= it.ctrlp3.bg.hex %>\", <%= it.ctrlp3.fg.xterm %>, <%= it.ctrlp3.bg.xterm %> ]\n\nlet g:airline#themes#<%= it.info.name %>#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)\n<% } %>\n"
     },
     "syntax": {
-        "json.yml": "jsonPadding: '' # Operator\njsonString: '' # String\njsonTest: '' # Label\njsonEscape: '' # Special\njsonNumber: '' # Number\njsonBraces: '' # Delimiter\njsonNull: '' # Function\njsonBoolean: '' # Boolean\njsonKeyword: '' # Label\njsonNumError: '' # Error\njsonCommentError: '' # Error\njsonSemicolonError: '' # Error\njsonTrailingCommaError: '' # Error\njsonMissingCommaError: '' # Error\njsonStringSQError: '' # Error\njsonNoQuotesError: '' # Error\njsonTripleQuotesError: '' # Error\njsonQuote: '' # Quote\njsonNoise: '' # Noise\n",
-        "help.yml": "helpIgnore: '' # Ignore\nhelpHyperTextJump: '' # Identifier\nhelpBar: '' # Ignore\nhelpBacktick: '' # Ignore\nhelpStar: '' # Ignore\nhelpHyperTextEntry: '' # String\nhelpHeadline: '' # Statement\nhelpHeader: '' # PreProc\nhelpSectionDelim: '' # PreProc\nhelpVim: '' # Identifier\nhelpCommand: '' # Comment\nhelpExample: '' # Comment\nhelpOption: '' # Type\nhelpSpecial: '' # Special\nhelpNote: '' # Todo\nhelpComment: '' # Comment\nhelpConstant: '' # Constant\nhelpString: '' # String\nhelpCharacter: '' # Character\nhelpNumber: '' # Number\nhelpBoolean: '' # Boolean\nhelpFloat: '' # Float\nhelpIdentifier: '' # Identifier\nhelpFunction: '' # Function\nhelpStatement: '' # Statement\nhelpConditional: '' # Conditional\nhelpRepeat: '' # Repeat\nhelpLabel: '' # Label\nhelpOperator: '' # Operator\nhelpKeyword: '' # Keyword\nhelpException: '' # Exception\nhelpPreProc: '' # PreProc\nhelpInclude: '' # Include\nhelpDefine: '' # Define\nhelpMacro: '' # Macro\nhelpPreCondit: '' # PreCondit\nhelpType: '' # Type\nhelpStorageClass: '' # StorageClass\nhelpStructure: '' # Structure\nhelpTypedef: '' # Typedef\nhelpSpecialChar: '' # SpecialChar\nhelpTag: '' # Tag\nhelpDelimiter: '' # Delimiter\nhelpSpecialComment: '' # SpecialComment\nhelpDebug: '' # Debug\nhelpUnderlined: '' # Underlined\nhelpError: '' # Error\nhelpTodo: '' # Todo\nhelpURL: '' # String\n",
-        "base.yml": "# BASE UI\nColorColumn: ''\nConceal: ''\nCursor: ''\nCursorIM: ''\nCursorColumn: ''\nCursorLine: ''\nCursorLineNr: ''\nDirectory: ''\nDiffAdd: ''\nDiffChange: ''\nDiffDelete: ''\nDiffText: ''\nErrorMsg: ''\nVertSplit: ''\nFolded: ''\nFoldColumn: ''\nSignColumn: ''\nIncSearch: ''\nLineNr: ''\nMatchParen: ''\nModeMsg: ''\nMoreMsg: ''\nNonText: ''\nNormal: ''\nPMenu: ''\nPMenuSel: ''\nPmenuSbar: ''\nPmenuThumb: ''\nQuestion: ''\nSearch: ''\nSpecialKey: ''\nSpellBad: ''\nSpellLocal: ''\nSpellCap: ''\nSpellRare: ''\nStatusLine: ''\nStatusLineNC: ''\nTabLine: ''\nTabLineFill: ''\nTabLineSel: ''\nTitle: ''\nVisual: ''\nVisualNOS: ''\nWarningMsg: ''\nWildMenu: ''\n# BASE SYNTAX\nComment: ''\nConstant: ''\nString: '' # Constant\nCharacter: '' # Constant\nBoolean: '' # Constant\nNumber: '' # Constant\nFloat: '' # Constant\nIdentifier: ''\nFunction: '' # Identifier\nStatement: ''\nConditional: '' # Statement\nRepeat: '' # Statement\nLabel: '' # Statement\nOperator: '' # Statement\nKeyword: '' # Statement\nException: '' # Statement\nPreProc: ''\nInclude: '' # PreProc\nDefine: '' # PreProc\nMacro: '' # PreProc\nPreCondit: '' # PreProc\nType: ''\nStorageClass: '' # Type\nStructure: '' # Type\nTypedef: '' # Type\nSpecial: ''\nSpecialChar: '' # Special\nTag: '' # Special\nDelimiter: '' # Special\nSpecialComment: '' # Special\nDebug: '' # Special\nUnderlined: ''\nIgnore: ''\nError: ''\nTodo: ''\n",
-        "xml.yml": "xmlTodo: '' # Todo\nxmlTag: '' # Function\nxmlTagName: '' # Function\nxmlEndTag: '' # Identifier\nxmlNamespace: '' # Tag\nxmlEntity: '' # Statement\nxmlEntityPunct: '' # Type\nxmlAttribPunct: '' # Comment\nxmlAttrib: '' # Type\nxmlString: '' # String\nxmlComment: '' # Comment\nxmlCommentStart: '' # xmlComment\nxmlCommentPart: '' # Comment\nxmlCommentError: '' # Error\nxmlError: '' # Error\nxmlProcessingDelim: '' # Comment\nxmlProcessing: '' # Type\nxmlCdata: '' # String\nxmlCdataCdata: '' # Statement\nxmlCdataStart: '' # Type\nxmlCdataEnd: '' # Type\nxmlDocTypeDecl: '' # Function\nxmlDocTypeKeyword: '' # Statement\nxmlInlineDTD: '' # Function\n",
-        "css.yml": "cssComment: '' # Comment\ncssVendor: '' # Comment\ncssHacks: '' # Comment\ncssTagName: '' # Statement\ncssDeprecated: '' # Error\ncssSelectorOp: '' # Special\ncssSelectorOp2: '' # Special\ncssAttrComma: '' # Special\ncssAnimationProp: '' # cssProp\ncssBackgroundProp: '' # cssProp\ncssBorderProp: '' # cssProp\ncssBoxProp: '' # cssProp\ncssColorProp: '' # cssProp\ncssContentForPagedMediaProp: '' # cssProp\ncssDimensionProp: '' # cssProp\ncssFlexibleBoxProp: '' # cssProp\ncssFontProp: '' # cssProp\ncssGeneratedContentProp: '' # cssProp\ncssGridProp: '' # cssProp\ncssHyerlinkProp: '' # cssProp\ncssLineboxProp: '' # cssProp\ncssListProp: '' # cssProp\ncssMarqueeProp: '' # cssProp\ncssMultiColumnProp: '' # cssProp\ncssPagedMediaProp: '' # cssProp\ncssPositioningProp: '' # cssProp\ncssPrintProp: '' # cssProp\ncssRubyProp: '' # cssProp\ncssSpeechProp: '' # cssProp\ncssTableProp: '' # cssProp\ncssTextProp: '' # cssProp\ncssTransformProp: '' # cssProp\ncssTransitionProp: '' # cssProp\ncssUIProp: '' # cssProp\ncssIEUIProp: '' # cssProp\ncssAuralProp: '' # cssProp\ncssRenderProp: '' # cssProp\ncssMobileTextProp: '' # cssProp\ncssAnimationAttr: '' # cssAttr\ncssBackgroundAttr: '' # cssAttr\ncssBorderAttr: '' # cssAttr\ncssBoxAttr: '' # cssAttr\ncssContentForPagedMediaAttr: '' # cssAttr\ncssDimensionAttr: '' # cssAttr\ncssFlexibleBoxAttr: '' # cssAttr\ncssFontAttr: '' # cssAttr\ncssGeneratedContentAttr: '' # cssAttr\ncssGridAttr: '' # cssAttr\ncssHyerlinkAttr: '' # cssAttr\ncssLineboxAttr: '' # cssAttr\ncssListAttr: '' # cssAttr\ncssMarginAttr: '' # cssAttr\ncssMarqueeAttr: '' # cssAttr\ncssMultiColumnAttr: '' # cssAttr\ncssPaddingAttr: '' # cssAttr\ncssPagedMediaAttr: '' # cssAttr\ncssPositioningAttr: '' # cssAttr\ncssGradientAttr: '' # cssAttr\ncssPrintAttr: '' # cssAttr\ncssRubyAttr: '' # cssAttr\ncssSpeechAttr: '' # cssAttr\ncssTableAttr: '' # cssAttr\ncssTextAttr: '' # cssAttr\ncssTransformAttr: '' # cssAttr\ncssTransitionAttr: '' # cssAttr\ncssUIAttr: '' # cssAttr\ncssIEUIAttr: '' # cssAttr\ncssAuralAttr: '' # cssAttr\ncssRenderAttr: '' # cssAttr\ncssCommonAttr: '' # cssAttr\ncssPseudoClassId: '' # PreProc\ncssPseudoClassLang: '' # Constant\ncssValueLength: '' # Number\ncssValueInteger: '' # Number\ncssValueNumber: '' # Number\ncssValueAngle: '' # Number\ncssValueTime: '' # Number\ncssValueFrequency: '' # Number\ncssFunction: '' # Constant\ncssURL: '' # String\ncssFunctionName: '' # Function\ncssFunctionComma: '' # Function\ncssColor: '' # Constant\ncssIdentifier: '' # Function\ncssInclude: '' # Include\ncssIncludeKeyword: '' # atKeyword\ncssImportant: '' # Special\ncssBraces: '' # Function\ncssBraceError: '' # Error\ncssError: '' # Error\ncssUnicodeEscape: '' # Special\ncssStringQQ: '' # String\ncssStringQ: '' # String\ncssAttributeSelector: '' # String\ncssMedia: '' # atKeyword\ncssMediaType: '' # Special\ncssMediaComma: '' # Normal\ncssMediaKeyword: '' # Statement\ncssMediaProp: '' # cssProp\ncssMediaAttr: '' # cssAttr\ncssPage: '' # atKeyword\ncssPagePseudo: '' # PreProc\ncssPageMargin: '' # atKeyword\ncssPageProp: '' # cssProp\ncssKeyFrame: '' # atKeyword\ncssKeyFrameSelector: '' # Constant\ncssFontDescriptor: '' # Special\ncssFontDescriptorFunction: '' # Constant\ncssFontDescriptorProp: '' # cssProp\ncssFontDescriptorAttr: '' # cssAttr\ncssUnicodeRange: '' # Constant\ncssClassName: '' # Function\ncssClassNameDot: '' # Function\ncssProp: '' # StorageClass\ncssAttr: '' # Constant\ncssUnitDecorators: '' # Number\ncssNoise: '' # Noise\natKeyword: '' # PreProc\n",
-        "vim-stylus.yml": "stylusComment: '' # Comment\nstylusVariable: '' # Identifier\nstylusControl: '' # PreProc\nstylusFunction: '' # Function\nstylusInterpolation: '' # Delimiter\nstylusAmpersand: '' # Character\nstylusClass: '' # Type\nstylusClassChar: '' # Special\nstylusEscape: '' # Special\nstylusId: '' # Identifier\nstylusIdChar: '' # Special\n",
-        "vim-mustache-handlebars.yml": "mustacheVariable: '' # Number\nmustacheVariableUnescape: '' # Number\nmustachePartial: '' # Number\nmustacheSection: '' # Number\nmustacheMarkerSet: '' # Number\nmustacheComment: '' # Comment\nmustacheBlockComment: '' # Comment\nmustacheError: '' # Error\nmustacheInsideError: '' # Error\nmustacheHandlebars: '' # Special\nmustacheUnescape: '' # Identifier\nmustacheOperators: '' # Operator\nmustacheConditionals: '' # Conditional\nmustacheHelpers: '' # Repeat\nmustacheQString: '' # String\nmustacheDQString: '' # String\n",
-        "vim-signify.yml": "# mhinz/vim-signify\nSignifyLineAdd: ''\nSignifyLineDelete: ''\nSignifyLineDeleteFirstLine: ''\nSignifyLineChange: ''\nSignifyLineChangeDelete: ''\n\nSignifySignAdd: ''\nSignifySignDelete: ''\nSignifySignDeleteFirstLine: ''\nSignifySignChange: ''\nSignifySignChangeDelete: ''\n",
-        "diff.yml": "diffOldFile: '' # diffFile\ndiffNewFile: '' # diffFile\ndiffFile: '' # Type\ndiffOnly: '' # Constant\ndiffIdentical: '' # Constant\ndiffDiffer: '' # Constant\ndiffBDiffer: '' # Constant\ndiffIsA: '' # Constant\ndiffNoEOL: '' # Constant\ndiffCommon: '' # Constant\ndiffRemoved: '' # Special\ndiffChanged: '' # PreProc\ndiffAdded: '' # Identifier\ndiffLine: '' # Statement\ndiffSubname: '' # PreProc\ndiffComment: '' # Comment\n",
-        "vim-plug.yml": "plug1: '' # Title\nplug2: '' # Repeat\nplugH2: '' # Type\nplugX: '' # Exception\nplugBracket: '' # Structure\nplugNumber: '' # Number\nplugDash: '' # Special\nplugPlus: '' # Constant\nplugStar: '' # Boolean\nplugMessage: '' # Function\nplugName: '' # Label\nplugInstall: '' # Function\nplugUpdate: '' # Type\nplugError: '' # Error\nplugRelDate: '' # Comment\nplugEdge: '' # PreProc\nplugSha: '' # Identifier\nplugTag: '' # Constant\nplugNotLoaded: '' # Comment\n",
-        "pug.yml": "pugPlainChar: '' # Special\npugScriptConditional: '' # PreProc\npugScriptLoopKeywords: '' # PreProc\npugScriptStatement: '' # PreProc\npugHtmlArg: '' # htmlArg\npugAttributeString: '' # String\npugAttributesDelimiter: '' # Identifier\npugIdChar: '' # Special\npugClassChar: '' # Special\npugBlockExpansionChar: '' # Special\npugPipeChar: '' # Special\npugTagBlockChar: '' # Special\npugId: '' # Identifier\npugClass: '' # Type\npugInterpolationDelimiter: '' # Delimiter\npugInlineDelimiter: '' # Delimiter\npugFilter: '' # PreProc\npugDocType: '' # PreProc\npugComment: '' # Comment\npugCommentBlock: '' # Comment\npugHtmlConditionalComment: '' # pugComment\n",
-        "git.yml": "gitDateHeader: '' # gitIdentityHeader\ngitIdentityHeader: '' # gitIdentityKeyword\ngitIdentityKeyword: '' # Label\ngitNotesHeader: '' # gitKeyword\ngitReflogHeader: '' # gitKeyword\ngitKeyword: '' # Keyword\ngitIdentity: '' # String\ngitEmailDelimiter: '' # Delimiter\ngitEmail: '' # Special\ngitDate: '' # Number\ngitMode: '' # Number\ngitHashAbbrev: '' # gitHash\ngitHash: '' # Identifier\ngitReflogMiddle: '' # gitReference\ngitReference: '' # Function\ngitStage: '' # gitType\ngitType: '' # Type\ngitDiffAdded: '' # diffAdded\ngitDiffRemoved: '' # diffRemoved\n",
-        "elixir.yml": "# Elixir\nelixirComment: '' # Comment\nelixirUnusedVariable: '' # Comment\nelixirAtom: '' # Constant\nelixirBoolean: '' # Constant\nelixirPseudoVariable: '' # Constant\nelixirNumber: '' # Constant\nelixirString: '' # Constant\nelixirRegex: '' # Constant\nelixirDocString: '' # Constant\nelixirAtomInterpolated: '' # Constant\nelixirSigil: '' # Constant\nelixirRegexDelimiter: '' # Delimiter\nelixirStringDelimiter: '' # Delimiter\nelixirInterpolationDelimiter: '' # Delimiter\nelixirSigilDelimiter: '' # Delimiter\nelixirSpecial: '' # Delimiter\nelixirRegexEscape: '' # Delimiter\nelixirRegexEscapePunctuation: '' # Delimiter\nelixirRegexQuantifier: '' # Delimiter\nelixirRegexCharClass: '' # Delimiter\nelixirSelf: '' # Identifier\nelixirVariable: '' # Identifier\nelixirFunctionDeclaration: '' # Identifier\nelixirBlockDefinition: '' # Statement\nelixirKeyword: '' # Statement\nelixirOperator: '' # Statement\nelixirInclude: '' # Preproc\nelixirDefine: '' # Preproc\nelixirPrivateDefine: '' # Preproc\nelixirModuleDefine: '' # Preproc\nelixirProtocolDefine: '' # Preproc\nelixirImplDefine: '' # Preproc\nelixirRecordDefine: '' # Preproc\nelixirPrivateRecordDefine: '' # Preproc\nelixirMacroDefine: '' # Preproc\nelixirMacroDeclaration: '' # Preproc\nelixirPrivateMacroDefine: '' # Preproc\nelixirDelegateDefine: '' # Preproc\nelixirOverridableDefine: '' # Preproc\nelixirExceptionDefine: '' # Preproc\nelixirCallbackDefine: '' # Preproc\nelixirStructDefine: '' # Preproc\nelixirAlias: '' # Type\nelixirTodo: '' # Todo\nelixirArguments: ''\nelixirGuard: ''\nelixirId: ''\nelixirInterpolation: ''\nelixirDocStringStar: ''\nelixirBlock: ''\nelixirAnonymousFunction: ''\nelixirDelimEscape: ''\nelixirModuleDeclaration: ''\nelixirProtocolDeclaration: ''\nelixirImplDeclaration: ''\nelixirRecordDeclaration: ''\nelixirDelegateDeclaration: ''\nelixirOverridableDeclaratio: ''\nelixirExceptionDeclaration: ''\nelixirCallbackDeclaration: ''\nelixirStructDeclaration: ''\n",
         "elm-vim.yml": "elmTopLevelDecl: '' # Function\nelmTupleFunction: '' # Normal\nelmTodo: '' # Todo\nelmComment: '' # Comment\nelmLineComment: '' # Comment\nelmString: '' # String\nelmTripleString: '' # String\nelmChar: '' # String\nelmStringEscape: '' # Special\nelmInt: '' # Number\nelmFloat: '' # Float\nelmDelimiter: '' # Comment\nelmTypedef: '' # Keyword\nelmImport: '' # Keyword\nelmConditional: '' # Keyword\nelmAlias: '' # Keyword\nelmOperator: '' # Operator\nelmType: '' # Type\nelmNumberType: '' # Type\nelmBraces: '' # Delimiter\n",
-        "markdown.yml": "markdownH1: '' # htmlH1\nmarkdownH2: '' # htmlH2\nmarkdownH3: '' # htmlH3\nmarkdownH4: '' # htmlH4\nmarkdownH5: '' # htmlH5\nmarkdownH6: '' # htmlH6\nmarkdownHeadingRule: '' # markdownRule\nmarkdownHeadingDelimiter: '' # Delimiter\nmarkdownOrderedListMarker: '' # markdownListMarker\nmarkdownListMarker: '' # htmlTagName\nmarkdownBlockquote: '' # Comment\nmarkdownRule: '' # PreProc\nmarkdownLinkText: '' # htmlLink\nmarkdownIdDeclaration: '' # Typedef\nmarkdownId: '' # Type\nmarkdownAutomaticLink: '' # markdownUrl\nmarkdownUrl: '' # Float\nmarkdownUrlTitle: '' # String\nmarkdownIdDelimiter: '' # markdownLinkDelimiter\nmarkdownUrlDelimiter: '' # htmlTag\nmarkdownUrlTitleDelimiter: '' # Delimiter\nmarkdownItalic: '' # htmlItalic\nmarkdownBold: '' # htmlBold\nmarkdownBoldItalic: '' # htmlBoldItalic\nmarkdownCodeDelimiter: '' # Delimiter\nmarkdownEscape: '' # Special\nmarkdownError: '' # Error\n",
-        "sh.yml": "shArithRegion: '' # shShellVariables\nshAtExpr: '' # shSetList\nshBeginHere: '' # shRedir\nshCaseBar: '' # shConditional\nshCaseCommandSub: '' # shCommandSub\nshCaseDoubleQuote: '' # shDoubleQuote\nshCaseIn: '' # shConditional\nshQuote: '' # shOperator\nshCaseSingleQuote: '' # shSingleQuote\nshCaseStart: '' # shConditional\nshCmdSubRegion: '' # shShellVariables\nshColon: '' # shComment\nshDerefOp: '' # shOperator\nshDerefPOL: '' # shDerefOp\nshDerefPPS: '' # shDerefOp\nshDeref: '' # shShellVariables\nshDerefDelim: '' # shOperator\nshDerefSimple: '' # shDeref\nshDerefSpecial: '' # shDeref\nshDerefString: '' # shDoubleQuote\nshDerefVar: '' # shDeref\nshDoubleQuote: '' # shString\nshEcho: '' # shString\nshEchoDelim: '' # shOperator\nshEchoQuote: '' # shString\nshForPP: '' # shLoop\nshEmbeddedEcho: '' # shString\nshEscape: '' # shCommandSub\nshExDoubleQuote: '' # shDoubleQuote\nshExSingleQuote: '' # shSingleQuote\nshFunction: '' # Function\nshHereDoc: '' # shString\nshHerePayload: '' # shHereDoc\nshLoop: '' # shStatement\nshMoreSpecial: '' # shSpecial\nshOption: '' # shCommandSub\nshPattern: '' # shString\nshParen: '' # shArithmetic\nshPosnParm: '' # shShellVariables\nshQuickComment: '' # shComment\nshRange: '' # shOperator\nshRedir: '' # shOperator\nshSetListDelim: '' # shOperator\nshSetOption: '' # shOption\nshSingleQuote: '' # shString\nshSource: '' # shOperator\nshStringSpecial: '' # shSpecial\nshSubShRegion: '' # shOperator\nshTestOpr: '' # shConditional\nshTestPattern: '' # shString\nshTestDoubleQuote: '' # shString\nshTestSingleQuote: '' # shString\nshVariable: '' # shSetList\nshWrapLineOperator: '' # shOperator\nbashAdminStatement: '' # shStatement if exists(\"b:is_bash\")\nbashSpecialVariables: '' # shShellVariables if exists(\"b:is_bash\")\nbashStatement: '' # shStatement if exists(\"b:is_bash\")\nshFunctionParen: '' # Delimiter if exists(\"b:is_bash\")\nshFunctionDelim: '' # Delimiter if exists(\"b:is_bash\")\nkshSpecialVariables: '' # shShellVariables if exists(\"b:is_kornshell\")\nkshStatement: '' # shStatement if exists(\"b:is_kornshell\")\nshCaseError: '' # Error if !exists(\"g:sh_no_error\")\nshCondError: '' # Error if !exists(\"g:sh_no_error\")\nshCurlyError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefOpError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefWordError: '' # Error if !exists(\"g:sh_no_error\")\nshDoError: '' # Error if !exists(\"g:sh_no_error\")\nshEsacError: '' # Error if !exists(\"g:sh_no_error\")\nshIfError: '' # Error if !exists(\"g:sh_no_error\")\nshInError: '' # Error if !exists(\"g:sh_no_error\")\nshParenError: '' # Error if !exists(\"g:sh_no_error\")\nshTestError: '' # Error if !exists(\"g:sh_no_error\")\nshDTestError: '' # Error if exists(\"b:is_kornshell\")\nshArithmetic: '' # Special\nshCharClass: '' # Identifier\nshSnglCase: '' # Statement\nshCommandSub: '' # Special\nshComment: '' # Comment\nshConditional: '' # Conditional\nshCtrlSeq: '' # Special\nshExprRegion: '' # Delimiter\nshFunctionKey: '' # Function\nshFunctionName: '' # Function\nshNumber: '' # Number\nshOperator: '' # Operator\nshRepeat: '' # Repeat\nshSet: '' # Statement\nshSetList: '' # Identifier\nshShellVariables: '' # PreProc\nshSpecial: '' # Special\nshStatement: '' # Statement\nshString: '' # String\nshTodo: '' # Todo\nshAlias: '' # Identifier\nshHereDoc01: '' # shRedir\nshHereDoc02: '' # shRedir\nshHereDoc03: '' # shRedir\nshHereDoc04: '' # shRedir\nshHereDoc05: '' # shRedir\nshHereDoc06: '' # shRedir\nshHereDoc07: '' # shRedir\nshHereDoc08: '' # shRedir\nshHereDoc09: '' # shRedir\nshHereDoc10: '' # shRedir\nshHereDoc11: '' # shRedir\nshHereDoc12: '' # shRedir\nshHereDoc13: '' # shRedir\nshHereDoc14: '' # shRedir\nshHereDoc15: '' # shRedir\nshHereDoc16: '' # shRedir\nshHereDoc17: '' # shRedir\nshHereDoc18: '' # shRedir\nshHereDoc19: '' # shRedir\nshHereDoc20: '' # shRedir\nshHereDoc21: '' # shRedir\nshHereDoc22: '' # shRedir\nshHereDoc23: '' # shRedir\nshHereDoc24: '' # shRedir\nshHereDoc25: '' # shRedir\nshHereDoc26: '' # shRedir\nshHereDoc27: '' # shRedir\nshHereDoc28: '' # shRedir\nshHereDoc29: '' # shRedir\nshHereDoc30: '' # shRedir\nshHereDoc31: '' # shRedir\nshHereDoc32: '' # shRedir\n",
-        "elm.vim.yml": "elmKeyword: '' # Keyword\nelmBuiltinOp: '' # Special\nelmType: '' # Type\nelmTodo: '' # Todo\nelmLineComment: '' # Comment\nelmComment: '' # Comment\nelmString: '' # String\nelmNumber: '' # Number\nspecialName: '' # Special\n",
-        "vim-gitgutter.yml": "# GitGutter airblade/vim-gitgutter\nGitGutterAdd: ''\nGitGutterChange: ''\nGitGutterDelete: ''\nGitGutterChangeDelete: ''\n",
-        "html.yml": "htmlTag: '' # Function\nhtmlEndTag: '' # Identifier\nhtmlArg: '' # Type\nhtmlTagName: '' # htmlStatement\nhtmlSpecialTagName: '' # Exception\nhtmlValue: '' # String\nhtmlH1: '' # Title\nhtmlH2: '' # htmlH1\nhtmlH3: '' # htmlH2\nhtmlH4: '' # htmlH3\nhtmlH5: '' # htmlH4\nhtmlH6: '' # htmlH5\nhtmlHead: '' # PreProc\nhtmlTitle: '' # Title\nhtmlBoldItalicUnderline: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBold: '' # htmlBoldUnderline\nhtmlUnderlineItalicBold: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBoldItalic: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderline: '' # htmlUnderlineItalic\nhtmlItalicBold: '' # htmlBoldItalic\nhtmlItalicBoldUnderline: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderlineBold: '' # htmlBoldUnderlineItalic\nhtmlLink: '' # Underlined\nhtmlLeadingSpace: '' # None\nhtmlPreStmt: '' # PreProc\nhtmlPreError: '' # Error\nhtmlPreProc: '' # PreProc\nhtmlPreAttr: '' # String\nhtmlPreProcAttrName: '' # PreProc\nhtmlPreProcAttrError: '' # Error\nhtmlSpecial: '' # Special\nhtmlSpecialChar: '' # Special\nhtmlString: '' # String\nhtmlStatement: '' # Statement\nhtmlComment: '' # Comment\nhtmlCommentPart: '' # Comment\nhtmlCommentError: '' # htmlError\nhtmlTagError: '' # htmlError\nhtmlEvent: '' # javaScript\nhtmlError: '' # Error\njavaScript: '' # Special\njavaScriptExpression: '' # javaScript\nhtmlCssStyleComment: '' # Comment\nhtmlCssDefinition: '' # Special\n",
-        "viminfo.yml": "viminfoComment: '' # Comment\nviminfoError: '' # Error\nviminfoStatement: '' # Statement\n",
+        "git.yml": "gitDateHeader: '' # gitIdentityHeader\ngitIdentityHeader: '' # gitIdentityKeyword\ngitIdentityKeyword: '' # Label\ngitNotesHeader: '' # gitKeyword\ngitReflogHeader: '' # gitKeyword\ngitKeyword: '' # Keyword\ngitIdentity: '' # String\ngitEmailDelimiter: '' # Delimiter\ngitEmail: '' # Special\ngitDate: '' # Number\ngitMode: '' # Number\ngitHashAbbrev: '' # gitHash\ngitHash: '' # Identifier\ngitReflogMiddle: '' # gitReference\ngitReference: '' # Function\ngitStage: '' # gitType\ngitType: '' # Type\ngitDiffAdded: '' # diffAdded\ngitDiffRemoved: '' # diffRemoved\n",
+        "vim-javascript-syntax.yml": "# jelera/vim-javascript-syntax\njavaScriptEndColons: '' # Operator\njavaScriptOpSymbols: '' # Operator\njavaScriptLogicSymbols: '' # Boolean\njavaScriptParens: '' # Operator\njavaScriptTemplateDelim: '' # Operator\njavaScriptDocComment: '' # Comment\njavaScriptDocTags: '' # Special\njavaScriptDocSeeTag: '' # Function\njavaScriptDocParam: '' # Function\njavaScriptString: '' # String\njavaScriptTemplateString: '' # String\njavaScriptFloat: '' # Number\njavaScriptPrototype: '' # Type\njavaScriptSpecial: '' # Special\njavaScriptSource: '' # Special\njavaScriptGlobalObjects: '' # Special\njavaScriptExceptions: '' # Special\njavaScriptParensErrA: '' # Error\njavaScriptParensErrB: '' # Error\njavaScriptParensErrC: '' # Error\njavaScriptDomErrNo: '' # Error\njavaScriptDomNodeConsts: '' # Constant\njavaScriptDomElemAttrs: '' # Label\njavaScriptDomElemFuncs: '' # Type\njavaScriptWebAPI: '' # Type\njavaScriptHtmlElemAttrs: '' # Label\njavaScriptHtmlElemFuncs: '' # Type\njavaScriptCssStyles: '' # Type\njavaScriptBrowserObjects: '' # Constant\njavaScriptDOMObjects: '' # Constant\njavaScriptDOMMethods: '' # Type\njavaScriptDOMProperties: '' # Label\njavaScriptAjaxObjects: '' # Constant\njavaScriptAjaxMethods: '' # Type\njavaScriptAjaxProperties: '' # Label\njavaScriptFuncKeyword: '' # Function\njavaScriptFuncDef: '' # PreProc\njavaScriptFuncExp: '' # Title\njavaScriptFuncArg: '' # Special\njavaScriptFuncComma: '' # Operator\njavaScriptFuncEq: '' # Operator\njavaScriptHtmlEvents: '' # Constant\njavaScriptHtmlElemProperties: '' # Label\njavaScriptEventListenerKeywords: '' # Type\njavaScriptPropietaryObjects: '' # Constant\n",
+        "gitrebase.yml": "gitrebaseCommit: '' # gitrebaseHash\ngitrebaseHash: '' # Identifier\ngitrebasePick: '' # Statement\ngitrebaseReword: '' # Number\ngitrebaseEdit: '' # PreProc\ngitrebaseSquash: '' # Type\ngitrebaseFixup: '' # Special\ngitrebaseExec: '' # Function\ngitrebaseSummary: '' # String\ngitrebaseComment: '' # Comment\ngitrebaseSquashError: '' # Error\n",
+        "json.yml": "jsonPadding: '' # Operator\njsonString: '' # String\njsonTest: '' # Label\njsonEscape: '' # Special\njsonNumber: '' # Number\njsonBraces: '' # Delimiter\njsonNull: '' # Function\njsonBoolean: '' # Boolean\njsonKeyword: '' # Label\njsonNumError: '' # Error\njsonCommentError: '' # Error\njsonSemicolonError: '' # Error\njsonTrailingCommaError: '' # Error\njsonMissingCommaError: '' # Error\njsonStringSQError: '' # Error\njsonNoQuotesError: '' # Error\njsonTripleQuotesError: '' # Error\njsonQuote: '' # Quote\njsonNoise: '' # Noise\n",
         "php.yml": "phpConstant: '' # Constant\nphpCoreConstant: '' # Constant\nphpComment: '' # Comment\nphpDocTags: '' # PreProc\nphpDocCustomTags: '' # Type\nphpException: '' # Exception\nphpBoolean: '' # Boolean\nphpStorageClass: '' # StorageClass\nphpSCKeyword: '' # StorageClass\nphpFCKeyword: '' # Define\nphpStructure: '' # Structure\nphpStringSingle: '' # String\nphpStringDouble: '' # String\nphpBacktick: '' # String\nphpNumber: '' # Number\nphpFloat: '' # Float\nphpMethods: '' # Function\nphpFunctions: '' # Function\nphpBaselib: '' # Function\nphpRepeat: '' # Repeat\nphpConditional: '' # Conditional\nphpLabel: '' # Label\nphpStatement: '' # Statement\nphpKeyword: '' # Statement\nphpType: '' # Type\nphpInclude: '' # Include\nphpDefine: '' # Define\nphpBackslashSequences: '' # SpecialChar\nphpBackslashDoubleQuote: '' # SpecialChar\nphpBackslashSingleQuote: '' # SpecialChar\nphpParent: '' # Delimiter\nphpBrackets: '' # Delimiter\nphpIdentifierConst: '' # Delimiter\nphpParentError: '' # Error\nphpOctalError: '' # Error\nphpInterpSimpleError: '' # Error\nphpInterpBogusDollarCurley: '' # Error\nphpInterpDollarCurly1: '' # Error\nphpInterpDollarCurly2: '' # Error\nphpInterpSimpleBracketsInner: '' # String\nphpInterpSimpleCurly: '' # Delimiter\nphpInterpVarname: '' # Identifier\nphpTodo: '' # Todo\nphpDocTodo: '' # Todo\nphpMemberSelector: '' # Structure\nphpIntVar: '' # Identifier\nphpEnvVar: '' # Identifier\nphpOperator: '' # Operator\nphpVarSelector: '' # Operator\nphpRelation: '' # Operator\nphpIdentifier: '' # Identifier\nphpIdentifierSimply: '' # Identifier\n",
+        "markdown.yml": "markdownH1: '' # htmlH1\nmarkdownH2: '' # htmlH2\nmarkdownH3: '' # htmlH3\nmarkdownH4: '' # htmlH4\nmarkdownH5: '' # htmlH5\nmarkdownH6: '' # htmlH6\nmarkdownHeadingRule: '' # markdownRule\nmarkdownHeadingDelimiter: '' # Delimiter\nmarkdownOrderedListMarker: '' # markdownListMarker\nmarkdownListMarker: '' # htmlTagName\nmarkdownBlockquote: '' # Comment\nmarkdownRule: '' # PreProc\nmarkdownLinkText: '' # htmlLink\nmarkdownIdDeclaration: '' # Typedef\nmarkdownId: '' # Type\nmarkdownAutomaticLink: '' # markdownUrl\nmarkdownUrl: '' # Float\nmarkdownUrlTitle: '' # String\nmarkdownIdDelimiter: '' # markdownLinkDelimiter\nmarkdownUrlDelimiter: '' # htmlTag\nmarkdownUrlTitleDelimiter: '' # Delimiter\nmarkdownItalic: '' # htmlItalic\nmarkdownBold: '' # htmlBold\nmarkdownBoldItalic: '' # htmlBoldItalic\nmarkdownCodeDelimiter: '' # Delimiter\nmarkdownEscape: '' # Special\nmarkdownError: '' # Error\n",
+        "pug.yml": "pugPlainChar: '' # Special\npugScriptConditional: '' # PreProc\npugScriptLoopKeywords: '' # PreProc\npugScriptStatement: '' # PreProc\npugHtmlArg: '' # htmlArg\npugAttributeString: '' # String\npugAttributesDelimiter: '' # Identifier\npugIdChar: '' # Special\npugClassChar: '' # Special\npugBlockExpansionChar: '' # Special\npugPipeChar: '' # Special\npugTagBlockChar: '' # Special\npugId: '' # Identifier\npugClass: '' # Type\npugInterpolationDelimiter: '' # Delimiter\npugInlineDelimiter: '' # Delimiter\npugFilter: '' # PreProc\npugDocType: '' # PreProc\npugComment: '' # Comment\npugCommentBlock: '' # Comment\npugHtmlConditionalComment: '' # pugComment\n",
+        "css.yml": "cssComment: '' # Comment\ncssVendor: '' # Comment\ncssHacks: '' # Comment\ncssTagName: '' # Statement\ncssDeprecated: '' # Error\ncssSelectorOp: '' # Special\ncssSelectorOp2: '' # Special\ncssAttrComma: '' # Special\ncssAnimationProp: '' # cssProp\ncssBackgroundProp: '' # cssProp\ncssBorderProp: '' # cssProp\ncssBoxProp: '' # cssProp\ncssColorProp: '' # cssProp\ncssContentForPagedMediaProp: '' # cssProp\ncssDimensionProp: '' # cssProp\ncssFlexibleBoxProp: '' # cssProp\ncssFontProp: '' # cssProp\ncssGeneratedContentProp: '' # cssProp\ncssGridProp: '' # cssProp\ncssHyerlinkProp: '' # cssProp\ncssLineboxProp: '' # cssProp\ncssListProp: '' # cssProp\ncssMarqueeProp: '' # cssProp\ncssMultiColumnProp: '' # cssProp\ncssPagedMediaProp: '' # cssProp\ncssPositioningProp: '' # cssProp\ncssPrintProp: '' # cssProp\ncssRubyProp: '' # cssProp\ncssSpeechProp: '' # cssProp\ncssTableProp: '' # cssProp\ncssTextProp: '' # cssProp\ncssTransformProp: '' # cssProp\ncssTransitionProp: '' # cssProp\ncssUIProp: '' # cssProp\ncssIEUIProp: '' # cssProp\ncssAuralProp: '' # cssProp\ncssRenderProp: '' # cssProp\ncssMobileTextProp: '' # cssProp\ncssAnimationAttr: '' # cssAttr\ncssBackgroundAttr: '' # cssAttr\ncssBorderAttr: '' # cssAttr\ncssBoxAttr: '' # cssAttr\ncssContentForPagedMediaAttr: '' # cssAttr\ncssDimensionAttr: '' # cssAttr\ncssFlexibleBoxAttr: '' # cssAttr\ncssFontAttr: '' # cssAttr\ncssGeneratedContentAttr: '' # cssAttr\ncssGridAttr: '' # cssAttr\ncssHyerlinkAttr: '' # cssAttr\ncssLineboxAttr: '' # cssAttr\ncssListAttr: '' # cssAttr\ncssMarginAttr: '' # cssAttr\ncssMarqueeAttr: '' # cssAttr\ncssMultiColumnAttr: '' # cssAttr\ncssPaddingAttr: '' # cssAttr\ncssPagedMediaAttr: '' # cssAttr\ncssPositioningAttr: '' # cssAttr\ncssGradientAttr: '' # cssAttr\ncssPrintAttr: '' # cssAttr\ncssRubyAttr: '' # cssAttr\ncssSpeechAttr: '' # cssAttr\ncssTableAttr: '' # cssAttr\ncssTextAttr: '' # cssAttr\ncssTransformAttr: '' # cssAttr\ncssTransitionAttr: '' # cssAttr\ncssUIAttr: '' # cssAttr\ncssIEUIAttr: '' # cssAttr\ncssAuralAttr: '' # cssAttr\ncssRenderAttr: '' # cssAttr\ncssCommonAttr: '' # cssAttr\ncssPseudoClassId: '' # PreProc\ncssPseudoClassLang: '' # Constant\ncssValueLength: '' # Number\ncssValueInteger: '' # Number\ncssValueNumber: '' # Number\ncssValueAngle: '' # Number\ncssValueTime: '' # Number\ncssValueFrequency: '' # Number\ncssFunction: '' # Constant\ncssURL: '' # String\ncssFunctionName: '' # Function\ncssFunctionComma: '' # Function\ncssColor: '' # Constant\ncssIdentifier: '' # Function\ncssInclude: '' # Include\ncssIncludeKeyword: '' # atKeyword\ncssImportant: '' # Special\ncssBraces: '' # Function\ncssBraceError: '' # Error\ncssError: '' # Error\ncssUnicodeEscape: '' # Special\ncssStringQQ: '' # String\ncssStringQ: '' # String\ncssAttributeSelector: '' # String\ncssMedia: '' # atKeyword\ncssMediaType: '' # Special\ncssMediaComma: '' # Normal\ncssMediaKeyword: '' # Statement\ncssMediaProp: '' # cssProp\ncssMediaAttr: '' # cssAttr\ncssPage: '' # atKeyword\ncssPagePseudo: '' # PreProc\ncssPageMargin: '' # atKeyword\ncssPageProp: '' # cssProp\ncssKeyFrame: '' # atKeyword\ncssKeyFrameSelector: '' # Constant\ncssFontDescriptor: '' # Special\ncssFontDescriptorFunction: '' # Constant\ncssFontDescriptorProp: '' # cssProp\ncssFontDescriptorAttr: '' # cssAttr\ncssUnicodeRange: '' # Constant\ncssClassName: '' # Function\ncssClassNameDot: '' # Function\ncssProp: '' # StorageClass\ncssAttr: '' # Constant\ncssUnitDecorators: '' # Number\ncssNoise: '' # Noise\natKeyword: '' # PreProc\n",
+        "gitconfig.yml": "gitconfigComment: '' # Comment\ngitconfigSection: '' # Keyword\ngitconfigVariable: '' # Identifier\ngitconfigBoolean: '' # Boolean\ngitconfigNumber: '' # Number\ngitconfigString: '' # String\ngitconfigDelim: '' # Delimiter\ngitconfigEscape: '' # Delimiter\ngitconfigError: '' # Error\n",
+        "vim-plug.yml": "plug1: '' # Title\nplug2: '' # Repeat\nplugH2: '' # Type\nplugX: '' # Exception\nplugBracket: '' # Structure\nplugNumber: '' # Number\nplugDash: '' # Special\nplugPlus: '' # Constant\nplugStar: '' # Boolean\nplugMessage: '' # Function\nplugName: '' # Label\nplugInstall: '' # Function\nplugUpdate: '' # Type\nplugError: '' # Error\nplugRelDate: '' # Comment\nplugEdge: '' # PreProc\nplugSha: '' # Identifier\nplugTag: '' # Constant\nplugNotLoaded: '' # Comment\n",
+        "base.yml": "# BASE UI\nColorColumn: ''\nConceal: ''\nCursor: ''\nCursorIM: ''\nCursorColumn: ''\nCursorLine: ''\nCursorLineNr: ''\nDirectory: ''\nDiffAdd: ''\nDiffChange: ''\nDiffDelete: ''\nDiffText: ''\nErrorMsg: ''\nVertSplit: ''\nFolded: ''\nFoldColumn: ''\nSignColumn: ''\nIncSearch: ''\nLineNr: ''\nMatchParen: ''\nModeMsg: ''\nMoreMsg: ''\nNonText: ''\nNormal: ''\nPMenu: ''\nPMenuSel: ''\nPmenuSbar: ''\nPmenuThumb: ''\nQuestion: ''\nSearch: ''\nSpecialKey: ''\nSpellBad: ''\nSpellLocal: ''\nSpellCap: ''\nSpellRare: ''\nStatusLine: ''\nStatusLineNC: ''\nTabLine: ''\nTabLineFill: ''\nTabLineSel: ''\nTitle: ''\nVisual: ''\nVisualNOS: ''\nWarningMsg: ''\nWildMenu: ''\n# BASE SYNTAX\nComment: ''\nConstant: ''\nString: '' # Constant\nCharacter: '' # Constant\nBoolean: '' # Constant\nNumber: '' # Constant\nFloat: '' # Constant\nIdentifier: ''\nFunction: '' # Identifier\nStatement: ''\nConditional: '' # Statement\nRepeat: '' # Statement\nLabel: '' # Statement\nOperator: '' # Statement\nKeyword: '' # Statement\nException: '' # Statement\nPreProc: ''\nInclude: '' # PreProc\nDefine: '' # PreProc\nMacro: '' # PreProc\nPreCondit: '' # PreProc\nType: ''\nStorageClass: '' # Type\nStructure: '' # Type\nTypedef: '' # Type\nSpecial: ''\nSpecialChar: '' # Special\nTag: '' # Special\nDelimiter: '' # Special\nSpecialComment: '' # Special\nDebug: '' # Special\nUnderlined: ''\nIgnore: ''\nError: ''\nTodo: ''\n",
         "nerdtree.yml": "NERDTreePart: '' # Special\nNERDTreePartFile: '' # Type\nNERDTreeExecFile: '' # Title\nNERDTreeDirSlash: '' # Identifier\nNERDTreeBookmarksHeader: '' # statement\nNERDTreeBookmarksLeader: '' # ignore\nNERDTreeBookmarkName: '' # Identifier\nNERDTreeBookmark: '' # normal\nNERDTreeHelp: '' # String\nNERDTreeHelpKey: '' # Identifier\nNERDTreeHelpCommand: '' # Identifier\nNERDTreeHelpTitle: '' # Macro\nNERDTreeToggleOn: '' # Question\nNERDTreeToggleOff: '' # WarningMsg\nNERDTreeLinkTarget: '' # Type\nNERDTreeLinkFile: '' # Macro\nNERDTreeLinkDir: '' # Macro\nNERDTreeDir: '' # Directory\nNERDTreeUp: '' # Directory\nNERDTreeFile: '' # Normal\nNERDTreeCWD: '' # Statement\nNERDTreeOpenable: '' # Title\nNERDTreeClosable: '' # Title\nNERDTreeIgnore: '' # ignore\nNERDTreeRO: '' # WarningMsg\nNERDTreeFlags: '' # Number\n",
-        "fugitive.yml": "FugitiveblameBoundary: '' # Keyword\nFugitiveblameHash: '' # Identifier\nFugitiveblameUncommitted: '' # Ignore\nFugitiveblameTime: '' # PreProc\nFugitiveblameLineNumber: '' # Number\nFugitiveblameOriginalFile: '' # String\nFugitiveblameOriginalLineNumber: '' #\nFugitiveblameShort: '' # FugitiveblameDelimiter\nFugitiveblameDelimiter: '' # Delimiter\nFugitiveblameNotCommittedYet: '' # Comment\n",
-        "ruby.yml": "rubyClass: '' # rubyDefine\nrubyModule: '' # rubyDefine\nrubyMethodExceptional: '' # rubyDefine\nrubyDefine: '' # Define\nrubyFunction: '' # Function\nrubyConditional: '' # Conditional\nrubyConditionalModifier: '' # rubyConditional\nrubyExceptional: '' # rubyConditional\nrubyRepeat: '' # Repeat\nrubyRepeatModifier: '' # rubyRepeat\nrubyOptionalDo: '' # rubyRepeat\nrubyControl: '' # Statement\nrubyInclude: '' # Include\nrubyInteger: '' # Number\nrubyASCIICode: '' # Character\nrubyFloat: '' # Float\nrubyBoolean: '' # Boolean\nrubyException: '' # Exception\nrubyIdentifier: '' # Identifier\nrubyClassVariable: '' # rubyIdentifier\nrubyConstant: '' # Type\nrubyGlobalVariable: '' # rubyIdentifier\nrubyBlockParameter: '' # rubyIdentifier\nrubyInstanceVariable: '' # rubyIdentifier\nrubyPredefinedIdentifier: '' # rubyIdentifier\nrubyPredefinedConstant: '' # rubyPredefinedIdentifier\nrubyPredefinedVariable: '' # rubyPredefinedIdentifier\nrubySymbol: '' # Constant\nrubyKeyword: '' # Keyword\nrubyOperator: '' # Operator\nrubyBeginEnd: '' # Statement\nrubyAccess: '' # Statement\nrubyAttribute: '' # Statement\nrubyEval: '' # Statement\nrubyPseudoVariable: '' # Constant\nrubyComment: '' # Comment\nrubyData: '' # Comment\nrubyDataDirective: '' # Delimiter\nrubyDocumentation: '' # Comment\nrubyTodo: '' # Todo\nrubyQuoteEscape: '' # rubyStringEscape\nrubyStringEscape: '' # Special\nrubyInterpolationDelimiter: '' # Delimiter\nrubyNoInterpolation: '' # rubyString\nrubySharpBang: '' # PreProc\nrubyRegexpDelimiter: '' # rubyStringDelimiter\nrubySymbolDelimiter: '' # rubyStringDelimiter\nrubyStringDelimiter: '' # Delimiter\nrubyHeredoc: '' # rubyString\nrubyString: '' # String\nrubyRegexpEscape: '' # rubyRegexpSpecial\nrubyRegexpQuantifier: '' # rubyRegexpSpecial\nrubyRegexpAnchor: '' # rubyRegexpSpecial\nrubyRegexpDot: '' # rubyRegexpCharClass\nrubyRegexpCharClass: '' # rubyRegexpSpecial\nrubyRegexpSpecial: '' # Special\nrubyRegexpComment: '' # Comment\nrubyRegexp: '' # rubyString\nrubyInvalidVariable: '' # Error\nrubyError: '' # Error\nrubySpaceError: '' # rubyError\n",
+        "vim-mustache-handlebars.yml": "mustacheVariable: '' # Number\nmustacheVariableUnescape: '' # Number\nmustachePartial: '' # Number\nmustacheSection: '' # Number\nmustacheMarkerSet: '' # Number\nmustacheComment: '' # Comment\nmustacheBlockComment: '' # Comment\nmustacheError: '' # Error\nmustacheInsideError: '' # Error\nmustacheHandlebars: '' # Special\nmustacheUnescape: '' # Identifier\nmustacheOperators: '' # Operator\nmustacheConditionals: '' # Conditional\nmustacheHelpers: '' # Repeat\nmustacheQString: '' # String\nmustacheDQString: '' # String\n",
+        "diff.yml": "diffOldFile: '' # diffFile\ndiffNewFile: '' # diffFile\ndiffFile: '' # Type\ndiffOnly: '' # Constant\ndiffIdentical: '' # Constant\ndiffDiffer: '' # Constant\ndiffBDiffer: '' # Constant\ndiffIsA: '' # Constant\ndiffNoEOL: '' # Constant\ndiffCommon: '' # Constant\ndiffRemoved: '' # Special\ndiffChanged: '' # PreProc\ndiffAdded: '' # Identifier\ndiffLine: '' # Statement\ndiffSubname: '' # PreProc\ndiffComment: '' # Comment\n",
         "yajs.yml": "javascriptReserved: '' # Error\njavascriptReservedCase: '' # Error\njavascriptInvalidOp: '' # Error\njavascriptEndColons: '' # Statement\njavascriptOpSymbol: '' # Normal\njavascriptBraces: '' # Function\njavascriptBrackets: '' # Function\njavascriptParens: '' # Normal\njavascriptComment: '' # Comment\njavascriptLineComment: '' # Comment\njavascriptDocComment: '' # Comment\njavascriptCommentTodo: '' # Todo\njavascriptDocNotation: '' # SpecialComment\njavascriptDocTags: '' # SpecialComment\njavascriptDocNGParam: '' # javascriptDocParam\njavascriptDocParam: '' # Function\njavascriptDocNumParam: '' # Function\njavascriptDocEventRef: '' # Function\njavascriptDocNamedParamType: '' # Type\njavascriptDocParamName: '' # Type\njavascriptDocParamType: '' # Type\njavascriptString: '' # String\njavascriptTemplate: '' # String\njavascriptEventString: '' # String\njavascriptASCII: '' # Label\njavascriptTemplateSubstitution: '' # Label\njavascriptTemplateSB: '' # javascriptTemplateSubstitution\njavascriptRegexpString: '' # String\njavascriptGlobal: '' # Constant\njavascriptCharacter: '' # Character\njavascriptPrototype: '' # Type\njavascriptConditional: '' # Conditional\njavascriptConditionalElse: '' # Conditional\njavascriptSwitch: '' # Conditional\njavascriptCase: '' # Conditional\njavascriptDefault: '' # javascriptCase\njavascriptExportDefault: '' # javascriptCase\njavascriptBranch: '' # Conditional\njavascriptIdentifier: '' # Structure\njavascriptVariable: '' # Identifier\njavascriptRepeat: '' # Repeat\njavascriptForComprehension: '' # Repeat\njavascriptIfComprehension: '' # Repeat\njavascriptOfComprehension: '' # Repeat\njavascriptForOperator: '' # Repeat\njavascriptStatementKeyword: '' # Statement\njavascriptReturn: '' # Statement\njavascriptYield: '' # Statement\njavascriptYieldGen: '' # Statement\njavascriptMessage: '' # Keyword\njavascriptOperator: '' # Identifier\njavascriptTarget: '' # Identifier\njavascriptNull: '' # Boolean\njavascriptNumber: '' # Number\njavascriptBoolean: '' # Boolean\njavascriptObjectLabel: '' # javascriptLabel\njavascriptObjectLabelColon: '' # javascriptLabel\njavascriptLabel: '' # Label\njavascriptPropertyName: '' # Label\njavascriptImport: '' # Special\njavascriptExport: '' # Special\njavascriptTry: '' # Statement\njavascriptExceptions: '' # Statement\njavascriptMethodName: '' # Function\njavascriptMethodAccessor: '' # Operator\njavascriptObjectMethodName: '' # Function\njavascriptFuncKeyword: '' # Keyword\njavascriptAsyncFunc: '' # Keyword\njavascriptArrowFunc: '' # Type\njavascriptFuncName: '' # Function\njavascriptFuncArg: '' # Special\njavascriptArrowFuncArg: '' # javascriptFuncArg\njavascriptComma: '' # Normal\njavascriptClassKeyword: '' # Keyword\njavascriptClassExtends: '' # Keyword\njavascriptClassName: '' # Function\njavascriptClassSuperName: '' # Function\njavascriptClassStatic: '' # StorageClass\njavascriptClassSuper: '' # keyword\nshellbang: '' # Comment\n",
         "less.yml": "lessEndOfLineComment: '' # lessComment\nlessCssComment: '' # lessComment\nlessComment: '' # Comment\nlessDefault: '' # cssImportant\nlessVariable: '' # Identifier\nlessFunction: '' # PreProc\nlessTodo: '' # Todo\nlessInclude: '' # Include\nlessIdChar: '' # Special\nlessClassChar: '' # Special\nlessAmpersand: '' # Character\nlessId: '' # Identifier\nlessClass: '' # Type\nlessCssAttribute: '' # PreProc\nlessClassCall: '' # Type\nlessClassIdCall: '' # Type\nlessTagName: '' # cssTagName\nlessDeprecated: '' # cssDeprecated\nlessMedia: '' # cssMedia\n",
         "python.yml": "pythonStatement: '' # Statement\npythonConditional: '' # Conditional\npythonRepeat: '' # Repeat\npythonOperator: '' # Operator\npythonException: '' # Exception\npythonInclude: '' # Include\npythonDecorator: '' # Define\npythonFunction: '' # Function\npythonComment: '' # Comment\npythonTodo: '' # Todo\npythonString: '' # String\npythonRawString: '' # String\npythonQuotes: '' # String\npythonTripleQuotes: '' # pythonQuotes\npythonEscape: '' # Special\npythonNumber: '' # Number\npythonBuiltin: '' # Function\npythonExceptions: '' # Structure\npythonSpaceError: '' # Error\npythonDoctest: '' # Special\npythonDoctestValue: '' # Define\n",
-        "gitconfig.yml": "gitconfigComment: '' # Comment\ngitconfigSection: '' # Keyword\ngitconfigVariable: '' # Identifier\ngitconfigBoolean: '' # Boolean\ngitconfigNumber: '' # Number\ngitconfigString: '' # String\ngitconfigDelim: '' # Delimiter\ngitconfigEscape: '' # Delimiter\ngitconfigError: '' # Error\n",
-        "gitcommit.yml": "gitcommitSummary: '' # Keyword\ngitcommitComment: '' # Comment\ngitcommitUntracked: '' # gitcommitComment\ngitcommitDiscarded: '' # gitcommitComment\ngitcommitSelected: '' # gitcommitComment\ngitcommitUnmerged: '' # gitcommitComment\ngitcommitOnBranch: '' # Comment\ngitcommitBranch: '' # Special\ngitcommitNoBranch: '' # gitCommitBranch\ngitcommitDiscardedType: '' # gitcommitType\ngitcommitSelectedType: '' # gitcommitType\ngitcommitUnmergedType: '' # gitcommitType\ngitcommitType: '' # Type\ngitcommitNoChanges: '' # gitcommitHeader\ngitcommitHeader: '' # PreProc\ngitcommitUntrackedFile: '' # gitcommitFile\ngitcommitDiscardedFile: '' # gitcommitFile\ngitcommitSelectedFile: '' # gitcommitFile\ngitcommitUnmergedFile: '' # gitcommitFile\ngitcommitFile: '' # Constant\ngitcommitDiscardedArrow: '' # gitcommitArrow\ngitcommitSelectedArrow: '' # gitcommitArrow\ngitcommitUnmergedArrow: '' # gitcommitArrow\ngitcommitArrow: '' # gitcommitComment\ngitcommitOverflow: '' # none\ngitcommitBlank: '' # Error\n",
-        "vim-javascript-syntax.yml": "# jelera/vim-javascript-syntax\njavaScriptEndColons: '' # Operator\njavaScriptOpSymbols: '' # Operator\njavaScriptLogicSymbols: '' # Boolean\njavaScriptParens: '' # Operator\njavaScriptTemplateDelim: '' # Operator\njavaScriptDocComment: '' # Comment\njavaScriptDocTags: '' # Special\njavaScriptDocSeeTag: '' # Function\njavaScriptDocParam: '' # Function\njavaScriptString: '' # String\njavaScriptTemplateString: '' # String\njavaScriptFloat: '' # Number\njavaScriptPrototype: '' # Type\njavaScriptSpecial: '' # Special\njavaScriptSource: '' # Special\njavaScriptGlobalObjects: '' # Special\njavaScriptExceptions: '' # Special\njavaScriptParensErrA: '' # Error\njavaScriptParensErrB: '' # Error\njavaScriptParensErrC: '' # Error\njavaScriptDomErrNo: '' # Error\njavaScriptDomNodeConsts: '' # Constant\njavaScriptDomElemAttrs: '' # Label\njavaScriptDomElemFuncs: '' # Type\njavaScriptWebAPI: '' # Type\njavaScriptHtmlElemAttrs: '' # Label\njavaScriptHtmlElemFuncs: '' # Type\njavaScriptCssStyles: '' # Type\njavaScriptBrowserObjects: '' # Constant\njavaScriptDOMObjects: '' # Constant\njavaScriptDOMMethods: '' # Type\njavaScriptDOMProperties: '' # Label\njavaScriptAjaxObjects: '' # Constant\njavaScriptAjaxMethods: '' # Type\njavaScriptAjaxProperties: '' # Label\njavaScriptFuncKeyword: '' # Function\njavaScriptFuncDef: '' # PreProc\njavaScriptFuncExp: '' # Title\njavaScriptFuncArg: '' # Special\njavaScriptFuncComma: '' # Operator\njavaScriptFuncEq: '' # Operator\njavaScriptHtmlEvents: '' # Constant\njavaScriptHtmlElemProperties: '' # Label\njavaScriptEventListenerKeywords: '' # Type\njavaScriptPropietaryObjects: '' # Constant\n",
-        "gitrebase.yml": "gitrebaseCommit: '' # gitrebaseHash\ngitrebaseHash: '' # Identifier\ngitrebasePick: '' # Statement\ngitrebaseReword: '' # Number\ngitrebaseEdit: '' # PreProc\ngitrebaseSquash: '' # Type\ngitrebaseFixup: '' # Special\ngitrebaseExec: '' # Function\ngitrebaseSummary: '' # String\ngitrebaseComment: '' # Comment\ngitrebaseSquashError: '' # Error\n",
+        "html.yml": "htmlTag: '' # Function\nhtmlEndTag: '' # Identifier\nhtmlArg: '' # Type\nhtmlTagName: '' # htmlStatement\nhtmlSpecialTagName: '' # Exception\nhtmlValue: '' # String\nhtmlH1: '' # Title\nhtmlH2: '' # htmlH1\nhtmlH3: '' # htmlH2\nhtmlH4: '' # htmlH3\nhtmlH5: '' # htmlH4\nhtmlH6: '' # htmlH5\nhtmlHead: '' # PreProc\nhtmlTitle: '' # Title\nhtmlBoldItalicUnderline: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBold: '' # htmlBoldUnderline\nhtmlUnderlineItalicBold: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBoldItalic: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderline: '' # htmlUnderlineItalic\nhtmlItalicBold: '' # htmlBoldItalic\nhtmlItalicBoldUnderline: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderlineBold: '' # htmlBoldUnderlineItalic\nhtmlLink: '' # Underlined\nhtmlLeadingSpace: '' # None\nhtmlPreStmt: '' # PreProc\nhtmlPreError: '' # Error\nhtmlPreProc: '' # PreProc\nhtmlPreAttr: '' # String\nhtmlPreProcAttrName: '' # PreProc\nhtmlPreProcAttrError: '' # Error\nhtmlSpecial: '' # Special\nhtmlSpecialChar: '' # Special\nhtmlString: '' # String\nhtmlStatement: '' # Statement\nhtmlComment: '' # Comment\nhtmlCommentPart: '' # Comment\nhtmlCommentError: '' # htmlError\nhtmlTagError: '' # htmlError\nhtmlEvent: '' # javaScript\nhtmlError: '' # Error\njavaScript: '' # Special\njavaScriptExpression: '' # javaScript\nhtmlCssStyleComment: '' # Comment\nhtmlCssDefinition: '' # Special\n",
         "javascript.yml": "javaScriptComment: '' # Comment\njavaScriptLineComment: '' # Comment\njavaScriptCommentTodo: '' # Todo\njavaScriptSpecial: '' # Special\njavaScriptStringS: '' # String\njavaScriptStringD: '' # String\njavaScriptCharacter: '' # Character\njavaScriptSpecialCharacter: '' # javaScriptSpecial\njavaScriptNumber: '' # javaScriptValue\njavaScriptConditional: '' # Conditional\njavaScriptRepeat: '' # Repeat\njavaScriptBranch: '' # Conditional\njavaScriptOperator: '' # Operator\njavaScriptType: '' # Type\njavaScriptStatement: '' # Statement\njavaScriptFunction: '' # Function\njavaScriptBraces: '' # Function\njavaScriptError: '' # Error\njavaScriptParensError: '' # Error\njavaScriptNull: '' # Keyword\njavaScriptBoolean: '' # Boolean\njavaScriptRegexpString: '' # String\njavaScriptIdentifier: '' # Identifier\njavaScriptLabel: '' # Label\njavaScriptException: '' # Exception\njavaScriptMessage: '' # Keyword\njavaScriptGlobal: '' # Keyword\njavaScriptMember: '' # Keyword\njavaScriptDeprecated: '' # Exception\njavaScriptReserved: '' # Keyword\njavaScriptDebug: '' # Debug\njavaScriptConstant: '' # Label\n",
-        "yaml.yml": "yamlTodo: '' # Todo\nyamlComment: '' # Comment\nyamlDocumentStart: '' # PreProc\nyamlDocumentEnd: '' # PreProc\nyamlDirectiveName: '' # Keyword\nyamlTAGDirective: '' # yamlDirectiveName\nyamlTagHandle: '' # String\nyamlTagPrefix: '' # String\nyamlYAMLDirective: '' # yamlDirectiveName\nyamlReservedDirective: '' # Error\nyamlYAMLVersion: '' # Number\nyamlString: '' # String\nyamlFlowString: '' # yamlString\nyamlFlowStringDelimiter: '' # yamlString\nyamlEscape: '' # SpecialChar\nyamlSingleEscape: '' # SpecialChar\nyamlBlockCollectionItemStart: '' # Label\nyamlBlockMappingKey: '' # Identifier\nyamlBlockMappingMerge: '' # Special\nyamlFlowMappingKey: '' # Identifier\nyamlFlowMappingMerge: '' # Special\nyamlMappingKeyStart: '' # Special\nyamlFlowIndicator: '' # Special\nyamlKeyValueDelimiter: '' # Special\nyamlConstant: '' # Constant\nyamlNull: '' # yamlConstant\nyamlBool: '' # yamlConstant\nyamlAnchor: '' # Type\nyamlAlias: '' # Type\nyamlNodeTag: '' # Type\nyamlInteger: '' # Number\nyamlFloat: '' # Float\nyamlTimestamp: '' # Number\n",
+        "vim-gitgutter.yml": "# GitGutter airblade/vim-gitgutter\nGitGutterAdd: ''\nGitGutterChange: ''\nGitGutterDelete: ''\nGitGutterChangeDelete: ''\n",
         "go.yml": "goDirective: '' # Statement\ngoDeclaration: '' # Keyword\ngoDeclType: '' # Keyword\ngoStatement: '' # Statement\ngoConditional: '' # Conditional\ngoLabel: '' # Label\ngoRepeat: '' # Repeat\ngoType: '' # Type\ngoSignedInts: '' # Type\ngoUnsignedInts: '' # Type\ngoFloats: '' # Type\ngoComplexes: '' # Type\ngoBuiltins: '' # Keyword\ngoConstants: '' # Keyword\ngoComment: '' # Comment\ngoTodo: '' # Todo\ngoEscapeOctal: '' # goSpecialString\ngoEscapeC: '' # goSpecialString\ngoEscapeX: '' # goSpecialString\ngoEscapeU: '' # goSpecialString\ngoEscapeBigU: '' # goSpecialString\ngoSpecialString: '' # Special\ngoEscapeError: '' # Error\ngoString: '' # String\ngoRawString: '' # String\ngoCharacter: '' # Character\ngoDecimalInt: '' # Integer\ngoHexadecimalInt: '' # Integer\ngoOctalInt: '' # Integer\nInteger: '' # Number\ngoFloat: '' # Float\ngoImaginary: '' # Number\ngoExtraType: '' # Type\ngoSpaceError: '' # Error\n",
-        "unite.yml": "uniteError: '' # Error\nuniteMarkedLine: '' # Statement\nuniteCandidateSourceName: '' # Type\nuniteQuickMatchText: '' # Special\nuniteCandidateIcon: '' # Special\nuniteMarkedIcon: '' # Statement\nuniteCandidateInputKeyword: '' # Function\nuniteChooseAction: '' # NONE\nuniteChooseCandidate: '' # NONE\nuniteChooseKey: '' # SpecialKey\nuniteChooseMessage: '' # NONE\nuniteChoosePrompt: '' # uniteSourcePrompt\nuniteChooseSource: '' # uniteSourceNames\nuniteInputPrompt: '' # Normal\nuniteInputLine: '' # Identifier\nuniteInputCommand: '' # Statement\nuniteStatusNormal: '' # StatusLine\nuniteStatusHead: '' # Statement\nuniteStatusSourceNames: '' # PreProc\nuniteStatusSourceCandidates: '' # Constant\nuniteStatusMessage: '' # Comment\nuniteStatusLineNR: '' # LineNR\n"
+        "help.yml": "helpIgnore: '' # Ignore\nhelpHyperTextJump: '' # Identifier\nhelpBar: '' # Ignore\nhelpBacktick: '' # Ignore\nhelpStar: '' # Ignore\nhelpHyperTextEntry: '' # String\nhelpHeadline: '' # Statement\nhelpHeader: '' # PreProc\nhelpSectionDelim: '' # PreProc\nhelpVim: '' # Identifier\nhelpCommand: '' # Comment\nhelpExample: '' # Comment\nhelpOption: '' # Type\nhelpSpecial: '' # Special\nhelpNote: '' # Todo\nhelpComment: '' # Comment\nhelpConstant: '' # Constant\nhelpString: '' # String\nhelpCharacter: '' # Character\nhelpNumber: '' # Number\nhelpBoolean: '' # Boolean\nhelpFloat: '' # Float\nhelpIdentifier: '' # Identifier\nhelpFunction: '' # Function\nhelpStatement: '' # Statement\nhelpConditional: '' # Conditional\nhelpRepeat: '' # Repeat\nhelpLabel: '' # Label\nhelpOperator: '' # Operator\nhelpKeyword: '' # Keyword\nhelpException: '' # Exception\nhelpPreProc: '' # PreProc\nhelpInclude: '' # Include\nhelpDefine: '' # Define\nhelpMacro: '' # Macro\nhelpPreCondit: '' # PreCondit\nhelpType: '' # Type\nhelpStorageClass: '' # StorageClass\nhelpStructure: '' # Structure\nhelpTypedef: '' # Typedef\nhelpSpecialChar: '' # SpecialChar\nhelpTag: '' # Tag\nhelpDelimiter: '' # Delimiter\nhelpSpecialComment: '' # SpecialComment\nhelpDebug: '' # Debug\nhelpUnderlined: '' # Underlined\nhelpError: '' # Error\nhelpTodo: '' # Todo\nhelpURL: '' # String\n",
+        "unite.yml": "uniteError: '' # Error\nuniteMarkedLine: '' # Statement\nuniteCandidateSourceName: '' # Type\nuniteQuickMatchText: '' # Special\nuniteCandidateIcon: '' # Special\nuniteMarkedIcon: '' # Statement\nuniteCandidateInputKeyword: '' # Function\nuniteChooseAction: '' # NONE\nuniteChooseCandidate: '' # NONE\nuniteChooseKey: '' # SpecialKey\nuniteChooseMessage: '' # NONE\nuniteChoosePrompt: '' # uniteSourcePrompt\nuniteChooseSource: '' # uniteSourceNames\nuniteInputPrompt: '' # Normal\nuniteInputLine: '' # Identifier\nuniteInputCommand: '' # Statement\nuniteStatusNormal: '' # StatusLine\nuniteStatusHead: '' # Statement\nuniteStatusSourceNames: '' # PreProc\nuniteStatusSourceCandidates: '' # Constant\nuniteStatusMessage: '' # Comment\nuniteStatusLineNR: '' # LineNR\n",
+        "gitcommit.yml": "gitcommitSummary: '' # Keyword\ngitcommitComment: '' # Comment\ngitcommitUntracked: '' # gitcommitComment\ngitcommitDiscarded: '' # gitcommitComment\ngitcommitSelected: '' # gitcommitComment\ngitcommitUnmerged: '' # gitcommitComment\ngitcommitOnBranch: '' # Comment\ngitcommitBranch: '' # Special\ngitcommitNoBranch: '' # gitCommitBranch\ngitcommitDiscardedType: '' # gitcommitType\ngitcommitSelectedType: '' # gitcommitType\ngitcommitUnmergedType: '' # gitcommitType\ngitcommitType: '' # Type\ngitcommitNoChanges: '' # gitcommitHeader\ngitcommitHeader: '' # PreProc\ngitcommitUntrackedFile: '' # gitcommitFile\ngitcommitDiscardedFile: '' # gitcommitFile\ngitcommitSelectedFile: '' # gitcommitFile\ngitcommitUnmergedFile: '' # gitcommitFile\ngitcommitFile: '' # Constant\ngitcommitDiscardedArrow: '' # gitcommitArrow\ngitcommitSelectedArrow: '' # gitcommitArrow\ngitcommitUnmergedArrow: '' # gitcommitArrow\ngitcommitArrow: '' # gitcommitComment\ngitcommitOverflow: '' # none\ngitcommitBlank: '' # Error\n",
+        "elixir.yml": "# Elixir\nelixirComment: '' # Comment\nelixirUnusedVariable: '' # Comment\nelixirAtom: '' # Constant\nelixirBoolean: '' # Constant\nelixirPseudoVariable: '' # Constant\nelixirNumber: '' # Constant\nelixirString: '' # Constant\nelixirRegex: '' # Constant\nelixirDocString: '' # Constant\nelixirAtomInterpolated: '' # Constant\nelixirSigil: '' # Constant\nelixirRegexDelimiter: '' # Delimiter\nelixirStringDelimiter: '' # Delimiter\nelixirInterpolationDelimiter: '' # Delimiter\nelixirSigilDelimiter: '' # Delimiter\nelixirSpecial: '' # Delimiter\nelixirRegexEscape: '' # Delimiter\nelixirRegexEscapePunctuation: '' # Delimiter\nelixirRegexQuantifier: '' # Delimiter\nelixirRegexCharClass: '' # Delimiter\nelixirSelf: '' # Identifier\nelixirVariable: '' # Identifier\nelixirFunctionDeclaration: '' # Identifier\nelixirBlockDefinition: '' # Statement\nelixirKeyword: '' # Statement\nelixirOperator: '' # Statement\nelixirInclude: '' # Preproc\nelixirDefine: '' # Preproc\nelixirPrivateDefine: '' # Preproc\nelixirModuleDefine: '' # Preproc\nelixirProtocolDefine: '' # Preproc\nelixirImplDefine: '' # Preproc\nelixirRecordDefine: '' # Preproc\nelixirPrivateRecordDefine: '' # Preproc\nelixirMacroDefine: '' # Preproc\nelixirMacroDeclaration: '' # Preproc\nelixirPrivateMacroDefine: '' # Preproc\nelixirDelegateDefine: '' # Preproc\nelixirOverridableDefine: '' # Preproc\nelixirExceptionDefine: '' # Preproc\nelixirCallbackDefine: '' # Preproc\nelixirStructDefine: '' # Preproc\nelixirAlias: '' # Type\nelixirTodo: '' # Todo\nelixirArguments: ''\nelixirGuard: ''\nelixirId: ''\nelixirInterpolation: ''\nelixirDocStringStar: ''\nelixirBlock: ''\nelixirAnonymousFunction: ''\nelixirDelimEscape: ''\nelixirModuleDeclaration: ''\nelixirProtocolDeclaration: ''\nelixirImplDeclaration: ''\nelixirRecordDeclaration: ''\nelixirDelegateDeclaration: ''\nelixirOverridableDeclaratio: ''\nelixirExceptionDeclaration: ''\nelixirCallbackDeclaration: ''\nelixirStructDeclaration: ''\n",
+        "fugitive.yml": "FugitiveblameBoundary: '' # Keyword\nFugitiveblameHash: '' # Identifier\nFugitiveblameUncommitted: '' # Ignore\nFugitiveblameTime: '' # PreProc\nFugitiveblameLineNumber: '' # Number\nFugitiveblameOriginalFile: '' # String\nFugitiveblameOriginalLineNumber: '' #\nFugitiveblameShort: '' # FugitiveblameDelimiter\nFugitiveblameDelimiter: '' # Delimiter\nFugitiveblameNotCommittedYet: '' # Comment\n",
+        "xml.yml": "xmlTodo: '' # Todo\nxmlTag: '' # Function\nxmlTagName: '' # Function\nxmlEndTag: '' # Identifier\nxmlNamespace: '' # Tag\nxmlEntity: '' # Statement\nxmlEntityPunct: '' # Type\nxmlAttribPunct: '' # Comment\nxmlAttrib: '' # Type\nxmlString: '' # String\nxmlComment: '' # Comment\nxmlCommentStart: '' # xmlComment\nxmlCommentPart: '' # Comment\nxmlCommentError: '' # Error\nxmlError: '' # Error\nxmlProcessingDelim: '' # Comment\nxmlProcessing: '' # Type\nxmlCdata: '' # String\nxmlCdataCdata: '' # Statement\nxmlCdataStart: '' # Type\nxmlCdataEnd: '' # Type\nxmlDocTypeDecl: '' # Function\nxmlDocTypeKeyword: '' # Statement\nxmlInlineDTD: '' # Function\n",
+        "vim-stylus.yml": "stylusComment: '' # Comment\nstylusVariable: '' # Identifier\nstylusControl: '' # PreProc\nstylusFunction: '' # Function\nstylusInterpolation: '' # Delimiter\nstylusAmpersand: '' # Character\nstylusClass: '' # Type\nstylusClassChar: '' # Special\nstylusEscape: '' # Special\nstylusId: '' # Identifier\nstylusIdChar: '' # Special\n",
+        "elm.vim.yml": "elmKeyword: '' # Keyword\nelmBuiltinOp: '' # Special\nelmType: '' # Type\nelmTodo: '' # Todo\nelmLineComment: '' # Comment\nelmComment: '' # Comment\nelmString: '' # String\nelmNumber: '' # Number\nspecialName: '' # Special\n",
+        "yaml.yml": "yamlTodo: '' # Todo\nyamlComment: '' # Comment\nyamlDocumentStart: '' # PreProc\nyamlDocumentEnd: '' # PreProc\nyamlDirectiveName: '' # Keyword\nyamlTAGDirective: '' # yamlDirectiveName\nyamlTagHandle: '' # String\nyamlTagPrefix: '' # String\nyamlYAMLDirective: '' # yamlDirectiveName\nyamlReservedDirective: '' # Error\nyamlYAMLVersion: '' # Number\nyamlString: '' # String\nyamlFlowString: '' # yamlString\nyamlFlowStringDelimiter: '' # yamlString\nyamlEscape: '' # SpecialChar\nyamlSingleEscape: '' # SpecialChar\nyamlBlockCollectionItemStart: '' # Label\nyamlBlockMappingKey: '' # Identifier\nyamlBlockMappingMerge: '' # Special\nyamlFlowMappingKey: '' # Identifier\nyamlFlowMappingMerge: '' # Special\nyamlMappingKeyStart: '' # Special\nyamlFlowIndicator: '' # Special\nyamlKeyValueDelimiter: '' # Special\nyamlConstant: '' # Constant\nyamlNull: '' # yamlConstant\nyamlBool: '' # yamlConstant\nyamlAnchor: '' # Type\nyamlAlias: '' # Type\nyamlNodeTag: '' # Type\nyamlInteger: '' # Number\nyamlFloat: '' # Float\nyamlTimestamp: '' # Number\n",
+        "ruby.yml": "rubyClass: '' # rubyDefine\nrubyModule: '' # rubyDefine\nrubyMethodExceptional: '' # rubyDefine\nrubyDefine: '' # Define\nrubyFunction: '' # Function\nrubyConditional: '' # Conditional\nrubyConditionalModifier: '' # rubyConditional\nrubyExceptional: '' # rubyConditional\nrubyRepeat: '' # Repeat\nrubyRepeatModifier: '' # rubyRepeat\nrubyOptionalDo: '' # rubyRepeat\nrubyControl: '' # Statement\nrubyInclude: '' # Include\nrubyInteger: '' # Number\nrubyASCIICode: '' # Character\nrubyFloat: '' # Float\nrubyBoolean: '' # Boolean\nrubyException: '' # Exception\nrubyIdentifier: '' # Identifier\nrubyClassVariable: '' # rubyIdentifier\nrubyConstant: '' # Type\nrubyGlobalVariable: '' # rubyIdentifier\nrubyBlockParameter: '' # rubyIdentifier\nrubyInstanceVariable: '' # rubyIdentifier\nrubyPredefinedIdentifier: '' # rubyIdentifier\nrubyPredefinedConstant: '' # rubyPredefinedIdentifier\nrubyPredefinedVariable: '' # rubyPredefinedIdentifier\nrubySymbol: '' # Constant\nrubyKeyword: '' # Keyword\nrubyOperator: '' # Operator\nrubyBeginEnd: '' # Statement\nrubyAccess: '' # Statement\nrubyAttribute: '' # Statement\nrubyEval: '' # Statement\nrubyPseudoVariable: '' # Constant\nrubyComment: '' # Comment\nrubyData: '' # Comment\nrubyDataDirective: '' # Delimiter\nrubyDocumentation: '' # Comment\nrubyTodo: '' # Todo\nrubyQuoteEscape: '' # rubyStringEscape\nrubyStringEscape: '' # Special\nrubyInterpolationDelimiter: '' # Delimiter\nrubyNoInterpolation: '' # rubyString\nrubySharpBang: '' # PreProc\nrubyRegexpDelimiter: '' # rubyStringDelimiter\nrubySymbolDelimiter: '' # rubyStringDelimiter\nrubyStringDelimiter: '' # Delimiter\nrubyHeredoc: '' # rubyString\nrubyString: '' # String\nrubyRegexpEscape: '' # rubyRegexpSpecial\nrubyRegexpQuantifier: '' # rubyRegexpSpecial\nrubyRegexpAnchor: '' # rubyRegexpSpecial\nrubyRegexpDot: '' # rubyRegexpCharClass\nrubyRegexpCharClass: '' # rubyRegexpSpecial\nrubyRegexpSpecial: '' # Special\nrubyRegexpComment: '' # Comment\nrubyRegexp: '' # rubyString\nrubyInvalidVariable: '' # Error\nrubyError: '' # Error\nrubySpaceError: '' # rubyError\n",
+        "sh.yml": "shArithRegion: '' # shShellVariables\nshAtExpr: '' # shSetList\nshBeginHere: '' # shRedir\nshCaseBar: '' # shConditional\nshCaseCommandSub: '' # shCommandSub\nshCaseDoubleQuote: '' # shDoubleQuote\nshCaseIn: '' # shConditional\nshQuote: '' # shOperator\nshCaseSingleQuote: '' # shSingleQuote\nshCaseStart: '' # shConditional\nshCmdSubRegion: '' # shShellVariables\nshColon: '' # shComment\nshDerefOp: '' # shOperator\nshDerefPOL: '' # shDerefOp\nshDerefPPS: '' # shDerefOp\nshDeref: '' # shShellVariables\nshDerefDelim: '' # shOperator\nshDerefSimple: '' # shDeref\nshDerefSpecial: '' # shDeref\nshDerefString: '' # shDoubleQuote\nshDerefVar: '' # shDeref\nshDoubleQuote: '' # shString\nshEcho: '' # shString\nshEchoDelim: '' # shOperator\nshEchoQuote: '' # shString\nshForPP: '' # shLoop\nshEmbeddedEcho: '' # shString\nshEscape: '' # shCommandSub\nshExDoubleQuote: '' # shDoubleQuote\nshExSingleQuote: '' # shSingleQuote\nshFunction: '' # Function\nshHereDoc: '' # shString\nshHerePayload: '' # shHereDoc\nshLoop: '' # shStatement\nshMoreSpecial: '' # shSpecial\nshOption: '' # shCommandSub\nshPattern: '' # shString\nshParen: '' # shArithmetic\nshPosnParm: '' # shShellVariables\nshQuickComment: '' # shComment\nshRange: '' # shOperator\nshRedir: '' # shOperator\nshSetListDelim: '' # shOperator\nshSetOption: '' # shOption\nshSingleQuote: '' # shString\nshSource: '' # shOperator\nshStringSpecial: '' # shSpecial\nshSubShRegion: '' # shOperator\nshTestOpr: '' # shConditional\nshTestPattern: '' # shString\nshTestDoubleQuote: '' # shString\nshTestSingleQuote: '' # shString\nshVariable: '' # shSetList\nshWrapLineOperator: '' # shOperator\nbashAdminStatement: '' # shStatement if exists(\"b:is_bash\")\nbashSpecialVariables: '' # shShellVariables if exists(\"b:is_bash\")\nbashStatement: '' # shStatement if exists(\"b:is_bash\")\nshFunctionParen: '' # Delimiter if exists(\"b:is_bash\")\nshFunctionDelim: '' # Delimiter if exists(\"b:is_bash\")\nkshSpecialVariables: '' # shShellVariables if exists(\"b:is_kornshell\")\nkshStatement: '' # shStatement if exists(\"b:is_kornshell\")\nshCaseError: '' # Error if !exists(\"g:sh_no_error\")\nshCondError: '' # Error if !exists(\"g:sh_no_error\")\nshCurlyError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefOpError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefWordError: '' # Error if !exists(\"g:sh_no_error\")\nshDoError: '' # Error if !exists(\"g:sh_no_error\")\nshEsacError: '' # Error if !exists(\"g:sh_no_error\")\nshIfError: '' # Error if !exists(\"g:sh_no_error\")\nshInError: '' # Error if !exists(\"g:sh_no_error\")\nshParenError: '' # Error if !exists(\"g:sh_no_error\")\nshTestError: '' # Error if !exists(\"g:sh_no_error\")\nshDTestError: '' # Error if exists(\"b:is_kornshell\")\nshArithmetic: '' # Special\nshCharClass: '' # Identifier\nshSnglCase: '' # Statement\nshCommandSub: '' # Special\nshComment: '' # Comment\nshConditional: '' # Conditional\nshCtrlSeq: '' # Special\nshExprRegion: '' # Delimiter\nshFunctionKey: '' # Function\nshFunctionName: '' # Function\nshNumber: '' # Number\nshOperator: '' # Operator\nshRepeat: '' # Repeat\nshSet: '' # Statement\nshSetList: '' # Identifier\nshShellVariables: '' # PreProc\nshSpecial: '' # Special\nshStatement: '' # Statement\nshString: '' # String\nshTodo: '' # Todo\nshAlias: '' # Identifier\nshHereDoc01: '' # shRedir\nshHereDoc02: '' # shRedir\nshHereDoc03: '' # shRedir\nshHereDoc04: '' # shRedir\nshHereDoc05: '' # shRedir\nshHereDoc06: '' # shRedir\nshHereDoc07: '' # shRedir\nshHereDoc08: '' # shRedir\nshHereDoc09: '' # shRedir\nshHereDoc10: '' # shRedir\nshHereDoc11: '' # shRedir\nshHereDoc12: '' # shRedir\nshHereDoc13: '' # shRedir\nshHereDoc14: '' # shRedir\nshHereDoc15: '' # shRedir\nshHereDoc16: '' # shRedir\nshHereDoc17: '' # shRedir\nshHereDoc18: '' # shRedir\nshHereDoc19: '' # shRedir\nshHereDoc20: '' # shRedir\nshHereDoc21: '' # shRedir\nshHereDoc22: '' # shRedir\nshHereDoc23: '' # shRedir\nshHereDoc24: '' # shRedir\nshHereDoc25: '' # shRedir\nshHereDoc26: '' # shRedir\nshHereDoc27: '' # shRedir\nshHereDoc28: '' # shRedir\nshHereDoc29: '' # shRedir\nshHereDoc30: '' # shRedir\nshHereDoc31: '' # shRedir\nshHereDoc32: '' # shRedir\n",
+        "vim-signify.yml": "# mhinz/vim-signify\nSignifyLineAdd: ''\nSignifyLineDelete: ''\nSignifyLineDeleteFirstLine: ''\nSignifyLineChange: ''\nSignifyLineChangeDelete: ''\n\nSignifySignAdd: ''\nSignifySignDelete: ''\nSignifySignDeleteFirstLine: ''\nSignifySignChange: ''\nSignifySignChangeDelete: ''\n",
+        "viminfo.yml": "viminfoComment: '' # Comment\nviminfoError: '' # Error\nviminfoStatement: '' # Statement\n"
     },
     "addons": {
-        "terminal.yml": "color_foreground: ''\ncolor_background: ''\ncolor_0: ''\ncolor_1: ''\ncolor_2: ''\ncolor_3: ''\ncolor_4: ''\ncolor_5: ''\ncolor_6: ''\ncolor_7: ''\ncolor_8: ''\ncolor_9: ''\ncolor_10: ''\ncolor_11: ''\ncolor_12: ''\ncolor_13: ''\ncolor_14: ''\ncolor_15: ''\n",
         "lightline.yml": "normal1: ''\nnormal2: ''\nnormal3: ''\nnormal4: ''\nnormal5: ''\nnormalError: ''\nnormalWarning: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninactive4: ''\ninactive5: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\ninsert4: ''\ninsert5: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nreplace4: ''\nreplace5: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nvisual4: ''\nvisual5: ''\ntablineLeft: ''\ntablineSelected: ''\ntablineMiddle: ''\ntablineRight: ''\n",
+        "terminal.yml": "color_foreground: ''\ncolor_background: ''\ncolor_0: ''\ncolor_1: ''\ncolor_2: ''\ncolor_3: ''\ncolor_4: ''\ncolor_5: ''\ncolor_6: ''\ncolor_7: ''\ncolor_8: ''\ncolor_9: ''\ncolor_10: ''\ncolor_11: ''\ncolor_12: ''\ncolor_13: ''\ncolor_14: ''\ncolor_15: ''\n",
         "airline.yml": "normal1: ''\nnormal2: ''\nnormal3: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nctrlp1: '' # optional\nctrlp2: '' # optional\nctrlp3: '' # optional\n"
     }
 };
-const tick = green("✓");
+const tick = green1("✓");
 function installTemplates(projectPath, templates) {
     templates.forEach((name)=>{
         const destination = resolve5(projectPath, "estilos/syntax", name);
@@ -10886,10 +11529,8 @@ function installTemplates(projectPath, templates) {
             console.error(err);
         }
     });
-    console.log(green(`Added ${templates.length} templates:`));
-    console.log(templates.map((name)=>name.slice(0, -4)
-    ).map((name)=>`${tick} ${name}\n`
-    ).join(""));
+    console.log(green1(`Added ${templates.length} templates:`));
+    console.log(templates.map((name)=>name.slice(0, -4)).map((name)=>`${tick} ${name}\n`).join(""));
 }
 const defaultPalette = "myblue: '#99ccff'";
 async function createProject(projectPath, noQuestions) {
@@ -10941,7 +11582,7 @@ async function askConfig(projectPath) {
             type: Input,
             name: "description",
             message: "Description:"
-        }, 
+        }
     ]);
 }
 async function createBoilerplate(projectPath, options) {
@@ -10958,7 +11599,7 @@ async function createBoilerplate(projectPath, options) {
     installTemplates(projectPath, [
         "base.yml"
     ]);
-    console.log(green("✓  Your project is ready\n"));
+    console.log(green1("✓  Your project is ready\n"));
 }
 async function renderConfigFile(options) {
     return await render(__default1.mustaches["project.ejs"], options);
@@ -10968,7 +11609,7 @@ function isHexColor1(color) {
 }
 function loadYml(folderPath, filename) {
     const filepath = resolve5(folderPath, filename || "");
-    const content = parse8(Deno.readTextFileSync(filepath));
+    const content = parse11(Deno.readTextFileSync(filepath));
     if (typeof content !== "object") {
         crash("Content of file is not an object", {
             filepath
@@ -10979,8 +11620,7 @@ function loadYml(folderPath, filename) {
         content
     };
 }
-function buildPalettes(paletteFiles, common = {
-}) {
+function buildPalettes(paletteFiles, common = {}) {
     const commonPalette = buildMainPalette(common);
     const paleteEntries = paletteFiles.map((paletteFile)=>{
         const palette = buildPalette(paletteFile, commonPalette);
@@ -11017,8 +11657,7 @@ function buildPalette(paletteFile, common) {
     const palette = {
         filepath,
         name: basename5(filepath, ".yml"),
-        colors: {
-        }
+        colors: {}
     };
     Object.entries(content).forEach(([name, value])=>{
         const hexcolor = value.trim();
@@ -11041,8 +11680,7 @@ function buildPalette(paletteFile, common) {
             xterm: hexterm(hexcolor).toString()
         };
     });
-    palette.colors = Object.assign({
-    }, common, palette.colors);
+    palette.colors = Object.assign({}, common, palette.colors);
     return palette;
 }
 function formatSyntaxFile(file) {
@@ -11051,21 +11689,16 @@ function formatSyntaxFile(file) {
             filepath,
             name,
             rule: value.trim()
-        })
-    ).filter((rule)=>rule.rule
-    );
+        })).filter((rule)=>rule.rule);
 }
 function formatSyntax(syntaxFiles) {
-    return syntaxFiles.map((syntaxFile)=>formatSyntaxFile(syntaxFile)
-    ).flat();
+    return syntaxFiles.map((syntaxFile)=>formatSyntaxFile(syntaxFile)).flat();
 }
 function formatTerminal(data) {
     return Object.fromEntries(Object.keys(data).map((prop)=>[
             prop,
             data[prop].trim()
-        ]
-    ).filter(([_, colorname])=>colorname
-    ));
+        ]).filter(([_, colorname])=>colorname));
 }
 const statusParts = {
     airline: [
@@ -11083,7 +11716,7 @@ const statusParts = {
         "visual3",
         "inactive1",
         "inactive2",
-        "inactive3", 
+        "inactive3"
     ],
     lightline: [
         "normal1",
@@ -11116,7 +11749,7 @@ const statusParts = {
         "tablineLeft",
         "tablineSelected",
         "tablineMiddle",
-        "tablineRight", 
+        "tablineRight"
     ]
 };
 function formatStatusStyles(statusFiles, brand) {
@@ -11133,8 +11766,7 @@ function formatStatusStyle(content, brand, filepath) {
     const statusStyle = {
         name: basename5(filepath, ".yml"),
         filepath,
-        syntax: {
-        }
+        syntax: {}
     };
     Object.keys(content).forEach((name)=>{
         const txt = content[name].trim();
@@ -11180,15 +11812,12 @@ function loadProjectFiles(projectUrl) {
 }
 function loadYmlsInFolder(projectUrl, folder) {
     const folderUrl = resolve5(projectUrl, "estilos", folder);
-    return ymlsInFolder(folderUrl).map((filepath)=>loadYml(filepath)
-    );
+    return ymlsInFolder(folderUrl).map((filepath)=>loadYml(filepath));
 }
 function ymlsInFolder(folderPath, folder2) {
     const finalPath = resolve5(folderPath, folder2 || "");
     if (!existsSync1(finalPath)) return [];
-    return Array.from(Deno.readDirSync(finalPath)).filter((file)=>file.name.endsWith(".yml")
-    ).map((file)=>resolve5(finalPath, file.name)
-    );
+    return Array.from(Deno.readDirSync(finalPath)).filter((file)=>file.name.endsWith(".yml")).map((file)=>resolve5(finalPath, file.name));
 }
 async function selectSyntax(projectPath, all = false) {
     const destFolder = resolve5(projectPath, "estilos/syntax");
@@ -11198,12 +11827,10 @@ async function selectSyntax(projectPath, all = false) {
     installTemplates(projectPath, templates);
 }
 function getFileNamesFromFolder(folder) {
-    return Array.from(Deno.readDirSync(folder)).map((file)=>file.name
-    );
+    return Array.from(Deno.readDirSync(folder)).map((file)=>file.name);
 }
 function getMissingTemplates(libFiles, destFiles) {
-    return libFiles.filter((template)=>!destFiles.includes(template)
-    );
+    return libFiles.filter((template)=>!destFiles.includes(template));
 }
 async function askForTemplates(libFiles, destFiles) {
     const options = libFiles.map((value)=>{
@@ -11221,7 +11848,7 @@ async function askForTemplates(libFiles, destFiles) {
             message: "Select some extra syntax templates",
             name: "templates",
             options
-        }, 
+        }
     ]);
 }
 const uis = new Set([
@@ -11246,8 +11873,7 @@ function isLegacyUi(value) {
     });
 }
 function parseLegacyUi(style) {
-    return style.split("").map((val)=>uiValues[val]
-    ).join(",");
+    return style.split("").map((val)=>uiValues[val]).join(",");
 }
 async function renderColorscheme(config, project) {
     const palette = project.palettes[config.palette];
@@ -11290,8 +11916,7 @@ function parseTermColors(termSyntax, palette) {
     return Object.fromEntries(values);
 }
 function parseSyntaxColors(syntax, palette) {
-    const values = {
-    };
+    const values = {};
     syntax.forEach((rule)=>{
         const [fgColor, bgColor, ui, curlColor] = rule.rule.split(/\s+/);
         const filepath = rule.filepath;
@@ -11348,8 +11973,7 @@ function getCurlColor(color, palette, filepath) {
     return curlColor;
 }
 function parseStatusColors(syntax, palette) {
-    const out = {
-    };
+    const out = {};
     Object.keys(syntax).forEach((partName)=>{
         const [fgName, bgName] = syntax[partName];
         const fg = palette.colors[fgName];
@@ -11414,18 +12038,18 @@ async function renderProject(project) {
         writeScheme(rendered, config.name, project.projectUrl);
     }
     if (projectConfig.airline) {
-        for (const config of projectConfig.airline){
-            const rendered = await renderStatus(config, project, "airline");
-            writeStatus("airline", rendered, config.name, project.projectUrl);
+        for (const config1 of projectConfig.airline){
+            const rendered1 = await renderStatus(config1, project, "airline");
+            writeStatus("airline", rendered1, config1.name, project.projectUrl);
         }
     }
     if (projectConfig.lightline) {
-        for (const config of projectConfig.lightline){
-            const rendered = await renderStatus(config, project, "lightline");
-            writeStatus("lightline", rendered, config.name, project.projectUrl);
+        for (const config2 of projectConfig.lightline){
+            const rendered2 = await renderStatus(config2, project, "lightline");
+            writeStatus("lightline", rendered2, config2.name, project.projectUrl);
         }
     }
-    console.log(green("✓  Done, your theme is ready\n"));
+    console.log(green1("✓  Done, your theme is ready\n"));
 }
 const paths = {
     airline: "autoload/airline/themes",
@@ -11449,8 +12073,7 @@ async function installStatus(projectPath, brand, styleName) {
     if (styleName) {
         return addStatus(projectPath, brand, styleName);
     }
-    const installedStyles = Array.from(Deno.readDirSync(statusFolderPath)).map((n)=>n.name.slice(0, -4)
-    );
+    const installedStyles = Array.from(Deno.readDirSync(statusFolderPath)).map((n)=>n.name.slice(0, -4));
     const answers = await prompt([
         {
             type: Input,
@@ -11461,7 +12084,7 @@ async function installStatus(projectPath, brand, styleName) {
                 if (!stylename) return "That's not a name";
                 return installedStyles.includes(stylename) ? "That style already exists" : true;
             }
-        }, 
+        }
     ]);
     addStatus(projectPath, brand, answers.stylename);
 }
@@ -11470,11 +12093,11 @@ function addStatus(projectPath, brand, styleName) {
     ensureDirSync(folderPath);
     const filepath = resolve5(folderPath, styleName + ".yml");
     Deno.writeTextFileSync(filepath, __default1.addons[brand + ".yml"]);
-    console.log(green(`New ${brand} style: ${styleName}`));
+    console.log(green1(`New ${brand} style: ${styleName}`));
     console.log(`==> ${filepath}`);
 }
 const estiloCommand = new Command();
-const result1 = await estiloCommand.command("help", new HelpCommand().global()).reset().name("estilo").version(__default).description("Generate colorschemes for (neo)vim, airline and lightline").command("create [folder]").description("Initialize an estilo project in [folder] or current folder").option("-y, --yes", "Skip questions").action((options, folder = ".")=>{
+const result = await estiloCommand.command("help", new HelpCommand().global()).reset().name("estilo").version(__default).description("Generate colorschemes for (neo)vim, airline and lightline").command("create [folder]").description("Initialize an estilo project in [folder] or current folder").option("-y, --yes", "Skip questions").action((options, folder = ".")=>{
     createProject(resolve5(folder), !!options.yes);
 }).reset().command("render [folder]").description("Render project").action((_, folder = ".")=>{
     const projectPath = resolve5(folder);
@@ -11488,7 +12111,7 @@ const result1 = await estiloCommand.command("help", new HelpCommand().global()).
 }).reset().command("add-airline [styleName]").description("Add new Airline style").action((_, styleName)=>{
     installStatus(".", "airline", styleName);
 }).reset().parse(Deno.args);
-if (!Object.entries(result1.options).length && result1.cmd._name === "estilo") {
+if (!Object.entries(result.options).length && result.cmd._name === "estilo") {
     estiloCommand.showHelp();
 }
 function checkProject(projectPath) {
@@ -11496,11 +12119,9 @@ function checkProject(projectPath) {
         "estilo.yml",
         "estilos/syntax",
         "estilos/palettes",
-        "estilos/terminal.yml", 
+        "estilos/terminal.yml"
     ];
-    const notOk = paths.map((path)=>resolve5(projectPath, path)
-    ).filter((path)=>!existsSync1(path)
-    );
+    const notOk = paths.map((path)=>resolve5(projectPath, path)).filter((path)=>!existsSync1(path));
     if (notOk.length) {
         if (existsSync1(resolve5(projectPath, "estilo"))) {
             crash(`⚠ Wrong project folder. Follow upgrade instructions please`);

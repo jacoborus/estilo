@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.97.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.163.0/testing/asserts.ts";
 import { isHexColor } from "../src/util.ts";
 
 Deno.test("isHexColor recognizes 3 characters color codes", () => {

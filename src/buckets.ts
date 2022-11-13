@@ -1,6 +1,6 @@
 // is-deno-bucket
 import loadFolder from "./load-folder.ts";
-import { resolve } from "https://deno.land/std@0.117.0/path/mod.ts";
+import { resolve } from "../deps.ts";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 

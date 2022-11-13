@@ -1,5 +1,5 @@
 import { WalkOptions, walkSync } from "https://deno.land/std@0.117.0/fs/mod.ts";
-import { resolve } from "https://deno.land/std@0.117.0/path/mod.ts";
+import { resolve } from "../deps.ts";
 
 export interface BucketOptions {
   maxDepth?: number;
