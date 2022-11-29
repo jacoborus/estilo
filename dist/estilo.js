@@ -1,4 +1,3 @@
-const __default = "2.0.0-beta.4";
 function setPrototypeOf(obj, proto) {
     if (Object.setPrototypeOf) {
         Object.setPrototypeOf(obj, proto);
@@ -11461,6 +11460,7 @@ const xtermcolors = [
     "e4e4e4",
     "eeeeee"
 ];
+const version = "2.0.0-beta-5";
 function crash(message, data) {
     console.log(red1("Error: " + message));
     if (data) console.log(red1(dataToText(data)));
@@ -11469,7 +11469,7 @@ function crash(message, data) {
 function dataToText(data) {
     return Object.keys(data).map((key)=>`- ${key}: ${data[key]}`).join("\n");
 }
-const __default1 = {
+const __default = {
     "mustaches": {
         "colorscheme.ejs": "<% const info = it.info; %>\n\"\"\n\" Colorscheme: <% info.name %>\n<% if(it.info.description) { %>\" Description: <%= it.info.description %>\n<% } %>\n<% if(it.info.url){ %>\" URL: <%= it.info.url %>\n<% } %>\n<% if(it.info.author){ %>\" Author: <%= it.info.author %>\n<% } %>\n<% if(it.info.license){%>\" License: <%= it.info.license %>\n<% } %>\n\"\"\n\nset background=<%= it.info.background %>\n\nhi clear\n\nif exists(\"syntax_on\")\n  syntax reset\nendif\nlet g:colors_name=\"<%= it.info.name %>\"\n\n\nlet Italic = \"\"\nif exists('g:<%= it.info.name %>_italic')\n  let Italic = \"italic\"\nendif\nlet g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)\n\nlet Bold = \"\"\nif exists('g:<%= info.name %>_bold')\n  let Bold = \"bold\"\nendif\n\nlet g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)\n\n<% Object.keys(it.stacks).forEach(function (key) {%>\n  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>\n<%- if(link){ -%>\nhi link <%=key%> <%=link%>\n<%- } else { -%>\nhi <%=key%>\n<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>\n<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>\n<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>\n<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>\n<% } %>\n\n<% }) %>\n\n<% if(it.term.color_0){ %>\nif has('terminal')\n  let g:terminal_ansi_colors = [\n  \\ \"<%= it.term.color_0 %>\",\n  \\ \"<%= it.term.color_1 %>\",\n  \\ \"<%= it.term.color_2 %>\",\n  \\ \"<%= it.term.color_3 %>\",\n  \\ \"<%= it.term.color_4 %>\",\n  \\ \"<%= it.term.color_5 %>\",\n  \\ \"<%= it.term.color_6 %>\",\n  \\ \"<%= it.term.color_7 %>\",\n  \\ \"<%= it.term.color_8 %>\",\n  \\ \"<%= it.term.color_9 %>\",\n  \\ \"<%= it.term.color_10 %>\",\n  \\ \"<%= it.term.color_11 %>\",\n  \\ \"<%= it.term.color_12 %>\",\n  \\ \"<%= it.term.color_13 %>\",\n  \\ \"<%= it.term.color_14 %>\",\n  \\ \"<%= it.term.color_15 %>\"\n  \\ ]\nendif\n\nif has('nvim')\n<% Object.keys(it.term).forEach(function (key) { %>\n  let g:terminal_<%= key %> = \"<%= it.term[key] %>\"\n<% }) %>\nendif\n<% } %>\n",
         "lightline.ejs": "<% const info = it.info; %>\n\"\"\n\" Lightline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){ %>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){ %>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){ %>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet s:p = {\"normal\": {}, \"inactive\": {}, \"insert\": {}, \"replace\": {}, \"visual\": {}, \"tabline\": {} }\n\nlet s:p.normal.left = [[[\"<%= it.normal1.fg.hex %>\", <%= it.normal1.fg.xterm %>], [\"<%= it.normal1.bg.hex %>\", <%= it.normal1.bg.xterm %>]], [[\"<%= it.normal2.fg.hex %>\", <%= it.normal2.fg.xterm %>], [\"<%= it.normal2.bg.hex %>\", <%= it.normal2.bg.xterm %>]]]\nlet s:p.normal.middle = [[[\"<%= it.normal3.fg.hex %>\", <%= it.normal3.fg.xterm %>], [\"<%= it.normal3.bg.hex %>\", <%= it.normal3.bg.xterm %>]]]\nlet s:p.normal.right = [[[\"<%= it.normal4.fg.hex %>\", <%= it.normal4.fg.xterm %>], [\"<%= it.normal4.bg.hex %>\", <%= it.normal4.bg.xterm %>]], [[\"<%= it.normal5.fg.hex %>\", <%= it.normal5.fg.xterm %>], [\"<%= it.normal5.bg.hex %>\", <%= it.normal5.bg.xterm %>]]]\nlet s:p.normal.error = [[[\"<%= it.normalError.fg.hex %>\", <%= it.normalError.fg.xterm %>], [\"<%= it.normalError.bg.hex %>\", <%= it.normalError.bg.xterm %>]]]\nlet s:p.normal.warning = [[[\"<%= it.normalWarning.fg.hex %>\", <%= it.normalWarning.fg.xterm %>], [\"<%= it.normalWarning.bg.hex %>\", <%= it.normalWarning.bg.xterm %>]]]\n\nlet s:p.inactive.left = [[[\"<%= it.inactive1.fg.hex %>\", <%= it.inactive1.fg.xterm %>], [\"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.bg.xterm %>]], [[\"<%= it.inactive2.fg.hex %>\", <%= it.inactive2.fg.xterm %>], [\"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.bg.xterm %>]]]\nlet s:p.inactive.middle = [[[\"<%= it.inactive3.fg.hex %>\", <%= it.inactive3.fg.xterm %>], [\"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.bg.xterm %>]]]\nlet s:p.inactive.right = [[[\"<%= it.inactive4.fg.hex %>\", <%= it.inactive4.fg.xterm %>], [\"<%= it.inactive4.bg.hex %>\", <%= it.inactive4.bg.xterm %>]], [[\"<%= it.inactive5.fg.hex %>\", <%= it.inactive5.fg.xterm %>], [\"<%= it.inactive5.bg.hex %>\", <%= it.inactive5.bg.xterm %>]]]\n\nlet s:p.insert.left = [[[\"<%= it.insert1.fg.hex %>\", <%= it.insert1.fg.xterm %>], [\"<%= it.insert1.bg.hex %>\", <%= it.insert1.bg.xterm %>]], [[\"<%= it.insert2.fg.hex %>\", <%= it.insert2.fg.xterm %>], [\"<%= it.insert2.bg.hex %>\", <%= it.insert2.bg.xterm %>]]]\nlet s:p.insert.middle = [[[\"<%= it.insert3.fg.hex %>\", <%= it.insert3.fg.xterm %>], [\"<%= it.insert3.bg.hex %>\", <%= it.insert3.bg.xterm %>]]]\nlet s:p.insert.right = [[[\"<%= it.insert4.fg.hex %>\", <%= it.insert4.fg.xterm %>], [\"<%= it.insert4.bg.hex %>\", <%= it.insert4.bg.xterm %>]], [[\"<%= it.insert5.fg.hex %>\", <%= it.insert5.fg.xterm %>], [\"<%= it.insert5.bg.hex %>\", <%= it.insert5.bg.xterm %>]]]\n\nlet s:p.replace.left = [[[\"<%= it.replace1.fg.hex %>\", <%= it.replace1.fg.xterm %>], [\"<%= it.replace1.bg.hex %>\", <%= it.replace1.bg.xterm %>]], [[\"<%= it.replace2.fg.hex %>\", <%= it.replace2.fg.xterm %>], [\"<%= it.replace2.bg.hex %>\", <%= it.replace2.bg.xterm %>]]]\nlet s:p.replace.middle = [[[\"<%= it.replace3.fg.hex %>\", <%= it.replace3.fg.xterm %>], [\"<%= it.replace3.bg.hex %>\", <%= it.replace3.bg.xterm %>]]]\nlet s:p.replace.right = [[[\"<%= it.replace4.fg.hex %>\", <%= it.replace4.fg.xterm %>], [\"<%= it.replace4.bg.hex %>\", <%= it.replace4.bg.xterm %>]], [[\"<%= it.replace5.fg.hex %>\", <%= it.replace5.fg.xterm %>], [\"<%= it.replace5.bg.hex %>\", <%= it.replace5.bg.xterm %>]]]\n\nlet s:p.visual.left = [[[\"<%= it.visual1.fg.hex %>\", <%= it.visual1.fg.xterm %>], [\"<%= it.visual1.bg.hex %>\", <%= it.visual1.bg.xterm %>]], [[\"<%= it.visual2.fg.hex %>\", <%= it.visual2.fg.xterm %>], [\"<%= it.visual2.bg.hex %>\", <%= it.visual2.bg.xterm %>]]]\nlet s:p.visual.middle = [[[\"<%= it.visual3.fg.hex %>\", <%= it.visual3.fg.xterm %>], [\"<%= it.visual3.bg.hex %>\", <%= it.visual3.bg.xterm %>]]]\nlet s:p.visual.right = [[[\"<%= it.visual4.fg.hex %>\", <%= it.visual4.fg.xterm %>], [\"<%= it.visual4.bg.hex %>\", <%= it.visual4.bg.xterm %>]], [[\"<%= it.visual5.fg.hex %>\", <%= it.visual5.fg.xterm %>], [\"<%= it.visual5.bg.hex %>\", <%= it.visual5.bg.xterm %>]]]\n\nlet s:p.tabline.left = [[[\"<%= it.tablineLeft.fg.hex %>\", <%= it.tablineLeft.fg.xterm %>], [\"<%= it.tablineLeft.bg.hex %>\", <%= it.tablineLeft.bg.xterm %>]]]\nlet s:p.tabline.tabsel = [[[\"<%= it.tablineSelected.fg.hex %>\", <%= it.tablineSelected.fg.xterm %>], [\"<%= it.tablineSelected.bg.hex %>\", <%= it.tablineSelected.bg.xterm %>]]]\nlet s:p.tabline.middle = [[[\"<%= it.tablineMiddle.fg.hex %>\", <%= it.tablineMiddle.fg.xterm %>], [\"<%= it.tablineMiddle.bg.hex %>\", <%= it.tablineMiddle.bg.xterm %>]]]\nlet s:p.tabline.right = [[[\"<%= it.tablineRight.fg.hex %>\", <%= it.tablineRight.fg.xterm %>], [\"<%= it.tablineRight.bg.hex %>\", <%= it.tablineRight.bg.xterm %>]]]\n\nlet g:lightline#colorscheme#<%= info.name %>#palette = lightline#colorscheme#flatten(s:p)\n",
@@ -11524,7 +11524,7 @@ function installTemplates(projectPath, templates) {
     templates.forEach((name)=>{
         const destination = resolve5(projectPath, "estilos/syntax", name);
         try {
-            Deno.writeTextFileSync(destination, __default1.syntax[name]);
+            Deno.writeTextFileSync(destination, __default.syntax[name]);
         } catch (err) {
             console.error(err);
         }
@@ -11594,7 +11594,7 @@ async function createBoilerplate(projectPath, options) {
     ensureDirSync(syntaxFolder);
     ensureDirSync(palettesFolder);
     Deno.writeTextFileSync(resolve5(projectPath, "estilo.yml"), estiloStr);
-    Deno.writeTextFileSync(resolve5(estilosFolder, "terminal.yml"), __default1.addons["terminal.yml"]);
+    Deno.writeTextFileSync(resolve5(estilosFolder, "terminal.yml"), __default.addons["terminal.yml"]);
     Deno.writeTextFileSync(resolve5(palettesFolder, options.name + ".yml"), defaultPalette);
     installTemplates(projectPath, [
         "base.yml"
@@ -11602,7 +11602,7 @@ async function createBoilerplate(projectPath, options) {
     console.log(green1("✓  Your project is ready\n"));
 }
 async function renderConfigFile(options) {
-    return await render(__default1.mustaches["project.ejs"], options);
+    return await render(__default.mustaches["project.ejs"], options);
 }
 function isHexColor1(color) {
     return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
@@ -11821,7 +11821,7 @@ function ymlsInFolder(folderPath, folder2) {
 }
 async function selectSyntax(projectPath, all = false) {
     const destFolder = resolve5(projectPath, "estilos/syntax");
-    const libFiles = Object.keys(__default1.syntax);
+    const libFiles = Object.keys(__default.syntax);
     const destFiles = getFileNamesFromFolder(destFolder);
     const templates = all ? getMissingTemplates(libFiles, destFiles) : (await askForTemplates(libFiles, destFiles)).templates;
     installTemplates(projectPath, templates);
@@ -11883,7 +11883,7 @@ async function renderColorscheme(config, project) {
             palette: config.palette
         });
     }
-    return await render(__default1.mustaches["colorscheme.ejs"], {
+    return await render(__default.mustaches["colorscheme.ejs"], {
         info: {
             name: config.name,
             description: config.description,
@@ -11891,7 +11891,7 @@ async function renderColorscheme(config, project) {
             author: project.config.author,
             license: project.config.license,
             background: config.background,
-            estiloVersion: __default
+            estiloVersion: version
         },
         stacks: parseSyntaxColors(project.syntax, palette),
         term: parseTermColors(project.terminalSyntax, palette)
@@ -12024,12 +12024,12 @@ async function renderStatus(config, project, brand) {
         url: project.config.url,
         author: project.config.author,
         license: project.config.license,
-        estiloVersion: __default
+        estiloVersion: version
     };
     const context = Object.assign(c, {
         info
     });
-    return await render(__default1.mustaches[brand + ".ejs"], context);
+    return await render(__default.mustaches[brand + ".ejs"], context);
 }
 async function renderProject(project) {
     const { config: projectConfig  } = project;
@@ -12092,12 +12092,12 @@ function addStatus(projectPath, brand, styleName) {
     const folderPath = resolve5(projectPath, "estilos", brand);
     ensureDirSync(folderPath);
     const filepath = resolve5(folderPath, styleName + ".yml");
-    Deno.writeTextFileSync(filepath, __default1.addons[brand + ".yml"]);
+    Deno.writeTextFileSync(filepath, __default.addons[brand + ".yml"]);
     console.log(green1(`New ${brand} style: ${styleName}`));
     console.log(`==> ${filepath}`);
 }
 const estiloCommand = new Command();
-const result = await estiloCommand.command("help", new HelpCommand().global()).reset().name("estilo").version(__default).description("Generate colorschemes for (neo)vim, airline and lightline").command("create [folder]").description("Initialize an estilo project in [folder] or current folder").option("-y, --yes", "Skip questions").action((options, folder = ".")=>{
+const result = await estiloCommand.command("help", new HelpCommand().global()).reset().name("estilo").version(version).description("Generate colorschemes for (neo)vim, airline and lightline").command("create [folder]").description("Initialize an estilo project in [folder] or current folder").option("-y, --yes", "Skip questions").action((options, folder = ".")=>{
     createProject(resolve5(folder), !!options.yes);
 }).reset().command("render [folder]").description("Render project").action((_, folder = ".")=>{
     const projectPath = resolve5(folder);

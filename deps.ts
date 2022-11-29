@@ -1,6 +1,4 @@
-import config from "./deno.json" assert { type: "json" };
-
-export const version = config.version;
+export const version = "2.0.0-beta-5";
 
 export { render } from "https://deno.land/x/eta@v1.12.3/mod.ts";
 
