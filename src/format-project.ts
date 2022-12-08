@@ -5,7 +5,6 @@ import {
   StatusStyle,
   StatusStyles,
   SyntaxRule,
-  TerminalSyntax,
   YmlFile,
 } from "./common.ts";
 import { crash } from "./crash.ts";
@@ -25,7 +24,7 @@ export function formatSyntax(syntaxFiles: YmlFile[]): SyntaxRule[] {
   return syntaxFiles.map((syntaxFile) => formatSyntaxFile(syntaxFile)).flat();
 }
 
-export function formatTerminal(data: List): TerminalSyntax {
+export function formatTerminal(data: List): List {
   return Object.fromEntries(
     Object.keys(data)
       .map((prop) => [prop, data[prop].trim()])

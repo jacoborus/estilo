@@ -7,11 +7,11 @@ import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {
   ColorObj,
+  List,
   Palette,
   Project,
   SchemeConfig,
   SyntaxRule,
-  TerminalSyntax,
 } from "./common.ts";
 
 type SyntaxValues = Record<string, SyntaxValue | LinkValue>;
@@ -39,7 +39,7 @@ export async function renderColorscheme(
     });
   }
 
-  return await render(buckets.mustaches["colorscheme.ejs"] as string, {
+  return await render(buckets.mustaches["colorscheme"] as string, {
     info: {
       name: config.name,
       description: config.description,
@@ -54,7 +54,7 @@ export async function renderColorscheme(
   }) as string;
 }
 
-function parseTermColors(termSyntax: TerminalSyntax, palette: Palette) {
+function parseTermColors(termSyntax: List, palette: Palette) {
   const values = Object.keys(termSyntax).map((prop) => {
     const colorName = termSyntax[prop];
     const value = palette.colors[colorName];

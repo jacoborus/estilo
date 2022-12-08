@@ -70,7 +70,7 @@ export async function renderStatus(
   };
   const context = Object.assign(c, { info });
   return await render(
-    buckets.mustaches[brand + ".ejs"] as string,
+    buckets.mustaches[brand] as string,
     context,
   ) as string;
 }

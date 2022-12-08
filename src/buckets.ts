@@ -1,39 +1,28 @@
 // is-deno-bucket
-import loadFolder from "./load-folder.ts";
-import { resolve } from "../deps.ts";
+import { basename, extname, resolve } from "../deps.ts";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
-const configs = [
-  {
-    name: "mustaches",
-    folder: "../assets/mustaches",
-    options: {
-      exts: [".ejs"],
-    },
-  },
-  {
-    name: "syntax",
-    folder: "../assets/syntax",
-    options: {
-      exts: [".yml"],
-    },
-  },
-  {
-    name: "addons",
-    folder: "../assets/addons",
-    options: {
-      exts: [".yml"],
-    },
-  },
-];
+const syntax = loadFolder(resolve(__dirname, "../assets/syntax"));
+const addons = loadFolder(resolve(__dirname, "../assets/addons"));
+const mustaches = loadFolder(resolve(__dirname, "../assets/mustaches"));
 
-type Bucket = Record<string, string>;
-const buckets = {} as Record<string, Bucket>;
+export default { syntax, mustaches, addons };
 
-configs.forEach((config) => {
-  const path = resolve(__dirname, config.folder);
-  buckets[config.name] = loadFolder(path, config.options);
-});
+function loadFolder(folderPath: string): Record<string, string> {
+  const files = Array.from(Deno.readDirSync(folderPath))
+    .filter(({ isFile, isSymlink }) => isFile && !isSymlink)
+    .map(({ name }) => name);
+  return Object.fromEntries(
+    files.map((file) => {
+      const fullPath = resolve(folderPath, file);
+      return [removeExt(file), Deno.readTextFileSync(fullPath)];
+    }),
+  );
+}
 
-export default buckets;
+function removeExt(path: string): string {
+  const filename = basename(path);
+  const extension = extname(filename);
+  return filename.slice(0, -extension.length);
+}

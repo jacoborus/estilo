@@ -107,7 +107,7 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
 
 async function renderConfigFile(options: ProjectOptions): Promise<string> {
   return await render(
-    buckets.mustaches["project.ejs"] as string,
+    buckets.mustaches["project"] as string,
     (options as unknown) as List,
   ) as string;
 }

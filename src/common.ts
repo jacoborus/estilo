@@ -16,10 +16,6 @@ export interface Palette {
   colors: Record<string, ColorObj>;
 }
 
-export interface TerminalSyntax {
-  [index: string]: string;
-}
-
 export type StatusBrand = "airline" | "lightline";
 export type DataRenderStatus = Record<
   string,
@@ -76,7 +72,7 @@ export interface Project {
   config: ProjectConfig;
   palettes: Palettes;
   syntax: SyntaxRule[];
-  terminalSyntax: TerminalSyntax;
+  terminalSyntax: List;
   airlineStyles: StatusStyles;
   lightlineStyles: StatusStyles;
 }

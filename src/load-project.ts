@@ -1,6 +1,6 @@
-import { existsSync, resolve } from "../deps.ts";
-import { List, Project, ProjectConfig } from "./common.ts";
-import { loadYml } from "./util.ts";
+import { crash } from "./crash.ts";
+import { existsSync, resolve, yamlParse } from "../deps.ts";
+import { List, Project, ProjectConfig, YmlFile } from "./common.ts";
 import { buildPalettes } from "./build-palettes.ts";
 import {
   formatStatusStyles,
@@ -39,4 +39,13 @@ function ymlsInFolder(folderPath: string, folder2?: string): string[] {
   return Array.from(Deno.readDirSync(finalPath))
     .filter((file) => file.name.endsWith(".yml"))
     .map((file) => resolve(finalPath, file.name));
+}
+
+export function loadYml(folderPath: string, filename?: string): YmlFile {
+  const filepath = resolve(folderPath, filename || "");
+  const content = yamlParse(Deno.readTextFileSync(filepath));
+  if (typeof content !== "object") {
+    crash("Content of file is not an object", { filepath });
+  }
+  return { filepath, content };
 }
