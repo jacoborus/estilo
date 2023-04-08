@@ -1,5 +1,5 @@
 import { render, version } from "../deps.ts";
-import buckets from "./buckets.ts";
+import assets from "./assets.ts";
 import { crash } from "./crash.ts";
 
 import {
@@ -70,7 +70,7 @@ export async function renderStatus(
   };
   const context = Object.assign(c, { info });
   return await render(
-    buckets.mustaches[brand] as string,
+    assets.mustaches[brand] as string,
     context,
   ) as string;
 }

@@ -1,5 +1,5 @@
 import { green, resolve } from "../../deps.ts";
-import buckets from "../buckets.ts";
+import assets from "../assets.ts";
 
 const tick = green("✓");
 
@@ -8,7 +8,7 @@ export function installTemplates(projectPath: string, templates: string[]) {
     const destination = resolve(projectPath, "estilos/syntax", name);
     // TODO handle this error
     try {
-      Deno.writeTextFileSync(destination, buckets.syntax[name] as string);
+      Deno.writeTextFileSync(destination, assets.syntax[name] as string);
     } catch (err) {
       console.error(err);
     }

@@ -1,5 +1,5 @@
 import { hexterm, render, version } from "../deps.ts";
-import buckets from "./buckets.ts";
+import assets from "./assets.ts";
 
 import { crash } from "./crash.ts";
 import { isHexColor } from "./util.ts";
@@ -39,7 +39,7 @@ export async function renderColorscheme(
     });
   }
 
-  return await render(buckets.mustaches["colorscheme"] as string, {
+  return await render(assets.mustaches["colorscheme"] as string, {
     info: {
       name: config.name,
       description: config.description,

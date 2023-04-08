@@ -10,7 +10,7 @@ import {
 
 import { List } from "../common.ts";
 import { installTemplates } from "./install-templates.ts";
-import buckets from "../buckets.ts";
+import assets from "../assets.ts";
 
 interface ProjectOptions {
   name: string;
@@ -94,7 +94,7 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    buckets.addons["terminal.yml"] as string,
+    assets.addons["terminal.yml"] as string,
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
@@ -107,7 +107,7 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
 
 async function renderConfigFile(options: ProjectOptions): Promise<string> {
   return await render(
-    buckets.mustaches["project"] as string,
+    assets.mustaches["project"] as string,
     (options as unknown) as List,
   ) as string;
 }

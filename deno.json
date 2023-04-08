@@ -1,8 +1,7 @@
 {
   "test": {
     "files": {
-      "include": ["src/"],
-      "exclude": ["src/testdata/"]
+      "include": ["test/"]
     }
   },
   "tasks": {
