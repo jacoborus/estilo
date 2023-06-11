@@ -3,7 +3,6 @@ import {
   List,
   StatusBrand,
   StatusStyle,
-  StatusStyles,
   SyntaxRule,
   YmlFile,
 } from "./common.ts";
@@ -88,7 +87,7 @@ const statusParts = {
 export function formatStatusStyles(
   statusFiles: YmlFile[],
   brand: StatusBrand,
-): StatusStyles {
+): Record<string, StatusStyle> {
   const files = statusFiles.map(({ filepath, content }) => {
     const style = formatStatusStyle(content as List, brand, filepath);
     return [style.name, style];

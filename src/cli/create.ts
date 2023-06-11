@@ -1,7 +1,6 @@
 import {
   basename,
   ensureDirSync,
-  green,
   Input,
   prompt,
   render,
@@ -102,12 +101,12 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   );
   installTemplates(projectPath, ["base.yml"]);
 
-  console.log(green("✓  Your project is ready\n"));
+  console.log("%c✓  Your project is ready\n", "color: green");
 }
 
 async function renderConfigFile(options: ProjectOptions): Promise<string> {
-  return await render(
+  return (await render(
     assets.mustaches["project"] as string,
-    (options as unknown) as List,
-  ) as string;
+    options as unknown as List,
+  )) as string;
 }

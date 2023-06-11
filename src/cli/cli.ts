@@ -1,10 +1,5 @@
-import {
-  Command,
-  existsSync,
-  HelpCommand,
-  resolve,
-  version,
-} from "../../deps.ts";
+import { Command, HelpCommand, resolve, version } from "../../deps.ts";
+import { existsSync } from "../util.ts";
 import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
 import { loadProjectFiles } from "../load-project.ts";

@@ -5,7 +5,7 @@
     }
   },
   "tasks": {
-    "bundle": "deno run --allow-read --allow-write --allow-net --allow-env https://deno.land/x/buckets@v0.5.0/buckets.ts estilo.ts dist/estilo.js",
+    "bundle": "deno run --allow-read --allow-write --allow-net --allow-env https://deno.land/x/buckets@v0.7.0/buckets.ts estilo.ts > dist/estilo.js",
     "install": "deno install --allow-read --allow-write --allow-net --allow-env dist/estilo.js"
   }
 }

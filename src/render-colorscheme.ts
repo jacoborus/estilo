@@ -39,7 +39,7 @@ export async function renderColorscheme(
     });
   }
 
-  return await render(assets.mustaches["colorscheme"] as string, {
+  return (await render(assets.mustaches["colorscheme"] as string, {
     info: {
       name: config.name,
       description: config.description,
@@ -51,7 +51,7 @@ export async function renderColorscheme(
     },
     stacks: parseSyntaxColors(project.syntax, palette),
     term: parseTermColors(project.terminalSyntax, palette),
-  }) as string;
+  })) as string;
 }
 
 function parseTermColors(termSyntax: List, palette: Palette) {
@@ -75,9 +75,11 @@ function parseSyntaxColors(
   palette: Palette,
 ): SyntaxValues {
   const values = {} as SyntaxValues;
+
   syntax.forEach((rule) => {
     const [fgColor, bgColor, ui, curlColor] = rule.rule.split(/\s+/);
     const filepath = rule.filepath;
+
     if (fgColor.startsWith("@")) {
       values[rule.name] = {
         link: fgColor.slice(1),
@@ -91,6 +93,7 @@ function parseSyntaxColors(
       };
     }
   });
+
   return values;
 }
 

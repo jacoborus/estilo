@@ -13,6 +13,7 @@ function loadFolder(folderPath: string): Record<string, string> {
   const files = Array.from(Deno.readDirSync(folderPath))
     .filter(({ isFile, isSymlink }) => isFile && !isSymlink)
     .map(({ name }) => name);
+
   return Object.fromEntries(
     files.map((file) => {
       const fullPath = resolve(folderPath, file);

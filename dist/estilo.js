@@ -208,10 +208,10 @@ function parse(str, config) {
     }
     pushString(str.slice(lastIndex, str.length), false);
     if (config.plugins) {
-        for(let i1 = 0; i1 < config.plugins.length; i1++){
-            const plugin1 = config.plugins[i1];
-            if (plugin1.processAST) {
-                buffer = plugin1.processAST(buffer, config);
+        for(let i = 0; i < config.plugins.length; i++){
+            const plugin = config.plugins[i];
+            if (plugin.processAST) {
+                buffer = plugin.processAST(buffer, config);
             }
         }
     }
@@ -263,6 +263,7 @@ function compileScope(buff, config) {
     return returnStr;
 }
 class Cacher {
+    cache;
     constructor(cache){
         this.cache = cache;
     }
@@ -281,7 +282,6 @@ class Cacher {
     load(cacheObj) {
         copyProps(this.cache, cacheObj);
     }
-    cache;
 }
 const templates = new Cacher({});
 function includeHelper(templateNameOrPath, data) {
@@ -1908,6 +1908,7 @@ function render(template, data, config, cb) {
 config.includeFile = includeFileHelper;
 config.filepathCache = {};
 class YAMLError extends Error {
+    mark;
     constructor(message = "(unknown reason)", mark = ""){
         super(`${message} ${mark}`);
         this.mark = mark;
@@ -1916,7 +1917,6 @@ class YAMLError extends Error {
     toString(_compact) {
         return `${this.name}: ${this.message} ${this.mark}`;
     }
-    mark;
 }
 function isBoolean(value) {
     return typeof value === "boolean" || value instanceof Boolean;
@@ -1935,6 +1935,11 @@ function isNegativeZero(i) {
     return i === 0 && Number.NEGATIVE_INFINITY === 1 / i;
 }
 class Mark {
+    name;
+    buffer;
+    position;
+    line;
+    column;
     constructor(name, buffer, position, line, column){
         this.name = name;
         this.buffer = buffer;
@@ -1981,11 +1986,6 @@ class Mark {
         }
         return where;
     }
-    name;
-    buffer;
-    position;
-    line;
-    column;
 }
 function compileList(schema, name, result) {
     const exclude = [];
@@ -2187,27 +2187,27 @@ class Buffer {
         const n = this.writeSync(p);
         return Promise.resolve(n);
     }
-    #grow(n1) {
+    #grow(n) {
         const m = this.length;
         if (m === 0 && this.#off !== 0) {
             this.reset();
         }
-        const i = this.#tryGrowByReslice(n1);
+        const i = this.#tryGrowByReslice(n);
         if (i >= 0) {
             return i;
         }
         const c = this.capacity;
-        if (n1 <= Math.floor(c / 2) - m) {
+        if (n <= Math.floor(c / 2) - m) {
             copy(this.#buf.subarray(this.#off), this.#buf);
-        } else if (c + n1 > MAX_SIZE) {
+        } else if (c + n > MAX_SIZE) {
             throw new Error("The buffer cannot be grown beyond the maximum size.");
         } else {
-            const buf = new Uint8Array(Math.min(2 * c + n1, MAX_SIZE));
+            const buf = new Uint8Array(Math.min(2 * c + n, MAX_SIZE));
             copy(this.#buf.subarray(this.#off), buf);
             this.#buf = buf;
         }
         this.#off = 0;
-        this.#reslice(Math.min(m + n1, MAX_SIZE));
+        this.#reslice(Math.min(m + n, MAX_SIZE));
         return m;
     }
     grow(n) {
@@ -2324,6 +2324,9 @@ function representYamlBinary(object) {
     return result;
 }
 function isBinary(obj) {
+    if (typeof obj?.readSync !== "function") {
+        return false;
+    }
     const buf = new Buffer();
     try {
         if (0 > buf.readFromSync(obj)) return true;
@@ -2899,12 +2902,13 @@ new Schema({
     ]
 });
 class State {
+    schema;
     constructor(schema = def){
         this.schema = schema;
     }
-    schema;
 }
 class LoaderState extends State {
+    input;
     documents;
     length;
     lineIndent;
@@ -2944,7 +2948,6 @@ class LoaderState extends State {
         this.typeMap = this.schema.compiledTypeMap;
         this.length = input.length;
     }
-    input;
 }
 const { hasOwn: hasOwn2  } = Object;
 const CONTEXT_BLOCK_IN = 3;
@@ -3014,9 +3017,9 @@ const simpleEscapeCheck = Array.from({
 const simpleEscapeMap = Array.from({
     length: 256
 });
-for(let i1 = 0; i1 < 256; i1++){
-    simpleEscapeCheck[i1] = simpleEscapeSequence(i1) ? 1 : 0;
-    simpleEscapeMap[i1] = simpleEscapeSequence(i1);
+for(let i = 0; i < 256; i++){
+    simpleEscapeCheck[i] = simpleEscapeSequence(i) ? 1 : 0;
+    simpleEscapeMap[i] = simpleEscapeSequence(i);
 }
 function generateError(state, message) {
     return new YAMLError(message, new Mark(state.filename, state.input, state.position, state.line, state.position - state.lineStart));
@@ -3068,7 +3071,7 @@ const directiveHandlers = {
             return throwError(state, "ill-formed tag prefix (second argument) of the TAG directive");
         }
         if (typeof state.tagMap === "undefined") {
-            state.tagMap = {};
+            state.tagMap = Object.create(null);
         }
         state.tagMap[handle] = prefix;
     }
@@ -3098,7 +3101,12 @@ function mergeMappings(state, destination, source, overridableKeys) {
     for(let i = 0, len = keys.length; i < len; i++){
         const key = keys[i];
         if (!hasOwn2(destination, key)) {
-            destination[key] = source[key];
+            Object.defineProperty(destination, key, {
+                value: source[key],
+                writable: true,
+                enumerable: true,
+                configurable: true
+            });
             overridableKeys[key] = true;
         }
     }
@@ -3124,8 +3132,8 @@ function storeMappingPair(state, result, overridableKeys, keyTag, keyNode, value
     }
     if (keyTag === "tag:yaml.org,2002:merge") {
         if (Array.isArray(valueNode)) {
-            for(let index1 = 0, quantity1 = valueNode.length; index1 < quantity1; index1++){
-                mergeMappings(state, result, valueNode[index1], overridableKeys);
+            for(let index = 0, quantity = valueNode.length; index < quantity; index++){
+                mergeMappings(state, result, valueNode[index], overridableKeys);
             }
         } else {
             mergeMappings(state, result, valueNode, overridableKeys);
@@ -3136,7 +3144,12 @@ function storeMappingPair(state, result, overridableKeys, keyTag, keyNode, value
             state.position = startPos || state.position;
             return throwError(state, "duplicated mapping key");
         }
-        result[keyNode] = valueNode;
+        Object.defineProperty(result, keyNode, {
+            value: valueNode,
+            writable: true,
+            enumerable: true,
+            configurable: true
+        });
         delete overridableKeys[keyNode];
     }
     return result;
@@ -3382,7 +3395,7 @@ function readFlowCollection(state, nodeIndent) {
     let readNext = true;
     let valueNode, keyNode, keyTag = keyNode = valueNode = null, isExplicitPair, isPair = isExplicitPair = false;
     let following = 0, line = 0;
-    const overridableKeys = {};
+    const overridableKeys = Object.create(null);
     while(ch !== 0){
         skipSeparationSpace(state, true, nodeIndent);
         ch = state.input.charCodeAt(state.position);
@@ -3581,7 +3594,7 @@ function readBlockSequence(state, nodeIndent) {
     return false;
 }
 function readBlockMapping(state, nodeIndent, flowIndent) {
-    const tag = state.tag, anchor = state.anchor, result = {}, overridableKeys = {};
+    const tag = state.tag, anchor = state.anchor, result = {}, overridableKeys = Object.create(null);
     let following, allowCompact = false, line, pos, keyTag = null, keyNode = null, valueNode = null, atExplicitKey = false, detected = false, ch;
     if (state.anchor !== null && typeof state.anchor !== "undefined" && typeof state.anchorMap !== "undefined") {
         state.anchorMap[state.anchor] = result;
@@ -3892,8 +3905,8 @@ function readDocument(state) {
     let position, directiveName, directiveArgs, hasDirectives = false, ch;
     state.version = null;
     state.checkLineBreaks = state.legacy;
-    state.tagMap = {};
-    state.anchorMap = {};
+    state.tagMap = Object.create(null);
+    state.anchorMap = Object.create(null);
     while((ch = state.input.charCodeAt(state.position)) !== 0){
         skipSeparationSpace(state, true, -1);
         ch = state.input.charCodeAt(state.position);
@@ -3957,8 +3970,6 @@ function readDocument(state) {
     }
     if (state.position < state.length - 1) {
         return throwError(state, "end of the stream or a document separator is expected");
-    } else {
-        return;
     }
 }
 function loadDocuments(input, options) {
@@ -4099,6 +4110,7 @@ function _format1(sep, pathObject) {
     const dir = pathObject.dir || pathObject.root;
     const base = pathObject.base || (pathObject.name || "") + (pathObject.ext || "");
     if (!dir) return base;
+    if (base === sep) return dir;
     if (dir === pathObject.root) return dir + base;
     return dir + sep + base;
 }
@@ -4114,6 +4126,48 @@ function encodeWhitespace1(string) {
     return string.replaceAll(/[\s]/g, (c)=>{
         return WHITESPACE_ENCODINGS1[c] ?? c;
     });
+}
+function lastPathSegment(path, isSep, start = 0) {
+    let matchedNonSeparator = false;
+    let end = path.length;
+    for(let i = path.length - 1; i >= start; --i){
+        if (isSep(path.charCodeAt(i))) {
+            if (matchedNonSeparator) {
+                start = i + 1;
+                break;
+            }
+        } else if (!matchedNonSeparator) {
+            matchedNonSeparator = true;
+            end = i + 1;
+        }
+    }
+    return path.slice(start, end);
+}
+function stripTrailingSeparators(segment, isSep) {
+    if (segment.length <= 1) {
+        return segment;
+    }
+    let end = segment.length;
+    for(let i = segment.length - 1; i > 0; i--){
+        if (isSep(segment.charCodeAt(i))) {
+            end = i;
+        } else {
+            break;
+        }
+    }
+    return segment.slice(0, end);
+}
+function stripSuffix(name, suffix) {
+    if (suffix.length >= name.length) {
+        return name;
+    }
+    const lenDiff = name.length - suffix.length;
+    for(let i = suffix.length - 1; i >= 0; --i){
+        if (name.charCodeAt(lenDiff + i) !== suffix.charCodeAt(i)) {
+            return name;
+        }
+    }
+    return name.slice(0, -suffix.length);
 }
 const sep3 = "\\";
 const delimiter3 = ";";
@@ -4501,69 +4555,24 @@ function dirname3(path) {
         if (rootEnd === -1) return ".";
         else end = rootEnd;
     }
-    return path.slice(0, end);
+    return stripTrailingSeparators(path.slice(0, end), isPosixPathSeparator1);
 }
-function basename3(path, ext = "") {
-    if (ext !== undefined && typeof ext !== "string") {
-        throw new TypeError('"ext" argument must be a string');
-    }
+function basename3(path, suffix = "") {
     assertPath1(path);
+    if (path.length === 0) return path;
+    if (typeof suffix !== "string") {
+        throw new TypeError(`Suffix must be a string. Received ${JSON.stringify(suffix)}`);
+    }
     let start = 0;
-    let end = -1;
-    let matchedSlash = true;
-    let i;
     if (path.length >= 2) {
         const drive = path.charCodeAt(0);
         if (isWindowsDeviceRoot1(drive)) {
             if (path.charCodeAt(1) === 58) start = 2;
         }
     }
-    if (ext !== undefined && ext.length > 0 && ext.length <= path.length) {
-        if (ext.length === path.length && ext === path) return "";
-        let extIdx = ext.length - 1;
-        let firstNonSlashEnd = -1;
-        for(i = path.length - 1; i >= start; --i){
-            const code = path.charCodeAt(i);
-            if (isPathSeparator1(code)) {
-                if (!matchedSlash) {
-                    start = i + 1;
-                    break;
-                }
-            } else {
-                if (firstNonSlashEnd === -1) {
-                    matchedSlash = false;
-                    firstNonSlashEnd = i + 1;
-                }
-                if (extIdx >= 0) {
-                    if (code === ext.charCodeAt(extIdx)) {
-                        if (--extIdx === -1) {
-                            end = i;
-                        }
-                    } else {
-                        extIdx = -1;
-                        end = firstNonSlashEnd;
-                    }
-                }
-            }
-        }
-        if (start === end) end = firstNonSlashEnd;
-        else if (end === -1) end = path.length;
-        return path.slice(start, end);
-    } else {
-        for(i = path.length - 1; i >= start; --i){
-            if (isPathSeparator1(path.charCodeAt(i))) {
-                if (!matchedSlash) {
-                    start = i + 1;
-                    break;
-                }
-            } else if (end === -1) {
-                matchedSlash = false;
-                end = i + 1;
-            }
-        }
-        if (end === -1) return "";
-        return path.slice(start, end);
-    }
+    const lastSegment = lastPathSegment(path, isPathSeparator1, start);
+    const strippedSegment = stripTrailingSeparators(lastSegment, isPathSeparator1);
+    return suffix ? stripSuffix(strippedSegment, suffix) : strippedSegment;
 }
 function extname3(path) {
     assertPath1(path);
@@ -4654,6 +4663,7 @@ function parse5(path) {
                     if (isPathSeparator1(path.charCodeAt(2))) {
                         if (len === 3) {
                             ret.root = ret.dir = path;
+                            ret.base = "\\";
                             return ret;
                         }
                         rootEnd = 3;
@@ -4666,6 +4676,7 @@ function parse5(path) {
         }
     } else if (isPathSeparator1(code)) {
         ret.root = ret.dir = path;
+        ret.base = "\\";
         return ret;
     }
     if (rootEnd > 0) ret.root = path.slice(0, rootEnd);
@@ -4704,6 +4715,7 @@ function parse5(path) {
         ret.base = path.slice(startPart, end);
         ret.ext = path.slice(startDot, end);
     }
+    ret.base = ret.base || "\\";
     if (startPart > 0 && startPart !== rootEnd) {
         ret.dir = path.slice(0, startPart - 1);
     } else ret.dir = ret.root;
@@ -4772,7 +4784,7 @@ function resolve4(...pathSegments) {
             continue;
         }
         resolvedPath = `${path}/${resolvedPath}`;
-        resolvedAbsolute = path.charCodeAt(0) === CHAR_FORWARD_SLASH1;
+        resolvedAbsolute = isPosixPathSeparator1(path.charCodeAt(0));
     }
     resolvedPath = normalizeString1(resolvedPath, !resolvedAbsolute, "/", isPosixPathSeparator1);
     if (resolvedAbsolute) {
@@ -4784,8 +4796,8 @@ function resolve4(...pathSegments) {
 function normalize5(path) {
     assertPath1(path);
     if (path.length === 0) return ".";
-    const isAbsolute = path.charCodeAt(0) === 47;
-    const trailingSeparator = path.charCodeAt(path.length - 1) === 47;
+    const isAbsolute = isPosixPathSeparator1(path.charCodeAt(0));
+    const trailingSeparator = isPosixPathSeparator1(path.charCodeAt(path.length - 1));
     path = normalizeString1(path, !isAbsolute, "/", isPosixPathSeparator1);
     if (path.length === 0 && !isAbsolute) path = ".";
     if (path.length > 0 && trailingSeparator) path += "/";
@@ -4794,7 +4806,7 @@ function normalize5(path) {
 }
 function isAbsolute4(path) {
     assertPath1(path);
-    return path.length > 0 && path.charCodeAt(0) === 47;
+    return path.length > 0 && isPosixPathSeparator1(path.charCodeAt(0));
 }
 function join5(...paths) {
     if (paths.length === 0) return ".";
@@ -4820,13 +4832,13 @@ function relative4(from, to) {
     let fromStart = 1;
     const fromEnd = from.length;
     for(; fromStart < fromEnd; ++fromStart){
-        if (from.charCodeAt(fromStart) !== 47) break;
+        if (!isPosixPathSeparator1(from.charCodeAt(fromStart))) break;
     }
     const fromLen = fromEnd - fromStart;
     let toStart = 1;
     const toEnd = to.length;
     for(; toStart < toEnd; ++toStart){
-        if (to.charCodeAt(toStart) !== 47) break;
+        if (!isPosixPathSeparator1(to.charCodeAt(toStart))) break;
     }
     const toLen = toEnd - toStart;
     const length = fromLen < toLen ? fromLen : toLen;
@@ -4835,13 +4847,13 @@ function relative4(from, to) {
     for(; i <= length; ++i){
         if (i === length) {
             if (toLen > length) {
-                if (to.charCodeAt(toStart + i) === 47) {
+                if (isPosixPathSeparator1(to.charCodeAt(toStart + i))) {
                     return to.slice(toStart + i + 1);
                 } else if (i === 0) {
                     return to.slice(toStart + i);
                 }
             } else if (fromLen > length) {
-                if (from.charCodeAt(fromStart + i) === 47) {
+                if (isPosixPathSeparator1(from.charCodeAt(fromStart + i))) {
                     lastCommonSep = i;
                 } else if (i === 0) {
                     lastCommonSep = 0;
@@ -4852,11 +4864,11 @@ function relative4(from, to) {
         const fromCode = from.charCodeAt(fromStart + i);
         const toCode = to.charCodeAt(toStart + i);
         if (fromCode !== toCode) break;
-        else if (fromCode === 47) lastCommonSep = i;
+        else if (isPosixPathSeparator1(fromCode)) lastCommonSep = i;
     }
     let out = "";
     for(i = fromStart + lastCommonSep + 1; i <= fromEnd; ++i){
-        if (i === fromEnd || from.charCodeAt(i) === 47) {
+        if (i === fromEnd || isPosixPathSeparator1(from.charCodeAt(i))) {
             if (out.length === 0) out += "..";
             else out += "/..";
         }
@@ -4864,7 +4876,7 @@ function relative4(from, to) {
     if (out.length > 0) return out + to.slice(toStart + lastCommonSep);
     else {
         toStart += lastCommonSep;
-        if (to.charCodeAt(toStart) === 47) ++toStart;
+        if (isPosixPathSeparator1(to.charCodeAt(toStart))) ++toStart;
         return to.slice(toStart);
     }
 }
@@ -4872,80 +4884,33 @@ function toNamespacedPath4(path) {
     return path;
 }
 function dirname4(path) {
-    assertPath1(path);
     if (path.length === 0) return ".";
-    const hasRoot = path.charCodeAt(0) === 47;
     let end = -1;
-    let matchedSlash = true;
+    let matchedNonSeparator = false;
     for(let i = path.length - 1; i >= 1; --i){
-        if (path.charCodeAt(i) === 47) {
-            if (!matchedSlash) {
+        if (isPosixPathSeparator1(path.charCodeAt(i))) {
+            if (matchedNonSeparator) {
                 end = i;
                 break;
             }
         } else {
-            matchedSlash = false;
+            matchedNonSeparator = true;
         }
     }
-    if (end === -1) return hasRoot ? "/" : ".";
-    if (hasRoot && end === 1) return "//";
-    return path.slice(0, end);
+    if (end === -1) {
+        return isPosixPathSeparator1(path.charCodeAt(0)) ? "/" : ".";
+    }
+    return stripTrailingSeparators(path.slice(0, end), isPosixPathSeparator1);
 }
-function basename4(path, ext = "") {
-    if (ext !== undefined && typeof ext !== "string") {
-        throw new TypeError('"ext" argument must be a string');
-    }
+function basename4(path, suffix = "") {
     assertPath1(path);
-    let start = 0;
-    let end = -1;
-    let matchedSlash = true;
-    let i;
-    if (ext !== undefined && ext.length > 0 && ext.length <= path.length) {
-        if (ext.length === path.length && ext === path) return "";
-        let extIdx = ext.length - 1;
-        let firstNonSlashEnd = -1;
-        for(i = path.length - 1; i >= 0; --i){
-            const code = path.charCodeAt(i);
-            if (code === 47) {
-                if (!matchedSlash) {
-                    start = i + 1;
-                    break;
-                }
-            } else {
-                if (firstNonSlashEnd === -1) {
-                    matchedSlash = false;
-                    firstNonSlashEnd = i + 1;
-                }
-                if (extIdx >= 0) {
-                    if (code === ext.charCodeAt(extIdx)) {
-                        if (--extIdx === -1) {
-                            end = i;
-                        }
-                    } else {
-                        extIdx = -1;
-                        end = firstNonSlashEnd;
-                    }
-                }
-            }
-        }
-        if (start === end) end = firstNonSlashEnd;
-        else if (end === -1) end = path.length;
-        return path.slice(start, end);
-    } else {
-        for(i = path.length - 1; i >= 0; --i){
-            if (path.charCodeAt(i) === 47) {
-                if (!matchedSlash) {
-                    start = i + 1;
-                    break;
-                }
-            } else if (end === -1) {
-                matchedSlash = false;
-                end = i + 1;
-            }
-        }
-        if (end === -1) return "";
-        return path.slice(start, end);
+    if (path.length === 0) return path;
+    if (typeof suffix !== "string") {
+        throw new TypeError(`Suffix must be a string. Received ${JSON.stringify(suffix)}`);
     }
+    const lastSegment = lastPathSegment(path, isPosixPathSeparator1);
+    const strippedSegment = stripTrailingSeparators(lastSegment, isPosixPathSeparator1);
+    return suffix ? stripSuffix(strippedSegment, suffix) : strippedSegment;
 }
 function extname4(path) {
     assertPath1(path);
@@ -4956,7 +4921,7 @@ function extname4(path) {
     let preDotState = 0;
     for(let i = path.length - 1; i >= 0; --i){
         const code = path.charCodeAt(i);
-        if (code === 47) {
+        if (isPosixPathSeparator1(code)) {
             if (!matchedSlash) {
                 startPart = i + 1;
                 break;
@@ -4995,7 +4960,7 @@ function parse6(path) {
         name: ""
     };
     if (path.length === 0) return ret;
-    const isAbsolute = path.charCodeAt(0) === 47;
+    const isAbsolute = isPosixPathSeparator1(path.charCodeAt(0));
     let start;
     if (isAbsolute) {
         ret.root = "/";
@@ -5011,7 +4976,7 @@ function parse6(path) {
     let preDotState = 0;
     for(; i >= start; --i){
         const code = path.charCodeAt(i);
-        if (code === 47) {
+        if (isPosixPathSeparator1(code)) {
             if (!matchedSlash) {
                 startPart = i + 1;
                 break;
@@ -5037,6 +5002,7 @@ function parse6(path) {
                 ret.base = ret.name = path.slice(startPart, end);
             }
         }
+        ret.base = ret.base || "/";
     } else {
         if (startPart === 0 && isAbsolute) {
             ret.name = path.slice(1, startDot);
@@ -5047,8 +5013,9 @@ function parse6(path) {
         }
         ret.ext = path.slice(startDot, end);
     }
-    if (startPart > 0) ret.dir = path.slice(0, startPart - 1);
-    else if (isAbsolute) ret.dir = "/";
+    if (startPart > 0) {
+        ret.dir = stripTrailingSeparators(path.slice(0, startPart - 1), isPosixPathSeparator1);
+    } else if (isAbsolute) ret.dir = "/";
     return ret;
 }
 function fromFileUrl4(url) {
@@ -5086,24 +5053,23 @@ const mod4 = {
 const path2 = isWindows1 ? mod3 : mod4;
 const { join: join6 , normalize: normalize6  } = path2;
 const path3 = isWindows1 ? mod3 : mod4;
-const { basename: basename5 , delimiter: delimiter5 , dirname: dirname5 , extname: extname5 , format: format5 , fromFileUrl: fromFileUrl5 , isAbsolute: isAbsolute5 , join: join7 , normalize: normalize7 , parse: parse7 , relative: relative5 , resolve: resolve5 , sep: sep5 , toFileUrl: toFileUrl5 , toNamespacedPath: toNamespacedPath5  } = path3;
+const { basename: basename5 , delimiter: delimiter5 , dirname: dirname5 , extname: extname5 , format: format5 , fromFileUrl: fromFileUrl5 , isAbsolute: isAbsolute5 , join: join7 , normalize: normalize7 , parse: parse7 , relative: relative5 , resolve: resolve5 , toFileUrl: toFileUrl5 , toNamespacedPath: toNamespacedPath5  } = path3;
 function getFileInfoType(fileInfo) {
     return fileInfo.isFile ? "file" : fileInfo.isDirectory ? "dir" : fileInfo.isSymlink ? "symlink" : undefined;
 }
 function ensureDirSync(dir) {
     try {
+        Deno.mkdirSync(dir, {
+            recursive: true
+        });
+    } catch (err) {
+        if (!(err instanceof Deno.errors.AlreadyExists)) {
+            throw err;
+        }
         const fileInfo = Deno.lstatSync(dir);
         if (!fileInfo.isDirectory) {
             throw new Error(`Ensure path exists, expected 'dir', got '${getFileInfoType(fileInfo)}'`);
         }
-    } catch (err) {
-        if (err instanceof Deno.errors.NotFound) {
-            Deno.mkdirSync(dir, {
-                recursive: true
-            });
-            return;
-        }
-        throw err;
     }
 }
 new Deno.errors.AlreadyExists("dest already exists.");
@@ -5112,33 +5078,6 @@ var EOL;
     EOL["LF"] = "\n";
     EOL["CRLF"] = "\r\n";
 })(EOL || (EOL = {}));
-const { Deno: Deno1  } = globalThis;
-const noColor = typeof Deno1?.noColor === "boolean" ? Deno1.noColor : true;
-let enabled = !noColor;
-function code(open, close) {
-    return {
-        open: `\x1b[${open.join(";")}m`,
-        close: `\x1b[${close}m`,
-        regexp: new RegExp(`\\x1b\\[${close}m`, "g")
-    };
-}
-function run(str, code) {
-    return enabled ? `${code.open}${str.replace(code.regexp, code.open)}${code.close}` : str;
-}
-function red(str) {
-    return run(str, code([
-        31
-    ], 39));
-}
-function green(str) {
-    return run(str, code([
-        32
-    ], 39));
-}
-new RegExp([
-    "[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)",
-    "(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))"
-].join("|"), "g");
 const main = {
     ARROW_UP: "↑",
     ARROW_DOWN: "↓",
@@ -5697,70 +5636,70 @@ function charLengthAt(str, i) {
     }
     return pos >= 0x10000 ? 2 : 1;
 }
-const { Deno: Deno2  } = globalThis;
-const noColor1 = typeof Deno2?.noColor === "boolean" ? Deno2.noColor : true;
-let enabled1 = !noColor1;
+const { Deno: Deno1  } = globalThis;
+const noColor = typeof Deno1?.noColor === "boolean" ? Deno1.noColor : true;
+let enabled = !noColor;
 function setColorEnabled(value) {
-    if (noColor1) {
+    if (noColor) {
         return;
     }
-    enabled1 = value;
+    enabled = value;
 }
 function getColorEnabled() {
-    return enabled1;
+    return enabled;
 }
-function code1(open, close) {
+function code(open, close) {
     return {
         open: `\x1b[${open.join(";")}m`,
         close: `\x1b[${close}m`,
         regexp: new RegExp(`\\x1b\\[${close}m`, "g")
     };
 }
-function run1(str, code) {
-    return enabled1 ? `${code.open}${str.replace(code.regexp, code.open)}${code.close}` : str;
+function run(str, code) {
+    return enabled ? `${code.open}${str.replace(code.regexp, code.open)}${code.close}` : str;
 }
 function bold(str) {
-    return run1(str, code1([
+    return run(str, code([
         1
     ], 22));
 }
 function dim(str) {
-    return run1(str, code1([
+    return run(str, code([
         2
     ], 22));
 }
 function italic(str) {
-    return run1(str, code1([
+    return run(str, code([
         3
     ], 23));
 }
 function underline(str) {
-    return run1(str, code1([
+    return run(str, code([
         4
     ], 24));
 }
-function red1(str) {
-    return run1(str, code1([
+function red(str) {
+    return run(str, code([
         31
     ], 39));
 }
-function green1(str) {
-    return run1(str, code1([
+function green(str) {
+    return run(str, code([
         32
     ], 39));
 }
 function yellow(str) {
-    return run1(str, code1([
+    return run(str, code([
         33
     ], 39));
 }
 function blue(str) {
-    return run1(str, code1([
+    return run(str, code([
         34
     ], 39));
 }
 function magenta(str) {
-    return run1(str, code1([
+    return run(str, code([
         35
     ], 39));
 }
@@ -5882,7 +5821,7 @@ function assert2(expr, msg = "") {
         throw new DenoStdInternalError2(msg);
     }
 }
-const sep6 = "\\";
+const sep5 = "\\";
 const delimiter6 = ";";
 function resolve6(...pathSegments) {
     let resolvedDevice = "";
@@ -6503,7 +6442,7 @@ function toFileUrl6(path) {
     return url;
 }
 const mod6 = {
-    sep: sep6,
+    sep: sep5,
     delimiter: delimiter6,
     resolve: resolve6,
     normalize: normalize8,
@@ -6519,7 +6458,7 @@ const mod6 = {
     fromFileUrl: fromFileUrl6,
     toFileUrl: toFileUrl6
 };
-const sep7 = "/";
+const sep6 = "/";
 const delimiter7 = ":";
 function resolve7(...pathSegments) {
     let resolvedPath = "";
@@ -6834,7 +6773,7 @@ function toFileUrl7(path) {
     return url;
 }
 const mod7 = {
-    sep: sep7,
+    sep: sep6,
     delimiter: delimiter7,
     resolve: resolve7,
     normalize: normalize9,
@@ -6853,7 +6792,7 @@ const mod7 = {
 const path4 = isWindows2 ? mod6 : mod7;
 const { join: join10 , normalize: normalize10  } = path4;
 const path5 = isWindows2 ? mod6 : mod7;
-const { basename: basename8 , delimiter: delimiter8 , dirname: dirname8 , extname: extname8 , format: format8 , fromFileUrl: fromFileUrl8 , isAbsolute: isAbsolute8 , join: join11 , normalize: normalize11 , parse: parse11 , relative: relative8 , resolve: resolve8 , sep: sep8 , toFileUrl: toFileUrl8 , toNamespacedPath: toNamespacedPath8  } = path5;
+const { basename: basename8 , delimiter: delimiter8 , dirname: dirname8 , extname: extname8 , format: format8 , fromFileUrl: fromFileUrl8 , isAbsolute: isAbsolute8 , join: join11 , normalize: normalize11 , parse: parse11 , relative: relative8 , resolve: resolve8 , sep: sep7 , toFileUrl: toFileUrl8 , toNamespacedPath: toNamespacedPath8  } = path5;
 class GenericPrompt {
     static injectedValue;
     settings;
@@ -6972,13 +6911,13 @@ class GenericPrompt {
         return defaultMessage;
     }
     success(value) {
-        return `${this.settings.indent}${this.settings.prefix}` + bold(this.settings.message) + this.defaults() + " " + this.settings.pointer + " " + green1(this.format(value));
+        return `${this.settings.indent}${this.settings.prefix}` + bold(this.settings.message) + this.defaults() + " " + this.settings.pointer + " " + green(this.format(value));
     }
     footer() {
         return this.error() ?? this.hint();
     }
     error() {
-        return this.#lastError ? this.settings.indent + red1(bold(`${Figures.CROSS} `) + this.#lastError) : undefined;
+        return this.#lastError ? this.settings.indent + red(bold(`${Figures.CROSS} `) + this.#lastError) : undefined;
     }
     hint() {
         return this.settings.hint ? this.settings.indent + italic(blue(dim(`${Figures.POINTER} `) + this.settings.hint)) : undefined;
@@ -7155,12 +7094,12 @@ function distance(a, b) {
     for(let j = 0; j <= a.length; j++){
         matrix[0][j] = j;
     }
-    for(let i1 = 1; i1 <= b.length; i1++){
-        for(let j1 = 1; j1 <= a.length; j1++){
-            if (b.charAt(i1 - 1) == a.charAt(j1 - 1)) {
-                matrix[i1][j1] = matrix[i1 - 1][j1 - 1];
+    for(let i = 1; i <= b.length; i++){
+        for(let j = 1; j <= a.length; j++){
+            if (b.charAt(i - 1) == a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
             } else {
-                matrix[i1][j1] = Math.min(matrix[i1 - 1][j1 - 1] + 1, Math.min(matrix[i1][j1 - 1] + 1, matrix[i1 - 1][j1] + 1));
+                matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
             }
         }
     }
@@ -7425,8 +7364,8 @@ class Checkbox extends GenericList {
             searchLabel: blue(Figures.SEARCH),
             minOptions: 0,
             maxOptions: Infinity,
-            check: green1(Figures.TICK),
-            uncheck: red1(Figures.CROSS),
+            check: green(Figures.TICK),
+            uncheck: red(Figures.CROSS),
             ...options,
             keys: {
                 check: [
@@ -7507,7 +7446,7 @@ class Checkbox extends GenericList {
         return value.map((val)=>this.getOptionByValue(val)?.name ?? val).join(", ");
     }
 }
-const sep9 = Deno.build.os === "windows" ? "\\" : "/";
+const sep8 = Deno.build.os === "windows" ? "\\" : "/";
 class GenericSuggestions extends GenericInput {
     suggestionsIndex = -1;
     suggestionsOffset = 0;
@@ -7753,8 +7692,8 @@ class GenericSuggestions extends GenericInput {
         const suggestion = this.suggestions[this.suggestionsIndex]?.toString();
         if (this.settings.complete) {
             input = await this.settings.complete(input, suggestion);
-        } else if (this.#isFileModeEnabled() && input.at(-1) !== sep9 && await isDirectory(input) && (this.getCurrentInputValue().at(-1) !== "." || this.getCurrentInputValue().endsWith(".."))) {
-            input += sep9;
+        } else if (this.#isFileModeEnabled() && input.at(-1) !== sep8 && await isDirectory(input) && (this.getCurrentInputValue().at(-1) !== "." || this.getCurrentInputValue().endsWith(".."))) {
+            input += sep8;
         } else if (suggestion) {
             input = suggestion;
         }
@@ -8011,6 +7950,8 @@ function prompt(prompts, options) {
 }
 let injected = {};
 class PromptList {
+    prompts;
+    options;
     result;
     index;
     names;
@@ -8130,8 +8071,6 @@ class PromptList {
             await this.next();
         }
     }
-    prompts;
-    options;
 }
 function paramCaseToCamelCase(str) {
     return str.replace(/-([a-z])/g, (g)=>g[1].toUpperCase());
@@ -8364,19 +8303,19 @@ function parseArgumentsDefinition(argsDefinition, validate = true, all) {
         if (validate && hasVariadic) {
             throw new UnexpectedArgumentAfterVariadicArgumentError(arg);
         }
-        const parts1 = arg.split(ARGUMENT_DETAILS_REGEX);
-        if (!parts1[1]) {
+        const parts = arg.split(ARGUMENT_DETAILS_REGEX);
+        if (!parts[1]) {
             if (all) {
-                argumentDetails.push(parts1[0]);
+                argumentDetails.push(parts[0]);
             }
             continue;
         }
-        const type = parts1[2] || OptionType.STRING;
+        const type = parts[2] || OptionType.STRING;
         const details = {
             optionalValue: arg[0] === "[",
             requiredValue: arg[0] === "<",
-            name: parts1[1],
-            action: parts1[3] || type,
+            name: parts[1],
+            action: parts[3] || type,
             variadic: false,
             list: type ? arg.indexOf(type + "[]") !== -1 : false,
             type
@@ -9080,6 +9019,7 @@ const border = {
     middle: "│"
 };
 class Cell {
+    value;
     options;
     get length() {
         return this.toString().length;
@@ -9147,7 +9087,6 @@ class Cell {
     getAlign() {
         return this.options.align ?? "left";
     }
-    value;
 }
 class Row extends Array {
     options = {};
@@ -9230,6 +9169,8 @@ const strLength = (str)=>{
     return length;
 };
 class TableLayout {
+    table;
+    options;
     constructor(table, options){
         this.table = table;
         this.options = options;
@@ -9605,8 +9546,6 @@ class TableLayout {
         }
         return result;
     }
-    table;
-    options;
 }
 class Table extends Array {
     static _chars = {
@@ -9750,6 +9689,7 @@ class Table extends Array {
     }
 }
 class HelpGenerator {
+    cmd;
     indent;
     options;
     static generate(cmd, options) {
@@ -9841,8 +9781,8 @@ class HelpGenerator {
             ];
         }
         let result = "";
-        for (const group1 of groups){
-            result += this.generateOptionGroup(group1);
+        for (const group of groups){
+            result += this.generateOptionGroup(group);
         }
         return result;
     }
@@ -9856,7 +9796,7 @@ class HelpGenerator {
                 ...group.options.map((option)=>[
                         option.flags.map((flag)=>blue(flag)).join(", "),
                         highlightArguments(option.typeDefinition || "", this.options.types),
-                        red1(bold("-")),
+                        red(bold("-")),
                         getDescription(option.description, !this.options.long),
                         this.generateHints(option)
                     ])
@@ -9876,7 +9816,7 @@ class HelpGenerator {
         return this.label(group.name ?? "Options") + Table.from([
             ...group.options.map((option)=>[
                     option.flags.map((flag)=>blue(flag)).join(", "),
-                    red1(bold("-")),
+                    red(bold("-")),
                     getDescription(option.description, !this.options.long),
                     this.generateHints(option)
                 ])
@@ -9905,7 +9845,7 @@ class HelpGenerator {
                             ...command.getAliases()
                         ].map((name)=>blue(name)).join(", "),
                         highlightArguments(command.getArgsDefinition() || "", this.options.types),
-                        red1(bold("-")),
+                        red(bold("-")),
                         command.getShortDescription()
                     ])
             ]).indent(this.indent * 2).maxColWidth([
@@ -9926,7 +9866,7 @@ class HelpGenerator {
                         command.getName(),
                         ...command.getAliases()
                     ].map((name)=>blue(name)).join(", "),
-                    red1(bold("-")),
+                    red(bold("-")),
                     command.getShortDescription()
                 ])
         ]).maxColWidth([
@@ -9948,7 +9888,7 @@ class HelpGenerator {
             ...envVars.map((envVar)=>[
                     envVar.names.map((name)=>blue(name)).join(", "),
                     highlightArgumentDetails(envVar.details, this.options.types),
-                    red1(bold("-")),
+                    red(bold("-")),
                     this.options.long ? dedent(envVar.description) : envVar.description.trim().split("\n", 1)[0],
                     envVar.required ? `(${yellow(`required`)})` : ""
                 ])
@@ -9983,7 +9923,7 @@ class HelpGenerator {
         option.required && hints.push(yellow(`required`));
         typeof option.default !== "undefined" && hints.push(bold(`Default: `) + inspect(option.default, this.options.colors));
         option.depends?.length && hints.push(yellow(bold(`Depends: `)) + italic(option.depends.map(getFlag).join(", ")));
-        option.conflicts?.length && hints.push(red1(bold(`Conflicts: `)) + italic(option.conflicts.map(getFlag).join(", ")));
+        option.conflicts?.length && hints.push(red(bold(`Conflicts: `)) + italic(option.conflicts.map(getFlag).join(", ")));
         const type = this.cmd.getType(option.args[0]?.type)?.handler;
         if (type instanceof Type1) {
             const possibleValues = type.values?.(this.cmd, this.cmd.getParent());
@@ -9999,7 +9939,6 @@ class HelpGenerator {
     label(label) {
         return "\n" + " ".repeat(this.indent) + bold(`${label}:`) + "\n\n";
     }
-    cmd;
 }
 function capitalize(string) {
     return (string?.charAt(0).toUpperCase() + string.slice(1)) ?? "";
@@ -10029,9 +9968,9 @@ function highlightArgumentDetails(arg, types = true) {
     str += name;
     if (types) {
         str += yellow(":");
-        str += red1(arg.type);
+        str += red(arg.type);
         if (arg.list) {
-            str += green1("[]");
+            str += green("[]");
         }
     }
     str += yellow(arg.optionalValue ? "]" : ">");
@@ -10340,9 +10279,9 @@ class Command {
             }
         }
         for (const part of option.flags){
-            const arg1 = part.trim();
-            const isLong = /^--/.test(arg1);
-            const name = isLong ? arg1.slice(2) : arg1.slice(1);
+            const arg = part.trim();
+            const isLong = /^--/.test(arg);
+            const name = isLong ? arg.slice(2) : arg.slice(1);
             if (this.cmd.getBaseOption(name, true)) {
                 if (opts?.override) {
                     this.removeOption(name);
@@ -10761,7 +10700,7 @@ class Command {
             throw error;
         }
         this.showHelp();
-        console.error(red1(`  ${bold("error")}: ${error.message}\n`));
+        console.error(red(`  ${bold("error")}: ${error.message}\n`));
         Deno.exit(error instanceof ValidationError1 ? error.exitCode : 1);
     }
     getName() {
@@ -11463,72 +11402,71 @@ const xtermcolors = [
     "eeeeee"
 ];
 const version = "2.0.0-beta-5";
+function crash(message, data) {
+    console.log("Error: " + message, "color: red");
+    if (data) {
+        console.log("%c" + Object.keys(data).map((key)=>`- ${key}: ${data[key]}`).join("\n"), "color: red");
+    }
+    Deno.exit(1);
+}
+function isHexColor1(color) {
+    return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
+}
+function assertIsObject(input, filepath) {
+    if (typeof input !== "object" || input === null) {
+        crash("Content of file is not a list of strings", {
+            filepath
+        });
+    }
+}
+function assertIsList(input, filepath) {
+    assertIsObject(input, filepath);
+    const content = input;
+    for (const key of Object.keys(input)){
+        const value = content[key];
+        if (typeof value !== "string") {
+            crash("Content of file is not a list of strings", {
+                filepath
+            });
+        }
+    }
+}
 function existsSync1(path) {
     try {
-        Deno.stat(path);
+        Deno.statSync(path);
     } catch (e) {
         return !e;
     }
     return true;
 }
-function crash(message, data) {
-    console.log(red("Error: " + message));
-    if (data) {
-        console.log(red(Object.keys(data).map((key)=>`- ${key}: ${data[key]}`).join("\n")));
-    }
-    Deno.exit(1);
+const importMeta = {
+    url: "file:///home/jacobo/dev/estilo/src/assets.ts",
+    main: false
+};
+const __dirname = new URL(".", importMeta.url).pathname;
+const syntax = loadFolder(resolve5(__dirname, "../assets/syntax"));
+const addons = loadFolder(resolve5(__dirname, "../assets/addons"));
+const mustaches = loadFolder(resolve5(__dirname, "../assets/mustaches"));
+function loadFolder(folderPath) {
+    const files = Array.from(Deno.readDirSync(folderPath)).filter(({ isFile , isSymlink  })=>isFile && !isSymlink).map(({ name  })=>name);
+    return Object.fromEntries(files.map((file)=>{
+        const fullPath = resolve5(folderPath, file);
+        return [
+            removeExt(file),
+            Deno.readTextFileSync(fullPath)
+        ];
+    }));
+}
+function removeExt(path) {
+    const filename = basename5(path);
+    const extension = extname5(filename);
+    return filename.slice(0, -extension.length);
 }
 const __default = {
-    "syntax": {
-        "elm-vim": "elmTopLevelDecl: '' # Function\nelmTupleFunction: '' # Normal\nelmTodo: '' # Todo\nelmComment: '' # Comment\nelmLineComment: '' # Comment\nelmString: '' # String\nelmTripleString: '' # String\nelmChar: '' # String\nelmStringEscape: '' # Special\nelmInt: '' # Number\nelmFloat: '' # Float\nelmDelimiter: '' # Comment\nelmTypedef: '' # Keyword\nelmImport: '' # Keyword\nelmConditional: '' # Keyword\nelmAlias: '' # Keyword\nelmOperator: '' # Operator\nelmType: '' # Type\nelmNumberType: '' # Type\nelmBraces: '' # Delimiter\n",
-        "git": "gitDateHeader: '' # gitIdentityHeader\ngitIdentityHeader: '' # gitIdentityKeyword\ngitIdentityKeyword: '' # Label\ngitNotesHeader: '' # gitKeyword\ngitReflogHeader: '' # gitKeyword\ngitKeyword: '' # Keyword\ngitIdentity: '' # String\ngitEmailDelimiter: '' # Delimiter\ngitEmail: '' # Special\ngitDate: '' # Number\ngitMode: '' # Number\ngitHashAbbrev: '' # gitHash\ngitHash: '' # Identifier\ngitReflogMiddle: '' # gitReference\ngitReference: '' # Function\ngitStage: '' # gitType\ngitType: '' # Type\ngitDiffAdded: '' # diffAdded\ngitDiffRemoved: '' # diffRemoved\n",
-        "vim-javascript-syntax": "# jelera/vim-javascript-syntax\njavaScriptEndColons: '' # Operator\njavaScriptOpSymbols: '' # Operator\njavaScriptLogicSymbols: '' # Boolean\njavaScriptParens: '' # Operator\njavaScriptTemplateDelim: '' # Operator\njavaScriptDocComment: '' # Comment\njavaScriptDocTags: '' # Special\njavaScriptDocSeeTag: '' # Function\njavaScriptDocParam: '' # Function\njavaScriptString: '' # String\njavaScriptTemplateString: '' # String\njavaScriptFloat: '' # Number\njavaScriptPrototype: '' # Type\njavaScriptSpecial: '' # Special\njavaScriptSource: '' # Special\njavaScriptGlobalObjects: '' # Special\njavaScriptExceptions: '' # Special\njavaScriptParensErrA: '' # Error\njavaScriptParensErrB: '' # Error\njavaScriptParensErrC: '' # Error\njavaScriptDomErrNo: '' # Error\njavaScriptDomNodeConsts: '' # Constant\njavaScriptDomElemAttrs: '' # Label\njavaScriptDomElemFuncs: '' # Type\njavaScriptWebAPI: '' # Type\njavaScriptHtmlElemAttrs: '' # Label\njavaScriptHtmlElemFuncs: '' # Type\njavaScriptCssStyles: '' # Type\njavaScriptBrowserObjects: '' # Constant\njavaScriptDOMObjects: '' # Constant\njavaScriptDOMMethods: '' # Type\njavaScriptDOMProperties: '' # Label\njavaScriptAjaxObjects: '' # Constant\njavaScriptAjaxMethods: '' # Type\njavaScriptAjaxProperties: '' # Label\njavaScriptFuncKeyword: '' # Function\njavaScriptFuncDef: '' # PreProc\njavaScriptFuncExp: '' # Title\njavaScriptFuncArg: '' # Special\njavaScriptFuncComma: '' # Operator\njavaScriptFuncEq: '' # Operator\njavaScriptHtmlEvents: '' # Constant\njavaScriptHtmlElemProperties: '' # Label\njavaScriptEventListenerKeywords: '' # Type\njavaScriptPropietaryObjects: '' # Constant\n",
-        "gitrebase": "gitrebaseCommit: '' # gitrebaseHash\ngitrebaseHash: '' # Identifier\ngitrebasePick: '' # Statement\ngitrebaseReword: '' # Number\ngitrebaseEdit: '' # PreProc\ngitrebaseSquash: '' # Type\ngitrebaseFixup: '' # Special\ngitrebaseExec: '' # Function\ngitrebaseSummary: '' # String\ngitrebaseComment: '' # Comment\ngitrebaseSquashError: '' # Error\n",
-        "json": "jsonPadding: '' # Operator\njsonString: '' # String\njsonTest: '' # Label\njsonEscape: '' # Special\njsonNumber: '' # Number\njsonBraces: '' # Delimiter\njsonNull: '' # Function\njsonBoolean: '' # Boolean\njsonKeyword: '' # Label\njsonNumError: '' # Error\njsonCommentError: '' # Error\njsonSemicolonError: '' # Error\njsonTrailingCommaError: '' # Error\njsonMissingCommaError: '' # Error\njsonStringSQError: '' # Error\njsonNoQuotesError: '' # Error\njsonTripleQuotesError: '' # Error\njsonQuote: '' # Quote\njsonNoise: '' # Noise\n",
-        "php": "phpConstant: '' # Constant\nphpCoreConstant: '' # Constant\nphpComment: '' # Comment\nphpDocTags: '' # PreProc\nphpDocCustomTags: '' # Type\nphpException: '' # Exception\nphpBoolean: '' # Boolean\nphpStorageClass: '' # StorageClass\nphpSCKeyword: '' # StorageClass\nphpFCKeyword: '' # Define\nphpStructure: '' # Structure\nphpStringSingle: '' # String\nphpStringDouble: '' # String\nphpBacktick: '' # String\nphpNumber: '' # Number\nphpFloat: '' # Float\nphpMethods: '' # Function\nphpFunctions: '' # Function\nphpBaselib: '' # Function\nphpRepeat: '' # Repeat\nphpConditional: '' # Conditional\nphpLabel: '' # Label\nphpStatement: '' # Statement\nphpKeyword: '' # Statement\nphpType: '' # Type\nphpInclude: '' # Include\nphpDefine: '' # Define\nphpBackslashSequences: '' # SpecialChar\nphpBackslashDoubleQuote: '' # SpecialChar\nphpBackslashSingleQuote: '' # SpecialChar\nphpParent: '' # Delimiter\nphpBrackets: '' # Delimiter\nphpIdentifierConst: '' # Delimiter\nphpParentError: '' # Error\nphpOctalError: '' # Error\nphpInterpSimpleError: '' # Error\nphpInterpBogusDollarCurley: '' # Error\nphpInterpDollarCurly1: '' # Error\nphpInterpDollarCurly2: '' # Error\nphpInterpSimpleBracketsInner: '' # String\nphpInterpSimpleCurly: '' # Delimiter\nphpInterpVarname: '' # Identifier\nphpTodo: '' # Todo\nphpDocTodo: '' # Todo\nphpMemberSelector: '' # Structure\nphpIntVar: '' # Identifier\nphpEnvVar: '' # Identifier\nphpOperator: '' # Operator\nphpVarSelector: '' # Operator\nphpRelation: '' # Operator\nphpIdentifier: '' # Identifier\nphpIdentifierSimply: '' # Identifier\n",
-        "markdown": "markdownH1: '' # htmlH1\nmarkdownH2: '' # htmlH2\nmarkdownH3: '' # htmlH3\nmarkdownH4: '' # htmlH4\nmarkdownH5: '' # htmlH5\nmarkdownH6: '' # htmlH6\nmarkdownHeadingRule: '' # markdownRule\nmarkdownHeadingDelimiter: '' # Delimiter\nmarkdownOrderedListMarker: '' # markdownListMarker\nmarkdownListMarker: '' # htmlTagName\nmarkdownBlockquote: '' # Comment\nmarkdownRule: '' # PreProc\nmarkdownLinkText: '' # htmlLink\nmarkdownIdDeclaration: '' # Typedef\nmarkdownId: '' # Type\nmarkdownAutomaticLink: '' # markdownUrl\nmarkdownUrl: '' # Float\nmarkdownUrlTitle: '' # String\nmarkdownIdDelimiter: '' # markdownLinkDelimiter\nmarkdownUrlDelimiter: '' # htmlTag\nmarkdownUrlTitleDelimiter: '' # Delimiter\nmarkdownItalic: '' # htmlItalic\nmarkdownBold: '' # htmlBold\nmarkdownBoldItalic: '' # htmlBoldItalic\nmarkdownCodeDelimiter: '' # Delimiter\nmarkdownEscape: '' # Special\nmarkdownError: '' # Error\n",
-        "pug": "pugPlainChar: '' # Special\npugScriptConditional: '' # PreProc\npugScriptLoopKeywords: '' # PreProc\npugScriptStatement: '' # PreProc\npugHtmlArg: '' # htmlArg\npugAttributeString: '' # String\npugAttributesDelimiter: '' # Identifier\npugIdChar: '' # Special\npugClassChar: '' # Special\npugBlockExpansionChar: '' # Special\npugPipeChar: '' # Special\npugTagBlockChar: '' # Special\npugId: '' # Identifier\npugClass: '' # Type\npugInterpolationDelimiter: '' # Delimiter\npugInlineDelimiter: '' # Delimiter\npugFilter: '' # PreProc\npugDocType: '' # PreProc\npugComment: '' # Comment\npugCommentBlock: '' # Comment\npugHtmlConditionalComment: '' # pugComment\n",
-        "css": "cssComment: '' # Comment\ncssVendor: '' # Comment\ncssHacks: '' # Comment\ncssTagName: '' # Statement\ncssDeprecated: '' # Error\ncssSelectorOp: '' # Special\ncssSelectorOp2: '' # Special\ncssAttrComma: '' # Special\ncssAnimationProp: '' # cssProp\ncssBackgroundProp: '' # cssProp\ncssBorderProp: '' # cssProp\ncssBoxProp: '' # cssProp\ncssColorProp: '' # cssProp\ncssContentForPagedMediaProp: '' # cssProp\ncssDimensionProp: '' # cssProp\ncssFlexibleBoxProp: '' # cssProp\ncssFontProp: '' # cssProp\ncssGeneratedContentProp: '' # cssProp\ncssGridProp: '' # cssProp\ncssHyerlinkProp: '' # cssProp\ncssLineboxProp: '' # cssProp\ncssListProp: '' # cssProp\ncssMarqueeProp: '' # cssProp\ncssMultiColumnProp: '' # cssProp\ncssPagedMediaProp: '' # cssProp\ncssPositioningProp: '' # cssProp\ncssPrintProp: '' # cssProp\ncssRubyProp: '' # cssProp\ncssSpeechProp: '' # cssProp\ncssTableProp: '' # cssProp\ncssTextProp: '' # cssProp\ncssTransformProp: '' # cssProp\ncssTransitionProp: '' # cssProp\ncssUIProp: '' # cssProp\ncssIEUIProp: '' # cssProp\ncssAuralProp: '' # cssProp\ncssRenderProp: '' # cssProp\ncssMobileTextProp: '' # cssProp\ncssAnimationAttr: '' # cssAttr\ncssBackgroundAttr: '' # cssAttr\ncssBorderAttr: '' # cssAttr\ncssBoxAttr: '' # cssAttr\ncssContentForPagedMediaAttr: '' # cssAttr\ncssDimensionAttr: '' # cssAttr\ncssFlexibleBoxAttr: '' # cssAttr\ncssFontAttr: '' # cssAttr\ncssGeneratedContentAttr: '' # cssAttr\ncssGridAttr: '' # cssAttr\ncssHyerlinkAttr: '' # cssAttr\ncssLineboxAttr: '' # cssAttr\ncssListAttr: '' # cssAttr\ncssMarginAttr: '' # cssAttr\ncssMarqueeAttr: '' # cssAttr\ncssMultiColumnAttr: '' # cssAttr\ncssPaddingAttr: '' # cssAttr\ncssPagedMediaAttr: '' # cssAttr\ncssPositioningAttr: '' # cssAttr\ncssGradientAttr: '' # cssAttr\ncssPrintAttr: '' # cssAttr\ncssRubyAttr: '' # cssAttr\ncssSpeechAttr: '' # cssAttr\ncssTableAttr: '' # cssAttr\ncssTextAttr: '' # cssAttr\ncssTransformAttr: '' # cssAttr\ncssTransitionAttr: '' # cssAttr\ncssUIAttr: '' # cssAttr\ncssIEUIAttr: '' # cssAttr\ncssAuralAttr: '' # cssAttr\ncssRenderAttr: '' # cssAttr\ncssCommonAttr: '' # cssAttr\ncssPseudoClassId: '' # PreProc\ncssPseudoClassLang: '' # Constant\ncssValueLength: '' # Number\ncssValueInteger: '' # Number\ncssValueNumber: '' # Number\ncssValueAngle: '' # Number\ncssValueTime: '' # Number\ncssValueFrequency: '' # Number\ncssFunction: '' # Constant\ncssURL: '' # String\ncssFunctionName: '' # Function\ncssFunctionComma: '' # Function\ncssColor: '' # Constant\ncssIdentifier: '' # Function\ncssInclude: '' # Include\ncssIncludeKeyword: '' # atKeyword\ncssImportant: '' # Special\ncssBraces: '' # Function\ncssBraceError: '' # Error\ncssError: '' # Error\ncssUnicodeEscape: '' # Special\ncssStringQQ: '' # String\ncssStringQ: '' # String\ncssAttributeSelector: '' # String\ncssMedia: '' # atKeyword\ncssMediaType: '' # Special\ncssMediaComma: '' # Normal\ncssMediaKeyword: '' # Statement\ncssMediaProp: '' # cssProp\ncssMediaAttr: '' # cssAttr\ncssPage: '' # atKeyword\ncssPagePseudo: '' # PreProc\ncssPageMargin: '' # atKeyword\ncssPageProp: '' # cssProp\ncssKeyFrame: '' # atKeyword\ncssKeyFrameSelector: '' # Constant\ncssFontDescriptor: '' # Special\ncssFontDescriptorFunction: '' # Constant\ncssFontDescriptorProp: '' # cssProp\ncssFontDescriptorAttr: '' # cssAttr\ncssUnicodeRange: '' # Constant\ncssClassName: '' # Function\ncssClassNameDot: '' # Function\ncssProp: '' # StorageClass\ncssAttr: '' # Constant\ncssUnitDecorators: '' # Number\ncssNoise: '' # Noise\natKeyword: '' # PreProc\n",
-        "gitconfig": "gitconfigComment: '' # Comment\ngitconfigSection: '' # Keyword\ngitconfigVariable: '' # Identifier\ngitconfigBoolean: '' # Boolean\ngitconfigNumber: '' # Number\ngitconfigString: '' # String\ngitconfigDelim: '' # Delimiter\ngitconfigEscape: '' # Delimiter\ngitconfigError: '' # Error\n",
-        "vim-plug": "plug1: '' # Title\nplug2: '' # Repeat\nplugH2: '' # Type\nplugX: '' # Exception\nplugBracket: '' # Structure\nplugNumber: '' # Number\nplugDash: '' # Special\nplugPlus: '' # Constant\nplugStar: '' # Boolean\nplugMessage: '' # Function\nplugName: '' # Label\nplugInstall: '' # Function\nplugUpdate: '' # Type\nplugError: '' # Error\nplugRelDate: '' # Comment\nplugEdge: '' # PreProc\nplugSha: '' # Identifier\nplugTag: '' # Constant\nplugNotLoaded: '' # Comment\n",
-        "base": "# BASE UI\nColorColumn: ''\nConceal: ''\nCursor: ''\nCursorIM: ''\nCursorColumn: ''\nCursorLine: ''\nCursorLineNr: ''\nDirectory: ''\nDiffAdd: ''\nDiffChange: ''\nDiffDelete: ''\nDiffText: ''\nErrorMsg: ''\nVertSplit: ''\nFolded: ''\nFoldColumn: ''\nSignColumn: ''\nIncSearch: ''\nLineNr: ''\nMatchParen: ''\nModeMsg: ''\nMoreMsg: ''\nNonText: ''\nNormal: ''\nPMenu: ''\nPMenuSel: ''\nPmenuSbar: ''\nPmenuThumb: ''\nQuestion: ''\nSearch: ''\nSpecialKey: ''\nSpellBad: ''\nSpellLocal: ''\nSpellCap: ''\nSpellRare: ''\nStatusLine: ''\nStatusLineNC: ''\nTabLine: ''\nTabLineFill: ''\nTabLineSel: ''\nTitle: ''\nVisual: ''\nVisualNOS: ''\nWarningMsg: ''\nWildMenu: ''\n# BASE SYNTAX\nComment: ''\nConstant: ''\nString: '' # Constant\nCharacter: '' # Constant\nBoolean: '' # Constant\nNumber: '' # Constant\nFloat: '' # Constant\nIdentifier: ''\nFunction: '' # Identifier\nStatement: ''\nConditional: '' # Statement\nRepeat: '' # Statement\nLabel: '' # Statement\nOperator: '' # Statement\nKeyword: '' # Statement\nException: '' # Statement\nPreProc: ''\nInclude: '' # PreProc\nDefine: '' # PreProc\nMacro: '' # PreProc\nPreCondit: '' # PreProc\nType: ''\nStorageClass: '' # Type\nStructure: '' # Type\nTypedef: '' # Type\nSpecial: ''\nSpecialChar: '' # Special\nTag: '' # Special\nDelimiter: '' # Special\nSpecialComment: '' # Special\nDebug: '' # Special\nUnderlined: ''\nIgnore: ''\nError: ''\nTodo: ''\n",
-        "nerdtree": "NERDTreePart: '' # Special\nNERDTreePartFile: '' # Type\nNERDTreeExecFile: '' # Title\nNERDTreeDirSlash: '' # Identifier\nNERDTreeBookmarksHeader: '' # statement\nNERDTreeBookmarksLeader: '' # ignore\nNERDTreeBookmarkName: '' # Identifier\nNERDTreeBookmark: '' # normal\nNERDTreeHelp: '' # String\nNERDTreeHelpKey: '' # Identifier\nNERDTreeHelpCommand: '' # Identifier\nNERDTreeHelpTitle: '' # Macro\nNERDTreeToggleOn: '' # Question\nNERDTreeToggleOff: '' # WarningMsg\nNERDTreeLinkTarget: '' # Type\nNERDTreeLinkFile: '' # Macro\nNERDTreeLinkDir: '' # Macro\nNERDTreeDir: '' # Directory\nNERDTreeUp: '' # Directory\nNERDTreeFile: '' # Normal\nNERDTreeCWD: '' # Statement\nNERDTreeOpenable: '' # Title\nNERDTreeClosable: '' # Title\nNERDTreeIgnore: '' # ignore\nNERDTreeRO: '' # WarningMsg\nNERDTreeFlags: '' # Number\n",
-        "vim-mustache-handlebars": "mustacheVariable: '' # Number\nmustacheVariableUnescape: '' # Number\nmustachePartial: '' # Number\nmustacheSection: '' # Number\nmustacheMarkerSet: '' # Number\nmustacheComment: '' # Comment\nmustacheBlockComment: '' # Comment\nmustacheError: '' # Error\nmustacheInsideError: '' # Error\nmustacheHandlebars: '' # Special\nmustacheUnescape: '' # Identifier\nmustacheOperators: '' # Operator\nmustacheConditionals: '' # Conditional\nmustacheHelpers: '' # Repeat\nmustacheQString: '' # String\nmustacheDQString: '' # String\n",
-        "diff": "diffOldFile: '' # diffFile\ndiffNewFile: '' # diffFile\ndiffFile: '' # Type\ndiffOnly: '' # Constant\ndiffIdentical: '' # Constant\ndiffDiffer: '' # Constant\ndiffBDiffer: '' # Constant\ndiffIsA: '' # Constant\ndiffNoEOL: '' # Constant\ndiffCommon: '' # Constant\ndiffRemoved: '' # Special\ndiffChanged: '' # PreProc\ndiffAdded: '' # Identifier\ndiffLine: '' # Statement\ndiffSubname: '' # PreProc\ndiffComment: '' # Comment\n",
-        "yajs": "javascriptReserved: '' # Error\njavascriptReservedCase: '' # Error\njavascriptInvalidOp: '' # Error\njavascriptEndColons: '' # Statement\njavascriptOpSymbol: '' # Normal\njavascriptBraces: '' # Function\njavascriptBrackets: '' # Function\njavascriptParens: '' # Normal\njavascriptComment: '' # Comment\njavascriptLineComment: '' # Comment\njavascriptDocComment: '' # Comment\njavascriptCommentTodo: '' # Todo\njavascriptDocNotation: '' # SpecialComment\njavascriptDocTags: '' # SpecialComment\njavascriptDocNGParam: '' # javascriptDocParam\njavascriptDocParam: '' # Function\njavascriptDocNumParam: '' # Function\njavascriptDocEventRef: '' # Function\njavascriptDocNamedParamType: '' # Type\njavascriptDocParamName: '' # Type\njavascriptDocParamType: '' # Type\njavascriptString: '' # String\njavascriptTemplate: '' # String\njavascriptEventString: '' # String\njavascriptASCII: '' # Label\njavascriptTemplateSubstitution: '' # Label\njavascriptTemplateSB: '' # javascriptTemplateSubstitution\njavascriptRegexpString: '' # String\njavascriptGlobal: '' # Constant\njavascriptCharacter: '' # Character\njavascriptPrototype: '' # Type\njavascriptConditional: '' # Conditional\njavascriptConditionalElse: '' # Conditional\njavascriptSwitch: '' # Conditional\njavascriptCase: '' # Conditional\njavascriptDefault: '' # javascriptCase\njavascriptExportDefault: '' # javascriptCase\njavascriptBranch: '' # Conditional\njavascriptIdentifier: '' # Structure\njavascriptVariable: '' # Identifier\njavascriptRepeat: '' # Repeat\njavascriptForComprehension: '' # Repeat\njavascriptIfComprehension: '' # Repeat\njavascriptOfComprehension: '' # Repeat\njavascriptForOperator: '' # Repeat\njavascriptStatementKeyword: '' # Statement\njavascriptReturn: '' # Statement\njavascriptYield: '' # Statement\njavascriptYieldGen: '' # Statement\njavascriptMessage: '' # Keyword\njavascriptOperator: '' # Identifier\njavascriptTarget: '' # Identifier\njavascriptNull: '' # Boolean\njavascriptNumber: '' # Number\njavascriptBoolean: '' # Boolean\njavascriptObjectLabel: '' # javascriptLabel\njavascriptObjectLabelColon: '' # javascriptLabel\njavascriptLabel: '' # Label\njavascriptPropertyName: '' # Label\njavascriptImport: '' # Special\njavascriptExport: '' # Special\njavascriptTry: '' # Statement\njavascriptExceptions: '' # Statement\njavascriptMethodName: '' # Function\njavascriptMethodAccessor: '' # Operator\njavascriptObjectMethodName: '' # Function\njavascriptFuncKeyword: '' # Keyword\njavascriptAsyncFunc: '' # Keyword\njavascriptArrowFunc: '' # Type\njavascriptFuncName: '' # Function\njavascriptFuncArg: '' # Special\njavascriptArrowFuncArg: '' # javascriptFuncArg\njavascriptComma: '' # Normal\njavascriptClassKeyword: '' # Keyword\njavascriptClassExtends: '' # Keyword\njavascriptClassName: '' # Function\njavascriptClassSuperName: '' # Function\njavascriptClassStatic: '' # StorageClass\njavascriptClassSuper: '' # keyword\nshellbang: '' # Comment\n",
-        "less": "lessEndOfLineComment: '' # lessComment\nlessCssComment: '' # lessComment\nlessComment: '' # Comment\nlessDefault: '' # cssImportant\nlessVariable: '' # Identifier\nlessFunction: '' # PreProc\nlessTodo: '' # Todo\nlessInclude: '' # Include\nlessIdChar: '' # Special\nlessClassChar: '' # Special\nlessAmpersand: '' # Character\nlessId: '' # Identifier\nlessClass: '' # Type\nlessCssAttribute: '' # PreProc\nlessClassCall: '' # Type\nlessClassIdCall: '' # Type\nlessTagName: '' # cssTagName\nlessDeprecated: '' # cssDeprecated\nlessMedia: '' # cssMedia\n",
-        "python": "pythonStatement: '' # Statement\npythonConditional: '' # Conditional\npythonRepeat: '' # Repeat\npythonOperator: '' # Operator\npythonException: '' # Exception\npythonInclude: '' # Include\npythonDecorator: '' # Define\npythonFunction: '' # Function\npythonComment: '' # Comment\npythonTodo: '' # Todo\npythonString: '' # String\npythonRawString: '' # String\npythonQuotes: '' # String\npythonTripleQuotes: '' # pythonQuotes\npythonEscape: '' # Special\npythonNumber: '' # Number\npythonBuiltin: '' # Function\npythonExceptions: '' # Structure\npythonSpaceError: '' # Error\npythonDoctest: '' # Special\npythonDoctestValue: '' # Define\n",
-        "html": "htmlTag: '' # Function\nhtmlEndTag: '' # Identifier\nhtmlArg: '' # Type\nhtmlTagName: '' # htmlStatement\nhtmlSpecialTagName: '' # Exception\nhtmlValue: '' # String\nhtmlH1: '' # Title\nhtmlH2: '' # htmlH1\nhtmlH3: '' # htmlH2\nhtmlH4: '' # htmlH3\nhtmlH5: '' # htmlH4\nhtmlH6: '' # htmlH5\nhtmlHead: '' # PreProc\nhtmlTitle: '' # Title\nhtmlBoldItalicUnderline: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBold: '' # htmlBoldUnderline\nhtmlUnderlineItalicBold: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBoldItalic: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderline: '' # htmlUnderlineItalic\nhtmlItalicBold: '' # htmlBoldItalic\nhtmlItalicBoldUnderline: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderlineBold: '' # htmlBoldUnderlineItalic\nhtmlLink: '' # Underlined\nhtmlLeadingSpace: '' # None\nhtmlPreStmt: '' # PreProc\nhtmlPreError: '' # Error\nhtmlPreProc: '' # PreProc\nhtmlPreAttr: '' # String\nhtmlPreProcAttrName: '' # PreProc\nhtmlPreProcAttrError: '' # Error\nhtmlSpecial: '' # Special\nhtmlSpecialChar: '' # Special\nhtmlString: '' # String\nhtmlStatement: '' # Statement\nhtmlComment: '' # Comment\nhtmlCommentPart: '' # Comment\nhtmlCommentError: '' # htmlError\nhtmlTagError: '' # htmlError\nhtmlEvent: '' # javaScript\nhtmlError: '' # Error\njavaScript: '' # Special\njavaScriptExpression: '' # javaScript\nhtmlCssStyleComment: '' # Comment\nhtmlCssDefinition: '' # Special\n",
-        "javascript": "javaScriptComment: '' # Comment\njavaScriptLineComment: '' # Comment\njavaScriptCommentTodo: '' # Todo\njavaScriptSpecial: '' # Special\njavaScriptStringS: '' # String\njavaScriptStringD: '' # String\njavaScriptCharacter: '' # Character\njavaScriptSpecialCharacter: '' # javaScriptSpecial\njavaScriptNumber: '' # javaScriptValue\njavaScriptConditional: '' # Conditional\njavaScriptRepeat: '' # Repeat\njavaScriptBranch: '' # Conditional\njavaScriptOperator: '' # Operator\njavaScriptType: '' # Type\njavaScriptStatement: '' # Statement\njavaScriptFunction: '' # Function\njavaScriptBraces: '' # Function\njavaScriptError: '' # Error\njavaScriptParensError: '' # Error\njavaScriptNull: '' # Keyword\njavaScriptBoolean: '' # Boolean\njavaScriptRegexpString: '' # String\njavaScriptIdentifier: '' # Identifier\njavaScriptLabel: '' # Label\njavaScriptException: '' # Exception\njavaScriptMessage: '' # Keyword\njavaScriptGlobal: '' # Keyword\njavaScriptMember: '' # Keyword\njavaScriptDeprecated: '' # Exception\njavaScriptReserved: '' # Keyword\njavaScriptDebug: '' # Debug\njavaScriptConstant: '' # Label\n",
-        "vim-gitgutter": "# GitGutter airblade/vim-gitgutter\nGitGutterAdd: ''\nGitGutterChange: ''\nGitGutterDelete: ''\nGitGutterChangeDelete: ''\n",
-        "go": "goDirective: '' # Statement\ngoDeclaration: '' # Keyword\ngoDeclType: '' # Keyword\ngoStatement: '' # Statement\ngoConditional: '' # Conditional\ngoLabel: '' # Label\ngoRepeat: '' # Repeat\ngoType: '' # Type\ngoSignedInts: '' # Type\ngoUnsignedInts: '' # Type\ngoFloats: '' # Type\ngoComplexes: '' # Type\ngoBuiltins: '' # Keyword\ngoConstants: '' # Keyword\ngoComment: '' # Comment\ngoTodo: '' # Todo\ngoEscapeOctal: '' # goSpecialString\ngoEscapeC: '' # goSpecialString\ngoEscapeX: '' # goSpecialString\ngoEscapeU: '' # goSpecialString\ngoEscapeBigU: '' # goSpecialString\ngoSpecialString: '' # Special\ngoEscapeError: '' # Error\ngoString: '' # String\ngoRawString: '' # String\ngoCharacter: '' # Character\ngoDecimalInt: '' # Integer\ngoHexadecimalInt: '' # Integer\ngoOctalInt: '' # Integer\nInteger: '' # Number\ngoFloat: '' # Float\ngoImaginary: '' # Number\ngoExtraType: '' # Type\ngoSpaceError: '' # Error\n",
-        "help": "helpIgnore: '' # Ignore\nhelpHyperTextJump: '' # Identifier\nhelpBar: '' # Ignore\nhelpBacktick: '' # Ignore\nhelpStar: '' # Ignore\nhelpHyperTextEntry: '' # String\nhelpHeadline: '' # Statement\nhelpHeader: '' # PreProc\nhelpSectionDelim: '' # PreProc\nhelpVim: '' # Identifier\nhelpCommand: '' # Comment\nhelpExample: '' # Comment\nhelpOption: '' # Type\nhelpSpecial: '' # Special\nhelpNote: '' # Todo\nhelpComment: '' # Comment\nhelpConstant: '' # Constant\nhelpString: '' # String\nhelpCharacter: '' # Character\nhelpNumber: '' # Number\nhelpBoolean: '' # Boolean\nhelpFloat: '' # Float\nhelpIdentifier: '' # Identifier\nhelpFunction: '' # Function\nhelpStatement: '' # Statement\nhelpConditional: '' # Conditional\nhelpRepeat: '' # Repeat\nhelpLabel: '' # Label\nhelpOperator: '' # Operator\nhelpKeyword: '' # Keyword\nhelpException: '' # Exception\nhelpPreProc: '' # PreProc\nhelpInclude: '' # Include\nhelpDefine: '' # Define\nhelpMacro: '' # Macro\nhelpPreCondit: '' # PreCondit\nhelpType: '' # Type\nhelpStorageClass: '' # StorageClass\nhelpStructure: '' # Structure\nhelpTypedef: '' # Typedef\nhelpSpecialChar: '' # SpecialChar\nhelpTag: '' # Tag\nhelpDelimiter: '' # Delimiter\nhelpSpecialComment: '' # SpecialComment\nhelpDebug: '' # Debug\nhelpUnderlined: '' # Underlined\nhelpError: '' # Error\nhelpTodo: '' # Todo\nhelpURL: '' # String\n",
-        "unite": "uniteError: '' # Error\nuniteMarkedLine: '' # Statement\nuniteCandidateSourceName: '' # Type\nuniteQuickMatchText: '' # Special\nuniteCandidateIcon: '' # Special\nuniteMarkedIcon: '' # Statement\nuniteCandidateInputKeyword: '' # Function\nuniteChooseAction: '' # NONE\nuniteChooseCandidate: '' # NONE\nuniteChooseKey: '' # SpecialKey\nuniteChooseMessage: '' # NONE\nuniteChoosePrompt: '' # uniteSourcePrompt\nuniteChooseSource: '' # uniteSourceNames\nuniteInputPrompt: '' # Normal\nuniteInputLine: '' # Identifier\nuniteInputCommand: '' # Statement\nuniteStatusNormal: '' # StatusLine\nuniteStatusHead: '' # Statement\nuniteStatusSourceNames: '' # PreProc\nuniteStatusSourceCandidates: '' # Constant\nuniteStatusMessage: '' # Comment\nuniteStatusLineNR: '' # LineNR\n",
-        "gitcommit": "gitcommitSummary: '' # Keyword\ngitcommitComment: '' # Comment\ngitcommitUntracked: '' # gitcommitComment\ngitcommitDiscarded: '' # gitcommitComment\ngitcommitSelected: '' # gitcommitComment\ngitcommitUnmerged: '' # gitcommitComment\ngitcommitOnBranch: '' # Comment\ngitcommitBranch: '' # Special\ngitcommitNoBranch: '' # gitCommitBranch\ngitcommitDiscardedType: '' # gitcommitType\ngitcommitSelectedType: '' # gitcommitType\ngitcommitUnmergedType: '' # gitcommitType\ngitcommitType: '' # Type\ngitcommitNoChanges: '' # gitcommitHeader\ngitcommitHeader: '' # PreProc\ngitcommitUntrackedFile: '' # gitcommitFile\ngitcommitDiscardedFile: '' # gitcommitFile\ngitcommitSelectedFile: '' # gitcommitFile\ngitcommitUnmergedFile: '' # gitcommitFile\ngitcommitFile: '' # Constant\ngitcommitDiscardedArrow: '' # gitcommitArrow\ngitcommitSelectedArrow: '' # gitcommitArrow\ngitcommitUnmergedArrow: '' # gitcommitArrow\ngitcommitArrow: '' # gitcommitComment\ngitcommitOverflow: '' # none\ngitcommitBlank: '' # Error\n",
-        "elixir": "# Elixir\nelixirComment: '' # Comment\nelixirUnusedVariable: '' # Comment\nelixirAtom: '' # Constant\nelixirBoolean: '' # Constant\nelixirPseudoVariable: '' # Constant\nelixirNumber: '' # Constant\nelixirString: '' # Constant\nelixirRegex: '' # Constant\nelixirDocString: '' # Constant\nelixirAtomInterpolated: '' # Constant\nelixirSigil: '' # Constant\nelixirRegexDelimiter: '' # Delimiter\nelixirStringDelimiter: '' # Delimiter\nelixirInterpolationDelimiter: '' # Delimiter\nelixirSigilDelimiter: '' # Delimiter\nelixirSpecial: '' # Delimiter\nelixirRegexEscape: '' # Delimiter\nelixirRegexEscapePunctuation: '' # Delimiter\nelixirRegexQuantifier: '' # Delimiter\nelixirRegexCharClass: '' # Delimiter\nelixirSelf: '' # Identifier\nelixirVariable: '' # Identifier\nelixirFunctionDeclaration: '' # Identifier\nelixirBlockDefinition: '' # Statement\nelixirKeyword: '' # Statement\nelixirOperator: '' # Statement\nelixirInclude: '' # Preproc\nelixirDefine: '' # Preproc\nelixirPrivateDefine: '' # Preproc\nelixirModuleDefine: '' # Preproc\nelixirProtocolDefine: '' # Preproc\nelixirImplDefine: '' # Preproc\nelixirRecordDefine: '' # Preproc\nelixirPrivateRecordDefine: '' # Preproc\nelixirMacroDefine: '' # Preproc\nelixirMacroDeclaration: '' # Preproc\nelixirPrivateMacroDefine: '' # Preproc\nelixirDelegateDefine: '' # Preproc\nelixirOverridableDefine: '' # Preproc\nelixirExceptionDefine: '' # Preproc\nelixirCallbackDefine: '' # Preproc\nelixirStructDefine: '' # Preproc\nelixirAlias: '' # Type\nelixirTodo: '' # Todo\nelixirArguments: ''\nelixirGuard: ''\nelixirId: ''\nelixirInterpolation: ''\nelixirDocStringStar: ''\nelixirBlock: ''\nelixirAnonymousFunction: ''\nelixirDelimEscape: ''\nelixirModuleDeclaration: ''\nelixirProtocolDeclaration: ''\nelixirImplDeclaration: ''\nelixirRecordDeclaration: ''\nelixirDelegateDeclaration: ''\nelixirOverridableDeclaratio: ''\nelixirExceptionDeclaration: ''\nelixirCallbackDeclaration: ''\nelixirStructDeclaration: ''\n",
-        "fugitive": "FugitiveblameBoundary: '' # Keyword\nFugitiveblameHash: '' # Identifier\nFugitiveblameUncommitted: '' # Ignore\nFugitiveblameTime: '' # PreProc\nFugitiveblameLineNumber: '' # Number\nFugitiveblameOriginalFile: '' # String\nFugitiveblameOriginalLineNumber: '' #\nFugitiveblameShort: '' # FugitiveblameDelimiter\nFugitiveblameDelimiter: '' # Delimiter\nFugitiveblameNotCommittedYet: '' # Comment\n",
-        "xml": "xmlTodo: '' # Todo\nxmlTag: '' # Function\nxmlTagName: '' # Function\nxmlEndTag: '' # Identifier\nxmlNamespace: '' # Tag\nxmlEntity: '' # Statement\nxmlEntityPunct: '' # Type\nxmlAttribPunct: '' # Comment\nxmlAttrib: '' # Type\nxmlString: '' # String\nxmlComment: '' # Comment\nxmlCommentStart: '' # xmlComment\nxmlCommentPart: '' # Comment\nxmlCommentError: '' # Error\nxmlError: '' # Error\nxmlProcessingDelim: '' # Comment\nxmlProcessing: '' # Type\nxmlCdata: '' # String\nxmlCdataCdata: '' # Statement\nxmlCdataStart: '' # Type\nxmlCdataEnd: '' # Type\nxmlDocTypeDecl: '' # Function\nxmlDocTypeKeyword: '' # Statement\nxmlInlineDTD: '' # Function\n",
-        "vim-stylus": "stylusComment: '' # Comment\nstylusVariable: '' # Identifier\nstylusControl: '' # PreProc\nstylusFunction: '' # Function\nstylusInterpolation: '' # Delimiter\nstylusAmpersand: '' # Character\nstylusClass: '' # Type\nstylusClassChar: '' # Special\nstylusEscape: '' # Special\nstylusId: '' # Identifier\nstylusIdChar: '' # Special\n",
-        "elm.vim": "elmKeyword: '' # Keyword\nelmBuiltinOp: '' # Special\nelmType: '' # Type\nelmTodo: '' # Todo\nelmLineComment: '' # Comment\nelmComment: '' # Comment\nelmString: '' # String\nelmNumber: '' # Number\nspecialName: '' # Special\n",
-        "yaml": "yamlTodo: '' # Todo\nyamlComment: '' # Comment\nyamlDocumentStart: '' # PreProc\nyamlDocumentEnd: '' # PreProc\nyamlDirectiveName: '' # Keyword\nyamlTAGDirective: '' # yamlDirectiveName\nyamlTagHandle: '' # String\nyamlTagPrefix: '' # String\nyamlYAMLDirective: '' # yamlDirectiveName\nyamlReservedDirective: '' # Error\nyamlYAMLVersion: '' # Number\nyamlString: '' # String\nyamlFlowString: '' # yamlString\nyamlFlowStringDelimiter: '' # yamlString\nyamlEscape: '' # SpecialChar\nyamlSingleEscape: '' # SpecialChar\nyamlBlockCollectionItemStart: '' # Label\nyamlBlockMappingKey: '' # Identifier\nyamlBlockMappingMerge: '' # Special\nyamlFlowMappingKey: '' # Identifier\nyamlFlowMappingMerge: '' # Special\nyamlMappingKeyStart: '' # Special\nyamlFlowIndicator: '' # Special\nyamlKeyValueDelimiter: '' # Special\nyamlConstant: '' # Constant\nyamlNull: '' # yamlConstant\nyamlBool: '' # yamlConstant\nyamlAnchor: '' # Type\nyamlAlias: '' # Type\nyamlNodeTag: '' # Type\nyamlInteger: '' # Number\nyamlFloat: '' # Float\nyamlTimestamp: '' # Number\n",
-        "ruby": "rubyClass: '' # rubyDefine\nrubyModule: '' # rubyDefine\nrubyMethodExceptional: '' # rubyDefine\nrubyDefine: '' # Define\nrubyFunction: '' # Function\nrubyConditional: '' # Conditional\nrubyConditionalModifier: '' # rubyConditional\nrubyExceptional: '' # rubyConditional\nrubyRepeat: '' # Repeat\nrubyRepeatModifier: '' # rubyRepeat\nrubyOptionalDo: '' # rubyRepeat\nrubyControl: '' # Statement\nrubyInclude: '' # Include\nrubyInteger: '' # Number\nrubyASCIICode: '' # Character\nrubyFloat: '' # Float\nrubyBoolean: '' # Boolean\nrubyException: '' # Exception\nrubyIdentifier: '' # Identifier\nrubyClassVariable: '' # rubyIdentifier\nrubyConstant: '' # Type\nrubyGlobalVariable: '' # rubyIdentifier\nrubyBlockParameter: '' # rubyIdentifier\nrubyInstanceVariable: '' # rubyIdentifier\nrubyPredefinedIdentifier: '' # rubyIdentifier\nrubyPredefinedConstant: '' # rubyPredefinedIdentifier\nrubyPredefinedVariable: '' # rubyPredefinedIdentifier\nrubySymbol: '' # Constant\nrubyKeyword: '' # Keyword\nrubyOperator: '' # Operator\nrubyBeginEnd: '' # Statement\nrubyAccess: '' # Statement\nrubyAttribute: '' # Statement\nrubyEval: '' # Statement\nrubyPseudoVariable: '' # Constant\nrubyComment: '' # Comment\nrubyData: '' # Comment\nrubyDataDirective: '' # Delimiter\nrubyDocumentation: '' # Comment\nrubyTodo: '' # Todo\nrubyQuoteEscape: '' # rubyStringEscape\nrubyStringEscape: '' # Special\nrubyInterpolationDelimiter: '' # Delimiter\nrubyNoInterpolation: '' # rubyString\nrubySharpBang: '' # PreProc\nrubyRegexpDelimiter: '' # rubyStringDelimiter\nrubySymbolDelimiter: '' # rubyStringDelimiter\nrubyStringDelimiter: '' # Delimiter\nrubyHeredoc: '' # rubyString\nrubyString: '' # String\nrubyRegexpEscape: '' # rubyRegexpSpecial\nrubyRegexpQuantifier: '' # rubyRegexpSpecial\nrubyRegexpAnchor: '' # rubyRegexpSpecial\nrubyRegexpDot: '' # rubyRegexpCharClass\nrubyRegexpCharClass: '' # rubyRegexpSpecial\nrubyRegexpSpecial: '' # Special\nrubyRegexpComment: '' # Comment\nrubyRegexp: '' # rubyString\nrubyInvalidVariable: '' # Error\nrubyError: '' # Error\nrubySpaceError: '' # rubyError\n",
-        "sh": "shArithRegion: '' # shShellVariables\nshAtExpr: '' # shSetList\nshBeginHere: '' # shRedir\nshCaseBar: '' # shConditional\nshCaseCommandSub: '' # shCommandSub\nshCaseDoubleQuote: '' # shDoubleQuote\nshCaseIn: '' # shConditional\nshQuote: '' # shOperator\nshCaseSingleQuote: '' # shSingleQuote\nshCaseStart: '' # shConditional\nshCmdSubRegion: '' # shShellVariables\nshColon: '' # shComment\nshDerefOp: '' # shOperator\nshDerefPOL: '' # shDerefOp\nshDerefPPS: '' # shDerefOp\nshDeref: '' # shShellVariables\nshDerefDelim: '' # shOperator\nshDerefSimple: '' # shDeref\nshDerefSpecial: '' # shDeref\nshDerefString: '' # shDoubleQuote\nshDerefVar: '' # shDeref\nshDoubleQuote: '' # shString\nshEcho: '' # shString\nshEchoDelim: '' # shOperator\nshEchoQuote: '' # shString\nshForPP: '' # shLoop\nshEmbeddedEcho: '' # shString\nshEscape: '' # shCommandSub\nshExDoubleQuote: '' # shDoubleQuote\nshExSingleQuote: '' # shSingleQuote\nshFunction: '' # Function\nshHereDoc: '' # shString\nshHerePayload: '' # shHereDoc\nshLoop: '' # shStatement\nshMoreSpecial: '' # shSpecial\nshOption: '' # shCommandSub\nshPattern: '' # shString\nshParen: '' # shArithmetic\nshPosnParm: '' # shShellVariables\nshQuickComment: '' # shComment\nshRange: '' # shOperator\nshRedir: '' # shOperator\nshSetListDelim: '' # shOperator\nshSetOption: '' # shOption\nshSingleQuote: '' # shString\nshSource: '' # shOperator\nshStringSpecial: '' # shSpecial\nshSubShRegion: '' # shOperator\nshTestOpr: '' # shConditional\nshTestPattern: '' # shString\nshTestDoubleQuote: '' # shString\nshTestSingleQuote: '' # shString\nshVariable: '' # shSetList\nshWrapLineOperator: '' # shOperator\nbashAdminStatement: '' # shStatement if exists(\"b:is_bash\")\nbashSpecialVariables: '' # shShellVariables if exists(\"b:is_bash\")\nbashStatement: '' # shStatement if exists(\"b:is_bash\")\nshFunctionParen: '' # Delimiter if exists(\"b:is_bash\")\nshFunctionDelim: '' # Delimiter if exists(\"b:is_bash\")\nkshSpecialVariables: '' # shShellVariables if exists(\"b:is_kornshell\")\nkshStatement: '' # shStatement if exists(\"b:is_kornshell\")\nshCaseError: '' # Error if !exists(\"g:sh_no_error\")\nshCondError: '' # Error if !exists(\"g:sh_no_error\")\nshCurlyError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefOpError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefWordError: '' # Error if !exists(\"g:sh_no_error\")\nshDoError: '' # Error if !exists(\"g:sh_no_error\")\nshEsacError: '' # Error if !exists(\"g:sh_no_error\")\nshIfError: '' # Error if !exists(\"g:sh_no_error\")\nshInError: '' # Error if !exists(\"g:sh_no_error\")\nshParenError: '' # Error if !exists(\"g:sh_no_error\")\nshTestError: '' # Error if !exists(\"g:sh_no_error\")\nshDTestError: '' # Error if exists(\"b:is_kornshell\")\nshArithmetic: '' # Special\nshCharClass: '' # Identifier\nshSnglCase: '' # Statement\nshCommandSub: '' # Special\nshComment: '' # Comment\nshConditional: '' # Conditional\nshCtrlSeq: '' # Special\nshExprRegion: '' # Delimiter\nshFunctionKey: '' # Function\nshFunctionName: '' # Function\nshNumber: '' # Number\nshOperator: '' # Operator\nshRepeat: '' # Repeat\nshSet: '' # Statement\nshSetList: '' # Identifier\nshShellVariables: '' # PreProc\nshSpecial: '' # Special\nshStatement: '' # Statement\nshString: '' # String\nshTodo: '' # Todo\nshAlias: '' # Identifier\nshHereDoc01: '' # shRedir\nshHereDoc02: '' # shRedir\nshHereDoc03: '' # shRedir\nshHereDoc04: '' # shRedir\nshHereDoc05: '' # shRedir\nshHereDoc06: '' # shRedir\nshHereDoc07: '' # shRedir\nshHereDoc08: '' # shRedir\nshHereDoc09: '' # shRedir\nshHereDoc10: '' # shRedir\nshHereDoc11: '' # shRedir\nshHereDoc12: '' # shRedir\nshHereDoc13: '' # shRedir\nshHereDoc14: '' # shRedir\nshHereDoc15: '' # shRedir\nshHereDoc16: '' # shRedir\nshHereDoc17: '' # shRedir\nshHereDoc18: '' # shRedir\nshHereDoc19: '' # shRedir\nshHereDoc20: '' # shRedir\nshHereDoc21: '' # shRedir\nshHereDoc22: '' # shRedir\nshHereDoc23: '' # shRedir\nshHereDoc24: '' # shRedir\nshHereDoc25: '' # shRedir\nshHereDoc26: '' # shRedir\nshHereDoc27: '' # shRedir\nshHereDoc28: '' # shRedir\nshHereDoc29: '' # shRedir\nshHereDoc30: '' # shRedir\nshHereDoc31: '' # shRedir\nshHereDoc32: '' # shRedir\n",
-        "vim-signify": "# mhinz/vim-signify\nSignifyLineAdd: ''\nSignifyLineDelete: ''\nSignifyLineDeleteFirstLine: ''\nSignifyLineChange: ''\nSignifyLineChangeDelete: ''\n\nSignifySignAdd: ''\nSignifySignDelete: ''\nSignifySignDeleteFirstLine: ''\nSignifySignChange: ''\nSignifySignChangeDelete: ''\n",
-        "viminfo": "viminfoComment: '' # Comment\nviminfoError: '' # Error\nviminfoStatement: '' # Statement\n"
-    },
-    "mustaches": {
-        "colorscheme": "<% const info = it.info; %>\n\"\"\n\" Colorscheme: <% info.name %>\n<% if(it.info.description) { %>\" Description: <%= it.info.description %>\n<% } %>\n<% if(it.info.url){ %>\" URL: <%= it.info.url %>\n<% } %>\n<% if(it.info.author){ %>\" Author: <%= it.info.author %>\n<% } %>\n<% if(it.info.license){%>\" License: <%= it.info.license %>\n<% } %>\n\"\"\n\nset background=<%= it.info.background %>\n\nhi clear\n\nif exists(\"syntax_on\")\n  syntax reset\nendif\nlet g:colors_name=\"<%= it.info.name %>\"\n\n\nlet Italic = \"\"\nif exists('g:<%= it.info.name %>_italic')\n  let Italic = \"italic\"\nendif\nlet g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)\n\nlet Bold = \"\"\nif exists('g:<%= info.name %>_bold')\n  let Bold = \"bold\"\nendif\n\nlet g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)\n\n<% Object.keys(it.stacks).forEach(function (key) {%>\n  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>\n<%- if(link){ -%>\nhi link <%=key%> <%=link%>\n<%- } else { -%>\nhi <%=key%>\n<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>\n<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>\n<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>\n<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>\n<% } %>\n\n<% }) %>\n\n<% if(it.term.color_0){ %>\nif has('terminal')\n  let g:terminal_ansi_colors = [\n  \\ \"<%= it.term.color_0 %>\",\n  \\ \"<%= it.term.color_1 %>\",\n  \\ \"<%= it.term.color_2 %>\",\n  \\ \"<%= it.term.color_3 %>\",\n  \\ \"<%= it.term.color_4 %>\",\n  \\ \"<%= it.term.color_5 %>\",\n  \\ \"<%= it.term.color_6 %>\",\n  \\ \"<%= it.term.color_7 %>\",\n  \\ \"<%= it.term.color_8 %>\",\n  \\ \"<%= it.term.color_9 %>\",\n  \\ \"<%= it.term.color_10 %>\",\n  \\ \"<%= it.term.color_11 %>\",\n  \\ \"<%= it.term.color_12 %>\",\n  \\ \"<%= it.term.color_13 %>\",\n  \\ \"<%= it.term.color_14 %>\",\n  \\ \"<%= it.term.color_15 %>\"\n  \\ ]\nendif\n\nif has('nvim')\n<% Object.keys(it.term).forEach(function (key) { %>\n  let g:terminal_<%= key %> = \"<%= it.term[key] %>\"\n<% }) %>\nendif\n<% } %>\n",
-        "lightline": "<% const info = it.info; %>\n\"\"\n\" Lightline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){ %>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){ %>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){ %>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet s:p = {\"normal\": {}, \"inactive\": {}, \"insert\": {}, \"replace\": {}, \"visual\": {}, \"tabline\": {} }\n\nlet s:p.normal.left = [[[\"<%= it.normal1.fg.hex %>\", <%= it.normal1.fg.xterm %>], [\"<%= it.normal1.bg.hex %>\", <%= it.normal1.bg.xterm %>]], [[\"<%= it.normal2.fg.hex %>\", <%= it.normal2.fg.xterm %>], [\"<%= it.normal2.bg.hex %>\", <%= it.normal2.bg.xterm %>]]]\nlet s:p.normal.middle = [[[\"<%= it.normal3.fg.hex %>\", <%= it.normal3.fg.xterm %>], [\"<%= it.normal3.bg.hex %>\", <%= it.normal3.bg.xterm %>]]]\nlet s:p.normal.right = [[[\"<%= it.normal4.fg.hex %>\", <%= it.normal4.fg.xterm %>], [\"<%= it.normal4.bg.hex %>\", <%= it.normal4.bg.xterm %>]], [[\"<%= it.normal5.fg.hex %>\", <%= it.normal5.fg.xterm %>], [\"<%= it.normal5.bg.hex %>\", <%= it.normal5.bg.xterm %>]]]\nlet s:p.normal.error = [[[\"<%= it.normalError.fg.hex %>\", <%= it.normalError.fg.xterm %>], [\"<%= it.normalError.bg.hex %>\", <%= it.normalError.bg.xterm %>]]]\nlet s:p.normal.warning = [[[\"<%= it.normalWarning.fg.hex %>\", <%= it.normalWarning.fg.xterm %>], [\"<%= it.normalWarning.bg.hex %>\", <%= it.normalWarning.bg.xterm %>]]]\n\nlet s:p.inactive.left = [[[\"<%= it.inactive1.fg.hex %>\", <%= it.inactive1.fg.xterm %>], [\"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.bg.xterm %>]], [[\"<%= it.inactive2.fg.hex %>\", <%= it.inactive2.fg.xterm %>], [\"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.bg.xterm %>]]]\nlet s:p.inactive.middle = [[[\"<%= it.inactive3.fg.hex %>\", <%= it.inactive3.fg.xterm %>], [\"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.bg.xterm %>]]]\nlet s:p.inactive.right = [[[\"<%= it.inactive4.fg.hex %>\", <%= it.inactive4.fg.xterm %>], [\"<%= it.inactive4.bg.hex %>\", <%= it.inactive4.bg.xterm %>]], [[\"<%= it.inactive5.fg.hex %>\", <%= it.inactive5.fg.xterm %>], [\"<%= it.inactive5.bg.hex %>\", <%= it.inactive5.bg.xterm %>]]]\n\nlet s:p.insert.left = [[[\"<%= it.insert1.fg.hex %>\", <%= it.insert1.fg.xterm %>], [\"<%= it.insert1.bg.hex %>\", <%= it.insert1.bg.xterm %>]], [[\"<%= it.insert2.fg.hex %>\", <%= it.insert2.fg.xterm %>], [\"<%= it.insert2.bg.hex %>\", <%= it.insert2.bg.xterm %>]]]\nlet s:p.insert.middle = [[[\"<%= it.insert3.fg.hex %>\", <%= it.insert3.fg.xterm %>], [\"<%= it.insert3.bg.hex %>\", <%= it.insert3.bg.xterm %>]]]\nlet s:p.insert.right = [[[\"<%= it.insert4.fg.hex %>\", <%= it.insert4.fg.xterm %>], [\"<%= it.insert4.bg.hex %>\", <%= it.insert4.bg.xterm %>]], [[\"<%= it.insert5.fg.hex %>\", <%= it.insert5.fg.xterm %>], [\"<%= it.insert5.bg.hex %>\", <%= it.insert5.bg.xterm %>]]]\n\nlet s:p.replace.left = [[[\"<%= it.replace1.fg.hex %>\", <%= it.replace1.fg.xterm %>], [\"<%= it.replace1.bg.hex %>\", <%= it.replace1.bg.xterm %>]], [[\"<%= it.replace2.fg.hex %>\", <%= it.replace2.fg.xterm %>], [\"<%= it.replace2.bg.hex %>\", <%= it.replace2.bg.xterm %>]]]\nlet s:p.replace.middle = [[[\"<%= it.replace3.fg.hex %>\", <%= it.replace3.fg.xterm %>], [\"<%= it.replace3.bg.hex %>\", <%= it.replace3.bg.xterm %>]]]\nlet s:p.replace.right = [[[\"<%= it.replace4.fg.hex %>\", <%= it.replace4.fg.xterm %>], [\"<%= it.replace4.bg.hex %>\", <%= it.replace4.bg.xterm %>]], [[\"<%= it.replace5.fg.hex %>\", <%= it.replace5.fg.xterm %>], [\"<%= it.replace5.bg.hex %>\", <%= it.replace5.bg.xterm %>]]]\n\nlet s:p.visual.left = [[[\"<%= it.visual1.fg.hex %>\", <%= it.visual1.fg.xterm %>], [\"<%= it.visual1.bg.hex %>\", <%= it.visual1.bg.xterm %>]], [[\"<%= it.visual2.fg.hex %>\", <%= it.visual2.fg.xterm %>], [\"<%= it.visual2.bg.hex %>\", <%= it.visual2.bg.xterm %>]]]\nlet s:p.visual.middle = [[[\"<%= it.visual3.fg.hex %>\", <%= it.visual3.fg.xterm %>], [\"<%= it.visual3.bg.hex %>\", <%= it.visual3.bg.xterm %>]]]\nlet s:p.visual.right = [[[\"<%= it.visual4.fg.hex %>\", <%= it.visual4.fg.xterm %>], [\"<%= it.visual4.bg.hex %>\", <%= it.visual4.bg.xterm %>]], [[\"<%= it.visual5.fg.hex %>\", <%= it.visual5.fg.xterm %>], [\"<%= it.visual5.bg.hex %>\", <%= it.visual5.bg.xterm %>]]]\n\nlet s:p.tabline.left = [[[\"<%= it.tablineLeft.fg.hex %>\", <%= it.tablineLeft.fg.xterm %>], [\"<%= it.tablineLeft.bg.hex %>\", <%= it.tablineLeft.bg.xterm %>]]]\nlet s:p.tabline.tabsel = [[[\"<%= it.tablineSelected.fg.hex %>\", <%= it.tablineSelected.fg.xterm %>], [\"<%= it.tablineSelected.bg.hex %>\", <%= it.tablineSelected.bg.xterm %>]]]\nlet s:p.tabline.middle = [[[\"<%= it.tablineMiddle.fg.hex %>\", <%= it.tablineMiddle.fg.xterm %>], [\"<%= it.tablineMiddle.bg.hex %>\", <%= it.tablineMiddle.bg.xterm %>]]]\nlet s:p.tabline.right = [[[\"<%= it.tablineRight.fg.hex %>\", <%= it.tablineRight.fg.xterm %>], [\"<%= it.tablineRight.bg.hex %>\", <%= it.tablineRight.bg.xterm %>]]]\n\nlet g:lightline#colorscheme#<%= info.name %>#palette = lightline#colorscheme#flatten(s:p)\n",
-        "project": "name: '<%= it.name %>'\nversion: '<%= it.version %>'\nlicense: '<%= it.license %>'\nauthor: '<%= it.author %>'\nurl: '<%= it.url %>'\ndescription: '<%= it.description %>'\ncolorschemes:\n- name: '<%= it.name %>'\n  background: 'dark'\n  palette: '<%= it.name %>'\n",
-        "airline": "<% const info = it.info; %>\n\"\"\n\" Airline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){%>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){%>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){%>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet g:airline#themes#<%= info.name %>#palette = {}\n\nlet s:normal1 = [ \"<%= it.normal1.fg.hex %>\", \"<%= it.normal1.bg.hex %>\", <%= it.normal1.fg.xterm %>, <%= it.normal1.bg.xterm %> ]\nlet s:normal2 = [ \"<%= it.normal2.fg.hex %>\", \"<%= it.normal2.bg.hex %>\", <%= it.normal2.fg.xterm %>, <%= it.normal2.bg.xterm %> ]\nlet s:normal3 = [ \"<%= it.normal3.fg.hex %>\", \"<%= it.normal3.bg.hex %>\", <%= it.normal3.fg.xterm %>, <%= it.normal3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)\n\nlet s:insert1 = [ \"<%= it.insert1.fg.hex %>\", \"<%= it.insert1.bg.hex %>\", <%= it.insert1.fg.xterm %>, <%= it.insert1.bg.xterm %> ]\nlet s:insert2 = [ \"<%= it.insert2.fg.hex %>\", \"<%= it.insert2.bg.hex %>\", <%= it.insert2.fg.xterm %>, <%= it.insert2.bg.xterm %> ]\nlet s:insert3 = [ \"<%= it.insert3.fg.hex %>\", \"<%= it.insert3.bg.hex %>\", <%= it.insert3.fg.xterm %>, <%= it.insert3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)\n\nlet s:replace1 = [ \"<%= it.replace1.fg.hex %>\", \"<%= it.replace1.bg.hex %>\", <%= it.replace1.fg.xterm %>, <%= it.replace1.bg.xterm %> ]\nlet s:replace2 = [ \"<%= it.replace2.fg.hex %>\", \"<%= it.replace2.bg.hex %>\", <%= it.replace2.fg.xterm %>, <%= it.replace2.bg.xterm %> ]\nlet s:replace3 = [ \"<%= it.replace3.fg.hex %>\", \"<%= it.replace3.bg.hex %>\", <%= it.replace3.fg.xterm %>, <%= it.replace3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)\n\nlet s:visual1 = [ \"<%= it.visual1.fg.hex %>\", \"<%= it.visual1.bg.hex %>\", <%= it.visual1.fg.xterm %>, <%= it.visual1.bg.xterm %> ]\nlet s:visual2 = [ \"<%= it.visual2.fg.hex %>\", \"<%= it.visual2.bg.hex %>\", <%= it.visual2.fg.xterm %>, <%= it.visual2.bg.xterm %> ]\nlet s:visual3 = [ \"<%= it.visual3.fg.hex %>\", \"<%= it.visual3.bg.hex %>\", <%= it.visual3.fg.xterm %>, <%= it.visual3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)\n\nlet s:inactive1 = [ \"<%= it.inactive1.fg.hex %>\", \"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.fg.xterm %>, <%= it.inactive1.bg.xterm %> ]\nlet s:inactive2 = [ \"<%= it.inactive2.fg.hex %>\", \"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.fg.xterm %>, <%= it.inactive2.bg.xterm %> ]\nlet s:inactive3 = [ \"<%= it.inactive3.fg.hex %>\", \"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.fg.xterm %>, <%= it.inactive3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)\n\n<% if(it.ctrlp1){ %>\nif !get(g:, 'loaded_ctrlp', 0)\n  finish\nendif\n\nlet s:CP1 = [ \"<%= it.ctrlp1.fg.hex %>\", \"<%= it.ctrlp1.bg.hex %>\", <%= it.ctrlp1.fg.xterm %>, <%= it.ctrlp1.bg.xterm %> ]\nlet s:CP2 = [ \"<%= it.ctrlp2.fg.hex %>\", \"<%= it.ctrlp2.bg.hex %>\", <%= it.ctrlp2.fg.xterm %>, <%= it.ctrlp2.bg.xterm %> ]\nlet s:CP3 = [ \"<%= it.ctrlp3.fg.hex %>\", \"<%= it.ctrlp3.bg.hex %>\", <%= it.ctrlp3.fg.xterm %>, <%= it.ctrlp3.bg.xterm %> ]\n\nlet g:airline#themes#<%= it.info.name %>#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)\n<% } %>\n"
-    },
-    "addons": {
-        "lightline": "normal1: ''\nnormal2: ''\nnormal3: ''\nnormal4: ''\nnormal5: ''\nnormalError: ''\nnormalWarning: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninactive4: ''\ninactive5: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\ninsert4: ''\ninsert5: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nreplace4: ''\nreplace5: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nvisual4: ''\nvisual5: ''\ntablineLeft: ''\ntablineSelected: ''\ntablineMiddle: ''\ntablineRight: ''\n",
-        "terminal": "color_foreground: ''\ncolor_background: ''\ncolor_0: ''\ncolor_1: ''\ncolor_2: ''\ncolor_3: ''\ncolor_4: ''\ncolor_5: ''\ncolor_6: ''\ncolor_7: ''\ncolor_8: ''\ncolor_9: ''\ncolor_10: ''\ncolor_11: ''\ncolor_12: ''\ncolor_13: ''\ncolor_14: ''\ncolor_15: ''\n",
-        "airline": "normal1: ''\nnormal2: ''\nnormal3: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nctrlp1: '' # optional\nctrlp2: '' # optional\nctrlp3: '' # optional\n"
-    }
+    syntax,
+    mustaches,
+    addons
 };
-const tick = green("✓");
 function installTemplates(projectPath, templates) {
     templates.forEach((name)=>{
         const destination = resolve5(projectPath, "estilos/syntax", name);
@@ -11538,8 +11476,8 @@ function installTemplates(projectPath, templates) {
             console.error(err);
         }
     });
-    console.log(green(`Added ${templates.length} templates:`));
-    console.log(templates.map((name)=>name.slice(0, -4)).map((name)=>`${tick} ${name}\n`).join(""));
+    console.log(`%cAdded ${templates.length} templates:`, "color: green");
+    templates.map((name)=>`%c✓ %c${name.slice(0, -4)}`).forEach((line)=>console.log(line, "color: green", "color: default"));
 }
 const defaultPalette = "myblue: '#99ccff'";
 async function createProject(projectPath, noQuestions) {
@@ -11608,13 +11546,10 @@ async function createBoilerplate(projectPath, options) {
     installTemplates(projectPath, [
         "base.yml"
     ]);
-    console.log(green("✓  Your project is ready\n"));
+    console.log("%c✓  Your project is ready\n", "color: green");
 }
 async function renderConfigFile(options) {
     return await render(__default.mustaches["project"], options);
-}
-function isHexColor1(color) {
-    return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
 }
 function buildPalettes(paletteFiles, common = {}) {
     const commonPalette = buildMainPalette(common);
@@ -11628,32 +11563,28 @@ function buildPalettes(paletteFiles, common = {}) {
     return Object.fromEntries(paleteEntries);
 }
 function buildMainPalette(content) {
-    const colors = Object.keys(content).map((name)=>{
+    const colors = {};
+    for (const name of Object.keys(content)){
         const hexcolor = content[name].trim();
         if (!isHexColor1(hexcolor)) {
             crash("Wrong color in common palette", {
                 name
             });
         }
-        return [
-            name,
-            getColorObj(hexcolor)
-        ];
-    });
-    return Object.fromEntries(colors);
-}
-function getColorObj(hexcolor) {
-    return {
-        hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
-        xterm: hexterm(hexcolor).toString()
-    };
+        colors[name] = {
+            hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
+            xterm: hexterm(hexcolor).toString()
+        };
+    }
+    return colors;
 }
 function buildPalette(paletteFile, common) {
     const { filepath , content  } = paletteFile;
+    assertIsList(content, filepath);
     const palette = {
         filepath,
         name: basename5(filepath, ".yml"),
-        colors: {}
+        colors: structuredClone(common)
     };
     Object.entries(content).forEach(([name, value])=>{
         const hexcolor = value.trim();
@@ -11666,17 +11597,18 @@ function buildPalette(paletteFile, common) {
             palette.colors[name] = color;
             return;
         }
-        if (!isHexColor1(hexcolor)) crash("Wrong color", {
-            filepath,
-            name,
-            hexcolor
-        });
+        if (!isHexColor1(hexcolor)) {
+            crash("Wrong color", {
+                filepath,
+                name,
+                hexcolor
+            });
+        }
         palette.colors[name] = {
             hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
             xterm: hexterm(hexcolor).toString()
         };
     });
-    palette.colors = Object.assign({}, common, palette.colors);
     return palette;
 }
 function formatSyntaxFile(file) {
@@ -11808,21 +11740,13 @@ function loadProjectFiles(projectUrl) {
 }
 function loadYmlsInFolder(projectUrl, folder) {
     const folderUrl = resolve5(projectUrl, "estilos", folder);
-    return ymlsInFolder(folderUrl).map((filepath)=>loadYml(filepath));
-}
-function ymlsInFolder(folderPath, folder2) {
-    const finalPath = resolve5(folderPath, folder2 || "");
-    if (!existsSync1(finalPath)) return [];
-    return Array.from(Deno.readDirSync(finalPath)).filter((file)=>file.name.endsWith(".yml")).map((file)=>resolve5(finalPath, file.name));
+    if (!existsSync1(folderUrl)) return [];
+    return Array.from(Deno.readDirSync(folderUrl)).filter((file)=>file.name.endsWith(".yml")).map((file)=>resolve5(folderUrl, file.name)).map((filepath)=>loadYml(filepath));
 }
 function loadYml(folderPath, filename) {
     const filepath = resolve5(folderPath, filename || "");
     const content = parse4(Deno.readTextFileSync(filepath));
-    if (typeof content !== "object") {
-        crash("Content of file is not an object", {
-            filepath
-        });
-    }
+    assertIsObject(content, filepath);
     return {
         filepath,
         content
@@ -12026,7 +11950,7 @@ async function renderStatus(config, project, brand) {
         });
     }
     const syntax = syntaxFile.syntax;
-    const c = parseStatusColors(syntax, palette);
+    const ctx = parseStatusColors(syntax, palette);
     const info = {
         name: config.name,
         description: config.description,
@@ -12035,43 +11959,37 @@ async function renderStatus(config, project, brand) {
         license: project.config.license,
         estiloVersion: version
     };
-    const context = Object.assign(c, {
+    const context = Object.assign(ctx, {
         info
     });
     return await render(__default.mustaches[brand], context);
-}
-async function renderProject(project) {
-    const { config: projectConfig  } = project;
-    for (const config of projectConfig.colorschemes){
-        const rendered = await renderColorscheme(config, project);
-        writeScheme(rendered, config.name, project.projectUrl);
-    }
-    if (projectConfig.airline) {
-        for (const config1 of projectConfig.airline){
-            const rendered1 = await renderStatus(config1, project, "airline");
-            writeStatus("airline", rendered1, config1.name, project.projectUrl);
-        }
-    }
-    if (projectConfig.lightline) {
-        for (const config2 of projectConfig.lightline){
-            const rendered2 = await renderStatus(config2, project, "lightline");
-            writeStatus("lightline", rendered2, config2.name, project.projectUrl);
-        }
-    }
-    console.log(green("✓  Done, your theme is ready\n"));
 }
 const paths = {
     airline: "autoload/airline/themes",
     lightline: "autoload/lightline/colorscheme"
 };
-function writeScheme(txt, name, projectPath) {
-    const folderPath = resolve5(projectPath, "colors");
-    const filepath = resolve5(folderPath, name + ".vim");
-    ensureDirSync(folderPath);
-    Deno.writeTextFileSync(filepath, txt);
+async function renderProject(project) {
+    const { config: projectConfig  } = project;
+    for (const config of projectConfig.colorschemes){
+        const rendered = await renderColorscheme(config, project);
+        writeThing("colors", rendered, config.name, project.projectUrl);
+    }
+    if (projectConfig.airline) {
+        for (const config of projectConfig.airline){
+            const rendered = await renderStatus(config, project, "airline");
+            writeThing(paths.airline, rendered, config.name, project.projectUrl);
+        }
+    }
+    if (projectConfig.lightline) {
+        for (const config of projectConfig.lightline){
+            const rendered = await renderStatus(config, project, "lightline");
+            writeThing(paths.lightline, rendered, config.name, project.projectUrl);
+        }
+    }
+    console.log("%c✓  Done, your theme is ready\n", "color: green");
 }
-function writeStatus(kind, txt, name, projectPath) {
-    const folderPath = resolve5(projectPath, paths[kind]);
+function writeThing(folder, txt, name, projectPath) {
+    const folderPath = resolve5(projectPath, folder);
     const filepath = resolve5(folderPath, name + ".vim");
     ensureDirSync(folderPath);
     Deno.writeTextFileSync(filepath, txt);
@@ -12102,7 +12020,7 @@ function addStatus(projectPath, brand, styleName) {
     ensureDirSync(folderPath);
     const filepath = resolve5(folderPath, styleName + ".yml");
     Deno.writeTextFileSync(filepath, __default.addons[brand + ".yml"]);
-    console.log(green(`New ${brand} style: ${styleName}`));
+    console.log(`%cNew ${brand} style: ${styleName}`, "color: green");
     console.log(`==> ${filepath}`);
 }
 const estiloCommand = new Command();

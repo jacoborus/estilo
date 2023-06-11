@@ -1,12 +1,9 @@
-import { green, resolve } from "../../deps.ts";
+import { resolve } from "../../deps.ts";
 import assets from "../assets.ts";
-
-const tick = green("✓");
 
 export function installTemplates(projectPath: string, templates: string[]) {
   templates.forEach((name) => {
     const destination = resolve(projectPath, "estilos/syntax", name);
-    // TODO handle this error
     try {
       Deno.writeTextFileSync(destination, assets.syntax[name] as string);
     } catch (err) {
@@ -14,11 +11,8 @@ export function installTemplates(projectPath: string, templates: string[]) {
     }
   });
 
-  console.log(green(`Added ${templates.length} templates:`));
-  console.log(
-    templates
-      .map((name) => name.slice(0, -4))
-      .map((name) => `${tick} ${name}\n`)
-      .join(""),
-  );
+  console.log(`%cAdded ${templates.length} templates:`, "color: green");
+  templates
+    .map((name) => `%c✓ %c${name.slice(0, -4)}`)
+    .forEach((line) => console.log(line, "color: green", "color: default"));
 }

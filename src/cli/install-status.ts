@@ -1,6 +1,5 @@
 import {
   ensureDirSync,
-  green,
   Input,
   prompt,
   resolve,
@@ -21,9 +20,9 @@ export async function installStatus(
     return addStatus(projectPath, brand, styleName);
   }
 
-  const installedStyles = Array.from(
-    Deno.readDirSync(statusFolderPath),
-  ).map((n) => n.name.slice(0, -4));
+  const installedStyles = Array.from(Deno.readDirSync(statusFolderPath)).map(
+    (n) => n.name.slice(0, -4),
+  );
 
   const answers = await prompt([
     {
@@ -48,6 +47,6 @@ function addStatus(projectPath: string, brand: StatusBrand, styleName: string) {
   ensureDirSync(folderPath);
   const filepath = resolve(folderPath, styleName + ".yml");
   Deno.writeTextFileSync(filepath, assets.addons[brand + ".yml"] as string);
-  console.log(green(`New ${brand} style: ${styleName}`));
+  console.log(`%cNew ${brand} style: ${styleName}`, "color: green");
   console.log(`==> ${filepath}`);
 }

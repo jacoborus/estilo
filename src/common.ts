@@ -16,39 +16,10 @@ export interface Palette {
   colors: Record<string, ColorObj>;
 }
 
-export type StatusBrand = "airline" | "lightline";
-export type DataRenderStatus = Record<
-  string,
-  {
-    fg: ColorObj;
-    bg: ColorObj;
-  }
->;
-
-export type StatusStyles = Record<string, StatusStyle>;
-export interface StatusSyntax {
-  [index: string]: [string, string];
-}
-export interface StatusStyle {
-  name: string;
-  filepath: string;
-  syntax: StatusSyntax;
-}
-
-export type Palettes = Record<string, Palette>;
-export type PaletteConfig = Record<string, List>;
-
 export interface SchemeConfig {
   name: string;
   background: string;
   palette: string;
-  description?: string;
-}
-
-export interface StatusConfig {
-  name: string;
-  palette: string;
-  style: string;
   description?: string;
 }
 
@@ -65,20 +36,41 @@ export interface ProjectConfig {
   lightline: StatusConfig[];
 }
 
-export type ListFile = Record<string, List>;
-
 export interface Project {
   projectUrl: string;
   config: ProjectConfig;
-  palettes: Palettes;
+  palettes: Record<string, Palette>;
   syntax: SyntaxRule[];
   terminalSyntax: List;
-  airlineStyles: StatusStyles;
-  lightlineStyles: StatusStyles;
+  airlineStyles: Record<string, StatusStyle>;
+  lightlineStyles: Record<string, StatusStyle>;
 }
 
 export interface SyntaxRule {
   filepath: string;
   name: string;
   rule: string;
+}
+
+export type StatusBrand = "airline" | "lightline";
+export type DataRenderStatus = Record<
+  string,
+  {
+    fg: ColorObj;
+    bg: ColorObj;
+  }
+>;
+
+export interface StatusStyle {
+  name: string;
+  filepath: string;
+  syntax: StatusSyntax;
+}
+export type StatusSyntax = Record<string, [string, string]>;
+
+export interface StatusConfig {
+  name: string;
+  palette: string;
+  style: string;
+  description?: string;
 }
