@@ -1,7 +1,7 @@
 import { Command, HelpCommand } from "cliffy-command";
 import { resolve } from "path";
 
-import { existsSync, version } from "../util.ts";
+import { existsSync, version } from "../common.ts";
 import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
 import { loadProjectFiles } from "../load-project.ts";

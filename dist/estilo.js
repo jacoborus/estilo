@@ -11552,64 +11552,6 @@ const xtermcolors = [
     "e4e4e4",
     "eeeeee"
 ];
-function buildPalettes(paletteFiles, common = {}) {
-    const commonPalette = buildMainPalette(common);
-    const palettes = {};
-    paletteFiles.forEach((paletteFile)=>{
-        const palette = buildPalette(paletteFile, commonPalette);
-        palettes[palette.name] = palette;
-    });
-    return palettes;
-}
-function buildMainPalette(content) {
-    const colors = {};
-    for (const name of Object.keys(content)){
-        const hexcolor = content[name].trim();
-        if (!isHexColor(hexcolor)) {
-            crash("Wrong color in common palette", {
-                name
-            });
-        }
-        colors[name] = {
-            hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
-            xterm: hexterm(hexcolor).toString()
-        };
-    }
-    return colors;
-}
-function buildPalette(paletteFile, common) {
-    const { filepath , content  } = paletteFile;
-    assertIsList(content, filepath);
-    const palette = {
-        filepath,
-        name: basename2(filepath, ".yml"),
-        colors: structuredClone(common)
-    };
-    Object.entries(content).forEach(([name, value])=>{
-        const hexcolor = value.trim();
-        if (hexcolor.startsWith("@")) {
-            const propName = hexcolor.slice(1);
-            const color = common[propName];
-            if (!color) crash("Missing common color", {
-                color: propName
-            });
-            palette.colors[name] = color;
-            return;
-        }
-        if (!isHexColor(hexcolor)) {
-            crash("Wrong color", {
-                filepath,
-                name,
-                hexcolor
-            });
-        }
-        palette.colors[name] = {
-            hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
-            xterm: hexterm(hexcolor).toString()
-        };
-    });
-    return palette;
-}
 function formatSyntaxFile(file) {
     const filepath = file.filepath;
     const content = file.content;
@@ -11753,6 +11695,64 @@ function loadYml(folderPath, filename) {
         filepath,
         content
     };
+}
+function buildPalettes(paletteFiles, common = {}) {
+    const commonPalette = buildMainPalette(common);
+    const palettes = {};
+    paletteFiles.forEach((paletteFile)=>{
+        const palette = buildPalette(paletteFile, commonPalette);
+        palettes[palette.name] = palette;
+    });
+    return palettes;
+}
+function buildMainPalette(content) {
+    const colors = {};
+    for (const name of Object.keys(content)){
+        const hexcolor = content[name].trim();
+        if (!isHexColor(hexcolor)) {
+            crash("Wrong color in common palette", {
+                name
+            });
+        }
+        colors[name] = {
+            hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
+            xterm: hexterm(hexcolor).toString()
+        };
+    }
+    return colors;
+}
+function buildPalette(paletteFile, common) {
+    const { filepath , content  } = paletteFile;
+    assertIsList(content, filepath);
+    const palette = {
+        filepath,
+        name: basename2(filepath, ".yml"),
+        colors: structuredClone(common)
+    };
+    Object.entries(content).forEach(([name, value])=>{
+        const hexcolor = value.trim();
+        if (hexcolor.startsWith("@")) {
+            const propName = hexcolor.slice(1);
+            const color = common[propName];
+            if (!color) crash("Missing common color", {
+                color: propName
+            });
+            palette.colors[name] = color;
+            return;
+        }
+        if (!isHexColor(hexcolor)) {
+            crash("Wrong color", {
+                filepath,
+                name,
+                hexcolor
+            });
+        }
+        palette.colors[name] = {
+            hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
+            xterm: hexterm(hexcolor).toString()
+        };
+    });
+    return palette;
 }
 async function selectSyntax(projectPath, all = false) {
     const destFolder = resolve2(projectPath, "estilos/syntax");

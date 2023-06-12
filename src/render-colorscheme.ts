@@ -4,7 +4,7 @@ import { render } from "eta";
 import assets from "./assets.ts";
 
 import { crash } from "./crash.ts";
-import { isHexColor, version } from "./util.ts";
+import { isHexColor, version } from "./common.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {

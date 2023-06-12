@@ -1,6 +1,6 @@
 import { render } from "eta";
 
-import { version } from "./util.ts";
+import { version } from "./common.ts";
 import assets from "./assets.ts";
 import { crash } from "./crash.ts";
 

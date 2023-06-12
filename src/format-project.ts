@@ -8,7 +8,7 @@ import {
   YmlFile,
 } from "./types.ts";
 import { crash } from "./crash.ts";
-import { assertIsList } from "./util.ts";
+import { assertIsList } from "./common.ts";
 
 function formatSyntaxFile(file: YmlFile): SyntaxRule[] {
   const filepath = file.filepath;
