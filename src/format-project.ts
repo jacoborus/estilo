@@ -1,18 +1,21 @@
-import { basename } from "../deps.ts";
+import { basename } from "path";
+
 import {
   List,
   StatusBrand,
   StatusStyle,
-  StatusStyles,
   SyntaxRule,
-  TerminalSyntax,
   YmlFile,
-} from "./common.ts";
+} from "./types.ts";
 import { crash } from "./crash.ts";
+import { assertIsList } from "./common.ts";
 
 function formatSyntaxFile(file: YmlFile): SyntaxRule[] {
   const filepath = file.filepath;
-  return Object.entries(file.content as List)
+  const content = file.content;
+  assertIsList(content, filepath);
+
+  return Object.entries(content)
     .map(([name, value]) => ({
       filepath,
       name,
@@ -25,12 +28,13 @@ export function formatSyntax(syntaxFiles: YmlFile[]): SyntaxRule[] {
   return syntaxFiles.map((syntaxFile) => formatSyntaxFile(syntaxFile)).flat();
 }
 
-export function formatTerminal(data: List): TerminalSyntax {
-  return Object.fromEntries(
-    Object.keys(data)
-      .map((prop) => [prop, data[prop].trim()])
-      .filter(([_, colorname]) => colorname),
-  );
+export function formatTerminal(data: List): List {
+  const formattedData: List = {};
+  Object.keys(data).forEach((prop) => {
+    const colorname = data[prop].trim();
+    if (colorname) formattedData[prop] = colorname;
+  });
+  return formattedData;
 }
 
 const statusParts = {
@@ -89,12 +93,14 @@ const statusParts = {
 export function formatStatusStyles(
   statusFiles: YmlFile[],
   brand: StatusBrand,
-): StatusStyles {
-  const files = statusFiles.map(({ filepath, content }) => {
-    const style = formatStatusStyle(content as List, brand, filepath);
-    return [style.name, style];
+): Record<string, StatusStyle> {
+  const statusMap: Record<string, StatusStyle> = {};
+  statusFiles.forEach(({ filepath, content }) => {
+    assertIsList(content, filepath);
+    const style = formatStatusStyle(content, brand, filepath);
+    statusMap[style.name] = style;
   });
-  return Object.fromEntries(files);
+  return statusMap;
 }
 
 function formatStatusStyle(

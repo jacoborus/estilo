@@ -1,12 +1,31 @@
-import { existsSync, resolve } from "../deps.ts";
-import { List, Project, ProjectConfig } from "./common.ts";
-import { loadYml } from "./util.ts";
-import { buildPalettes } from "./build-palettes.ts";
+import { resolve } from "path";
+import { basename } from "path";
+import { parse as yamlParse } from "yaml";
+import { hexterm } from "hexterm";
+
+import {
+  ColorObj,
+  List,
+  Palette,
+  Project,
+  ProjectConfig,
+  YmlFile,
+} from "./types.ts";
+
 import {
   formatStatusStyles,
   formatSyntax,
   formatTerminal,
 } from "./format-project.ts";
+
+import {
+  assertIsList,
+  assertIsObject,
+  existsSync,
+  isHexColor,
+} from "./common.ts";
+
+import { crash } from "./crash.ts";
 
 export function loadProjectFiles(projectUrl: string): Project {
   const config = loadYml(projectUrl, "estilo.yml").content as ProjectConfig;
@@ -29,14 +48,89 @@ export function loadProjectFiles(projectUrl: string): Project {
 
 function loadYmlsInFolder(projectUrl: string, folder: string) {
   const folderUrl = resolve(projectUrl, "estilos", folder);
-  return ymlsInFolder(folderUrl).map((filepath) => loadYml(filepath));
+  if (!existsSync(folderUrl)) return [];
+  return Array.from(Deno.readDirSync(folderUrl))
+    .filter((file) => file.name.endsWith(".yml"))
+    .map((file) => resolve(folderUrl, file.name))
+    .map((filepath) => loadYml(filepath));
 }
 
-// returns a list of all the `.yml` filepaths contained inside folderpath
-function ymlsInFolder(folderPath: string, folder2?: string): string[] {
-  const finalPath = resolve(folderPath, folder2 || "");
-  if (!existsSync(finalPath)) return [];
-  return Array.from(Deno.readDirSync(finalPath))
-    .filter((file) => file.name.endsWith(".yml"))
-    .map((file) => resolve(finalPath, file.name));
+function loadYml(folderPath: string, filename?: string): YmlFile {
+  const filepath = resolve(folderPath, filename || "");
+  const content = yamlParse(Deno.readTextFileSync(filepath));
+  assertIsObject(content, filepath);
+  return { filepath, content };
+}
+
+function buildPalettes(
+  paletteFiles: YmlFile[],
+  common = {} as List,
+): Record<string, Palette> {
+  const commonPalette = buildMainPalette(common);
+
+  const palettes: Record<string, Palette> = {};
+
+  paletteFiles.forEach((paletteFile) => {
+    const palette = buildPalette(paletteFile, commonPalette);
+    palettes[palette.name] = palette;
+  });
+
+  return palettes;
+}
+
+function buildMainPalette(content: List): Record<string, ColorObj> {
+  const colors: Record<string, ColorObj> = {};
+
+  for (const name of Object.keys(content)) {
+    const hexcolor = content[name].trim();
+
+    if (!isHexColor(hexcolor)) {
+      crash("Wrong color in common palette", { name });
+    }
+
+    colors[name] = {
+      hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
+      xterm: hexterm(hexcolor).toString(),
+    };
+  }
+
+  return colors;
+}
+
+export function buildPalette(
+  paletteFile: YmlFile,
+  common: Record<string, ColorObj>,
+): Palette {
+  const { filepath, content } = paletteFile;
+
+  assertIsList(content, filepath);
+
+  const palette: Palette = {
+    filepath,
+    name: basename(filepath, ".yml"),
+    colors: structuredClone(common),
+  };
+
+  Object.entries(content).forEach(([name, value]) => {
+    const hexcolor = value.trim();
+
+    if (hexcolor.startsWith("@")) {
+      const propName = hexcolor.slice(1);
+      const color = common[propName];
+      if (!color) crash("Missing common color", { color: propName });
+      palette.colors[name] = color;
+      return;
+    }
+
+    if (!isHexColor(hexcolor)) {
+      crash("Wrong color", { filepath, name, hexcolor });
+    }
+
+    palette.colors[name] = {
+      hex: hexcolor.startsWith("#") ? hexcolor : "#" + hexcolor,
+      xterm: hexterm(hexcolor).toString(),
+    };
+  });
+
+  return palette;
 }

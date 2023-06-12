@@ -1,13 +1,9 @@
-import {
-  ensureDirSync,
-  green,
-  Input,
-  prompt,
-  resolve,
-  ValidateResult,
-} from "../../deps.ts";
-import { StatusBrand } from "../common.ts";
-import buckets from "../buckets.ts";
+import { resolve } from "path";
+import { ensureDirSync } from "fs";
+import { Input, prompt, ValidateResult } from "cliffy-prompt";
+
+import { StatusBrand } from "../types.ts";
+import assets from "../assets.ts";
 
 export async function installStatus(
   projectPath: string,
@@ -21,9 +17,9 @@ export async function installStatus(
     return addStatus(projectPath, brand, styleName);
   }
 
-  const installedStyles = Array.from(
-    Deno.readDirSync(statusFolderPath),
-  ).map((n) => n.name.slice(0, -4));
+  const installedStyles = Array.from(Deno.readDirSync(statusFolderPath)).map(
+    (n) => n.name.slice(0, -4),
+  );
 
   const answers = await prompt([
     {
@@ -47,7 +43,7 @@ function addStatus(projectPath: string, brand: StatusBrand, styleName: string) {
   const folderPath = resolve(projectPath, "estilos", brand);
   ensureDirSync(folderPath);
   const filepath = resolve(folderPath, styleName + ".yml");
-  Deno.writeTextFileSync(filepath, buckets.addons[brand + ".yml"] as string);
-  console.log(green(`New ${brand} style: ${styleName}`));
+  Deno.writeTextFileSync(filepath, assets.addons[brand + ".yml"] as string);
+  console.log(`%cNew ${brand} style: ${styleName}`, "color: green");
   console.log(`==> ${filepath}`);
 }

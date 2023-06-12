@@ -1,10 +1,7 @@
-import {
-  Command,
-  existsSync,
-  HelpCommand,
-  resolve,
-  version,
-} from "../../deps.ts";
+import { Command, HelpCommand } from "cliffy-command";
+import { resolve } from "path";
+
+import { existsSync, version } from "../common.ts";
 import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
 import { loadProjectFiles } from "../load-project.ts";
@@ -14,7 +11,7 @@ import { installStatus } from "./install-status.ts";
 
 const estiloCommand = new Command();
 
-const result = await estiloCommand
+await estiloCommand
   .command("help", new HelpCommand().global())
   .reset()
   .name("estilo")
@@ -39,25 +36,25 @@ const result = await estiloCommand
   .command("add-syntax")
   .description("Add syntax templates.")
   .option("-a, --all [all:boolean]", "Add add available syntax templates")
-  .action((options: Record<string, []>) => {
+  .action((options) => {
     selectSyntax(".", !!options.all);
   })
   .reset()
   .command("add-lightline [styleName]")
   .description("Add new Lightline style")
-  .action((_: unknown, styleName: string) => {
+  .action((_: unknown, styleName?: string) => {
     installStatus(".", "lightline", styleName);
   })
   .reset()
   .command("add-airline [styleName]")
   .description("Add new Airline style")
-  .action((_: unknown, styleName: string) => {
+  .action((_: unknown, styleName?: string) => {
     installStatus(".", "airline", styleName);
   })
   .reset()
   .parse(Deno.args);
 
-if (!Object.entries(result.options).length && result.cmd._name === "estilo") {
+if (!Object.entries(Deno.args).length) {
   estiloCommand.showHelp();
 }
 

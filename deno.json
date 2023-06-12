@@ -1,12 +1,20 @@
 {
   "test": {
     "files": {
-      "include": ["src/"],
-      "exclude": ["src/testdata/"]
+      "include": ["test/"]
     }
   },
   "tasks": {
-    "bundle": "deno run --allow-read --allow-write --allow-net --allow-env bundler.ts",
+    "bundle": "deno run --allow-read --allow-write --allow-net --allow-env https://deno.land/x/buckets@v0.7.0/buckets.ts estilo.ts > dist/estilo.js",
     "install": "deno install --allow-read --allow-write --allow-net --allow-env dist/estilo.js"
+  },
+  "imports": {
+    "eta": "https://deno.land/x/eta@v1.12.3/mod.ts",
+    "fs": "https://deno.land/std@0.191.0/fs/mod.ts",
+    "path": "https://deno.land/std@0.191.0/path/mod.ts",
+    "yaml": "https://deno.land/std@0.191.0/yaml/mod.ts",
+    "cliffy-prompt": "https://deno.land/x/cliffy@v0.25.5/prompt/mod.ts",
+    "cliffy-command": "https://deno.land/x/cliffy@v0.25.5/command/mod.ts",
+    "hexterm": "https://deno.land/x/hexterm@2.0.2/src/hexterm.ts"
   }
 }

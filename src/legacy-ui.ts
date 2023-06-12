@@ -1,6 +1,7 @@
 type UiStyle = "u" | "b" | "r" | "i" | "c" | "s";
 
 const uis = new Set(["u", "b", "r", "i", "c", "s"]);
+
 const uiValues = {
   u: "underline",
   b: "Bold",

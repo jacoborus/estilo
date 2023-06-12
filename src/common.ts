@@ -1,88 +1,39 @@
-export type List = Record<string, string>;
+import { crash } from "./crash.ts";
 
-export type YmlFile = {
-  filepath: string;
-  content: unknown;
-};
+export const version = "2.0.0-beta-7";
 
-export interface ColorObj {
-  hex: string;
-  xterm: string;
+export function isHexColor(color: string): boolean {
+  return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
 }
 
-export interface Palette {
-  name: string;
-  filepath: string;
-  colors: Record<string, ColorObj>;
-}
-
-export interface TerminalSyntax {
-  [index: string]: string;
-}
-
-export type StatusBrand = "airline" | "lightline";
-export type DataRenderStatus = Record<
-  string,
-  {
-    fg: ColorObj;
-    bg: ColorObj;
+export function assertIsObject(
+  input: unknown,
+  filepath: string,
+): asserts input is Record<string, string> {
+  if (typeof input !== "object" || input === null) {
+    crash("Content of file is not a list of strings", { filepath });
   }
->;
-
-export type StatusStyles = Record<string, StatusStyle>;
-export interface StatusSyntax {
-  [index: string]: [string, string];
-}
-export interface StatusStyle {
-  name: string;
-  filepath: string;
-  syntax: StatusSyntax;
 }
 
-export type Palettes = Record<string, Palette>;
-export type PaletteConfig = Record<string, List>;
-
-export interface SchemeConfig {
-  name: string;
-  background: string;
-  palette: string;
-  description?: string;
+export function assertIsList(
+  input: unknown,
+  filepath: string,
+): asserts input is Record<string, string> {
+  assertIsObject(input, filepath);
+  const content = input as Record<string, unknown>;
+  for (const key of Object.keys(input)) {
+    const value = content[key];
+    if (typeof value !== "string") {
+      crash("Content of file is not a list of strings", { filepath });
+    }
+  }
 }
 
-export interface StatusConfig {
-  name: string;
-  palette: string;
-  style: string;
-  description?: string;
-}
-
-export interface ProjectConfig {
-  version?: string;
-  author?: string;
-  name?: string;
-  url?: string;
-  license?: string;
-  description?: string;
-  commonPalette?: List;
-  colorschemes: SchemeConfig[];
-  airline: StatusConfig[];
-  lightline: StatusConfig[];
-}
-
-export type ListFile = Record<string, List>;
-
-export interface Project {
-  projectUrl: string;
-  config: ProjectConfig;
-  palettes: Palettes;
-  syntax: SyntaxRule[];
-  terminalSyntax: TerminalSyntax;
-  airlineStyles: StatusStyles;
-  lightlineStyles: StatusStyles;
-}
-
-export interface SyntaxRule {
-  filepath: string;
-  name: string;
-  rule: string;
+export function existsSync(path: string): boolean {
+  try {
+    Deno.statSync(path);
+  } catch (e) {
+    return !e;
+  }
+  return true;
 }

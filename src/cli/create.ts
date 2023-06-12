@@ -1,16 +1,10 @@
-import {
-  basename,
-  ensureDirSync,
-  green,
-  Input,
-  prompt,
-  render,
-  resolve,
-} from "../../deps.ts";
-
-import { List } from "../common.ts";
+import { basename, resolve } from "path";
+import { ensureDirSync } from "fs";
+import { Input, prompt } from "cliffy-prompt";
+import { render } from "eta";
+import { List } from "../types.ts";
 import { installTemplates } from "./install-templates.ts";
-import buckets from "../buckets.ts";
+import assets from "../assets.ts";
 
 interface ProjectOptions {
   name: string;
@@ -94,7 +88,7 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    buckets.addons["terminal.yml"] as string,
+    assets.addons["terminal.yml"] as string,
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
@@ -102,12 +96,12 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   );
   installTemplates(projectPath, ["base.yml"]);
 
-  console.log(green("✓  Your project is ready\n"));
+  console.log("%c✓  Your project is ready\n", "color: green");
 }
 
 async function renderConfigFile(options: ProjectOptions): Promise<string> {
-  return await render(
-    buckets.mustaches["project.ejs"] as string,
-    (options as unknown) as List,
-  ) as string;
+  return (await render(
+    assets.mustaches["project"] as string,
+    options as unknown as List,
+  )) as string;
 }

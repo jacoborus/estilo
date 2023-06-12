@@ -1,18 +1,20 @@
-import { hexterm, render, version } from "../deps.ts";
-import buckets from "./buckets.ts";
+import { hexterm } from "hexterm";
+import { render } from "eta";
+
+import assets from "./assets.ts";
 
 import { crash } from "./crash.ts";
-import { isHexColor } from "./util.ts";
+import { isHexColor, version } from "./common.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {
   ColorObj,
+  List,
   Palette,
   Project,
   SchemeConfig,
   SyntaxRule,
-  TerminalSyntax,
-} from "./common.ts";
+} from "./types.ts";
 
 type SyntaxValues = Record<string, SyntaxValue | LinkValue>;
 
@@ -39,7 +41,7 @@ export async function renderColorscheme(
     });
   }
 
-  return await render(buckets.mustaches["colorscheme.ejs"] as string, {
+  return (await render(assets.mustaches["colorscheme"] as string, {
     info: {
       name: config.name,
       description: config.description,
@@ -51,11 +53,12 @@ export async function renderColorscheme(
     },
     stacks: parseSyntaxColors(project.syntax, palette),
     term: parseTermColors(project.terminalSyntax, palette),
-  }) as string;
+  })) as string;
 }
 
-function parseTermColors(termSyntax: TerminalSyntax, palette: Palette) {
-  const values = Object.keys(termSyntax).map((prop) => {
+function parseTermColors(termSyntax: List, palette: Palette) {
+  const colors: Record<string, string> = {};
+  Object.keys(termSyntax).forEach((prop) => {
     const colorName = termSyntax[prop];
     const value = palette.colors[colorName];
     if (!value) {
@@ -65,9 +68,9 @@ function parseTermColors(termSyntax: TerminalSyntax, palette: Palette) {
         palette: palette.filepath,
       });
     }
-    return [prop, value.hex];
+    colors[prop] = value.hex;
   });
-  return Object.fromEntries(values);
+  return colors;
 }
 
 function parseSyntaxColors(
@@ -75,9 +78,11 @@ function parseSyntaxColors(
   palette: Palette,
 ): SyntaxValues {
   const values = {} as SyntaxValues;
+
   syntax.forEach((rule) => {
     const [fgColor, bgColor, ui, curlColor] = rule.rule.split(/\s+/);
     const filepath = rule.filepath;
+
     if (fgColor.startsWith("@")) {
       values[rule.name] = {
         link: fgColor.slice(1),
@@ -91,6 +96,7 @@ function parseSyntaxColors(
       };
     }
   });
+
   return values;
 }
 
