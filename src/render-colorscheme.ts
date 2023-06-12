@@ -1,8 +1,10 @@
-import { hexterm, render, version } from "../deps.ts";
+import { hexterm } from "hexterm";
+import { render } from "eta";
+
 import assets from "./assets.ts";
 
 import { crash } from "./crash.ts";
-import { isHexColor } from "./util.ts";
+import { isHexColor, version } from "./util.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {
@@ -12,7 +14,7 @@ import {
   Project,
   SchemeConfig,
   SyntaxRule,
-} from "./common.ts";
+} from "./types.ts";
 
 type SyntaxValues = Record<string, SyntaxValue | LinkValue>;
 
@@ -55,7 +57,8 @@ export async function renderColorscheme(
 }
 
 function parseTermColors(termSyntax: List, palette: Palette) {
-  const values = Object.keys(termSyntax).map((prop) => {
+  const colors: Record<string, string> = {};
+  Object.keys(termSyntax).forEach((prop) => {
     const colorName = termSyntax[prop];
     const value = palette.colors[colorName];
     if (!value) {
@@ -65,9 +68,9 @@ function parseTermColors(termSyntax: List, palette: Palette) {
         palette: palette.filepath,
       });
     }
-    return [prop, value.hex];
+    colors[prop] = value.hex;
   });
-  return Object.fromEntries(values);
+  return colors;
 }
 
 function parseSyntaxColors(

@@ -1,11 +1,8 @@
-import {
-  ensureDirSync,
-  Input,
-  prompt,
-  resolve,
-  ValidateResult,
-} from "../../deps.ts";
-import { StatusBrand } from "../common.ts";
+import { resolve } from "path";
+import { ensureDirSync } from "fs";
+import { Input, prompt, ValidateResult } from "cliffy-prompt";
+
+import { StatusBrand } from "../types.ts";
 import assets from "../assets.ts";
 
 export async function installStatus(

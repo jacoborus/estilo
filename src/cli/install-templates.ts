@@ -1,4 +1,5 @@
-import { resolve } from "../../deps.ts";
+import { resolve } from "path";
+
 import assets from "../assets.ts";
 
 export function installTemplates(projectPath: string, templates: string[]) {

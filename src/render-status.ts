@@ -1,4 +1,6 @@
-import { render, version } from "../deps.ts";
+import { render } from "eta";
+
+import { version } from "./util.ts";
 import assets from "./assets.ts";
 import { crash } from "./crash.ts";
 
@@ -9,7 +11,7 @@ import {
   StatusBrand,
   StatusConfig,
   StatusSyntax,
-} from "./common.ts";
+} from "./types.ts";
 
 function parseStatusColors(
   syntax: StatusSyntax,

@@ -1,4 +1,6 @@
-import { Checkbox, prompt, resolve } from "../../deps.ts";
+import { resolve } from "path";
+import { Checkbox, prompt } from "cliffy-prompt";
+
 import assets from "../assets.ts";
 import { installTemplates } from "./install-templates.ts";
 

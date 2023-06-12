@@ -1,13 +1,8 @@
-import {
-  basename,
-  ensureDirSync,
-  Input,
-  prompt,
-  render,
-  resolve,
-} from "../../deps.ts";
-
-import { List } from "../common.ts";
+import { basename, resolve } from "path";
+import { ensureDirSync } from "fs";
+import { Input, prompt } from "cliffy-prompt";
+import { render } from "eta";
+import { List } from "../types.ts";
 import { installTemplates } from "./install-templates.ts";
 import assets from "../assets.ts";
 

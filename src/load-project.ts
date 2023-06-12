@@ -1,5 +1,6 @@
-import { resolve, yamlParse } from "../deps.ts";
-import { List, Project, ProjectConfig, YmlFile } from "./common.ts";
+import { resolve } from "path";
+import { parse as yamlParse } from "yaml";
+import { List, Project, ProjectConfig, YmlFile } from "./types.ts";
 import { buildPalettes } from "./build-palettes.ts";
 import { assertIsObject, existsSync } from "./util.ts";
 import {

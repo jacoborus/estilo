@@ -1,5 +1,7 @@
 import { crash } from "./crash.ts";
 
+export const version = "2.0.0-beta-7";
+
 export function isHexColor(color: string): boolean {
   return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
 }

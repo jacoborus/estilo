@@ -1,5 +1,7 @@
-import { ensureDirSync, resolve } from "../deps.ts";
-import { Project } from "./common.ts";
+import { ensureDirSync } from "fs";
+import { resolve } from "path";
+
+import { Project } from "./types.ts";
 import { renderColorscheme } from "./render-colorscheme.ts";
 import { renderStatus } from "./render-status.ts";
 

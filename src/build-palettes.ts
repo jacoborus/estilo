@@ -1,6 +1,8 @@
-import { basename, hexterm } from "../deps.ts";
+import { basename } from "path";
+import { hexterm } from "hexterm";
+
 import { assertIsList, isHexColor } from "./util.ts";
-import { ColorObj, List, Palette, YmlFile } from "./common.ts";
+import { ColorObj, List, Palette, YmlFile } from "./types.ts";
 import { crash } from "./crash.ts";
 
 export function buildPalettes(
@@ -9,12 +11,14 @@ export function buildPalettes(
 ): Record<string, Palette> {
   const commonPalette = buildMainPalette(common);
 
-  const paleteEntries = paletteFiles.map((paletteFile) => {
+  const palettes: Record<string, Palette> = {};
+
+  paletteFiles.forEach((paletteFile) => {
     const palette = buildPalette(paletteFile, commonPalette);
-    return [palette.name, palette];
+    palettes[palette.name] = palette;
   });
 
-  return Object.fromEntries(paleteEntries);
+  return palettes;
 }
 
 function buildMainPalette(content: List): Record<string, ColorObj> {

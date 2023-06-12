@@ -1,5 +1,5 @@
 // is-deno-bucket
-import { basename, extname, resolve } from "../deps.ts";
+import { basename, extname, resolve } from "path";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
@@ -10,16 +10,18 @@ const mustaches = loadFolder(resolve(__dirname, "../assets/mustaches"));
 export default { syntax, mustaches, addons };
 
 function loadFolder(folderPath: string): Record<string, string> {
-  const files = Array.from(Deno.readDirSync(folderPath))
+  const fileNames = Array.from(Deno.readDirSync(folderPath))
     .filter(({ isFile, isSymlink }) => isFile && !isSymlink)
     .map(({ name }) => name);
 
-  return Object.fromEntries(
-    files.map((file) => {
-      const fullPath = resolve(folderPath, file);
-      return [removeExt(file), Deno.readTextFileSync(fullPath)];
-    }),
-  );
+  const files: Record<string, string> = {};
+  fileNames.forEach((file) => {
+    const fullPath = resolve(folderPath, file);
+    const name = removeExt(file);
+    const content = Deno.readTextFileSync(fullPath);
+    files[name] = content;
+  });
+  return files;
 }
 
 function removeExt(path: string): string {
