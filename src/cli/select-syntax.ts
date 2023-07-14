@@ -29,9 +29,8 @@ function getMissingTemplates(libFiles: string[], destFiles: string[]) {
 async function askForTemplates(libFiles: string[], destFiles: string[]) {
   const options = libFiles.map((value) => {
     const disabled = destFiles.includes(value);
-    const name = value.slice(0, -4);
     return {
-      name: name + (disabled ? " (installed)" : ""),
+      name: value + (disabled ? " (installed)" : ""),
       value,
       disabled,
     };
