@@ -88,13 +88,13 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    assets.addons["terminal.yml"] as string,
+    assets.addons["terminal"] as string,
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
     defaultPalette,
   );
-  installTemplates(projectPath, ["base.yml"]);
+  installTemplates(projectPath, ["base"]);
 
   console.log("%c✓  Your project is ready\n", "color: green");
 }
