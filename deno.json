@@ -9,7 +9,7 @@
   "tasks": {
     "bundle-assets": "deno run --allow-read --allow-write src/bundle-assets.ts",
     "bundle": "deno bundle --config deno.json estilo.ts dist/estilo.js",
-    "install": "deno install --allow-read --allow-write --allow-net --allow-env estilo.ts"
+    "install": "deno task bundle && deno install --allow-read --allow-write --allow-net --allow-env dist/estilo.js"
   },
   "imports": {
     "eta": "https://deno.land/x/eta@v1.12.3/mod.ts",
