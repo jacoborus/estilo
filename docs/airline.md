@@ -3,15 +3,8 @@
 ## Creating styles
 
 Before creating the airline theme you need at least one color palette in
-`estilos/palettes` folder. Then proceed to add the blank airline template from
-the command line:
-
-```sh
-estilo add-airline
-```
-
-This command will create a style file in `estilos/airline` directory of your
-project. Open it, it will look like this:
+`estilos/palettes` directory. Then create your airline style as a `.yml`
+file inside `estilos/airline` folder, and paste this content:
 
 ```yml
 normal1: ''
@@ -29,6 +22,9 @@ replace3: ''
 visual1: ''
 visual2: ''
 visual3: ''
+ctrlp1: '' # optional
+ctrlp2: '' # optional
+ctrlp3: '' # optional
 ```
 
 Every property in the template is composed by a name and a number, they
