@@ -2,7 +2,7 @@ import { basename, extname, resolve } from "path";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
-const syntax = loadFolder(resolve(__dirname, "../assets/syntax"));
+const syntax = loadFolder(resolve(__dirname, "../assets/syntax-base"));
 const addons = loadFolder(resolve(__dirname, "../assets/addons"));
 const mustaches = loadFolder(resolve(__dirname, "../assets/mustaches"));
 
@@ -10,7 +10,7 @@ const assets = { syntax, mustaches, addons };
 
 Deno.writeTextFileSync(
   resolve(__dirname, "./assets.ts"),
-  "export default " + JSON.stringify(assets, null, 2)
+  "export default " + JSON.stringify(assets, null, 2),
 );
 
 function loadFolder(folderPath: string): Record<string, string> {
