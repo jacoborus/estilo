@@ -5,9 +5,7 @@ import { existsSync, version } from "../common.ts";
 import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
 import { loadProjectFiles } from "../load-project.ts";
-import { selectSyntax } from "./select-syntax.ts";
 import { renderProject } from "../render-project.ts";
-import { installStatus } from "./install-status.ts";
 
 const estiloCommand = new Command();
 
@@ -31,25 +29,6 @@ await estiloCommand
     checkProject(projectPath);
     const project = loadProjectFiles(projectPath);
     renderProject(project);
-  })
-  .reset()
-  .command("add-syntax")
-  .description("Add syntax templates.")
-  .option("-a, --all [all:boolean]", "Add add available syntax templates")
-  .action((options) => {
-    selectSyntax(".", !!options.all);
-  })
-  .reset()
-  .command("add-lightline [styleName]")
-  .description("Add new Lightline style")
-  .action((_: unknown, styleName?: string) => {
-    installStatus(".", "lightline", styleName);
-  })
-  .reset()
-  .command("add-airline [styleName]")
-  .description("Add new Airline style")
-  .action((_: unknown, styleName?: string) => {
-    installStatus(".", "airline", styleName);
   })
   .reset()
   .parse(Deno.args);

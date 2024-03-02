@@ -94,7 +94,7 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
     resolve(palettesFolder, options.name + ".yml"),
     defaultPalette,
   );
-  installTemplates(projectPath, ["base"]);
+  installTemplates(projectPath, ["base", "treesitter"]);
 
   console.log("%c✓  Your project is ready\n", "color: green");
 }

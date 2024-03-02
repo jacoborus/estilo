@@ -5508,675 +5508,6 @@ class GenericInput extends GenericPrompt {
         }
     }
 }
-class GenericList extends GenericInput {
-    parentOptions = [];
-    get selectedOption() {
-        return this.options.at(this.listIndex);
-    }
-    static separator(label = "------------") {
-        return {
-            name: label
-        };
-    }
-    getDefaultSettings({ groupIcon = true, groupOpenIcon = groupIcon, ...options }) {
-        const settings = super.getDefaultSettings(options);
-        return {
-            ...settings,
-            listPointer: options.listPointer ?? brightBlue(Figures.POINTER),
-            searchLabel: options.searchLabel ?? brightBlue(Figures.SEARCH),
-            backPointer: options.backPointer ?? brightBlue(Figures.POINTER_LEFT),
-            groupPointer: options.groupPointer ?? options.listPointer ?? brightBlue(Figures.POINTER),
-            groupIcon: !groupIcon ? false : typeof groupIcon === "string" ? groupIcon : Figures.FOLDER,
-            groupOpenIcon: !groupOpenIcon ? false : typeof groupOpenIcon === "string" ? groupOpenIcon : Figures.FOLDER_OPEN,
-            maxBreadcrumbItems: options.maxBreadcrumbItems ?? 5,
-            breadcrumbSeparator: options.breadcrumbSeparator ?? ` ${Figures.POINTER_SMALL} `,
-            maxRows: options.maxRows ?? 10,
-            options: this.mapOptions(options, options.options),
-            keys: {
-                next: options.search ? [
-                    "down"
-                ] : [
-                    "down",
-                    "d",
-                    "n",
-                    "2"
-                ],
-                previous: options.search ? [
-                    "up"
-                ] : [
-                    "up",
-                    "u",
-                    "p",
-                    "8"
-                ],
-                nextPage: [
-                    "pagedown",
-                    "right"
-                ],
-                previousPage: [
-                    "pageup",
-                    "left"
-                ],
-                open: [
-                    "right",
-                    "enter",
-                    "return"
-                ],
-                back: [
-                    "left",
-                    "escape",
-                    "enter",
-                    "return"
-                ],
-                ...settings.keys ?? {}
-            }
-        };
-    }
-    mapOption(options, option) {
-        if (isOption1(option)) {
-            return {
-                value: option.value,
-                name: typeof option.name === "undefined" ? options.format?.(option.value) ?? String(option.value) : option.name,
-                disabled: "disabled" in option && option.disabled === true,
-                indentLevel: 0
-            };
-        } else {
-            return {
-                value: null,
-                name: option.name,
-                disabled: true,
-                indentLevel: 0
-            };
-        }
-    }
-    mapOptionGroup(options, option, recursive = true) {
-        return {
-            name: option.name,
-            disabled: !!option.disabled,
-            indentLevel: 0,
-            options: recursive ? this.mapOptions(options, option.options) : []
-        };
-    }
-    match() {
-        const input = this.getCurrentInputValue().toLowerCase();
-        let options = this.getCurrentOptions().slice();
-        if (input.length) {
-            const matches = matchOptions(input, this.getCurrentOptions());
-            options = flatMatchedOptions(matches);
-        }
-        this.setOptions(options);
-    }
-    setOptions(options) {
-        this.options = [
-            ...options
-        ];
-        const parent = this.getParentOption();
-        if (parent && this.options[0] !== parent) {
-            this.options.unshift(parent);
-        }
-        this.listIndex = Math.max(0, Math.min(this.options.length - 1, this.listIndex));
-        this.listOffset = Math.max(0, Math.min(this.options.length - this.getListHeight(), this.listOffset));
-    }
-    getCurrentOptions() {
-        return this.getParentOption()?.options ?? this.settings.options;
-    }
-    getParentOption(index = -1) {
-        return this.parentOptions.at(index);
-    }
-    submitBackButton() {
-        const parentOption = this.parentOptions.pop();
-        if (!parentOption) {
-            return;
-        }
-        this.match();
-        this.listIndex = this.options.indexOf(parentOption);
-    }
-    submitGroupOption(selectedOption) {
-        this.parentOptions.push(selectedOption);
-        this.match();
-        this.listIndex = 1;
-    }
-    isBackButton(option) {
-        return option === this.getParentOption();
-    }
-    hasParent() {
-        return this.parentOptions.length > 0;
-    }
-    isSearching() {
-        return this.getCurrentInputValue() !== "";
-    }
-    message() {
-        let message = `${this.settings.indent}${this.settings.prefix}` + bold(this.settings.message) + this.defaults();
-        if (this.settings.search) {
-            const input = this.isSearchSelected() ? this.input() : dim(this.input());
-            message += " " + this.settings.searchLabel + " ";
-            this.cursor.x = stripColor(message).length + this.inputIndex + 1;
-            message += input;
-        }
-        return message;
-    }
-    body() {
-        return this.getList() + this.getInfo();
-    }
-    getInfo() {
-        if (!this.settings.info) {
-            return "";
-        }
-        const selected = this.listIndex + 1;
-        const hasGroups = this.options.some((option)=>isOptionGroup(option));
-        const groupActions = hasGroups ? [
-            [
-                "Open",
-                getFiguresByKeys(this.settings.keys.open ?? [])
-            ],
-            [
-                "Back",
-                getFiguresByKeys(this.settings.keys.back ?? [])
-            ]
-        ] : [];
-        const actions = [
-            [
-                "Next",
-                getFiguresByKeys(this.settings.keys.next ?? [])
-            ],
-            [
-                "Previous",
-                getFiguresByKeys(this.settings.keys.previous ?? [])
-            ],
-            ...groupActions,
-            [
-                "Next Page",
-                getFiguresByKeys(this.settings.keys.nextPage ?? [])
-            ],
-            [
-                "Previous Page",
-                getFiguresByKeys(this.settings.keys.previousPage ?? [])
-            ],
-            [
-                "Submit",
-                getFiguresByKeys(this.settings.keys.submit ?? [])
-            ]
-        ];
-        return "\n" + this.settings.indent + brightBlue(Figures.INFO) + bold(` ${selected}/${this.options.length} `) + actions.map((cur)=>`${cur[0]}: ${bold(cur[1].join(", "))}`).join(", ");
-    }
-    getList() {
-        const list = [];
-        const height = this.getListHeight();
-        for(let i = this.listOffset; i < this.listOffset + height; i++){
-            list.push(this.getListItem(this.options[i], this.listIndex === i));
-        }
-        if (!list.length) {
-            list.push(this.settings.indent + dim("  No matches..."));
-        }
-        return list.join("\n");
-    }
-    getListItem(option, isSelected) {
-        let line = this.getListItemIndent(option);
-        line += this.getListItemPointer(option, isSelected);
-        line += this.getListItemIcon(option);
-        line += this.getListItemLabel(option, isSelected);
-        return line;
-    }
-    getListItemIndent(option) {
-        const indentLevel = this.isSearching() ? option.indentLevel : this.hasParent() && !this.isBackButton(option) ? 1 : 0;
-        return this.settings.indent + " ".repeat(indentLevel);
-    }
-    getListItemPointer(option, isSelected) {
-        if (!isSelected) {
-            return "  ";
-        }
-        if (this.isBackButton(option)) {
-            return this.settings.backPointer + " ";
-        } else if (isOptionGroup(option)) {
-            return this.settings.groupPointer + " ";
-        }
-        return this.settings.listPointer + " ";
-    }
-    getListItemIcon(option) {
-        if (this.isBackButton(option)) {
-            return this.settings.groupOpenIcon ? this.settings.groupOpenIcon + " " : "";
-        } else if (isOptionGroup(option)) {
-            return this.settings.groupIcon ? this.settings.groupIcon + " " : "";
-        }
-        return "";
-    }
-    getListItemLabel(option, isSelected) {
-        let label = option.name;
-        if (this.isBackButton(option)) {
-            label = this.getBreadCrumb();
-            label = isSelected && !option.disabled ? label : yellow(label);
-        } else {
-            label = isSelected && !option.disabled ? this.highlight(label, (val)=>val) : this.highlight(label);
-        }
-        if (this.isBackButton(option) || isOptionGroup(option)) {
-            label = bold(label);
-        }
-        return label;
-    }
-    getBreadCrumb() {
-        if (!this.parentOptions.length || !this.settings.maxBreadcrumbItems) {
-            return "";
-        }
-        const names = this.parentOptions.map((option)=>option.name);
-        const breadCrumb = names.length > this.settings.maxBreadcrumbItems ? [
-            names[0],
-            "..",
-            ...names.slice(-this.settings.maxBreadcrumbItems + 1)
-        ] : names;
-        return breadCrumb.join(this.settings.breadcrumbSeparator);
-    }
-    getListHeight() {
-        return Math.min(this.options.length, this.settings.maxRows || this.options.length);
-    }
-    getListIndex(value) {
-        return Math.max(0, typeof value === "undefined" ? this.options.findIndex((option)=>!option.disabled) || 0 : this.options.findIndex((option)=>isOption1(option) && option.value === value) || 0);
-    }
-    getPageOffset(index) {
-        if (index === 0) {
-            return 0;
-        }
-        const height = this.getListHeight();
-        return Math.floor(index / height) * height;
-    }
-    getOptionByValue(value) {
-        const option = this.options.find((option)=>isOption1(option) && option.value === value);
-        return option && isOptionGroup(option) ? undefined : option;
-    }
-    read() {
-        if (!this.settings.search) {
-            this.settings.tty.cursorHide();
-        }
-        return super.read();
-    }
-    selectSearch() {
-        this.listIndex = -1;
-    }
-    isSearchSelected() {
-        return this.listIndex === -1;
-    }
-    async handleEvent(event) {
-        if (this.isKey(this.settings.keys, "open", event) && isOptionGroup(this.selectedOption) && !this.isBackButton(this.selectedOption) && !this.isSearchSelected()) {
-            this.submitGroupOption(this.selectedOption);
-        } else if (this.isKey(this.settings.keys, "back", event) && (this.isBackButton(this.selectedOption) || event.name === "escape") && !this.isSearchSelected()) {
-            this.submitBackButton();
-        } else if (this.isKey(this.settings.keys, "next", event)) {
-            this.selectNext();
-        } else if (this.isKey(this.settings.keys, "previous", event)) {
-            this.selectPrevious();
-        } else if (this.isKey(this.settings.keys, "nextPage", event) && !this.isSearchSelected()) {
-            this.selectNextPage();
-        } else if (this.isKey(this.settings.keys, "previousPage", event) && !this.isSearchSelected()) {
-            this.selectPreviousPage();
-        } else {
-            await super.handleEvent(event);
-        }
-    }
-    async submit() {
-        if (this.isSearchSelected()) {
-            this.selectNext();
-            return;
-        }
-        await super.submit();
-    }
-    moveCursorLeft() {
-        if (this.settings.search) {
-            super.moveCursorLeft();
-        }
-    }
-    moveCursorRight() {
-        if (this.settings.search) {
-            super.moveCursorRight();
-        }
-    }
-    deleteChar() {
-        if (this.settings.search) {
-            super.deleteChar();
-        }
-    }
-    deleteCharRight() {
-        if (this.settings.search) {
-            super.deleteCharRight();
-            this.match();
-        }
-    }
-    addChar(__char) {
-        if (this.settings.search) {
-            super.addChar(__char);
-            this.match();
-        }
-    }
-    selectPrevious(loop = true) {
-        if (this.options.length < 2 && !this.isSearchSelected()) {
-            return;
-        }
-        if (this.listIndex > 0) {
-            this.listIndex--;
-            if (this.listIndex < this.listOffset) {
-                this.listOffset--;
-            }
-            if (this.selectedOption?.disabled) {
-                this.selectPrevious();
-            }
-        } else if (this.settings.search && this.listIndex === 0 && this.getCurrentInputValue().length) {
-            this.listIndex = -1;
-        } else if (loop) {
-            this.listIndex = this.options.length - 1;
-            this.listOffset = this.options.length - this.getListHeight();
-            if (this.selectedOption?.disabled) {
-                this.selectPrevious();
-            }
-        }
-    }
-    selectNext(loop = true) {
-        if (this.options.length < 2 && !this.isSearchSelected()) {
-            return;
-        }
-        if (this.listIndex < this.options.length - 1) {
-            this.listIndex++;
-            if (this.listIndex >= this.listOffset + this.getListHeight()) {
-                this.listOffset++;
-            }
-            if (this.selectedOption?.disabled) {
-                this.selectNext();
-            }
-        } else if (this.settings.search && this.listIndex === this.options.length - 1 && this.getCurrentInputValue().length) {
-            this.listIndex = -1;
-        } else if (loop) {
-            this.listIndex = this.listOffset = 0;
-            if (this.selectedOption?.disabled) {
-                this.selectNext();
-            }
-        }
-    }
-    selectPreviousPage() {
-        if (this.options?.length) {
-            const height = this.getListHeight();
-            if (this.listOffset >= height) {
-                this.listIndex -= height;
-                this.listOffset -= height;
-            } else if (this.listOffset > 0) {
-                this.listIndex -= this.listOffset;
-                this.listOffset = 0;
-            } else {
-                this.listIndex = 0;
-            }
-            if (this.selectedOption?.disabled) {
-                this.selectPrevious(false);
-            }
-            if (this.selectedOption?.disabled) {
-                this.selectNext(false);
-            }
-        }
-    }
-    selectNextPage() {
-        if (this.options?.length) {
-            const height = this.getListHeight();
-            if (this.listOffset + height + height < this.options.length) {
-                this.listIndex += height;
-                this.listOffset += height;
-            } else if (this.listOffset + height < this.options.length) {
-                const offset = this.options.length - height;
-                this.listIndex += offset - this.listOffset;
-                this.listOffset = offset;
-            } else {
-                this.listIndex = this.options.length - 1;
-            }
-            if (this.selectedOption?.disabled) {
-                this.selectNext(false);
-            }
-            if (this.selectedOption?.disabled) {
-                this.selectPrevious(false);
-            }
-        }
-    }
-}
-function isOption1(option) {
-    return !!option && typeof option === "object" && "value" in option;
-}
-function isOptionGroup(option) {
-    return option !== null && typeof option === "object" && "options" in option && Array.isArray(option.options);
-}
-function matchOptions(searchInput, options) {
-    const matched = [];
-    for (const option of options){
-        if (isOptionGroup(option)) {
-            const children = matchOptions(searchInput, option.options).sort(sortByDistance);
-            if (children.length) {
-                matched.push({
-                    option,
-                    distance: Math.min(...children.map((item)=>item.distance)),
-                    children
-                });
-                continue;
-            }
-        }
-        if (matchOption(searchInput, option)) {
-            matched.push({
-                option,
-                distance: distance(option.name, searchInput),
-                children: []
-            });
-        }
-    }
-    return matched.sort(sortByDistance);
-    function sortByDistance(a, b) {
-        return a.distance - b.distance;
-    }
-}
-function matchOption(inputString, option) {
-    return matchInput(inputString, option.name) || isOption1(option) && option.name !== option.value && matchInput(inputString, String(option.value));
-}
-function matchInput(inputString, value) {
-    return stripColor(value).toLowerCase().includes(inputString);
-}
-function flatMatchedOptions(matches, indentLevel = 0, result = []) {
-    for (const { option, children } of matches){
-        option.indentLevel = indentLevel;
-        result.push(option);
-        flatMatchedOptions(children, indentLevel + 1, result);
-    }
-    return result;
-}
-class Checkbox extends GenericList {
-    settings;
-    options;
-    listIndex;
-    listOffset;
-    confirmSubmit = false;
-    static prompt(options) {
-        return new this(options).prompt();
-    }
-    static inject(value) {
-        GenericPrompt.inject(value);
-    }
-    constructor(options){
-        super();
-        this.settings = this.getDefaultSettings(options);
-        this.options = this.settings.options.slice();
-        this.listIndex = this.getListIndex();
-        this.listOffset = this.getPageOffset(this.listIndex);
-    }
-    getDefaultSettings(options) {
-        const settings = super.getDefaultSettings(options);
-        return {
-            confirmSubmit: true,
-            ...settings,
-            check: options.check ?? green(Figures.TICK),
-            uncheck: options.uncheck ?? red(Figures.CROSS),
-            partialCheck: options.partialCheck ?? green(Figures.RADIO_ON),
-            minOptions: options.minOptions ?? 0,
-            maxOptions: options.maxOptions ?? Infinity,
-            options: this.mapOptions(options, options.options),
-            keys: {
-                check: [
-                    "space"
-                ],
-                checkAll: [
-                    "a"
-                ],
-                ...settings.keys ?? {},
-                open: options.keys?.open ?? [
-                    "right"
-                ],
-                back: options.keys?.back ?? [
-                    "left",
-                    "escape"
-                ]
-            }
-        };
-    }
-    mapOptions(promptOptions, options) {
-        return options.map((option)=>typeof option === "string" || typeof option === "number" ? this.mapOption(promptOptions, {
-                value: option
-            }) : isCheckboxOptionGroup(option) ? this.mapOptionGroup(promptOptions, option) : this.mapOption(promptOptions, option));
-    }
-    mapOption(options, option) {
-        if (isOption1(option)) {
-            return {
-                ...super.mapOption(options, option),
-                checked: typeof option.checked === "undefined" && options.default && options.default.indexOf(option.value) !== -1 ? true : !!option.checked,
-                icon: typeof option.icon === "undefined" ? true : option.icon
-            };
-        } else {
-            return {
-                ...super.mapOption(options, option),
-                checked: false,
-                icon: false
-            };
-        }
-    }
-    mapOptionGroup(promptOptions, option) {
-        const options = this.mapOptions(promptOptions, option.options);
-        return {
-            ...super.mapOptionGroup(promptOptions, option, false),
-            get checked () {
-                return areAllChecked(options);
-            },
-            options,
-            icon: typeof option.icon === "undefined" ? true : option.icon
-        };
-    }
-    match() {
-        super.match();
-        if (this.isSearching()) {
-            this.selectSearch();
-        }
-    }
-    getListItemIcon(option) {
-        return this.getCheckboxIcon(option) + super.getListItemIcon(option);
-    }
-    getCheckboxIcon(option) {
-        if (!option.icon) {
-            return "";
-        }
-        const icon = option.checked ? this.settings.check + " " : isOptionGroup(option) && areSomeChecked(option.options) ? this.settings.partialCheck + " " : this.settings.uncheck + " ";
-        return option.disabled ? dim(icon) : icon;
-    }
-    getValue() {
-        return flatOptions(this.settings.options).filter((option)=>option.checked).map((option)=>option.value);
-    }
-    async handleEvent(event) {
-        const hasConfirmed = this.confirmSubmit;
-        this.confirmSubmit = false;
-        switch(true){
-            case this.isKey(this.settings.keys, "check", event) && !this.isSearchSelected():
-                this.checkValue();
-                break;
-            case this.isKey(this.settings.keys, "submit", event):
-                await this.submit(hasConfirmed);
-                break;
-            case event.ctrl && this.isKey(this.settings.keys, "checkAll", event):
-                this.checkAllOption();
-                break;
-            default:
-                await super.handleEvent(event);
-        }
-    }
-    hint() {
-        if (this.confirmSubmit) {
-            const info = this.isBackButton(this.selectedOption) ? ` To leave the current group press ${getFiguresByKeys(this.settings.keys.back ?? []).join(", ")}.` : isOptionGroup(this.selectedOption) ? ` To open the selected group press ${getFiguresByKeys(this.settings.keys.open ?? []).join(", ")}.` : ` To check or uncheck the selected option press ${getFiguresByKeys(this.settings.keys.check ?? []).join(", ")}.`;
-            return this.settings.indent + brightBlue(`Press ${getFiguresByKeys(this.settings.keys.submit ?? [])} again to submit.${info}`);
-        }
-        return super.hint();
-    }
-    async submit(hasConfirmed) {
-        if (!hasConfirmed && this.settings.confirmSubmit && !this.isSearchSelected()) {
-            this.confirmSubmit = true;
-            return;
-        }
-        await super.submit();
-    }
-    checkValue() {
-        const option = this.options.at(this.listIndex);
-        if (!option) {
-            this.setErrorMessage("No option available to select.");
-            return;
-        } else if (option.disabled) {
-            this.setErrorMessage("This option is disabled and cannot be changed.");
-            return;
-        }
-        this.checkOption(option, !option.checked);
-    }
-    checkOption(option, checked) {
-        if (isOption1(option)) {
-            option.checked = checked;
-        } else {
-            for (const childOption of option.options){
-                this.checkOption(childOption, checked);
-            }
-        }
-    }
-    checkAllOption() {
-        const checked = this.options.some((option)=>option.checked);
-        for (const option of this.options){
-            this.checkOption(option, !checked);
-        }
-    }
-    validate(value) {
-        const options = flatOptions(this.settings.options);
-        const isValidValue = Array.isArray(value) && value.every((val)=>options.findIndex((option)=>option.value === val) !== -1);
-        if (!isValidValue) {
-            return false;
-        }
-        if (value.length < this.settings.minOptions) {
-            return `The minimum number of options is ${this.settings.minOptions} but got ${value.length}.`;
-        }
-        if (value.length > this.settings.maxOptions) {
-            return `The maximum number of options is ${this.settings.maxOptions} but got ${value.length}.`;
-        }
-        return true;
-    }
-    transform(value) {
-        return value;
-    }
-    format(value) {
-        return value.map((val)=>this.settings.format?.(val) ?? this.getOptionByValue(val)?.name ?? String(val)).join(", ");
-    }
-}
-function areSomeChecked(options) {
-    return options.some((option)=>isOptionGroup(option) ? areSomeChecked(option.options) : option.checked);
-}
-function areAllChecked(options) {
-    return options.every((option)=>isOptionGroup(option) ? areAllChecked(option.options) : option.checked);
-}
-function flatOptions(options) {
-    return flat(options);
-    function flat(options, indentLevel = 0, opts = []) {
-        for (const option of options){
-            option.indentLevel = indentLevel;
-            if (isOption1(option)) {
-                opts.push(option);
-            }
-            if (isOptionGroup(option)) {
-                flat(option.options, ++indentLevel, opts);
-            }
-        }
-        return opts;
-    }
-}
-function isCheckboxOptionGroup(option) {
-    return isOptionGroup(option);
-}
 const sep2 = Deno.build.os === "windows" ? "\\" : "/";
 class GenericSuggestions extends GenericInput {
     suggestionsIndex = -1;
@@ -8592,52 +7923,53 @@ config.includeFile = includeFileHelper;
 config.filepathCache = {};
 const __default1 = {
     "syntax": {
-        "elm-vim": "elmTopLevelDecl: '' # Function\nelmTupleFunction: '' # Normal\nelmTodo: '' # Todo\nelmComment: '' # Comment\nelmLineComment: '' # Comment\nelmString: '' # String\nelmTripleString: '' # String\nelmChar: '' # String\nelmStringEscape: '' # Special\nelmInt: '' # Number\nelmFloat: '' # Float\nelmDelimiter: '' # Comment\nelmTypedef: '' # Keyword\nelmImport: '' # Keyword\nelmConditional: '' # Keyword\nelmAlias: '' # Keyword\nelmOperator: '' # Operator\nelmType: '' # Type\nelmNumberType: '' # Type\nelmBraces: '' # Delimiter\n",
-        "git": "gitDateHeader: '' # gitIdentityHeader\ngitIdentityHeader: '' # gitIdentityKeyword\ngitIdentityKeyword: '' # Label\ngitNotesHeader: '' # gitKeyword\ngitReflogHeader: '' # gitKeyword\ngitKeyword: '' # Keyword\ngitIdentity: '' # String\ngitEmailDelimiter: '' # Delimiter\ngitEmail: '' # Special\ngitDate: '' # Number\ngitMode: '' # Number\ngitHashAbbrev: '' # gitHash\ngitHash: '' # Identifier\ngitReflogMiddle: '' # gitReference\ngitReference: '' # Function\ngitStage: '' # gitType\ngitType: '' # Type\ngitDiffAdded: '' # diffAdded\ngitDiffRemoved: '' # diffRemoved\n",
-        "vim-javascript-syntax": "# jelera/vim-javascript-syntax\njavaScriptEndColons: '' # Operator\njavaScriptOpSymbols: '' # Operator\njavaScriptLogicSymbols: '' # Boolean\njavaScriptParens: '' # Operator\njavaScriptTemplateDelim: '' # Operator\njavaScriptDocComment: '' # Comment\njavaScriptDocTags: '' # Special\njavaScriptDocSeeTag: '' # Function\njavaScriptDocParam: '' # Function\njavaScriptString: '' # String\njavaScriptTemplateString: '' # String\njavaScriptFloat: '' # Number\njavaScriptPrototype: '' # Type\njavaScriptSpecial: '' # Special\njavaScriptSource: '' # Special\njavaScriptGlobalObjects: '' # Special\njavaScriptExceptions: '' # Special\njavaScriptParensErrA: '' # Error\njavaScriptParensErrB: '' # Error\njavaScriptParensErrC: '' # Error\njavaScriptDomErrNo: '' # Error\njavaScriptDomNodeConsts: '' # Constant\njavaScriptDomElemAttrs: '' # Label\njavaScriptDomElemFuncs: '' # Type\njavaScriptWebAPI: '' # Type\njavaScriptHtmlElemAttrs: '' # Label\njavaScriptHtmlElemFuncs: '' # Type\njavaScriptCssStyles: '' # Type\njavaScriptBrowserObjects: '' # Constant\njavaScriptDOMObjects: '' # Constant\njavaScriptDOMMethods: '' # Type\njavaScriptDOMProperties: '' # Label\njavaScriptAjaxObjects: '' # Constant\njavaScriptAjaxMethods: '' # Type\njavaScriptAjaxProperties: '' # Label\njavaScriptFuncKeyword: '' # Function\njavaScriptFuncDef: '' # PreProc\njavaScriptFuncExp: '' # Title\njavaScriptFuncArg: '' # Special\njavaScriptFuncComma: '' # Operator\njavaScriptFuncEq: '' # Operator\njavaScriptHtmlEvents: '' # Constant\njavaScriptHtmlElemProperties: '' # Label\njavaScriptEventListenerKeywords: '' # Type\njavaScriptPropietaryObjects: '' # Constant\n",
-        "gitrebase": "gitrebaseCommit: '' # gitrebaseHash\ngitrebaseHash: '' # Identifier\ngitrebasePick: '' # Statement\ngitrebaseReword: '' # Number\ngitrebaseEdit: '' # PreProc\ngitrebaseSquash: '' # Type\ngitrebaseFixup: '' # Special\ngitrebaseExec: '' # Function\ngitrebaseSummary: '' # String\ngitrebaseComment: '' # Comment\ngitrebaseSquashError: '' # Error\n",
-        "json": "jsonPadding: '' # Operator\njsonString: '' # String\njsonTest: '' # Label\njsonEscape: '' # Special\njsonNumber: '' # Number\njsonBraces: '' # Delimiter\njsonNull: '' # Function\njsonBoolean: '' # Boolean\njsonKeyword: '' # Label\njsonNumError: '' # Error\njsonCommentError: '' # Error\njsonSemicolonError: '' # Error\njsonTrailingCommaError: '' # Error\njsonMissingCommaError: '' # Error\njsonStringSQError: '' # Error\njsonNoQuotesError: '' # Error\njsonTripleQuotesError: '' # Error\njsonQuote: '' # Quote\njsonNoise: '' # Noise\n",
-        "php": "phpConstant: '' # Constant\nphpCoreConstant: '' # Constant\nphpComment: '' # Comment\nphpDocTags: '' # PreProc\nphpDocCustomTags: '' # Type\nphpException: '' # Exception\nphpBoolean: '' # Boolean\nphpStorageClass: '' # StorageClass\nphpSCKeyword: '' # StorageClass\nphpFCKeyword: '' # Define\nphpStructure: '' # Structure\nphpStringSingle: '' # String\nphpStringDouble: '' # String\nphpBacktick: '' # String\nphpNumber: '' # Number\nphpFloat: '' # Float\nphpMethods: '' # Function\nphpFunctions: '' # Function\nphpBaselib: '' # Function\nphpRepeat: '' # Repeat\nphpConditional: '' # Conditional\nphpLabel: '' # Label\nphpStatement: '' # Statement\nphpKeyword: '' # Statement\nphpType: '' # Type\nphpInclude: '' # Include\nphpDefine: '' # Define\nphpBackslashSequences: '' # SpecialChar\nphpBackslashDoubleQuote: '' # SpecialChar\nphpBackslashSingleQuote: '' # SpecialChar\nphpParent: '' # Delimiter\nphpBrackets: '' # Delimiter\nphpIdentifierConst: '' # Delimiter\nphpParentError: '' # Error\nphpOctalError: '' # Error\nphpInterpSimpleError: '' # Error\nphpInterpBogusDollarCurley: '' # Error\nphpInterpDollarCurly1: '' # Error\nphpInterpDollarCurly2: '' # Error\nphpInterpSimpleBracketsInner: '' # String\nphpInterpSimpleCurly: '' # Delimiter\nphpInterpVarname: '' # Identifier\nphpTodo: '' # Todo\nphpDocTodo: '' # Todo\nphpMemberSelector: '' # Structure\nphpIntVar: '' # Identifier\nphpEnvVar: '' # Identifier\nphpOperator: '' # Operator\nphpVarSelector: '' # Operator\nphpRelation: '' # Operator\nphpIdentifier: '' # Identifier\nphpIdentifierSimply: '' # Identifier\n",
-        "markdown": "markdownH1: '' # htmlH1\nmarkdownH2: '' # htmlH2\nmarkdownH3: '' # htmlH3\nmarkdownH4: '' # htmlH4\nmarkdownH5: '' # htmlH5\nmarkdownH6: '' # htmlH6\nmarkdownHeadingRule: '' # markdownRule\nmarkdownHeadingDelimiter: '' # Delimiter\nmarkdownOrderedListMarker: '' # markdownListMarker\nmarkdownListMarker: '' # htmlTagName\nmarkdownBlockquote: '' # Comment\nmarkdownRule: '' # PreProc\nmarkdownLinkText: '' # htmlLink\nmarkdownIdDeclaration: '' # Typedef\nmarkdownId: '' # Type\nmarkdownAutomaticLink: '' # markdownUrl\nmarkdownUrl: '' # Float\nmarkdownUrlTitle: '' # String\nmarkdownIdDelimiter: '' # markdownLinkDelimiter\nmarkdownUrlDelimiter: '' # htmlTag\nmarkdownUrlTitleDelimiter: '' # Delimiter\nmarkdownItalic: '' # htmlItalic\nmarkdownBold: '' # htmlBold\nmarkdownBoldItalic: '' # htmlBoldItalic\nmarkdownCodeDelimiter: '' # Delimiter\nmarkdownEscape: '' # Special\nmarkdownError: '' # Error\n",
-        "pug": "pugPlainChar: '' # Special\npugScriptConditional: '' # PreProc\npugScriptLoopKeywords: '' # PreProc\npugScriptStatement: '' # PreProc\npugHtmlArg: '' # htmlArg\npugAttributeString: '' # String\npugAttributesDelimiter: '' # Identifier\npugIdChar: '' # Special\npugClassChar: '' # Special\npugBlockExpansionChar: '' # Special\npugPipeChar: '' # Special\npugTagBlockChar: '' # Special\npugId: '' # Identifier\npugClass: '' # Type\npugInterpolationDelimiter: '' # Delimiter\npugInlineDelimiter: '' # Delimiter\npugFilter: '' # PreProc\npugDocType: '' # PreProc\npugComment: '' # Comment\npugCommentBlock: '' # Comment\npugHtmlConditionalComment: '' # pugComment\n",
-        "css": "cssComment: '' # Comment\ncssVendor: '' # Comment\ncssHacks: '' # Comment\ncssTagName: '' # Statement\ncssDeprecated: '' # Error\ncssSelectorOp: '' # Special\ncssSelectorOp2: '' # Special\ncssAttrComma: '' # Special\ncssAnimationProp: '' # cssProp\ncssBackgroundProp: '' # cssProp\ncssBorderProp: '' # cssProp\ncssBoxProp: '' # cssProp\ncssColorProp: '' # cssProp\ncssContentForPagedMediaProp: '' # cssProp\ncssDimensionProp: '' # cssProp\ncssFlexibleBoxProp: '' # cssProp\ncssFontProp: '' # cssProp\ncssGeneratedContentProp: '' # cssProp\ncssGridProp: '' # cssProp\ncssHyerlinkProp: '' # cssProp\ncssLineboxProp: '' # cssProp\ncssListProp: '' # cssProp\ncssMarqueeProp: '' # cssProp\ncssMultiColumnProp: '' # cssProp\ncssPagedMediaProp: '' # cssProp\ncssPositioningProp: '' # cssProp\ncssPrintProp: '' # cssProp\ncssRubyProp: '' # cssProp\ncssSpeechProp: '' # cssProp\ncssTableProp: '' # cssProp\ncssTextProp: '' # cssProp\ncssTransformProp: '' # cssProp\ncssTransitionProp: '' # cssProp\ncssUIProp: '' # cssProp\ncssIEUIProp: '' # cssProp\ncssAuralProp: '' # cssProp\ncssRenderProp: '' # cssProp\ncssMobileTextProp: '' # cssProp\ncssAnimationAttr: '' # cssAttr\ncssBackgroundAttr: '' # cssAttr\ncssBorderAttr: '' # cssAttr\ncssBoxAttr: '' # cssAttr\ncssContentForPagedMediaAttr: '' # cssAttr\ncssDimensionAttr: '' # cssAttr\ncssFlexibleBoxAttr: '' # cssAttr\ncssFontAttr: '' # cssAttr\ncssGeneratedContentAttr: '' # cssAttr\ncssGridAttr: '' # cssAttr\ncssHyerlinkAttr: '' # cssAttr\ncssLineboxAttr: '' # cssAttr\ncssListAttr: '' # cssAttr\ncssMarginAttr: '' # cssAttr\ncssMarqueeAttr: '' # cssAttr\ncssMultiColumnAttr: '' # cssAttr\ncssPaddingAttr: '' # cssAttr\ncssPagedMediaAttr: '' # cssAttr\ncssPositioningAttr: '' # cssAttr\ncssGradientAttr: '' # cssAttr\ncssPrintAttr: '' # cssAttr\ncssRubyAttr: '' # cssAttr\ncssSpeechAttr: '' # cssAttr\ncssTableAttr: '' # cssAttr\ncssTextAttr: '' # cssAttr\ncssTransformAttr: '' # cssAttr\ncssTransitionAttr: '' # cssAttr\ncssUIAttr: '' # cssAttr\ncssIEUIAttr: '' # cssAttr\ncssAuralAttr: '' # cssAttr\ncssRenderAttr: '' # cssAttr\ncssCommonAttr: '' # cssAttr\ncssPseudoClassId: '' # PreProc\ncssPseudoClassLang: '' # Constant\ncssValueLength: '' # Number\ncssValueInteger: '' # Number\ncssValueNumber: '' # Number\ncssValueAngle: '' # Number\ncssValueTime: '' # Number\ncssValueFrequency: '' # Number\ncssFunction: '' # Constant\ncssURL: '' # String\ncssFunctionName: '' # Function\ncssFunctionComma: '' # Function\ncssColor: '' # Constant\ncssIdentifier: '' # Function\ncssInclude: '' # Include\ncssIncludeKeyword: '' # atKeyword\ncssImportant: '' # Special\ncssBraces: '' # Function\ncssBraceError: '' # Error\ncssError: '' # Error\ncssUnicodeEscape: '' # Special\ncssStringQQ: '' # String\ncssStringQ: '' # String\ncssAttributeSelector: '' # String\ncssMedia: '' # atKeyword\ncssMediaType: '' # Special\ncssMediaComma: '' # Normal\ncssMediaKeyword: '' # Statement\ncssMediaProp: '' # cssProp\ncssMediaAttr: '' # cssAttr\ncssPage: '' # atKeyword\ncssPagePseudo: '' # PreProc\ncssPageMargin: '' # atKeyword\ncssPageProp: '' # cssProp\ncssKeyFrame: '' # atKeyword\ncssKeyFrameSelector: '' # Constant\ncssFontDescriptor: '' # Special\ncssFontDescriptorFunction: '' # Constant\ncssFontDescriptorProp: '' # cssProp\ncssFontDescriptorAttr: '' # cssAttr\ncssUnicodeRange: '' # Constant\ncssClassName: '' # Function\ncssClassNameDot: '' # Function\ncssProp: '' # StorageClass\ncssAttr: '' # Constant\ncssUnitDecorators: '' # Number\ncssNoise: '' # Noise\natKeyword: '' # PreProc\n",
-        "gitconfig": "gitconfigComment: '' # Comment\ngitconfigSection: '' # Keyword\ngitconfigVariable: '' # Identifier\ngitconfigBoolean: '' # Boolean\ngitconfigNumber: '' # Number\ngitconfigString: '' # String\ngitconfigDelim: '' # Delimiter\ngitconfigEscape: '' # Delimiter\ngitconfigError: '' # Error\n",
-        "vim-plug": "plug1: '' # Title\nplug2: '' # Repeat\nplugH2: '' # Type\nplugX: '' # Exception\nplugBracket: '' # Structure\nplugNumber: '' # Number\nplugDash: '' # Special\nplugPlus: '' # Constant\nplugStar: '' # Boolean\nplugMessage: '' # Function\nplugName: '' # Label\nplugInstall: '' # Function\nplugUpdate: '' # Type\nplugError: '' # Error\nplugRelDate: '' # Comment\nplugEdge: '' # PreProc\nplugSha: '' # Identifier\nplugTag: '' # Constant\nplugNotLoaded: '' # Comment\n",
         "base": "# BASE UI\nColorColumn: ''\nConceal: ''\nCursor: ''\nCursorIM: ''\nCursorColumn: ''\nCursorLine: ''\nCursorLineNr: ''\nDirectory: ''\nDiffAdd: ''\nDiffChange: ''\nDiffDelete: ''\nDiffText: ''\nErrorMsg: ''\nVertSplit: ''\nFolded: ''\nFoldColumn: ''\nSignColumn: ''\nIncSearch: ''\nLineNr: ''\nMatchParen: ''\nModeMsg: ''\nMoreMsg: ''\nNonText: ''\nNormal: ''\nPMenu: ''\nPMenuSel: ''\nPmenuSbar: ''\nPmenuThumb: ''\nQuestion: ''\nSearch: ''\nSpecialKey: ''\nSpellBad: ''\nSpellLocal: ''\nSpellCap: ''\nSpellRare: ''\nStatusLine: ''\nStatusLineNC: ''\nTabLine: ''\nTabLineFill: ''\nTabLineSel: ''\nTitle: ''\nVisual: ''\nVisualNOS: ''\nWarningMsg: ''\nWildMenu: ''\n# BASE SYNTAX\nComment: ''\nConstant: ''\nString: '' # Constant\nCharacter: '' # Constant\nBoolean: '' # Constant\nNumber: '' # Constant\nFloat: '' # Constant\nIdentifier: ''\nFunction: '' # Identifier\nStatement: ''\nConditional: '' # Statement\nRepeat: '' # Statement\nLabel: '' # Statement\nOperator: '' # Statement\nKeyword: '' # Statement\nException: '' # Statement\nPreProc: ''\nInclude: '' # PreProc\nDefine: '' # PreProc\nMacro: '' # PreProc\nPreCondit: '' # PreProc\nType: ''\nStorageClass: '' # Type\nStructure: '' # Type\nTypedef: '' # Type\nSpecial: ''\nSpecialChar: '' # Special\nTag: '' # Special\nDelimiter: '' # Special\nSpecialComment: '' # Special\nDebug: '' # Special\nUnderlined: ''\nIgnore: ''\nError: ''\nTodo: ''\n",
-        "nerdtree": "NERDTreePart: '' # Special\nNERDTreePartFile: '' # Type\nNERDTreeExecFile: '' # Title\nNERDTreeDirSlash: '' # Identifier\nNERDTreeBookmarksHeader: '' # statement\nNERDTreeBookmarksLeader: '' # ignore\nNERDTreeBookmarkName: '' # Identifier\nNERDTreeBookmark: '' # normal\nNERDTreeHelp: '' # String\nNERDTreeHelpKey: '' # Identifier\nNERDTreeHelpCommand: '' # Identifier\nNERDTreeHelpTitle: '' # Macro\nNERDTreeToggleOn: '' # Question\nNERDTreeToggleOff: '' # WarningMsg\nNERDTreeLinkTarget: '' # Type\nNERDTreeLinkFile: '' # Macro\nNERDTreeLinkDir: '' # Macro\nNERDTreeDir: '' # Directory\nNERDTreeUp: '' # Directory\nNERDTreeFile: '' # Normal\nNERDTreeCWD: '' # Statement\nNERDTreeOpenable: '' # Title\nNERDTreeClosable: '' # Title\nNERDTreeIgnore: '' # ignore\nNERDTreeRO: '' # WarningMsg\nNERDTreeFlags: '' # Number\n",
-        "vim-mustache-handlebars": "mustacheVariable: '' # Number\nmustacheVariableUnescape: '' # Number\nmustachePartial: '' # Number\nmustacheSection: '' # Number\nmustacheMarkerSet: '' # Number\nmustacheComment: '' # Comment\nmustacheBlockComment: '' # Comment\nmustacheError: '' # Error\nmustacheInsideError: '' # Error\nmustacheHandlebars: '' # Special\nmustacheUnescape: '' # Identifier\nmustacheOperators: '' # Operator\nmustacheConditionals: '' # Conditional\nmustacheHelpers: '' # Repeat\nmustacheQString: '' # String\nmustacheDQString: '' # String\n",
+        "css": "cssComment: '' # Comment\ncssVendor: '' # Comment\ncssHacks: '' # Comment\ncssTagName: '' # Statement\ncssDeprecated: '' # Error\ncssSelectorOp: '' # Special\ncssSelectorOp2: '' # Special\ncssAttrComma: '' # Special\ncssAnimationProp: '' # cssProp\ncssBackgroundProp: '' # cssProp\ncssBorderProp: '' # cssProp\ncssBoxProp: '' # cssProp\ncssColorProp: '' # cssProp\ncssContentForPagedMediaProp: '' # cssProp\ncssDimensionProp: '' # cssProp\ncssFlexibleBoxProp: '' # cssProp\ncssFontProp: '' # cssProp\ncssGeneratedContentProp: '' # cssProp\ncssGridProp: '' # cssProp\ncssHyerlinkProp: '' # cssProp\ncssLineboxProp: '' # cssProp\ncssListProp: '' # cssProp\ncssMarqueeProp: '' # cssProp\ncssMultiColumnProp: '' # cssProp\ncssPagedMediaProp: '' # cssProp\ncssPositioningProp: '' # cssProp\ncssPrintProp: '' # cssProp\ncssRubyProp: '' # cssProp\ncssSpeechProp: '' # cssProp\ncssTableProp: '' # cssProp\ncssTextProp: '' # cssProp\ncssTransformProp: '' # cssProp\ncssTransitionProp: '' # cssProp\ncssUIProp: '' # cssProp\ncssIEUIProp: '' # cssProp\ncssAuralProp: '' # cssProp\ncssRenderProp: '' # cssProp\ncssMobileTextProp: '' # cssProp\ncssAnimationAttr: '' # cssAttr\ncssBackgroundAttr: '' # cssAttr\ncssBorderAttr: '' # cssAttr\ncssBoxAttr: '' # cssAttr\ncssContentForPagedMediaAttr: '' # cssAttr\ncssDimensionAttr: '' # cssAttr\ncssFlexibleBoxAttr: '' # cssAttr\ncssFontAttr: '' # cssAttr\ncssGeneratedContentAttr: '' # cssAttr\ncssGridAttr: '' # cssAttr\ncssHyerlinkAttr: '' # cssAttr\ncssLineboxAttr: '' # cssAttr\ncssListAttr: '' # cssAttr\ncssMarginAttr: '' # cssAttr\ncssMarqueeAttr: '' # cssAttr\ncssMultiColumnAttr: '' # cssAttr\ncssPaddingAttr: '' # cssAttr\ncssPagedMediaAttr: '' # cssAttr\ncssPositioningAttr: '' # cssAttr\ncssGradientAttr: '' # cssAttr\ncssPrintAttr: '' # cssAttr\ncssRubyAttr: '' # cssAttr\ncssSpeechAttr: '' # cssAttr\ncssTableAttr: '' # cssAttr\ncssTextAttr: '' # cssAttr\ncssTransformAttr: '' # cssAttr\ncssTransitionAttr: '' # cssAttr\ncssUIAttr: '' # cssAttr\ncssIEUIAttr: '' # cssAttr\ncssAuralAttr: '' # cssAttr\ncssRenderAttr: '' # cssAttr\ncssCommonAttr: '' # cssAttr\ncssPseudoClassId: '' # PreProc\ncssPseudoClassLang: '' # Constant\ncssValueLength: '' # Number\ncssValueInteger: '' # Number\ncssValueNumber: '' # Number\ncssValueAngle: '' # Number\ncssValueTime: '' # Number\ncssValueFrequency: '' # Number\ncssFunction: '' # Constant\ncssURL: '' # String\ncssFunctionName: '' # Function\ncssFunctionComma: '' # Function\ncssColor: '' # Constant\ncssIdentifier: '' # Function\ncssInclude: '' # Include\ncssIncludeKeyword: '' # atKeyword\ncssImportant: '' # Special\ncssBraces: '' # Function\ncssBraceError: '' # Error\ncssError: '' # Error\ncssUnicodeEscape: '' # Special\ncssStringQQ: '' # String\ncssStringQ: '' # String\ncssAttributeSelector: '' # String\ncssMedia: '' # atKeyword\ncssMediaType: '' # Special\ncssMediaComma: '' # Normal\ncssMediaKeyword: '' # Statement\ncssMediaProp: '' # cssProp\ncssMediaAttr: '' # cssAttr\ncssPage: '' # atKeyword\ncssPagePseudo: '' # PreProc\ncssPageMargin: '' # atKeyword\ncssPageProp: '' # cssProp\ncssKeyFrame: '' # atKeyword\ncssKeyFrameSelector: '' # Constant\ncssFontDescriptor: '' # Special\ncssFontDescriptorFunction: '' # Constant\ncssFontDescriptorProp: '' # cssProp\ncssFontDescriptorAttr: '' # cssAttr\ncssUnicodeRange: '' # Constant\ncssClassName: '' # Function\ncssClassNameDot: '' # Function\ncssProp: '' # StorageClass\ncssAttr: '' # Constant\ncssUnitDecorators: '' # Number\ncssNoise: '' # Noise\natKeyword: '' # PreProc\n",
         "diff": "diffOldFile: '' # diffFile\ndiffNewFile: '' # diffFile\ndiffFile: '' # Type\ndiffOnly: '' # Constant\ndiffIdentical: '' # Constant\ndiffDiffer: '' # Constant\ndiffBDiffer: '' # Constant\ndiffIsA: '' # Constant\ndiffNoEOL: '' # Constant\ndiffCommon: '' # Constant\ndiffRemoved: '' # Special\ndiffChanged: '' # PreProc\ndiffAdded: '' # Identifier\ndiffLine: '' # Statement\ndiffSubname: '' # PreProc\ndiffComment: '' # Comment\n",
-        "yajs": "javascriptReserved: '' # Error\njavascriptReservedCase: '' # Error\njavascriptInvalidOp: '' # Error\njavascriptEndColons: '' # Statement\njavascriptOpSymbol: '' # Normal\njavascriptBraces: '' # Function\njavascriptBrackets: '' # Function\njavascriptParens: '' # Normal\njavascriptComment: '' # Comment\njavascriptLineComment: '' # Comment\njavascriptDocComment: '' # Comment\njavascriptCommentTodo: '' # Todo\njavascriptDocNotation: '' # SpecialComment\njavascriptDocTags: '' # SpecialComment\njavascriptDocNGParam: '' # javascriptDocParam\njavascriptDocParam: '' # Function\njavascriptDocNumParam: '' # Function\njavascriptDocEventRef: '' # Function\njavascriptDocNamedParamType: '' # Type\njavascriptDocParamName: '' # Type\njavascriptDocParamType: '' # Type\njavascriptString: '' # String\njavascriptTemplate: '' # String\njavascriptEventString: '' # String\njavascriptASCII: '' # Label\njavascriptTemplateSubstitution: '' # Label\njavascriptTemplateSB: '' # javascriptTemplateSubstitution\njavascriptRegexpString: '' # String\njavascriptGlobal: '' # Constant\njavascriptCharacter: '' # Character\njavascriptPrototype: '' # Type\njavascriptConditional: '' # Conditional\njavascriptConditionalElse: '' # Conditional\njavascriptSwitch: '' # Conditional\njavascriptCase: '' # Conditional\njavascriptDefault: '' # javascriptCase\njavascriptExportDefault: '' # javascriptCase\njavascriptBranch: '' # Conditional\njavascriptIdentifier: '' # Structure\njavascriptVariable: '' # Identifier\njavascriptRepeat: '' # Repeat\njavascriptForComprehension: '' # Repeat\njavascriptIfComprehension: '' # Repeat\njavascriptOfComprehension: '' # Repeat\njavascriptForOperator: '' # Repeat\njavascriptStatementKeyword: '' # Statement\njavascriptReturn: '' # Statement\njavascriptYield: '' # Statement\njavascriptYieldGen: '' # Statement\njavascriptMessage: '' # Keyword\njavascriptOperator: '' # Identifier\njavascriptTarget: '' # Identifier\njavascriptNull: '' # Boolean\njavascriptNumber: '' # Number\njavascriptBoolean: '' # Boolean\njavascriptObjectLabel: '' # javascriptLabel\njavascriptObjectLabelColon: '' # javascriptLabel\njavascriptLabel: '' # Label\njavascriptPropertyName: '' # Label\njavascriptImport: '' # Special\njavascriptExport: '' # Special\njavascriptTry: '' # Statement\njavascriptExceptions: '' # Statement\njavascriptMethodName: '' # Function\njavascriptMethodAccessor: '' # Operator\njavascriptObjectMethodName: '' # Function\njavascriptFuncKeyword: '' # Keyword\njavascriptAsyncFunc: '' # Keyword\njavascriptArrowFunc: '' # Type\njavascriptFuncName: '' # Function\njavascriptFuncArg: '' # Special\njavascriptArrowFuncArg: '' # javascriptFuncArg\njavascriptComma: '' # Normal\njavascriptClassKeyword: '' # Keyword\njavascriptClassExtends: '' # Keyword\njavascriptClassName: '' # Function\njavascriptClassSuperName: '' # Function\njavascriptClassStatic: '' # StorageClass\njavascriptClassSuper: '' # keyword\nshellbang: '' # Comment\n",
-        "less": "lessEndOfLineComment: '' # lessComment\nlessCssComment: '' # lessComment\nlessComment: '' # Comment\nlessDefault: '' # cssImportant\nlessVariable: '' # Identifier\nlessFunction: '' # PreProc\nlessTodo: '' # Todo\nlessInclude: '' # Include\nlessIdChar: '' # Special\nlessClassChar: '' # Special\nlessAmpersand: '' # Character\nlessId: '' # Identifier\nlessClass: '' # Type\nlessCssAttribute: '' # PreProc\nlessClassCall: '' # Type\nlessClassIdCall: '' # Type\nlessTagName: '' # cssTagName\nlessDeprecated: '' # cssDeprecated\nlessMedia: '' # cssMedia\n",
-        "python": "pythonStatement: '' # Statement\npythonConditional: '' # Conditional\npythonRepeat: '' # Repeat\npythonOperator: '' # Operator\npythonException: '' # Exception\npythonInclude: '' # Include\npythonDecorator: '' # Define\npythonFunction: '' # Function\npythonComment: '' # Comment\npythonTodo: '' # Todo\npythonString: '' # String\npythonRawString: '' # String\npythonQuotes: '' # String\npythonTripleQuotes: '' # pythonQuotes\npythonEscape: '' # Special\npythonNumber: '' # Number\npythonBuiltin: '' # Function\npythonExceptions: '' # Structure\npythonSpaceError: '' # Error\npythonDoctest: '' # Special\npythonDoctestValue: '' # Define\n",
-        "html": "htmlTag: '' # Function\nhtmlEndTag: '' # Identifier\nhtmlArg: '' # Type\nhtmlTagName: '' # htmlStatement\nhtmlSpecialTagName: '' # Exception\nhtmlValue: '' # String\nhtmlH1: '' # Title\nhtmlH2: '' # htmlH1\nhtmlH3: '' # htmlH2\nhtmlH4: '' # htmlH3\nhtmlH5: '' # htmlH4\nhtmlH6: '' # htmlH5\nhtmlHead: '' # PreProc\nhtmlTitle: '' # Title\nhtmlBoldItalicUnderline: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBold: '' # htmlBoldUnderline\nhtmlUnderlineItalicBold: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBoldItalic: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderline: '' # htmlUnderlineItalic\nhtmlItalicBold: '' # htmlBoldItalic\nhtmlItalicBoldUnderline: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderlineBold: '' # htmlBoldUnderlineItalic\nhtmlLink: '' # Underlined\nhtmlLeadingSpace: '' # None\nhtmlPreStmt: '' # PreProc\nhtmlPreError: '' # Error\nhtmlPreProc: '' # PreProc\nhtmlPreAttr: '' # String\nhtmlPreProcAttrName: '' # PreProc\nhtmlPreProcAttrError: '' # Error\nhtmlSpecial: '' # Special\nhtmlSpecialChar: '' # Special\nhtmlString: '' # String\nhtmlStatement: '' # Statement\nhtmlComment: '' # Comment\nhtmlCommentPart: '' # Comment\nhtmlCommentError: '' # htmlError\nhtmlTagError: '' # htmlError\nhtmlEvent: '' # javaScript\nhtmlError: '' # Error\njavaScript: '' # Special\njavaScriptExpression: '' # javaScript\nhtmlCssStyleComment: '' # Comment\nhtmlCssDefinition: '' # Special\n",
-        "javascript": "javaScriptComment: '' # Comment\njavaScriptLineComment: '' # Comment\njavaScriptCommentTodo: '' # Todo\njavaScriptSpecial: '' # Special\njavaScriptStringS: '' # String\njavaScriptStringD: '' # String\njavaScriptCharacter: '' # Character\njavaScriptSpecialCharacter: '' # javaScriptSpecial\njavaScriptNumber: '' # javaScriptValue\njavaScriptConditional: '' # Conditional\njavaScriptRepeat: '' # Repeat\njavaScriptBranch: '' # Conditional\njavaScriptOperator: '' # Operator\njavaScriptType: '' # Type\njavaScriptStatement: '' # Statement\njavaScriptFunction: '' # Function\njavaScriptBraces: '' # Function\njavaScriptError: '' # Error\njavaScriptParensError: '' # Error\njavaScriptNull: '' # Keyword\njavaScriptBoolean: '' # Boolean\njavaScriptRegexpString: '' # String\njavaScriptIdentifier: '' # Identifier\njavaScriptLabel: '' # Label\njavaScriptException: '' # Exception\njavaScriptMessage: '' # Keyword\njavaScriptGlobal: '' # Keyword\njavaScriptMember: '' # Keyword\njavaScriptDeprecated: '' # Exception\njavaScriptReserved: '' # Keyword\njavaScriptDebug: '' # Debug\njavaScriptConstant: '' # Label\n",
-        "vim-gitgutter": "# GitGutter airblade/vim-gitgutter\nGitGutterAdd: ''\nGitGutterChange: ''\nGitGutterDelete: ''\nGitGutterChangeDelete: ''\n",
+        "elixir": "# Elixir\nelixirComment: '' # Comment\nelixirUnusedVariable: '' # Comment\nelixirAtom: '' # Constant\nelixirBoolean: '' # Constant\nelixirPseudoVariable: '' # Constant\nelixirNumber: '' # Constant\nelixirString: '' # Constant\nelixirRegex: '' # Constant\nelixirDocString: '' # Constant\nelixirAtomInterpolated: '' # Constant\nelixirSigil: '' # Constant\nelixirRegexDelimiter: '' # Delimiter\nelixirStringDelimiter: '' # Delimiter\nelixirInterpolationDelimiter: '' # Delimiter\nelixirSigilDelimiter: '' # Delimiter\nelixirSpecial: '' # Delimiter\nelixirRegexEscape: '' # Delimiter\nelixirRegexEscapePunctuation: '' # Delimiter\nelixirRegexQuantifier: '' # Delimiter\nelixirRegexCharClass: '' # Delimiter\nelixirSelf: '' # Identifier\nelixirVariable: '' # Identifier\nelixirFunctionDeclaration: '' # Identifier\nelixirBlockDefinition: '' # Statement\nelixirKeyword: '' # Statement\nelixirOperator: '' # Statement\nelixirInclude: '' # Preproc\nelixirDefine: '' # Preproc\nelixirPrivateDefine: '' # Preproc\nelixirModuleDefine: '' # Preproc\nelixirProtocolDefine: '' # Preproc\nelixirImplDefine: '' # Preproc\nelixirRecordDefine: '' # Preproc\nelixirPrivateRecordDefine: '' # Preproc\nelixirMacroDefine: '' # Preproc\nelixirMacroDeclaration: '' # Preproc\nelixirPrivateMacroDefine: '' # Preproc\nelixirDelegateDefine: '' # Preproc\nelixirOverridableDefine: '' # Preproc\nelixirExceptionDefine: '' # Preproc\nelixirCallbackDefine: '' # Preproc\nelixirStructDefine: '' # Preproc\nelixirAlias: '' # Type\nelixirTodo: '' # Todo\nelixirArguments: ''\nelixirGuard: ''\nelixirId: ''\nelixirInterpolation: ''\nelixirDocStringStar: ''\nelixirBlock: ''\nelixirAnonymousFunction: ''\nelixirDelimEscape: ''\nelixirModuleDeclaration: ''\nelixirProtocolDeclaration: ''\nelixirImplDeclaration: ''\nelixirRecordDeclaration: ''\nelixirDelegateDeclaration: ''\nelixirOverridableDeclaratio: ''\nelixirExceptionDeclaration: ''\nelixirCallbackDeclaration: ''\nelixirStructDeclaration: ''\n",
+        "elm-vim": "elmTopLevelDecl: '' # Function\nelmTupleFunction: '' # Normal\nelmTodo: '' # Todo\nelmComment: '' # Comment\nelmLineComment: '' # Comment\nelmString: '' # String\nelmTripleString: '' # String\nelmChar: '' # String\nelmStringEscape: '' # Special\nelmInt: '' # Number\nelmFloat: '' # Float\nelmDelimiter: '' # Comment\nelmTypedef: '' # Keyword\nelmImport: '' # Keyword\nelmConditional: '' # Keyword\nelmAlias: '' # Keyword\nelmOperator: '' # Operator\nelmType: '' # Type\nelmNumberType: '' # Type\nelmBraces: '' # Delimiter\n",
+        "elm.vim": "elmKeyword: '' # Keyword\nelmBuiltinOp: '' # Special\nelmType: '' # Type\nelmTodo: '' # Todo\nelmLineComment: '' # Comment\nelmComment: '' # Comment\nelmString: '' # String\nelmNumber: '' # Number\nspecialName: '' # Special\n",
+        "fugitive": "FugitiveblameBoundary: '' # Keyword\nFugitiveblameHash: '' # Identifier\nFugitiveblameUncommitted: '' # Ignore\nFugitiveblameTime: '' # PreProc\nFugitiveblameLineNumber: '' # Number\nFugitiveblameOriginalFile: '' # String\nFugitiveblameOriginalLineNumber: '' #\nFugitiveblameShort: '' # FugitiveblameDelimiter\nFugitiveblameDelimiter: '' # Delimiter\nFugitiveblameNotCommittedYet: '' # Comment\n",
+        "git": "gitDateHeader: '' # gitIdentityHeader\ngitIdentityHeader: '' # gitIdentityKeyword\ngitIdentityKeyword: '' # Label\ngitNotesHeader: '' # gitKeyword\ngitReflogHeader: '' # gitKeyword\ngitKeyword: '' # Keyword\ngitIdentity: '' # String\ngitEmailDelimiter: '' # Delimiter\ngitEmail: '' # Special\ngitDate: '' # Number\ngitMode: '' # Number\ngitHashAbbrev: '' # gitHash\ngitHash: '' # Identifier\ngitReflogMiddle: '' # gitReference\ngitReference: '' # Function\ngitStage: '' # gitType\ngitType: '' # Type\ngitDiffAdded: '' # diffAdded\ngitDiffRemoved: '' # diffRemoved\n",
+        "gitcommit": "gitcommitSummary: '' # Keyword\ngitcommitComment: '' # Comment\ngitcommitUntracked: '' # gitcommitComment\ngitcommitDiscarded: '' # gitcommitComment\ngitcommitSelected: '' # gitcommitComment\ngitcommitUnmerged: '' # gitcommitComment\ngitcommitOnBranch: '' # Comment\ngitcommitBranch: '' # Special\ngitcommitNoBranch: '' # gitCommitBranch\ngitcommitDiscardedType: '' # gitcommitType\ngitcommitSelectedType: '' # gitcommitType\ngitcommitUnmergedType: '' # gitcommitType\ngitcommitType: '' # Type\ngitcommitNoChanges: '' # gitcommitHeader\ngitcommitHeader: '' # PreProc\ngitcommitUntrackedFile: '' # gitcommitFile\ngitcommitDiscardedFile: '' # gitcommitFile\ngitcommitSelectedFile: '' # gitcommitFile\ngitcommitUnmergedFile: '' # gitcommitFile\ngitcommitFile: '' # Constant\ngitcommitDiscardedArrow: '' # gitcommitArrow\ngitcommitSelectedArrow: '' # gitcommitArrow\ngitcommitUnmergedArrow: '' # gitcommitArrow\ngitcommitArrow: '' # gitcommitComment\ngitcommitOverflow: '' # none\ngitcommitBlank: '' # Error\n",
+        "gitconfig": "gitconfigComment: '' # Comment\ngitconfigSection: '' # Keyword\ngitconfigVariable: '' # Identifier\ngitconfigBoolean: '' # Boolean\ngitconfigNumber: '' # Number\ngitconfigString: '' # String\ngitconfigDelim: '' # Delimiter\ngitconfigEscape: '' # Delimiter\ngitconfigError: '' # Error\n",
+        "gitrebase": "gitrebaseCommit: '' # gitrebaseHash\ngitrebaseHash: '' # Identifier\ngitrebasePick: '' # Statement\ngitrebaseReword: '' # Number\ngitrebaseEdit: '' # PreProc\ngitrebaseSquash: '' # Type\ngitrebaseFixup: '' # Special\ngitrebaseExec: '' # Function\ngitrebaseSummary: '' # String\ngitrebaseComment: '' # Comment\ngitrebaseSquashError: '' # Error\n",
         "go": "goDirective: '' # Statement\ngoDeclaration: '' # Keyword\ngoDeclType: '' # Keyword\ngoStatement: '' # Statement\ngoConditional: '' # Conditional\ngoLabel: '' # Label\ngoRepeat: '' # Repeat\ngoType: '' # Type\ngoSignedInts: '' # Type\ngoUnsignedInts: '' # Type\ngoFloats: '' # Type\ngoComplexes: '' # Type\ngoBuiltins: '' # Keyword\ngoConstants: '' # Keyword\ngoComment: '' # Comment\ngoTodo: '' # Todo\ngoEscapeOctal: '' # goSpecialString\ngoEscapeC: '' # goSpecialString\ngoEscapeX: '' # goSpecialString\ngoEscapeU: '' # goSpecialString\ngoEscapeBigU: '' # goSpecialString\ngoSpecialString: '' # Special\ngoEscapeError: '' # Error\ngoString: '' # String\ngoRawString: '' # String\ngoCharacter: '' # Character\ngoDecimalInt: '' # Integer\ngoHexadecimalInt: '' # Integer\ngoOctalInt: '' # Integer\nInteger: '' # Number\ngoFloat: '' # Float\ngoImaginary: '' # Number\ngoExtraType: '' # Type\ngoSpaceError: '' # Error\n",
         "help": "helpIgnore: '' # Ignore\nhelpHyperTextJump: '' # Identifier\nhelpBar: '' # Ignore\nhelpBacktick: '' # Ignore\nhelpStar: '' # Ignore\nhelpHyperTextEntry: '' # String\nhelpHeadline: '' # Statement\nhelpHeader: '' # PreProc\nhelpSectionDelim: '' # PreProc\nhelpVim: '' # Identifier\nhelpCommand: '' # Comment\nhelpExample: '' # Comment\nhelpOption: '' # Type\nhelpSpecial: '' # Special\nhelpNote: '' # Todo\nhelpComment: '' # Comment\nhelpConstant: '' # Constant\nhelpString: '' # String\nhelpCharacter: '' # Character\nhelpNumber: '' # Number\nhelpBoolean: '' # Boolean\nhelpFloat: '' # Float\nhelpIdentifier: '' # Identifier\nhelpFunction: '' # Function\nhelpStatement: '' # Statement\nhelpConditional: '' # Conditional\nhelpRepeat: '' # Repeat\nhelpLabel: '' # Label\nhelpOperator: '' # Operator\nhelpKeyword: '' # Keyword\nhelpException: '' # Exception\nhelpPreProc: '' # PreProc\nhelpInclude: '' # Include\nhelpDefine: '' # Define\nhelpMacro: '' # Macro\nhelpPreCondit: '' # PreCondit\nhelpType: '' # Type\nhelpStorageClass: '' # StorageClass\nhelpStructure: '' # Structure\nhelpTypedef: '' # Typedef\nhelpSpecialChar: '' # SpecialChar\nhelpTag: '' # Tag\nhelpDelimiter: '' # Delimiter\nhelpSpecialComment: '' # SpecialComment\nhelpDebug: '' # Debug\nhelpUnderlined: '' # Underlined\nhelpError: '' # Error\nhelpTodo: '' # Todo\nhelpURL: '' # String\n",
-        "unite": "uniteError: '' # Error\nuniteMarkedLine: '' # Statement\nuniteCandidateSourceName: '' # Type\nuniteQuickMatchText: '' # Special\nuniteCandidateIcon: '' # Special\nuniteMarkedIcon: '' # Statement\nuniteCandidateInputKeyword: '' # Function\nuniteChooseAction: '' # NONE\nuniteChooseCandidate: '' # NONE\nuniteChooseKey: '' # SpecialKey\nuniteChooseMessage: '' # NONE\nuniteChoosePrompt: '' # uniteSourcePrompt\nuniteChooseSource: '' # uniteSourceNames\nuniteInputPrompt: '' # Normal\nuniteInputLine: '' # Identifier\nuniteInputCommand: '' # Statement\nuniteStatusNormal: '' # StatusLine\nuniteStatusHead: '' # Statement\nuniteStatusSourceNames: '' # PreProc\nuniteStatusSourceCandidates: '' # Constant\nuniteStatusMessage: '' # Comment\nuniteStatusLineNR: '' # LineNR\n",
-        "gitcommit": "gitcommitSummary: '' # Keyword\ngitcommitComment: '' # Comment\ngitcommitUntracked: '' # gitcommitComment\ngitcommitDiscarded: '' # gitcommitComment\ngitcommitSelected: '' # gitcommitComment\ngitcommitUnmerged: '' # gitcommitComment\ngitcommitOnBranch: '' # Comment\ngitcommitBranch: '' # Special\ngitcommitNoBranch: '' # gitCommitBranch\ngitcommitDiscardedType: '' # gitcommitType\ngitcommitSelectedType: '' # gitcommitType\ngitcommitUnmergedType: '' # gitcommitType\ngitcommitType: '' # Type\ngitcommitNoChanges: '' # gitcommitHeader\ngitcommitHeader: '' # PreProc\ngitcommitUntrackedFile: '' # gitcommitFile\ngitcommitDiscardedFile: '' # gitcommitFile\ngitcommitSelectedFile: '' # gitcommitFile\ngitcommitUnmergedFile: '' # gitcommitFile\ngitcommitFile: '' # Constant\ngitcommitDiscardedArrow: '' # gitcommitArrow\ngitcommitSelectedArrow: '' # gitcommitArrow\ngitcommitUnmergedArrow: '' # gitcommitArrow\ngitcommitArrow: '' # gitcommitComment\ngitcommitOverflow: '' # none\ngitcommitBlank: '' # Error\n",
-        "elixir": "# Elixir\nelixirComment: '' # Comment\nelixirUnusedVariable: '' # Comment\nelixirAtom: '' # Constant\nelixirBoolean: '' # Constant\nelixirPseudoVariable: '' # Constant\nelixirNumber: '' # Constant\nelixirString: '' # Constant\nelixirRegex: '' # Constant\nelixirDocString: '' # Constant\nelixirAtomInterpolated: '' # Constant\nelixirSigil: '' # Constant\nelixirRegexDelimiter: '' # Delimiter\nelixirStringDelimiter: '' # Delimiter\nelixirInterpolationDelimiter: '' # Delimiter\nelixirSigilDelimiter: '' # Delimiter\nelixirSpecial: '' # Delimiter\nelixirRegexEscape: '' # Delimiter\nelixirRegexEscapePunctuation: '' # Delimiter\nelixirRegexQuantifier: '' # Delimiter\nelixirRegexCharClass: '' # Delimiter\nelixirSelf: '' # Identifier\nelixirVariable: '' # Identifier\nelixirFunctionDeclaration: '' # Identifier\nelixirBlockDefinition: '' # Statement\nelixirKeyword: '' # Statement\nelixirOperator: '' # Statement\nelixirInclude: '' # Preproc\nelixirDefine: '' # Preproc\nelixirPrivateDefine: '' # Preproc\nelixirModuleDefine: '' # Preproc\nelixirProtocolDefine: '' # Preproc\nelixirImplDefine: '' # Preproc\nelixirRecordDefine: '' # Preproc\nelixirPrivateRecordDefine: '' # Preproc\nelixirMacroDefine: '' # Preproc\nelixirMacroDeclaration: '' # Preproc\nelixirPrivateMacroDefine: '' # Preproc\nelixirDelegateDefine: '' # Preproc\nelixirOverridableDefine: '' # Preproc\nelixirExceptionDefine: '' # Preproc\nelixirCallbackDefine: '' # Preproc\nelixirStructDefine: '' # Preproc\nelixirAlias: '' # Type\nelixirTodo: '' # Todo\nelixirArguments: ''\nelixirGuard: ''\nelixirId: ''\nelixirInterpolation: ''\nelixirDocStringStar: ''\nelixirBlock: ''\nelixirAnonymousFunction: ''\nelixirDelimEscape: ''\nelixirModuleDeclaration: ''\nelixirProtocolDeclaration: ''\nelixirImplDeclaration: ''\nelixirRecordDeclaration: ''\nelixirDelegateDeclaration: ''\nelixirOverridableDeclaratio: ''\nelixirExceptionDeclaration: ''\nelixirCallbackDeclaration: ''\nelixirStructDeclaration: ''\n",
-        "fugitive": "FugitiveblameBoundary: '' # Keyword\nFugitiveblameHash: '' # Identifier\nFugitiveblameUncommitted: '' # Ignore\nFugitiveblameTime: '' # PreProc\nFugitiveblameLineNumber: '' # Number\nFugitiveblameOriginalFile: '' # String\nFugitiveblameOriginalLineNumber: '' #\nFugitiveblameShort: '' # FugitiveblameDelimiter\nFugitiveblameDelimiter: '' # Delimiter\nFugitiveblameNotCommittedYet: '' # Comment\n",
-        "xml": "xmlTodo: '' # Todo\nxmlTag: '' # Function\nxmlTagName: '' # Function\nxmlEndTag: '' # Identifier\nxmlNamespace: '' # Tag\nxmlEntity: '' # Statement\nxmlEntityPunct: '' # Type\nxmlAttribPunct: '' # Comment\nxmlAttrib: '' # Type\nxmlString: '' # String\nxmlComment: '' # Comment\nxmlCommentStart: '' # xmlComment\nxmlCommentPart: '' # Comment\nxmlCommentError: '' # Error\nxmlError: '' # Error\nxmlProcessingDelim: '' # Comment\nxmlProcessing: '' # Type\nxmlCdata: '' # String\nxmlCdataCdata: '' # Statement\nxmlCdataStart: '' # Type\nxmlCdataEnd: '' # Type\nxmlDocTypeDecl: '' # Function\nxmlDocTypeKeyword: '' # Statement\nxmlInlineDTD: '' # Function\n",
-        "vim-stylus": "stylusComment: '' # Comment\nstylusVariable: '' # Identifier\nstylusControl: '' # PreProc\nstylusFunction: '' # Function\nstylusInterpolation: '' # Delimiter\nstylusAmpersand: '' # Character\nstylusClass: '' # Type\nstylusClassChar: '' # Special\nstylusEscape: '' # Special\nstylusId: '' # Identifier\nstylusIdChar: '' # Special\n",
-        "elm.vim": "elmKeyword: '' # Keyword\nelmBuiltinOp: '' # Special\nelmType: '' # Type\nelmTodo: '' # Todo\nelmLineComment: '' # Comment\nelmComment: '' # Comment\nelmString: '' # String\nelmNumber: '' # Number\nspecialName: '' # Special\n",
-        "yaml": "yamlTodo: '' # Todo\nyamlComment: '' # Comment\nyamlDocumentStart: '' # PreProc\nyamlDocumentEnd: '' # PreProc\nyamlDirectiveName: '' # Keyword\nyamlTAGDirective: '' # yamlDirectiveName\nyamlTagHandle: '' # String\nyamlTagPrefix: '' # String\nyamlYAMLDirective: '' # yamlDirectiveName\nyamlReservedDirective: '' # Error\nyamlYAMLVersion: '' # Number\nyamlString: '' # String\nyamlFlowString: '' # yamlString\nyamlFlowStringDelimiter: '' # yamlString\nyamlEscape: '' # SpecialChar\nyamlSingleEscape: '' # SpecialChar\nyamlBlockCollectionItemStart: '' # Label\nyamlBlockMappingKey: '' # Identifier\nyamlBlockMappingMerge: '' # Special\nyamlFlowMappingKey: '' # Identifier\nyamlFlowMappingMerge: '' # Special\nyamlMappingKeyStart: '' # Special\nyamlFlowIndicator: '' # Special\nyamlKeyValueDelimiter: '' # Special\nyamlConstant: '' # Constant\nyamlNull: '' # yamlConstant\nyamlBool: '' # yamlConstant\nyamlAnchor: '' # Type\nyamlAlias: '' # Type\nyamlNodeTag: '' # Type\nyamlInteger: '' # Number\nyamlFloat: '' # Float\nyamlTimestamp: '' # Number\n",
+        "html": "htmlTag: '' # Function\nhtmlEndTag: '' # Identifier\nhtmlArg: '' # Type\nhtmlTagName: '' # htmlStatement\nhtmlSpecialTagName: '' # Exception\nhtmlValue: '' # String\nhtmlH1: '' # Title\nhtmlH2: '' # htmlH1\nhtmlH3: '' # htmlH2\nhtmlH4: '' # htmlH3\nhtmlH5: '' # htmlH4\nhtmlH6: '' # htmlH5\nhtmlHead: '' # PreProc\nhtmlTitle: '' # Title\nhtmlBoldItalicUnderline: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBold: '' # htmlBoldUnderline\nhtmlUnderlineItalicBold: '' # htmlBoldUnderlineItalic\nhtmlUnderlineBoldItalic: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderline: '' # htmlUnderlineItalic\nhtmlItalicBold: '' # htmlBoldItalic\nhtmlItalicBoldUnderline: '' # htmlBoldUnderlineItalic\nhtmlItalicUnderlineBold: '' # htmlBoldUnderlineItalic\nhtmlLink: '' # Underlined\nhtmlLeadingSpace: '' # None\nhtmlPreStmt: '' # PreProc\nhtmlPreError: '' # Error\nhtmlPreProc: '' # PreProc\nhtmlPreAttr: '' # String\nhtmlPreProcAttrName: '' # PreProc\nhtmlPreProcAttrError: '' # Error\nhtmlSpecial: '' # Special\nhtmlSpecialChar: '' # Special\nhtmlString: '' # String\nhtmlStatement: '' # Statement\nhtmlComment: '' # Comment\nhtmlCommentPart: '' # Comment\nhtmlCommentError: '' # htmlError\nhtmlTagError: '' # htmlError\nhtmlEvent: '' # javaScript\nhtmlError: '' # Error\njavaScript: '' # Special\njavaScriptExpression: '' # javaScript\nhtmlCssStyleComment: '' # Comment\nhtmlCssDefinition: '' # Special\n",
+        "javascript": "javaScriptComment: '' # Comment\njavaScriptLineComment: '' # Comment\njavaScriptCommentTodo: '' # Todo\njavaScriptSpecial: '' # Special\njavaScriptStringS: '' # String\njavaScriptStringD: '' # String\njavaScriptCharacter: '' # Character\njavaScriptSpecialCharacter: '' # javaScriptSpecial\njavaScriptNumber: '' # javaScriptValue\njavaScriptConditional: '' # Conditional\njavaScriptRepeat: '' # Repeat\njavaScriptBranch: '' # Conditional\njavaScriptOperator: '' # Operator\njavaScriptType: '' # Type\njavaScriptStatement: '' # Statement\njavaScriptFunction: '' # Function\njavaScriptBraces: '' # Function\njavaScriptError: '' # Error\njavaScriptParensError: '' # Error\njavaScriptNull: '' # Keyword\njavaScriptBoolean: '' # Boolean\njavaScriptRegexpString: '' # String\njavaScriptIdentifier: '' # Identifier\njavaScriptLabel: '' # Label\njavaScriptException: '' # Exception\njavaScriptMessage: '' # Keyword\njavaScriptGlobal: '' # Keyword\njavaScriptMember: '' # Keyword\njavaScriptDeprecated: '' # Exception\njavaScriptReserved: '' # Keyword\njavaScriptDebug: '' # Debug\njavaScriptConstant: '' # Label\n",
+        "json": "jsonPadding: '' # Operator\njsonString: '' # String\njsonTest: '' # Label\njsonEscape: '' # Special\njsonNumber: '' # Number\njsonBraces: '' # Delimiter\njsonNull: '' # Function\njsonBoolean: '' # Boolean\njsonKeyword: '' # Label\njsonNumError: '' # Error\njsonCommentError: '' # Error\njsonSemicolonError: '' # Error\njsonTrailingCommaError: '' # Error\njsonMissingCommaError: '' # Error\njsonStringSQError: '' # Error\njsonNoQuotesError: '' # Error\njsonTripleQuotesError: '' # Error\njsonQuote: '' # Quote\njsonNoise: '' # Noise\n",
+        "less": "lessEndOfLineComment: '' # lessComment\nlessCssComment: '' # lessComment\nlessComment: '' # Comment\nlessDefault: '' # cssImportant\nlessVariable: '' # Identifier\nlessFunction: '' # PreProc\nlessTodo: '' # Todo\nlessInclude: '' # Include\nlessIdChar: '' # Special\nlessClassChar: '' # Special\nlessAmpersand: '' # Character\nlessId: '' # Identifier\nlessClass: '' # Type\nlessCssAttribute: '' # PreProc\nlessClassCall: '' # Type\nlessClassIdCall: '' # Type\nlessTagName: '' # cssTagName\nlessDeprecated: '' # cssDeprecated\nlessMedia: '' # cssMedia\n",
+        "markdown": "markdownH1: '' # htmlH1\nmarkdownH2: '' # htmlH2\nmarkdownH3: '' # htmlH3\nmarkdownH4: '' # htmlH4\nmarkdownH5: '' # htmlH5\nmarkdownH6: '' # htmlH6\nmarkdownHeadingRule: '' # markdownRule\nmarkdownHeadingDelimiter: '' # Delimiter\nmarkdownOrderedListMarker: '' # markdownListMarker\nmarkdownListMarker: '' # htmlTagName\nmarkdownBlockquote: '' # Comment\nmarkdownRule: '' # PreProc\nmarkdownLinkText: '' # htmlLink\nmarkdownIdDeclaration: '' # Typedef\nmarkdownId: '' # Type\nmarkdownAutomaticLink: '' # markdownUrl\nmarkdownUrl: '' # Float\nmarkdownUrlTitle: '' # String\nmarkdownIdDelimiter: '' # markdownLinkDelimiter\nmarkdownUrlDelimiter: '' # htmlTag\nmarkdownUrlTitleDelimiter: '' # Delimiter\nmarkdownItalic: '' # htmlItalic\nmarkdownBold: '' # htmlBold\nmarkdownBoldItalic: '' # htmlBoldItalic\nmarkdownCodeDelimiter: '' # Delimiter\nmarkdownEscape: '' # Special\nmarkdownError: '' # Error\n",
+        "nerdtree": "NERDTreePart: '' # Special\nNERDTreePartFile: '' # Type\nNERDTreeExecFile: '' # Title\nNERDTreeDirSlash: '' # Identifier\nNERDTreeBookmarksHeader: '' # statement\nNERDTreeBookmarksLeader: '' # ignore\nNERDTreeBookmarkName: '' # Identifier\nNERDTreeBookmark: '' # normal\nNERDTreeHelp: '' # String\nNERDTreeHelpKey: '' # Identifier\nNERDTreeHelpCommand: '' # Identifier\nNERDTreeHelpTitle: '' # Macro\nNERDTreeToggleOn: '' # Question\nNERDTreeToggleOff: '' # WarningMsg\nNERDTreeLinkTarget: '' # Type\nNERDTreeLinkFile: '' # Macro\nNERDTreeLinkDir: '' # Macro\nNERDTreeDir: '' # Directory\nNERDTreeUp: '' # Directory\nNERDTreeFile: '' # Normal\nNERDTreeCWD: '' # Statement\nNERDTreeOpenable: '' # Title\nNERDTreeClosable: '' # Title\nNERDTreeIgnore: '' # ignore\nNERDTreeRO: '' # WarningMsg\nNERDTreeFlags: '' # Number\n",
+        "php": "phpConstant: '' # Constant\nphpCoreConstant: '' # Constant\nphpComment: '' # Comment\nphpDocTags: '' # PreProc\nphpDocCustomTags: '' # Type\nphpException: '' # Exception\nphpBoolean: '' # Boolean\nphpStorageClass: '' # StorageClass\nphpSCKeyword: '' # StorageClass\nphpFCKeyword: '' # Define\nphpStructure: '' # Structure\nphpStringSingle: '' # String\nphpStringDouble: '' # String\nphpBacktick: '' # String\nphpNumber: '' # Number\nphpFloat: '' # Float\nphpMethods: '' # Function\nphpFunctions: '' # Function\nphpBaselib: '' # Function\nphpRepeat: '' # Repeat\nphpConditional: '' # Conditional\nphpLabel: '' # Label\nphpStatement: '' # Statement\nphpKeyword: '' # Statement\nphpType: '' # Type\nphpInclude: '' # Include\nphpDefine: '' # Define\nphpBackslashSequences: '' # SpecialChar\nphpBackslashDoubleQuote: '' # SpecialChar\nphpBackslashSingleQuote: '' # SpecialChar\nphpParent: '' # Delimiter\nphpBrackets: '' # Delimiter\nphpIdentifierConst: '' # Delimiter\nphpParentError: '' # Error\nphpOctalError: '' # Error\nphpInterpSimpleError: '' # Error\nphpInterpBogusDollarCurley: '' # Error\nphpInterpDollarCurly1: '' # Error\nphpInterpDollarCurly2: '' # Error\nphpInterpSimpleBracketsInner: '' # String\nphpInterpSimpleCurly: '' # Delimiter\nphpInterpVarname: '' # Identifier\nphpTodo: '' # Todo\nphpDocTodo: '' # Todo\nphpMemberSelector: '' # Structure\nphpIntVar: '' # Identifier\nphpEnvVar: '' # Identifier\nphpOperator: '' # Operator\nphpVarSelector: '' # Operator\nphpRelation: '' # Operator\nphpIdentifier: '' # Identifier\nphpIdentifierSimply: '' # Identifier\n",
+        "pug": "pugPlainChar: '' # Special\npugScriptConditional: '' # PreProc\npugScriptLoopKeywords: '' # PreProc\npugScriptStatement: '' # PreProc\npugHtmlArg: '' # htmlArg\npugAttributeString: '' # String\npugAttributesDelimiter: '' # Identifier\npugIdChar: '' # Special\npugClassChar: '' # Special\npugBlockExpansionChar: '' # Special\npugPipeChar: '' # Special\npugTagBlockChar: '' # Special\npugId: '' # Identifier\npugClass: '' # Type\npugInterpolationDelimiter: '' # Delimiter\npugInlineDelimiter: '' # Delimiter\npugFilter: '' # PreProc\npugDocType: '' # PreProc\npugComment: '' # Comment\npugCommentBlock: '' # Comment\npugHtmlConditionalComment: '' # pugComment\n",
+        "python": "pythonStatement: '' # Statement\npythonConditional: '' # Conditional\npythonRepeat: '' # Repeat\npythonOperator: '' # Operator\npythonException: '' # Exception\npythonInclude: '' # Include\npythonDecorator: '' # Define\npythonFunction: '' # Function\npythonComment: '' # Comment\npythonTodo: '' # Todo\npythonString: '' # String\npythonRawString: '' # String\npythonQuotes: '' # String\npythonTripleQuotes: '' # pythonQuotes\npythonEscape: '' # Special\npythonNumber: '' # Number\npythonBuiltin: '' # Function\npythonExceptions: '' # Structure\npythonSpaceError: '' # Error\npythonDoctest: '' # Special\npythonDoctestValue: '' # Define\n",
         "ruby": "rubyClass: '' # rubyDefine\nrubyModule: '' # rubyDefine\nrubyMethodExceptional: '' # rubyDefine\nrubyDefine: '' # Define\nrubyFunction: '' # Function\nrubyConditional: '' # Conditional\nrubyConditionalModifier: '' # rubyConditional\nrubyExceptional: '' # rubyConditional\nrubyRepeat: '' # Repeat\nrubyRepeatModifier: '' # rubyRepeat\nrubyOptionalDo: '' # rubyRepeat\nrubyControl: '' # Statement\nrubyInclude: '' # Include\nrubyInteger: '' # Number\nrubyASCIICode: '' # Character\nrubyFloat: '' # Float\nrubyBoolean: '' # Boolean\nrubyException: '' # Exception\nrubyIdentifier: '' # Identifier\nrubyClassVariable: '' # rubyIdentifier\nrubyConstant: '' # Type\nrubyGlobalVariable: '' # rubyIdentifier\nrubyBlockParameter: '' # rubyIdentifier\nrubyInstanceVariable: '' # rubyIdentifier\nrubyPredefinedIdentifier: '' # rubyIdentifier\nrubyPredefinedConstant: '' # rubyPredefinedIdentifier\nrubyPredefinedVariable: '' # rubyPredefinedIdentifier\nrubySymbol: '' # Constant\nrubyKeyword: '' # Keyword\nrubyOperator: '' # Operator\nrubyBeginEnd: '' # Statement\nrubyAccess: '' # Statement\nrubyAttribute: '' # Statement\nrubyEval: '' # Statement\nrubyPseudoVariable: '' # Constant\nrubyComment: '' # Comment\nrubyData: '' # Comment\nrubyDataDirective: '' # Delimiter\nrubyDocumentation: '' # Comment\nrubyTodo: '' # Todo\nrubyQuoteEscape: '' # rubyStringEscape\nrubyStringEscape: '' # Special\nrubyInterpolationDelimiter: '' # Delimiter\nrubyNoInterpolation: '' # rubyString\nrubySharpBang: '' # PreProc\nrubyRegexpDelimiter: '' # rubyStringDelimiter\nrubySymbolDelimiter: '' # rubyStringDelimiter\nrubyStringDelimiter: '' # Delimiter\nrubyHeredoc: '' # rubyString\nrubyString: '' # String\nrubyRegexpEscape: '' # rubyRegexpSpecial\nrubyRegexpQuantifier: '' # rubyRegexpSpecial\nrubyRegexpAnchor: '' # rubyRegexpSpecial\nrubyRegexpDot: '' # rubyRegexpCharClass\nrubyRegexpCharClass: '' # rubyRegexpSpecial\nrubyRegexpSpecial: '' # Special\nrubyRegexpComment: '' # Comment\nrubyRegexp: '' # rubyString\nrubyInvalidVariable: '' # Error\nrubyError: '' # Error\nrubySpaceError: '' # rubyError\n",
         "sh": "shArithRegion: '' # shShellVariables\nshAtExpr: '' # shSetList\nshBeginHere: '' # shRedir\nshCaseBar: '' # shConditional\nshCaseCommandSub: '' # shCommandSub\nshCaseDoubleQuote: '' # shDoubleQuote\nshCaseIn: '' # shConditional\nshQuote: '' # shOperator\nshCaseSingleQuote: '' # shSingleQuote\nshCaseStart: '' # shConditional\nshCmdSubRegion: '' # shShellVariables\nshColon: '' # shComment\nshDerefOp: '' # shOperator\nshDerefPOL: '' # shDerefOp\nshDerefPPS: '' # shDerefOp\nshDeref: '' # shShellVariables\nshDerefDelim: '' # shOperator\nshDerefSimple: '' # shDeref\nshDerefSpecial: '' # shDeref\nshDerefString: '' # shDoubleQuote\nshDerefVar: '' # shDeref\nshDoubleQuote: '' # shString\nshEcho: '' # shString\nshEchoDelim: '' # shOperator\nshEchoQuote: '' # shString\nshForPP: '' # shLoop\nshEmbeddedEcho: '' # shString\nshEscape: '' # shCommandSub\nshExDoubleQuote: '' # shDoubleQuote\nshExSingleQuote: '' # shSingleQuote\nshFunction: '' # Function\nshHereDoc: '' # shString\nshHerePayload: '' # shHereDoc\nshLoop: '' # shStatement\nshMoreSpecial: '' # shSpecial\nshOption: '' # shCommandSub\nshPattern: '' # shString\nshParen: '' # shArithmetic\nshPosnParm: '' # shShellVariables\nshQuickComment: '' # shComment\nshRange: '' # shOperator\nshRedir: '' # shOperator\nshSetListDelim: '' # shOperator\nshSetOption: '' # shOption\nshSingleQuote: '' # shString\nshSource: '' # shOperator\nshStringSpecial: '' # shSpecial\nshSubShRegion: '' # shOperator\nshTestOpr: '' # shConditional\nshTestPattern: '' # shString\nshTestDoubleQuote: '' # shString\nshTestSingleQuote: '' # shString\nshVariable: '' # shSetList\nshWrapLineOperator: '' # shOperator\nbashAdminStatement: '' # shStatement if exists(\"b:is_bash\")\nbashSpecialVariables: '' # shShellVariables if exists(\"b:is_bash\")\nbashStatement: '' # shStatement if exists(\"b:is_bash\")\nshFunctionParen: '' # Delimiter if exists(\"b:is_bash\")\nshFunctionDelim: '' # Delimiter if exists(\"b:is_bash\")\nkshSpecialVariables: '' # shShellVariables if exists(\"b:is_kornshell\")\nkshStatement: '' # shStatement if exists(\"b:is_kornshell\")\nshCaseError: '' # Error if !exists(\"g:sh_no_error\")\nshCondError: '' # Error if !exists(\"g:sh_no_error\")\nshCurlyError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefOpError: '' # Error if !exists(\"g:sh_no_error\")\nshDerefWordError: '' # Error if !exists(\"g:sh_no_error\")\nshDoError: '' # Error if !exists(\"g:sh_no_error\")\nshEsacError: '' # Error if !exists(\"g:sh_no_error\")\nshIfError: '' # Error if !exists(\"g:sh_no_error\")\nshInError: '' # Error if !exists(\"g:sh_no_error\")\nshParenError: '' # Error if !exists(\"g:sh_no_error\")\nshTestError: '' # Error if !exists(\"g:sh_no_error\")\nshDTestError: '' # Error if exists(\"b:is_kornshell\")\nshArithmetic: '' # Special\nshCharClass: '' # Identifier\nshSnglCase: '' # Statement\nshCommandSub: '' # Special\nshComment: '' # Comment\nshConditional: '' # Conditional\nshCtrlSeq: '' # Special\nshExprRegion: '' # Delimiter\nshFunctionKey: '' # Function\nshFunctionName: '' # Function\nshNumber: '' # Number\nshOperator: '' # Operator\nshRepeat: '' # Repeat\nshSet: '' # Statement\nshSetList: '' # Identifier\nshShellVariables: '' # PreProc\nshSpecial: '' # Special\nshStatement: '' # Statement\nshString: '' # String\nshTodo: '' # Todo\nshAlias: '' # Identifier\nshHereDoc01: '' # shRedir\nshHereDoc02: '' # shRedir\nshHereDoc03: '' # shRedir\nshHereDoc04: '' # shRedir\nshHereDoc05: '' # shRedir\nshHereDoc06: '' # shRedir\nshHereDoc07: '' # shRedir\nshHereDoc08: '' # shRedir\nshHereDoc09: '' # shRedir\nshHereDoc10: '' # shRedir\nshHereDoc11: '' # shRedir\nshHereDoc12: '' # shRedir\nshHereDoc13: '' # shRedir\nshHereDoc14: '' # shRedir\nshHereDoc15: '' # shRedir\nshHereDoc16: '' # shRedir\nshHereDoc17: '' # shRedir\nshHereDoc18: '' # shRedir\nshHereDoc19: '' # shRedir\nshHereDoc20: '' # shRedir\nshHereDoc21: '' # shRedir\nshHereDoc22: '' # shRedir\nshHereDoc23: '' # shRedir\nshHereDoc24: '' # shRedir\nshHereDoc25: '' # shRedir\nshHereDoc26: '' # shRedir\nshHereDoc27: '' # shRedir\nshHereDoc28: '' # shRedir\nshHereDoc29: '' # shRedir\nshHereDoc30: '' # shRedir\nshHereDoc31: '' # shRedir\nshHereDoc32: '' # shRedir\n",
+        "unite": "uniteError: '' # Error\nuniteMarkedLine: '' # Statement\nuniteCandidateSourceName: '' # Type\nuniteQuickMatchText: '' # Special\nuniteCandidateIcon: '' # Special\nuniteMarkedIcon: '' # Statement\nuniteCandidateInputKeyword: '' # Function\nuniteChooseAction: '' # NONE\nuniteChooseCandidate: '' # NONE\nuniteChooseKey: '' # SpecialKey\nuniteChooseMessage: '' # NONE\nuniteChoosePrompt: '' # uniteSourcePrompt\nuniteChooseSource: '' # uniteSourceNames\nuniteInputPrompt: '' # Normal\nuniteInputLine: '' # Identifier\nuniteInputCommand: '' # Statement\nuniteStatusNormal: '' # StatusLine\nuniteStatusHead: '' # Statement\nuniteStatusSourceNames: '' # PreProc\nuniteStatusSourceCandidates: '' # Constant\nuniteStatusMessage: '' # Comment\nuniteStatusLineNR: '' # LineNR\n",
+        "vim-gitgutter": "# GitGutter airblade/vim-gitgutter\nGitGutterAdd: ''\nGitGutterChange: ''\nGitGutterDelete: ''\nGitGutterChangeDelete: ''\n",
+        "vim-javascript-syntax": "# jelera/vim-javascript-syntax\njavaScriptEndColons: '' # Operator\njavaScriptOpSymbols: '' # Operator\njavaScriptLogicSymbols: '' # Boolean\njavaScriptParens: '' # Operator\njavaScriptTemplateDelim: '' # Operator\njavaScriptDocComment: '' # Comment\njavaScriptDocTags: '' # Special\njavaScriptDocSeeTag: '' # Function\njavaScriptDocParam: '' # Function\njavaScriptString: '' # String\njavaScriptTemplateString: '' # String\njavaScriptFloat: '' # Number\njavaScriptPrototype: '' # Type\njavaScriptSpecial: '' # Special\njavaScriptSource: '' # Special\njavaScriptGlobalObjects: '' # Special\njavaScriptExceptions: '' # Special\njavaScriptParensErrA: '' # Error\njavaScriptParensErrB: '' # Error\njavaScriptParensErrC: '' # Error\njavaScriptDomErrNo: '' # Error\njavaScriptDomNodeConsts: '' # Constant\njavaScriptDomElemAttrs: '' # Label\njavaScriptDomElemFuncs: '' # Type\njavaScriptWebAPI: '' # Type\njavaScriptHtmlElemAttrs: '' # Label\njavaScriptHtmlElemFuncs: '' # Type\njavaScriptCssStyles: '' # Type\njavaScriptBrowserObjects: '' # Constant\njavaScriptDOMObjects: '' # Constant\njavaScriptDOMMethods: '' # Type\njavaScriptDOMProperties: '' # Label\njavaScriptAjaxObjects: '' # Constant\njavaScriptAjaxMethods: '' # Type\njavaScriptAjaxProperties: '' # Label\njavaScriptFuncKeyword: '' # Function\njavaScriptFuncDef: '' # PreProc\njavaScriptFuncExp: '' # Title\njavaScriptFuncArg: '' # Special\njavaScriptFuncComma: '' # Operator\njavaScriptFuncEq: '' # Operator\njavaScriptHtmlEvents: '' # Constant\njavaScriptHtmlElemProperties: '' # Label\njavaScriptEventListenerKeywords: '' # Type\njavaScriptPropietaryObjects: '' # Constant\n",
+        "vim-mustache-handlebars": "mustacheVariable: '' # Number\nmustacheVariableUnescape: '' # Number\nmustachePartial: '' # Number\nmustacheSection: '' # Number\nmustacheMarkerSet: '' # Number\nmustacheComment: '' # Comment\nmustacheBlockComment: '' # Comment\nmustacheError: '' # Error\nmustacheInsideError: '' # Error\nmustacheHandlebars: '' # Special\nmustacheUnescape: '' # Identifier\nmustacheOperators: '' # Operator\nmustacheConditionals: '' # Conditional\nmustacheHelpers: '' # Repeat\nmustacheQString: '' # String\nmustacheDQString: '' # String\n",
+        "vim-plug": "plug1: '' # Title\nplug2: '' # Repeat\nplugH2: '' # Type\nplugX: '' # Exception\nplugBracket: '' # Structure\nplugNumber: '' # Number\nplugDash: '' # Special\nplugPlus: '' # Constant\nplugStar: '' # Boolean\nplugMessage: '' # Function\nplugName: '' # Label\nplugInstall: '' # Function\nplugUpdate: '' # Type\nplugError: '' # Error\nplugRelDate: '' # Comment\nplugEdge: '' # PreProc\nplugSha: '' # Identifier\nplugTag: '' # Constant\nplugNotLoaded: '' # Comment\n",
         "vim-signify": "# mhinz/vim-signify\nSignifyLineAdd: ''\nSignifyLineDelete: ''\nSignifyLineDeleteFirstLine: ''\nSignifyLineChange: ''\nSignifyLineChangeDelete: ''\n\nSignifySignAdd: ''\nSignifySignDelete: ''\nSignifySignDeleteFirstLine: ''\nSignifySignChange: ''\nSignifySignChangeDelete: ''\n",
-        "viminfo": "viminfoComment: '' # Comment\nviminfoError: '' # Error\nviminfoStatement: '' # Statement\n"
+        "vim-stylus": "stylusComment: '' # Comment\nstylusVariable: '' # Identifier\nstylusControl: '' # PreProc\nstylusFunction: '' # Function\nstylusInterpolation: '' # Delimiter\nstylusAmpersand: '' # Character\nstylusClass: '' # Type\nstylusClassChar: '' # Special\nstylusEscape: '' # Special\nstylusId: '' # Identifier\nstylusIdChar: '' # Special\n",
+        "viminfo": "viminfoComment: '' # Comment\nviminfoError: '' # Error\nviminfoStatement: '' # Statement\n",
+        "xml": "xmlTodo: '' # Todo\nxmlTag: '' # Function\nxmlTagName: '' # Function\nxmlEndTag: '' # Identifier\nxmlNamespace: '' # Tag\nxmlEntity: '' # Statement\nxmlEntityPunct: '' # Type\nxmlAttribPunct: '' # Comment\nxmlAttrib: '' # Type\nxmlString: '' # String\nxmlComment: '' # Comment\nxmlCommentStart: '' # xmlComment\nxmlCommentPart: '' # Comment\nxmlCommentError: '' # Error\nxmlError: '' # Error\nxmlProcessingDelim: '' # Comment\nxmlProcessing: '' # Type\nxmlCdata: '' # String\nxmlCdataCdata: '' # Statement\nxmlCdataStart: '' # Type\nxmlCdataEnd: '' # Type\nxmlDocTypeDecl: '' # Function\nxmlDocTypeKeyword: '' # Statement\nxmlInlineDTD: '' # Function\n",
+        "yajs": "javascriptReserved: '' # Error\njavascriptReservedCase: '' # Error\njavascriptInvalidOp: '' # Error\njavascriptEndColons: '' # Statement\njavascriptOpSymbol: '' # Normal\njavascriptBraces: '' # Function\njavascriptBrackets: '' # Function\njavascriptParens: '' # Normal\njavascriptComment: '' # Comment\njavascriptLineComment: '' # Comment\njavascriptDocComment: '' # Comment\njavascriptCommentTodo: '' # Todo\njavascriptDocNotation: '' # SpecialComment\njavascriptDocTags: '' # SpecialComment\njavascriptDocNGParam: '' # javascriptDocParam\njavascriptDocParam: '' # Function\njavascriptDocNumParam: '' # Function\njavascriptDocEventRef: '' # Function\njavascriptDocNamedParamType: '' # Type\njavascriptDocParamName: '' # Type\njavascriptDocParamType: '' # Type\njavascriptString: '' # String\njavascriptTemplate: '' # String\njavascriptEventString: '' # String\njavascriptASCII: '' # Label\njavascriptTemplateSubstitution: '' # Label\njavascriptTemplateSB: '' # javascriptTemplateSubstitution\njavascriptRegexpString: '' # String\njavascriptGlobal: '' # Constant\njavascriptCharacter: '' # Character\njavascriptPrototype: '' # Type\njavascriptConditional: '' # Conditional\njavascriptConditionalElse: '' # Conditional\njavascriptSwitch: '' # Conditional\njavascriptCase: '' # Conditional\njavascriptDefault: '' # javascriptCase\njavascriptExportDefault: '' # javascriptCase\njavascriptBranch: '' # Conditional\njavascriptIdentifier: '' # Structure\njavascriptVariable: '' # Identifier\njavascriptRepeat: '' # Repeat\njavascriptForComprehension: '' # Repeat\njavascriptIfComprehension: '' # Repeat\njavascriptOfComprehension: '' # Repeat\njavascriptForOperator: '' # Repeat\njavascriptStatementKeyword: '' # Statement\njavascriptReturn: '' # Statement\njavascriptYield: '' # Statement\njavascriptYieldGen: '' # Statement\njavascriptMessage: '' # Keyword\njavascriptOperator: '' # Identifier\njavascriptTarget: '' # Identifier\njavascriptNull: '' # Boolean\njavascriptNumber: '' # Number\njavascriptBoolean: '' # Boolean\njavascriptObjectLabel: '' # javascriptLabel\njavascriptObjectLabelColon: '' # javascriptLabel\njavascriptLabel: '' # Label\njavascriptPropertyName: '' # Label\njavascriptImport: '' # Special\njavascriptExport: '' # Special\njavascriptTry: '' # Statement\njavascriptExceptions: '' # Statement\njavascriptMethodName: '' # Function\njavascriptMethodAccessor: '' # Operator\njavascriptObjectMethodName: '' # Function\njavascriptFuncKeyword: '' # Keyword\njavascriptAsyncFunc: '' # Keyword\njavascriptArrowFunc: '' # Type\njavascriptFuncName: '' # Function\njavascriptFuncArg: '' # Special\njavascriptArrowFuncArg: '' # javascriptFuncArg\njavascriptComma: '' # Normal\njavascriptClassKeyword: '' # Keyword\njavascriptClassExtends: '' # Keyword\njavascriptClassName: '' # Function\njavascriptClassSuperName: '' # Function\njavascriptClassStatic: '' # StorageClass\njavascriptClassSuper: '' # keyword\nshellbang: '' # Comment\n",
+        "yaml": "yamlTodo: '' # Todo\nyamlComment: '' # Comment\nyamlDocumentStart: '' # PreProc\nyamlDocumentEnd: '' # PreProc\nyamlDirectiveName: '' # Keyword\nyamlTAGDirective: '' # yamlDirectiveName\nyamlTagHandle: '' # String\nyamlTagPrefix: '' # String\nyamlYAMLDirective: '' # yamlDirectiveName\nyamlReservedDirective: '' # Error\nyamlYAMLVersion: '' # Number\nyamlString: '' # String\nyamlFlowString: '' # yamlString\nyamlFlowStringDelimiter: '' # yamlString\nyamlEscape: '' # SpecialChar\nyamlSingleEscape: '' # SpecialChar\nyamlBlockCollectionItemStart: '' # Label\nyamlBlockMappingKey: '' # Identifier\nyamlBlockMappingMerge: '' # Special\nyamlFlowMappingKey: '' # Identifier\nyamlFlowMappingMerge: '' # Special\nyamlMappingKeyStart: '' # Special\nyamlFlowIndicator: '' # Special\nyamlKeyValueDelimiter: '' # Special\nyamlConstant: '' # Constant\nyamlNull: '' # yamlConstant\nyamlBool: '' # yamlConstant\nyamlAnchor: '' # Type\nyamlAlias: '' # Type\nyamlNodeTag: '' # Type\nyamlInteger: '' # Number\nyamlFloat: '' # Float\nyamlTimestamp: '' # Number\n",
+        "treesitter": "'@text.literal': '' #Comment\n'@text.reference': '' #Identifier\n'@text.title': '' #Title\n'@text.uri': '' #Underlined\n'@text.underline': '' #Underlined\n'@text.todo': '' #Todo\n\n'@comment': '' #Comment\n'@punctuation': '' #Delimiter\n\n'@constant': '' #Constant\n'@constant.builtin': '' #Special\n'@constant.macro': '' #Define\n'@define': '' #Define\n'@macro': '' #Macro\n'@string': '' #String\n'@string.escape': '' #SpecialChar\n'@string.special': '' #SpecialChar\n'@character': '' #Character\n'@character.special': '' #SpecialChar\n'@number': '' #Number\n'@boolean': '' #Boolean\n'@float': '' #Float\n\n'@function': '' #Function\n'@function.builtin': '' #Special\n'@function.macro': '' #Macro\n'@parameter': '' #Identifier\n'@method': '' #Function\n'@field': '' #Identifier\n'@property': '' #Identifier\n'@constructor': '' #Special\n\n'@conditional': '' #Conditional\n'@repeat': '' #Repeat\n'@label': '' #Label\n'@operator': '' #Operator\n'@keyword': '' #Keyword\n'@exception': '' #Exception\n\n'@variable': '' #Identifier\n'@type': '' #Type\n'@type.definition': '' #Typedef\n'@storageclass': '' #StorageClass\n'@structure': '' #Structure\n'@namespace': '' #Identifier\n'@include': '' #Include\n'@preproc': '' #PreProc\n'@debug': '' #Debug\n'@tag': '' #Tag\n"
     },
     "mustaches": {
+        "airline": "<% const info = it.info; %>\n\"\"\n\" Airline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){%>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){%>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){%>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet g:airline#themes#<%= info.name %>#palette = {}\n\nlet s:normal1 = [ \"<%= it.normal1.fg.hex %>\", \"<%= it.normal1.bg.hex %>\", <%= it.normal1.fg.xterm %>, <%= it.normal1.bg.xterm %> ]\nlet s:normal2 = [ \"<%= it.normal2.fg.hex %>\", \"<%= it.normal2.bg.hex %>\", <%= it.normal2.fg.xterm %>, <%= it.normal2.bg.xterm %> ]\nlet s:normal3 = [ \"<%= it.normal3.fg.hex %>\", \"<%= it.normal3.bg.hex %>\", <%= it.normal3.fg.xterm %>, <%= it.normal3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)\n\nlet s:insert1 = [ \"<%= it.insert1.fg.hex %>\", \"<%= it.insert1.bg.hex %>\", <%= it.insert1.fg.xterm %>, <%= it.insert1.bg.xterm %> ]\nlet s:insert2 = [ \"<%= it.insert2.fg.hex %>\", \"<%= it.insert2.bg.hex %>\", <%= it.insert2.fg.xterm %>, <%= it.insert2.bg.xterm %> ]\nlet s:insert3 = [ \"<%= it.insert3.fg.hex %>\", \"<%= it.insert3.bg.hex %>\", <%= it.insert3.fg.xterm %>, <%= it.insert3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)\n\nlet s:replace1 = [ \"<%= it.replace1.fg.hex %>\", \"<%= it.replace1.bg.hex %>\", <%= it.replace1.fg.xterm %>, <%= it.replace1.bg.xterm %> ]\nlet s:replace2 = [ \"<%= it.replace2.fg.hex %>\", \"<%= it.replace2.bg.hex %>\", <%= it.replace2.fg.xterm %>, <%= it.replace2.bg.xterm %> ]\nlet s:replace3 = [ \"<%= it.replace3.fg.hex %>\", \"<%= it.replace3.bg.hex %>\", <%= it.replace3.fg.xterm %>, <%= it.replace3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)\n\nlet s:visual1 = [ \"<%= it.visual1.fg.hex %>\", \"<%= it.visual1.bg.hex %>\", <%= it.visual1.fg.xterm %>, <%= it.visual1.bg.xterm %> ]\nlet s:visual2 = [ \"<%= it.visual2.fg.hex %>\", \"<%= it.visual2.bg.hex %>\", <%= it.visual2.fg.xterm %>, <%= it.visual2.bg.xterm %> ]\nlet s:visual3 = [ \"<%= it.visual3.fg.hex %>\", \"<%= it.visual3.bg.hex %>\", <%= it.visual3.fg.xterm %>, <%= it.visual3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)\n\nlet s:inactive1 = [ \"<%= it.inactive1.fg.hex %>\", \"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.fg.xterm %>, <%= it.inactive1.bg.xterm %> ]\nlet s:inactive2 = [ \"<%= it.inactive2.fg.hex %>\", \"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.fg.xterm %>, <%= it.inactive2.bg.xterm %> ]\nlet s:inactive3 = [ \"<%= it.inactive3.fg.hex %>\", \"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.fg.xterm %>, <%= it.inactive3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)\n\n<% if(it.ctrlp1){ %>\nif !get(g:, 'loaded_ctrlp', 0)\n  finish\nendif\n\nlet s:CP1 = [ \"<%= it.ctrlp1.fg.hex %>\", \"<%= it.ctrlp1.bg.hex %>\", <%= it.ctrlp1.fg.xterm %>, <%= it.ctrlp1.bg.xterm %> ]\nlet s:CP2 = [ \"<%= it.ctrlp2.fg.hex %>\", \"<%= it.ctrlp2.bg.hex %>\", <%= it.ctrlp2.fg.xterm %>, <%= it.ctrlp2.bg.xterm %> ]\nlet s:CP3 = [ \"<%= it.ctrlp3.fg.hex %>\", \"<%= it.ctrlp3.bg.hex %>\", <%= it.ctrlp3.fg.xterm %>, <%= it.ctrlp3.bg.xterm %> ]\n\nlet g:airline#themes#<%= it.info.name %>#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)\n<% } %>\n",
         "colorscheme": "<% const info = it.info; %>\n\"\"\n\" Colorscheme: <% info.name %>\n<% if(it.info.description) { %>\" Description: <%= it.info.description %>\n<% } %>\n<% if(it.info.url){ %>\" URL: <%= it.info.url %>\n<% } %>\n<% if(it.info.author){ %>\" Author: <%= it.info.author %>\n<% } %>\n<% if(it.info.license){%>\" License: <%= it.info.license %>\n<% } %>\n\"\"\n\nset background=<%= it.info.background %>\n\nhi clear\n\nif exists(\"syntax_on\")\n  syntax reset\nendif\nlet g:colors_name=\"<%= it.info.name %>\"\n\n\nlet Italic = \"\"\nif exists('g:<%= it.info.name %>_italic')\n  let Italic = \"italic\"\nendif\nlet g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)\n\nlet Bold = \"\"\nif exists('g:<%= info.name %>_bold')\n  let Bold = \"bold\"\nendif\n\nlet g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)\n\n<% Object.keys(it.stacks).forEach(function (key) {%>\n  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>\n<%- if(link){ -%>\nhi link <%=key%> <%=link%>\n<%- } else { -%>\nhi <%=key%>\n<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>\n<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>\n<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>\n<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>\n<% } %>\n\n<% }) %>\n\n<% if(it.term.color_0){ %>\nif has('terminal')\n  let g:terminal_ansi_colors = [\n  \\ \"<%= it.term.color_0 %>\",\n  \\ \"<%= it.term.color_1 %>\",\n  \\ \"<%= it.term.color_2 %>\",\n  \\ \"<%= it.term.color_3 %>\",\n  \\ \"<%= it.term.color_4 %>\",\n  \\ \"<%= it.term.color_5 %>\",\n  \\ \"<%= it.term.color_6 %>\",\n  \\ \"<%= it.term.color_7 %>\",\n  \\ \"<%= it.term.color_8 %>\",\n  \\ \"<%= it.term.color_9 %>\",\n  \\ \"<%= it.term.color_10 %>\",\n  \\ \"<%= it.term.color_11 %>\",\n  \\ \"<%= it.term.color_12 %>\",\n  \\ \"<%= it.term.color_13 %>\",\n  \\ \"<%= it.term.color_14 %>\",\n  \\ \"<%= it.term.color_15 %>\"\n  \\ ]\nendif\n\nif has('nvim')\n<% Object.keys(it.term).forEach(function (key) { %>\n  let g:terminal_<%= key %> = \"<%= it.term[key] %>\"\n<% }) %>\nendif\n<% } %>\n",
         "lightline": "<% const info = it.info; %>\n\"\"\n\" Lightline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){ %>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){ %>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){ %>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet s:p = {\"normal\": {}, \"inactive\": {}, \"insert\": {}, \"replace\": {}, \"visual\": {}, \"tabline\": {} }\n\nlet s:p.normal.left = [[[\"<%= it.normal1.fg.hex %>\", <%= it.normal1.fg.xterm %>], [\"<%= it.normal1.bg.hex %>\", <%= it.normal1.bg.xterm %>]], [[\"<%= it.normal2.fg.hex %>\", <%= it.normal2.fg.xterm %>], [\"<%= it.normal2.bg.hex %>\", <%= it.normal2.bg.xterm %>]]]\nlet s:p.normal.middle = [[[\"<%= it.normal3.fg.hex %>\", <%= it.normal3.fg.xterm %>], [\"<%= it.normal3.bg.hex %>\", <%= it.normal3.bg.xterm %>]]]\nlet s:p.normal.right = [[[\"<%= it.normal4.fg.hex %>\", <%= it.normal4.fg.xterm %>], [\"<%= it.normal4.bg.hex %>\", <%= it.normal4.bg.xterm %>]], [[\"<%= it.normal5.fg.hex %>\", <%= it.normal5.fg.xterm %>], [\"<%= it.normal5.bg.hex %>\", <%= it.normal5.bg.xterm %>]]]\nlet s:p.normal.error = [[[\"<%= it.normalError.fg.hex %>\", <%= it.normalError.fg.xterm %>], [\"<%= it.normalError.bg.hex %>\", <%= it.normalError.bg.xterm %>]]]\nlet s:p.normal.warning = [[[\"<%= it.normalWarning.fg.hex %>\", <%= it.normalWarning.fg.xterm %>], [\"<%= it.normalWarning.bg.hex %>\", <%= it.normalWarning.bg.xterm %>]]]\n\nlet s:p.inactive.left = [[[\"<%= it.inactive1.fg.hex %>\", <%= it.inactive1.fg.xterm %>], [\"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.bg.xterm %>]], [[\"<%= it.inactive2.fg.hex %>\", <%= it.inactive2.fg.xterm %>], [\"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.bg.xterm %>]]]\nlet s:p.inactive.middle = [[[\"<%= it.inactive3.fg.hex %>\", <%= it.inactive3.fg.xterm %>], [\"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.bg.xterm %>]]]\nlet s:p.inactive.right = [[[\"<%= it.inactive4.fg.hex %>\", <%= it.inactive4.fg.xterm %>], [\"<%= it.inactive4.bg.hex %>\", <%= it.inactive4.bg.xterm %>]], [[\"<%= it.inactive5.fg.hex %>\", <%= it.inactive5.fg.xterm %>], [\"<%= it.inactive5.bg.hex %>\", <%= it.inactive5.bg.xterm %>]]]\n\nlet s:p.insert.left = [[[\"<%= it.insert1.fg.hex %>\", <%= it.insert1.fg.xterm %>], [\"<%= it.insert1.bg.hex %>\", <%= it.insert1.bg.xterm %>]], [[\"<%= it.insert2.fg.hex %>\", <%= it.insert2.fg.xterm %>], [\"<%= it.insert2.bg.hex %>\", <%= it.insert2.bg.xterm %>]]]\nlet s:p.insert.middle = [[[\"<%= it.insert3.fg.hex %>\", <%= it.insert3.fg.xterm %>], [\"<%= it.insert3.bg.hex %>\", <%= it.insert3.bg.xterm %>]]]\nlet s:p.insert.right = [[[\"<%= it.insert4.fg.hex %>\", <%= it.insert4.fg.xterm %>], [\"<%= it.insert4.bg.hex %>\", <%= it.insert4.bg.xterm %>]], [[\"<%= it.insert5.fg.hex %>\", <%= it.insert5.fg.xterm %>], [\"<%= it.insert5.bg.hex %>\", <%= it.insert5.bg.xterm %>]]]\n\nlet s:p.replace.left = [[[\"<%= it.replace1.fg.hex %>\", <%= it.replace1.fg.xterm %>], [\"<%= it.replace1.bg.hex %>\", <%= it.replace1.bg.xterm %>]], [[\"<%= it.replace2.fg.hex %>\", <%= it.replace2.fg.xterm %>], [\"<%= it.replace2.bg.hex %>\", <%= it.replace2.bg.xterm %>]]]\nlet s:p.replace.middle = [[[\"<%= it.replace3.fg.hex %>\", <%= it.replace3.fg.xterm %>], [\"<%= it.replace3.bg.hex %>\", <%= it.replace3.bg.xterm %>]]]\nlet s:p.replace.right = [[[\"<%= it.replace4.fg.hex %>\", <%= it.replace4.fg.xterm %>], [\"<%= it.replace4.bg.hex %>\", <%= it.replace4.bg.xterm %>]], [[\"<%= it.replace5.fg.hex %>\", <%= it.replace5.fg.xterm %>], [\"<%= it.replace5.bg.hex %>\", <%= it.replace5.bg.xterm %>]]]\n\nlet s:p.visual.left = [[[\"<%= it.visual1.fg.hex %>\", <%= it.visual1.fg.xterm %>], [\"<%= it.visual1.bg.hex %>\", <%= it.visual1.bg.xterm %>]], [[\"<%= it.visual2.fg.hex %>\", <%= it.visual2.fg.xterm %>], [\"<%= it.visual2.bg.hex %>\", <%= it.visual2.bg.xterm %>]]]\nlet s:p.visual.middle = [[[\"<%= it.visual3.fg.hex %>\", <%= it.visual3.fg.xterm %>], [\"<%= it.visual3.bg.hex %>\", <%= it.visual3.bg.xterm %>]]]\nlet s:p.visual.right = [[[\"<%= it.visual4.fg.hex %>\", <%= it.visual4.fg.xterm %>], [\"<%= it.visual4.bg.hex %>\", <%= it.visual4.bg.xterm %>]], [[\"<%= it.visual5.fg.hex %>\", <%= it.visual5.fg.xterm %>], [\"<%= it.visual5.bg.hex %>\", <%= it.visual5.bg.xterm %>]]]\n\nlet s:p.tabline.left = [[[\"<%= it.tablineLeft.fg.hex %>\", <%= it.tablineLeft.fg.xterm %>], [\"<%= it.tablineLeft.bg.hex %>\", <%= it.tablineLeft.bg.xterm %>]]]\nlet s:p.tabline.tabsel = [[[\"<%= it.tablineSelected.fg.hex %>\", <%= it.tablineSelected.fg.xterm %>], [\"<%= it.tablineSelected.bg.hex %>\", <%= it.tablineSelected.bg.xterm %>]]]\nlet s:p.tabline.middle = [[[\"<%= it.tablineMiddle.fg.hex %>\", <%= it.tablineMiddle.fg.xterm %>], [\"<%= it.tablineMiddle.bg.hex %>\", <%= it.tablineMiddle.bg.xterm %>]]]\nlet s:p.tabline.right = [[[\"<%= it.tablineRight.fg.hex %>\", <%= it.tablineRight.fg.xterm %>], [\"<%= it.tablineRight.bg.hex %>\", <%= it.tablineRight.bg.xterm %>]]]\n\nlet g:lightline#colorscheme#<%= info.name %>#palette = lightline#colorscheme#flatten(s:p)\n",
-        "project": "name: '<%= it.name %>'\nversion: '<%= it.version %>'\nlicense: '<%= it.license %>'\nauthor: '<%= it.author %>'\nurl: '<%= it.url %>'\ndescription: '<%= it.description %>'\ncolorschemes:\n- name: '<%= it.name %>'\n  background: 'dark'\n  palette: '<%= it.name %>'\n",
-        "airline": "<% const info = it.info; %>\n\"\"\n\" Airline_theme: <%= info.name %>\n\n<% if(info.description){ %>\" Description: <%= info.description %>\n<% } %>\n\n<% if(info.url){%>\" URL: <%= info.url %>\n<% } %>\n\n<% if(info.author){%>\" Author: <%= info.author %>\n<% } %>\n\n<% if(info.license){%>\" License: <%= info.license %>\n<% } %>\n\n\"\"\n\nlet g:airline#themes#<%= info.name %>#palette = {}\n\nlet s:normal1 = [ \"<%= it.normal1.fg.hex %>\", \"<%= it.normal1.bg.hex %>\", <%= it.normal1.fg.xterm %>, <%= it.normal1.bg.xterm %> ]\nlet s:normal2 = [ \"<%= it.normal2.fg.hex %>\", \"<%= it.normal2.bg.hex %>\", <%= it.normal2.fg.xterm %>, <%= it.normal2.bg.xterm %> ]\nlet s:normal3 = [ \"<%= it.normal3.fg.hex %>\", \"<%= it.normal3.bg.hex %>\", <%= it.normal3.fg.xterm %>, <%= it.normal3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.normal = airline#themes#generate_color_map(s:normal1, s:normal2, s:normal3)\n\nlet s:insert1 = [ \"<%= it.insert1.fg.hex %>\", \"<%= it.insert1.bg.hex %>\", <%= it.insert1.fg.xterm %>, <%= it.insert1.bg.xterm %> ]\nlet s:insert2 = [ \"<%= it.insert2.fg.hex %>\", \"<%= it.insert2.bg.hex %>\", <%= it.insert2.fg.xterm %>, <%= it.insert2.bg.xterm %> ]\nlet s:insert3 = [ \"<%= it.insert3.fg.hex %>\", \"<%= it.insert3.bg.hex %>\", <%= it.insert3.fg.xterm %>, <%= it.insert3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.insert = airline#themes#generate_color_map(s:insert1, s:insert2, s:insert3)\n\nlet s:replace1 = [ \"<%= it.replace1.fg.hex %>\", \"<%= it.replace1.bg.hex %>\", <%= it.replace1.fg.xterm %>, <%= it.replace1.bg.xterm %> ]\nlet s:replace2 = [ \"<%= it.replace2.fg.hex %>\", \"<%= it.replace2.bg.hex %>\", <%= it.replace2.fg.xterm %>, <%= it.replace2.bg.xterm %> ]\nlet s:replace3 = [ \"<%= it.replace3.fg.hex %>\", \"<%= it.replace3.bg.hex %>\", <%= it.replace3.fg.xterm %>, <%= it.replace3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.replace = airline#themes#generate_color_map(s:replace1, s:replace2, s:replace3)\n\nlet s:visual1 = [ \"<%= it.visual1.fg.hex %>\", \"<%= it.visual1.bg.hex %>\", <%= it.visual1.fg.xterm %>, <%= it.visual1.bg.xterm %> ]\nlet s:visual2 = [ \"<%= it.visual2.fg.hex %>\", \"<%= it.visual2.bg.hex %>\", <%= it.visual2.fg.xterm %>, <%= it.visual2.bg.xterm %> ]\nlet s:visual3 = [ \"<%= it.visual3.fg.hex %>\", \"<%= it.visual3.bg.hex %>\", <%= it.visual3.fg.xterm %>, <%= it.visual3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.visual = airline#themes#generate_color_map(s:visual1, s:visual2, s:visual3)\n\nlet s:inactive1 = [ \"<%= it.inactive1.fg.hex %>\", \"<%= it.inactive1.bg.hex %>\", <%= it.inactive1.fg.xterm %>, <%= it.inactive1.bg.xterm %> ]\nlet s:inactive2 = [ \"<%= it.inactive2.fg.hex %>\", \"<%= it.inactive2.bg.hex %>\", <%= it.inactive2.fg.xterm %>, <%= it.inactive2.bg.xterm %> ]\nlet s:inactive3 = [ \"<%= it.inactive3.fg.hex %>\", \"<%= it.inactive3.bg.hex %>\", <%= it.inactive3.fg.xterm %>, <%= it.inactive3.bg.xterm %> ]\nlet g:airline#themes#<%= it.info.name %>#palette.inactive = airline#themes#generate_color_map(s:inactive1, s:inactive2, s:inactive3)\n\n<% if(it.ctrlp1){ %>\nif !get(g:, 'loaded_ctrlp', 0)\n  finish\nendif\n\nlet s:CP1 = [ \"<%= it.ctrlp1.fg.hex %>\", \"<%= it.ctrlp1.bg.hex %>\", <%= it.ctrlp1.fg.xterm %>, <%= it.ctrlp1.bg.xterm %> ]\nlet s:CP2 = [ \"<%= it.ctrlp2.fg.hex %>\", \"<%= it.ctrlp2.bg.hex %>\", <%= it.ctrlp2.fg.xterm %>, <%= it.ctrlp2.bg.xterm %> ]\nlet s:CP3 = [ \"<%= it.ctrlp3.fg.hex %>\", \"<%= it.ctrlp3.bg.hex %>\", <%= it.ctrlp3.fg.xterm %>, <%= it.ctrlp3.bg.xterm %> ]\n\nlet g:airline#themes#<%= it.info.name %>#palette.ctrlp = airline#extensions#ctrlp#generate_color_map(s:CP1, s:CP2, s:CP3)\n<% } %>\n"
+        "project": "name: '<%= it.name %>'\nversion: '<%= it.version %>'\nlicense: '<%= it.license %>'\nauthor: '<%= it.author %>'\nurl: '<%= it.url %>'\ndescription: '<%= it.description %>'\ncolorschemes:\n- name: '<%= it.name %>'\n  background: 'dark'\n  palette: '<%= it.name %>'\n"
     },
     "addons": {
+        "airline": "normal1: ''\nnormal2: ''\nnormal3: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nctrlp1: '' # optional\nctrlp2: '' # optional\nctrlp3: '' # optional\n",
         "lightline": "normal1: ''\nnormal2: ''\nnormal3: ''\nnormal4: ''\nnormal5: ''\nnormalError: ''\nnormalWarning: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninactive4: ''\ninactive5: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\ninsert4: ''\ninsert5: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nreplace4: ''\nreplace5: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nvisual4: ''\nvisual5: ''\ntablineLeft: ''\ntablineSelected: ''\ntablineMiddle: ''\ntablineRight: ''\n",
-        "terminal": "color_foreground: ''\ncolor_background: ''\ncolor_0: ''\ncolor_1: ''\ncolor_2: ''\ncolor_3: ''\ncolor_4: ''\ncolor_5: ''\ncolor_6: ''\ncolor_7: ''\ncolor_8: ''\ncolor_9: ''\ncolor_10: ''\ncolor_11: ''\ncolor_12: ''\ncolor_13: ''\ncolor_14: ''\ncolor_15: ''\n",
-        "airline": "normal1: ''\nnormal2: ''\nnormal3: ''\ninactive1: ''\ninactive2: ''\ninactive3: ''\ninsert1: ''\ninsert2: ''\ninsert3: ''\nreplace1: ''\nreplace2: ''\nreplace3: ''\nvisual1: ''\nvisual2: ''\nvisual3: ''\nctrlp1: '' # optional\nctrlp2: '' # optional\nctrlp3: '' # optional\n"
+        "terminal": "color_foreground: ''\ncolor_background: ''\ncolor_0: ''\ncolor_1: ''\ncolor_2: ''\ncolor_3: ''\ncolor_4: ''\ncolor_5: ''\ncolor_6: ''\ncolor_7: ''\ncolor_8: ''\ncolor_9: ''\ncolor_10: ''\ncolor_11: ''\ncolor_12: ''\ncolor_13: ''\ncolor_14: ''\ncolor_15: ''\n"
     }
 };
 function installTemplates(projectPath, templates) {
@@ -8717,7 +8049,8 @@ async function createBoilerplate(projectPath, options) {
     Deno.writeTextFileSync(resolve2(estilosFolder, "terminal.yml"), __default1.addons["terminal"]);
     Deno.writeTextFileSync(resolve2(palettesFolder, options.name + ".yml"), defaultPalette);
     installTemplates(projectPath, [
-        "base"
+        "base",
+        "treesitter"
     ]);
     console.log("%c✓  Your project is ready\n", "color: green");
 }
@@ -11187,37 +10520,6 @@ function buildPalette(paletteFile, common) {
     });
     return palette;
 }
-async function selectSyntax(projectPath, all = false) {
-    const destFolder = resolve2(projectPath, "estilos/syntax");
-    const libFiles = Object.keys(__default1.syntax);
-    const destFiles = getFileNamesFromFolder(destFolder);
-    const templates = all ? getMissingTemplates(libFiles, destFiles) : (await askForTemplates(libFiles, destFiles)).templates;
-    installTemplates(projectPath, templates);
-}
-function getFileNamesFromFolder(folder) {
-    return Array.from(Deno.readDirSync(folder)).map((file)=>file.name);
-}
-function getMissingTemplates(libFiles, destFiles) {
-    return libFiles.filter((template)=>!destFiles.includes(template));
-}
-async function askForTemplates(libFiles, destFiles) {
-    const options = libFiles.map((value)=>{
-        const disabled = destFiles.includes(value);
-        return {
-            name: value + (disabled ? " (installed)" : ""),
-            value,
-            disabled
-        };
-    });
-    return await prompt([
-        {
-            type: Checkbox,
-            message: "Select some extra syntax templates",
-            name: "templates",
-            options
-        }
-    ]);
-}
 const uis = new Set([
     "u",
     "b",
@@ -11426,35 +10728,6 @@ function writeThing(folder, txt, name, projectPath) {
     ensureDirSync(folderPath);
     Deno.writeTextFileSync(filepath, txt);
 }
-async function installStatus(projectPath, brand, styleName) {
-    const statusFolderPath = resolve2(projectPath, "estilos", brand);
-    ensureDirSync(statusFolderPath);
-    if (styleName) {
-        return addStatus(projectPath, brand, styleName);
-    }
-    const installedStyles = Array.from(Deno.readDirSync(statusFolderPath)).map((n)=>n.name.slice(0, -4));
-    const answers = await prompt([
-        {
-            type: Input,
-            message: `Enter ${brand} style name:`,
-            name: "stylename",
-            validate: (input)=>{
-                const stylename = input.trim();
-                if (!stylename) return "That's not a name";
-                return installedStyles.includes(stylename) ? "That style already exists" : true;
-            }
-        }
-    ]);
-    addStatus(projectPath, brand, answers.stylename);
-}
-function addStatus(projectPath, brand, styleName) {
-    const folderPath = resolve2(projectPath, "estilos", brand);
-    ensureDirSync(folderPath);
-    const filepath = resolve2(folderPath, styleName + ".yml");
-    Deno.writeTextFileSync(filepath, __default1.addons[brand]);
-    console.log(`%cNew ${brand} style: ${styleName}`, "color: green");
-    console.log(`==> ${filepath}`);
-}
 const estiloCommand = new Command();
 await estiloCommand.command("help", new HelpCommand().global()).reset().name("estilo").version(version).description("Generate colorschemes for (neo)vim, airline and lightline").command("create [folder]").description("Initialize an estilo project in [folder] or current folder").option("-y, --yes", "Skip questions").action((options, folder = ".")=>{
     createProject(resolve2(folder), !!options.yes);
@@ -11463,12 +10736,6 @@ await estiloCommand.command("help", new HelpCommand().global()).reset().name("es
     checkProject(projectPath);
     const project = loadProjectFiles(projectPath);
     renderProject(project);
-}).reset().command("add-syntax").description("Add syntax templates.").option("-a, --all [all:boolean]", "Add add available syntax templates").action((options)=>{
-    selectSyntax(".", !!options.all);
-}).reset().command("add-lightline [styleName]").description("Add new Lightline style").action((_, styleName)=>{
-    installStatus(".", "lightline", styleName);
-}).reset().command("add-airline [styleName]").description("Add new Airline style").action((_, styleName)=>{
-    installStatus(".", "airline", styleName);
 }).reset().parse(Deno.args);
 if (!Object.entries(Deno.args).length) {
     estiloCommand.showHelp();
