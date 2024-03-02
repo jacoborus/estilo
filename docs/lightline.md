@@ -2,16 +2,9 @@
 
 ## Creating styles
 
-Before creating any lightline theme you need at least one color palette in
-`estilos/palettes` folder. Then proceed to add the blank lightline template from
-the command line:
-
-```sh
-estilo add-lightline
-```
-
-This command will create a style file in `estilos/lightline` directory of your
-project. Open it, it will look like this:
+Before creating the lightline theme you need at least one color palette in
+`estilos/palettes` directory. Then create your lightline style as a `.yml`
+file inside `estilos/lightline` folder, and paste this content:
 
 ```yml
 normal1: ''
