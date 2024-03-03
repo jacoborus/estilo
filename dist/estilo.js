@@ -3558,7 +3558,7 @@ function crash(message, data) {
     }
     Deno.exit(1);
 }
-const version = "2.0.0-beta-7";
+const version = "2.0.0-beta-8";
 function isHexColor(color) {
     return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
 }
