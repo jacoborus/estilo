@@ -77,11 +77,13 @@ mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
   [@albertorestifo](https://github.com/albertorestifo)
 - [vim-framer-syntax](https://github.com/balanceiskey/vim-framer-syntax) by
   [@balanceiskey](https://github.com/balanceiskey)
+- [Ullswater](https://github.com/logicmonkey/Ullswater) by
+  [@logicmonkey](https://github.com/logicmonkey)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
 
 ## Development
 
-Estilo is written in pure Typescript, so you need
+Estilo is written in pure Typescript, you'll need 
 [deno.js 1.35](https://deno.land/) or higher installed in your computer
 
 <br>
