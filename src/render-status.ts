@@ -1,5 +1,5 @@
 import { render } from "./deps.ts";
-import { version } from "./common.ts";
+import { version } from "../jsr.json" with { type: "json" };
 import assets from "./assets.ts";
 import { crash } from "./crash.ts";
 

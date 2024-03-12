@@ -1,6 +1,7 @@
 import { Command, HelpCommand, resolve } from "../deps.ts";
 
-import { existsSync, version } from "../common.ts";
+import { version } from "../../jsr.json" with { type: "json" };
+import { existsSync } from "../common.ts";
 import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
 import { loadProjectFiles } from "../load-project.ts";

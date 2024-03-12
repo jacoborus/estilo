@@ -1,7 +1,8 @@
 import { hexterm, render } from "./deps.ts";
 import assets from "./assets.ts";
 import { crash } from "./crash.ts";
-import { isHexColor, version } from "./common.ts";
+import { version } from "../jsr.json" with { type: "json" };
+import { isHexColor } from "./common.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {

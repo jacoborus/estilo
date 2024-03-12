@@ -19,7 +19,7 @@ for Estilo 1, please check out
 ### Deno users
 
 ```sh
-deno install --unstable --allow-read --allow-write -n estilo https://denopkg.com/jacoborus/estilo/dist/estilo.js
+deno install -n estilo jsr:@jacoborus/estilo
 ```
 
 ### Other plaforms
