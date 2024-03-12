@@ -12,5 +12,14 @@
         "test/"
       ]
     }
+  },
+  "imports": {
+    "eta/": "npm:eta@v1.14.2",
+    "@std/fs": "jsr:@std/fs@0.219.0",
+    "@std/path": "jsr:@std/path@0.219.0",
+    "@std/yaml": "jsr:@std/yaml@0.219.0",
+    "cliffy/": "https://deno.land/x/cliffy@v1.0.0-rc.3/",
+    "hexterm/": "npm:hexterm@2.0.2/",
+    "@std/testing": "jsr:@std/testing@0.163.0"
   }
 }
