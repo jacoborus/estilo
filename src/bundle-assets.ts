@@ -1,4 +1,4 @@
-import { basename, extname, resolve } from "path";
+import { basename, extname, resolve } from "./deps.ts";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 

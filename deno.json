@@ -1,17 +1,7 @@
 {
   "tasks": {
     "bundle-assets": "deno run --allow-read --allow-write src/bundle-assets.ts",
-    "bundle": "deno bundle --config deno.json estilo.ts dist/estilo.js",
-    "install": "deno task bundle-assets && deno task bundle && deno install --allow-read --allow-write --allow-net --allow-env dist/estilo.js"
-  },
-  "imports": {
-    "eta": "https://deno.land/x/eta@v1.12.3/mod.ts",
-    "fs": "https://deno.land/std@0.219.0/fs/mod.ts",
-    "path": "https://deno.land/std@0.219.0/path/mod.ts",
-    "yaml": "https://deno.land/std@0.219.0/yaml/mod.ts",
-    "cliffy-prompt": "https://deno.land/x/cliffy@v1.0.0-rc.3/prompt/mod.ts",
-    "cliffy-command": "https://deno.land/x/cliffy@v1.0.0-rc.3/command/mod.ts",
-    "hexterm": "https://deno.land/x/hexterm@2.0.2/src/hexterm.ts"
+    "install": "deno task bundle-assets  && deno install --allow-read --allow-write --allow-net --allow-env estilo.ts"
   },
   "test": {
     "files": {

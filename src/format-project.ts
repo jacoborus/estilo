@@ -1,4 +1,4 @@
-import { basename } from "path";
+import { basename } from "./deps.ts";
 
 import {
   List,

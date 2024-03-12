@@ -1,8 +1,5 @@
-import { hexterm } from "hexterm";
-import { render } from "eta";
-
+import { hexterm, render } from "./deps.ts";
 import assets from "./assets.ts";
-
 import { crash } from "./crash.ts";
 import { isHexColor, version } from "./common.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";

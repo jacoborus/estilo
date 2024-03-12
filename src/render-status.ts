@@ -1,5 +1,4 @@
-import { render } from "eta";
-
+import { render } from "./deps.ts";
 import { version } from "./common.ts";
 import assets from "./assets.ts";
 import { crash } from "./crash.ts";

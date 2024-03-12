@@ -1,5 +1,4 @@
-import { Command, HelpCommand } from "cliffy-command";
-import { resolve } from "path";
+import { Command, HelpCommand, resolve } from "../deps.ts";
 
 import { existsSync, version } from "../common.ts";
 import { crash } from "../crash.ts";
@@ -49,7 +48,9 @@ function checkProject(projectPath: string) {
     .filter((path) => !existsSync(path));
   if (notOk.length) {
     if (existsSync(resolve(projectPath, "estilo"))) {
-      crash(`⚠ Wrong project folder. Follow upgrade instructions please`);
+      crash(
+        `⚠ Wrong project folder. Please, follow upgrade instructions in docs`,
+      );
     } else {
       crash(`⚠ Wrong project folder. Missing paths:\n${notOk.join("\n")}`);
     }
