@@ -2,8 +2,8 @@ import { basename, extname, resolve } from "./deps.ts";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
-const syntax = loadFolder(resolve(__dirname, "../assets/syntax"));
-const mustaches = loadFolder(resolve(__dirname, "../assets/mustaches"));
+const syntax = loadFolder(resolve(__dirname, "./assets/syntax"));
+const mustaches = loadFolder(resolve(__dirname, "./assets/mustaches"));
 
 const assets = { syntax, mustaches };
 
