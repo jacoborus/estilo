@@ -1,4 +1,7 @@
 {
+  "name": "@jacoborus/estilo",
+  "version": "2.0.0-beta.9",
+  "exports": "./estilo.ts",
   "tasks": {
     "bundle-assets": "deno run --allow-read --allow-write src/bundle-assets.ts",
     "install": "deno task bundle-assets  && deno install --allow-read --allow-write --allow-net --allow-env estilo.ts"
