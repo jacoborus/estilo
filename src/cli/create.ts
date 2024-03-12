@@ -3,7 +3,6 @@ import { ensureDirSync } from "fs";
 import { Input, prompt } from "cliffy-prompt";
 import { render } from "eta";
 import { List } from "../types.ts";
-import { installTemplates } from "./install-templates.ts";
 import assets from "../assets.ts";
 
 interface ProjectOptions {
@@ -88,13 +87,20 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    assets.addons["terminal"] as string,
+    assets.addons.terminal,
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
     defaultPalette,
   );
-  installTemplates(projectPath, ["base", "treesitter"]);
+  Deno.writeTextFileSync(
+    resolve(syntaxFolder, "base.yml"),
+    assets.syntax.base,
+  );
+  Deno.writeTextFileSync(
+    resolve(syntaxFolder, "treesitter.yml"),
+    assets.syntax.treesitter,
+  );
 
   console.log("%c✓  Your project is ready\n", "color: green");
 }

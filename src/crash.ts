@@ -1,5 +1,5 @@
 export function crash(message: string, data?: Record<string, string>): never {
-  console.log("Error: " + message, "color: red");
+  console.log("%cError: " + message, "color: red");
 
   if (data) {
     console.log(

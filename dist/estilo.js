@@ -3552,7 +3552,7 @@ function resolve2(...pathSegments) {
     return isWindows ? resolve(...pathSegments) : resolve1(...pathSegments);
 }
 function crash(message, data) {
-    console.log("Error: " + message, "color: red");
+    console.log("%cError: " + message, "color: red");
     if (data) {
         console.log("%c" + Object.keys(data).map((key)=>`- ${key}: ${data[key]}`).join("\n"), "color: red");
     }
@@ -7938,18 +7938,6 @@ const __default1 = {
         "terminal": "color_foreground: ''\ncolor_background: ''\ncolor_0: ''\ncolor_1: ''\ncolor_2: ''\ncolor_3: ''\ncolor_4: ''\ncolor_5: ''\ncolor_6: ''\ncolor_7: ''\ncolor_8: ''\ncolor_9: ''\ncolor_10: ''\ncolor_11: ''\ncolor_12: ''\ncolor_13: ''\ncolor_14: ''\ncolor_15: ''\n"
     }
 };
-function installTemplates(projectPath, templates) {
-    templates.forEach((name)=>{
-        const destination = resolve2(projectPath, "estilos/syntax", name + ".yml");
-        try {
-            Deno.writeTextFileSync(destination, __default1.syntax[name]);
-        } catch (err) {
-            console.error(err);
-        }
-    });
-    console.log(`%cAdded ${templates.length} templates:`, "color: green");
-    templates.map((name)=>`%c✓ %c${name}`).forEach((line)=>console.log(line, "color: green", "color: default"));
-}
 const defaultPalette = "myblue: '#99ccff'";
 async function createProject(projectPath, noQuestions) {
     const options = noQuestions ? getDefaultConfig(projectPath) : await askConfig(projectPath);
@@ -8012,12 +8000,10 @@ async function createBoilerplate(projectPath, options) {
     ensureDirSync(syntaxFolder);
     ensureDirSync(palettesFolder);
     Deno.writeTextFileSync(resolve2(projectPath, "estilo.yml"), estiloStr);
-    Deno.writeTextFileSync(resolve2(estilosFolder, "terminal.yml"), __default1.addons["terminal"]);
+    Deno.writeTextFileSync(resolve2(estilosFolder, "terminal.yml"), __default1.addons.terminal);
     Deno.writeTextFileSync(resolve2(palettesFolder, options.name + ".yml"), defaultPalette);
-    installTemplates(projectPath, [
-        "base",
-        "treesitter"
-    ]);
+    Deno.writeTextFileSync(resolve2(syntaxFolder, "base.yml"), __default1.syntax.base);
+    Deno.writeTextFileSync(resolve2(syntaxFolder, "treesitter.yml"), __default1.syntax.treesitter);
     console.log("%c✓  Your project is ready\n", "color: green");
 }
 async function renderConfigFile(options) {
