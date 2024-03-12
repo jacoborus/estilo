@@ -2,11 +2,10 @@ import { basename, extname, resolve } from "./deps.ts";
 
 const __dirname = new URL(".", import.meta.url).pathname;
 
-const syntax = loadFolder(resolve(__dirname, "../assets/syntax-base"));
-const addons = loadFolder(resolve(__dirname, "../assets/addons"));
+const syntax = loadFolder(resolve(__dirname, "../assets/syntax"));
 const mustaches = loadFolder(resolve(__dirname, "../assets/mustaches"));
 
-const assets = { syntax, mustaches, addons };
+const assets = { syntax, mustaches };
 
 Deno.writeTextFileSync(
   resolve(__dirname, "./assets.ts"),

@@ -61,10 +61,10 @@ hi link WarningMsg Title
 ## Add more syntax highlighting templates
 
 Estilo bundles a pack of templates for common language syntaxes and plugins, you
-can add this templates by running `estilo add-syntax` on your terminal.
+can add them to the estilos/syntax folder of your project
 
 See
-[list of available syntax templates](https://github.com/jacoborus/estilo/tree/master/templates/syntax)
+[list of available syntax templates](https://github.com/jacoborus/estilo/tree/master/syntax)
 
 ## Add colors to terminal
 

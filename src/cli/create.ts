@@ -91,7 +91,7 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(
     resolve(estilosFolder, "terminal.yml"),
-    assets.addons.terminal,
+    assets.syntax.terminal,
   );
   Deno.writeTextFileSync(
     resolve(palettesFolder, options.name + ".yml"),
@@ -100,10 +100,6 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   Deno.writeTextFileSync(
     resolve(syntaxFolder, "base.yml"),
     assets.syntax.base,
-  );
-  Deno.writeTextFileSync(
-    resolve(syntaxFolder, "treesitter.yml"),
-    assets.syntax.treesitter,
   );
 
   console.log("%c✓  Your project is ready\n", "color: green");
