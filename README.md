@@ -19,7 +19,7 @@ for Estilo 1, please check out
 ### Deno users
 
 ```sh
-deno install -n estilo jsr:@jacoborus/estilo
+deno install -n estilo --allow-write --allow-read jsr:@jacoborus/estilo
 ```
 
 ### Other plaforms
@@ -34,11 +34,7 @@ Commands:
 
 - **`create [folder]`**: Create an estilo project in [folder] or current folder
 - **`render [folder]`**: Render project in [folder] or current folder
-- **`add-syntax`**: Add more syntax templates
-- **`add-airline [styleName]`**: Add a new Airline style
-- **`add-lightline [styleName]`**: Add a new Lightline style
-- **`help [command]`**: Show this help or the help of a sub-command.
-- **`--version`**: Show the version number.
+- **`help [command]`**: Show this help
 
 ## Guide
 

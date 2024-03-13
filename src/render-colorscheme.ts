@@ -1,9 +1,8 @@
 import { render } from "npm:eta@1.14.2";
 import { hexterm } from "jsr:@jacoborus/hexterm@2.1.0";
 import assets from "./assets.ts";
-import { crash } from "./crash.ts";
 import denojson from "../deno.json" with { type: "json" };
-import { isHexColor } from "./common.ts";
+import { crash, isHexColor } from "./util.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
 import {

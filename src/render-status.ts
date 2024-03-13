@@ -1,7 +1,7 @@
 import { render } from "npm:eta@1.14.2";
 import denojson from "../deno.json" with { type: "json" };
 import assets from "./assets.ts";
-import { crash } from "./crash.ts";
+import { crash } from "./util.ts";
 
 import {
   DataRenderStatus,

@@ -1,1 +1,1 @@
-import "./src/cli/cli.ts";
+import "./src/cli.ts";

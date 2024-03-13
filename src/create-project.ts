@@ -2,8 +2,8 @@ import { ensureDirSync } from "jsr:@std/fs@0.219.1";
 import { basename, resolve } from "jsr:@std/path@0.219.1";
 import { render } from "npm:eta@1.14.2";
 
-import { List } from "../types.ts";
-import assets from "../assets.ts";
+import { List } from "./types.ts";
+import assets from "./assets.ts";
 
 interface ProjectOptions {
   name: string;

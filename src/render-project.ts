@@ -13,7 +13,7 @@ export async function renderProject(project: Project): Promise<void> {
   const { config: projectConfig } = project;
 
   for (const config of projectConfig.colorschemes) {
-    const rendered = await renderColorscheme(config, project);
+    const rendered = renderColorscheme(config, project);
     writeThing("colors", rendered, config.name, project.projectUrl);
   }
 

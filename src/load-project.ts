@@ -20,11 +20,10 @@ import {
 import {
   assertIsList,
   assertIsObject,
+  crash,
   existsSync,
   isHexColor,
-} from "./common.ts";
-
-import { crash } from "./crash.ts";
+} from "./util.ts";
 
 export function loadProjectFiles(projectUrl: string): Project {
   const config = loadYml(projectUrl, "estilo.yml").content as ProjectConfig;

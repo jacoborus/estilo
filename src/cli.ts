@@ -1,11 +1,10 @@
 import { resolve } from "jsr:@std/path@0.219.1";
 
-import { existsSync } from "../common.ts";
-import { crash } from "../crash.ts";
-import { createProject } from "./create.ts";
-import { loadProjectFiles } from "../load-project.ts";
-import { renderProject } from "../render-project.ts";
-import denojson from "../../deno.json" with { type: "json" };
+import { crash, existsSync } from "./util.ts";
+import { createProject } from "./create-project.ts";
+import { loadProjectFiles } from "./load-project.ts";
+import { renderProject } from "./render-project.ts";
+import denojson from "../deno.json" with { type: "json" };
 
 const helpText = `
   Estilo ${denojson.version}

@@ -1,4 +1,17 @@
-import { crash } from "./crash.ts";
+export function crash(message: string, data?: Record<string, string>): never {
+  console.log("%cError: " + message, "color: red");
+
+  if (data) {
+    console.log(
+      "%c" +
+        Object.keys(data)
+          .map((key) => `- ${key}: ${data[key]}`)
+          .join("\n"),
+      "color: red",
+    );
+  }
+  Deno.exit(1);
+}
 
 export function isHexColor(color: string): boolean {
   return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
