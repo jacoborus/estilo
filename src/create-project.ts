@@ -21,7 +21,7 @@ export async function createProject(projectPath: string, noQuestions: boolean) {
   const options = noQuestions
     ? getDefaultConfig(projectPath)
     : await askConfig(projectPath);
-  await createBoilerplate(projectPath, options as ProjectOptions);
+  createBoilerplate(projectPath, options as ProjectOptions);
 }
 
 function getDefaultConfig(projectPath: string): ProjectOptions {
@@ -38,7 +38,7 @@ function getDefaultConfig(projectPath: string): ProjectOptions {
 async function ask(question: string, defaultAnswer = "") {
   console.log(
     `%c${question}%c${defaultAnswer ? " (" + defaultAnswer + ")" : ""}`,
-    "font-weight: bold",
+    "font-weight: bold; color: green;",
     "font-weight: normal",
   );
   const buffer = new Uint8Array(1024);
@@ -69,8 +69,8 @@ async function askConfig(projectPath: string) {
   return config;
 }
 
-async function createBoilerplate(projectPath: string, options: ProjectOptions) {
-  const estiloStr = await renderConfigFile(options);
+function createBoilerplate(projectPath: string, options: ProjectOptions) {
+  const estiloStr = renderConfigFile(options);
 
   const estilosFolder = resolve(projectPath, "estilos");
   const syntaxFolder = resolve(estilosFolder, "syntax");
@@ -97,9 +97,9 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   console.log("%c✓  Your project is ready\n", "color: green");
 }
 
-async function renderConfigFile(options: ProjectOptions): Promise<string> {
-  return (await render(
+function renderConfigFile(options: ProjectOptions): string {
+  return render(
     assets.mustaches["project"] as string,
     options as unknown as List,
-  )) as string;
+  ) as string;
 }
