@@ -45,11 +45,11 @@ function parseStatusColors(
   return out;
 }
 
-export async function renderStatus(
+export function renderStatus(
   config: StatusConfig,
   project: Project,
   brand: StatusBrand,
-): Promise<string> {
+): string {
   const palette = project.palettes[config.palette];
 
   if (!palette) {
@@ -80,9 +80,10 @@ export async function renderStatus(
     url: project.config.url,
     author: project.config.author,
     license: project.config.license,
+    version: project.config.version,
     estiloVersion: version,
   };
 
   const context = Object.assign(ctx, { info });
-  return (await render(assets.mustaches[brand] as string, context)) as string;
+  return render(assets.mustaches[brand] as string, context) as string;
 }

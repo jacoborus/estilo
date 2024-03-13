@@ -1,8 +1,9 @@
 <% const info = it.info; %>
 ""
-" Lightline_theme: <%= info.name %>
+" Lightline_theme: <%= info.name %> v<%= it.info.version %>
 
-<% if(info.description){ %>" Description: <%= info.description %>
+"
+<% if(info.description){ %>" <%= info.description %>
 <% } %>
 
 <% if(info.url){ %>" URL: <%= info.url %>
