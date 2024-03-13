@@ -3,7 +3,8 @@
   "version": "2.0.0-beta.10",
   "exports": "./estilo.ts",
   "tasks": {
-    "bundle-assets": "deno run --allow-read --allow-write src/bundle-assets.ts",
-    "install": "deno task bundle-assets  && deno install --allow-read --allow-write estilo.ts"
+    "bundle-assets": "deno run --allow-read --allow-write scripts/bundle_assets.ts",
+    "install": "deno task bundle-assets && deno install --allow-read --allow-write estilo.ts",
+    "build-npm": "deno run -A scripts/build_npm.ts"
   }
 }

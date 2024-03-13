@@ -6,3 +6,4 @@ _book
 lib
 .vim
 *.bundle.js
+npm

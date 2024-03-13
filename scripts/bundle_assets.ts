@@ -1,14 +1,15 @@
 import { basename, extname, resolve } from "jsr:@std/path@0.219.1";
 
-const __dirname = new URL(".", import.meta.url).pathname;
+const projectFolder = resolve(import.meta.dirname as string, "..");
+const srcFolder = resolve(projectFolder, "src");
 
-const syntax = loadFolder(resolve(__dirname, "./assets/syntax"));
-const mustaches = loadFolder(resolve(__dirname, "./assets/mustaches"));
+const syntax = loadFolder(resolve(srcFolder, "./assets/syntax"));
+const mustaches = loadFolder(resolve(srcFolder, "./assets/mustaches"));
 
 const assets = { syntax, mustaches };
 
 Deno.writeTextFileSync(
-  resolve(__dirname, "./assets.ts"),
+  resolve(srcFolder, "./assets.ts"),
   "export default " + JSON.stringify(assets, null, 2),
 );
 

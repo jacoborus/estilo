@@ -2,9 +2,11 @@
 
 Create and maintain colorschemes for vim, airline and lightline.
 
+[![JSR](https://jsr.io/badges/@jacoborus/estilo)](https://jsr.io/@jacoborus/estilo)
+
 ---
 
-:fire: **HEADS UP!**
+**HEADS UP!**
 
 You're currently looking at Estilo 2 branch (beta version). If you're looking
 for Estilo 1, please check out
@@ -79,12 +81,12 @@ mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
 
 ## Development
 
-Estilo is written in pure Typescript, you'll need 
-[deno.js 1.35](https://deno.land/) or higher installed in your computer
+Estilo is written in pure Typescript, you'll need [deno.js](https://deno.land/)
+installed in your computer
 
 <br>
 
 ---
 
-© 2016-2023 [Jacobo Tabernero Rey](http://jacoborus.codes) - Released under
+© 2016-2023 [Jacobo Tabernero Rey](http://jacobo.codes) - Released under
 [MIT License](https://raw.github.com/jacoborus/estilo/master/LICENSE)
