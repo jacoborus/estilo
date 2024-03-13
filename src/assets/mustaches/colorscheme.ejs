@@ -1,14 +1,19 @@
-<% const info = it.info; %>
 ""
-" Colorscheme: <% info.name %>
-<% if(it.info.description) { %>" Description: <%= it.info.description %>
+" <%= it.info.name %> v<%= it.info.version %>
+
+"
+<% if(it.info.description) { %>" <%= it.info.description %>
 <% } %>
+
 <% if(it.info.url){ %>" URL: <%= it.info.url %>
 <% } %>
+
 <% if(it.info.author){ %>" Author: <%= it.info.author %>
 <% } %>
+
 <% if(it.info.license){%>" License: <%= it.info.license %>
 <% } %>
+
 ""
 
 set background=<%= it.info.background %>
@@ -28,14 +33,14 @@ endif
 let g:<%= it.info.name %>_italic = get(g:, '<%= it.info.name %>_italic', 0)
 
 let Bold = ""
-if exists('g:<%= info.name %>_bold')
+if exists('g:<%= it.info.name %>_bold')
   let Bold = "bold"
 endif
 
-let g:<%= it.info.name %>_bold = get(g:, '<%info.name%>_bold', 0)
+let g:<%= it.info.name %>_bold = get(g:, '<%it.info.name%>_bold', 0)
 
 <% Object.keys(it.stacks).forEach(function (key) {%>
-  <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>
+<% const { link, fore, back, ui, guisp } = it.stacks[key]; %>
 <%- if(link){ -%>
 hi link <%=key%> <%=link%>
 <%- } else { -%>

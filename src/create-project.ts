@@ -11,7 +11,6 @@ interface ProjectOptions {
   version: string;
   url: string;
   license: string;
-  description: string;
 }
 
 const decoder = new TextDecoder();
@@ -31,7 +30,6 @@ function getDefaultConfig(projectPath: string): ProjectOptions {
     version: "1.0.0",
     url: "",
     license: "MIT",
-    description: "A (neo)vim colorscheme",
   };
 }
 
@@ -55,12 +53,10 @@ async function askConfig(projectPath: string) {
     version: "1.0.0",
     url: "",
     license: "MIT",
-    description: "A (neo)vim colorscheme",
   };
 
   const config = {
     name: await ask("Project name:", defConfig.name as string),
-    description: await ask("Description:"),
     version: await ask("Version:", defConfig.version),
     license: await ask("License:", defConfig.license),
     author: await ask("Author:"),

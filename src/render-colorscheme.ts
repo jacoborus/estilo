@@ -41,7 +41,7 @@ export function renderColorscheme(
     });
   }
 
-  return render(assets.mustaches["colorscheme"] as string, {
+  const ctx = {
     info: {
       name: config.name,
       description: config.description,
@@ -49,11 +49,14 @@ export function renderColorscheme(
       author: project.config.author,
       license: project.config.license,
       background: config.background,
+      version: project.config.version,
       estiloVersion: version,
     },
     stacks: parseSyntaxColors(project.syntax, palette),
     term: parseTermColors(project.terminalSyntax, palette),
-  }) as string;
+  };
+
+  return render(assets.mustaches["colorscheme"]!, ctx);
 }
 
 function parseTermColors(termSyntax: List, palette: Palette) {
