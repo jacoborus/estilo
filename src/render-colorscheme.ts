@@ -1,7 +1,8 @@
-import { hexterm, render } from "./deps.ts";
+import { render } from "npm:eta@1.14.2";
+import { hexterm } from "jsr:@jacoborus/hexterm";
 import assets from "./assets.ts";
 import { crash } from "./crash.ts";
-import { version } from "../jsr.json" with { type: "json" };
+import denojson from "../deno.json" with { type: "json" };
 import { isHexColor } from "./common.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
@@ -27,10 +28,12 @@ interface LinkValue {
   link: string;
 }
 
-export async function renderColorscheme(
+const version = denojson.version;
+
+export function renderColorscheme(
   config: SchemeConfig,
   project: Project,
-): Promise<string> {
+): string {
   const palette = project.palettes[config.palette];
   if (!palette) {
     crash("Colorscheme palette does not exist", {
@@ -39,7 +42,7 @@ export async function renderColorscheme(
     });
   }
 
-  return (await render(assets.mustaches["colorscheme"] as string, {
+  return render(assets.mustaches["colorscheme"] as string, {
     info: {
       name: config.name,
       description: config.description,
@@ -51,7 +54,7 @@ export async function renderColorscheme(
     },
     stacks: parseSyntaxColors(project.syntax, palette),
     term: parseTermColors(project.terminalSyntax, palette),
-  })) as string;
+  }) as string;
 }
 
 function parseTermColors(termSyntax: List, palette: Palette) {

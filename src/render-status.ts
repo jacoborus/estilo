@@ -1,5 +1,5 @@
-import { render } from "./deps.ts";
-import { version } from "../jsr.json" with { type: "json" };
+import { render } from "npm:eta@1.14.2";
+import denojson from "../deno.json" with { type: "json" };
 import assets from "./assets.ts";
 import { crash } from "./crash.ts";
 
@@ -11,6 +11,8 @@ import {
   StatusConfig,
   StatusSyntax,
 } from "./types.ts";
+
+const version = denojson.version;
 
 function parseStatusColors(
   syntax: StatusSyntax,

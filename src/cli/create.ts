@@ -1,11 +1,7 @@
-import {
-  basename,
-  ensureDirSync,
-  Input,
-  prompt,
-  render,
-  resolve,
-} from "../deps.ts";
+import { ensureDirSync } from "jsr:@std/fs@0.219.1";
+import { basename, resolve } from "jsr:@std/path@0.219.1";
+import { render } from "npm:eta@1.14.2";
+
 import { List } from "../types.ts";
 import assets from "../assets.ts";
 
@@ -18,6 +14,7 @@ interface ProjectOptions {
   description: string;
 }
 
+const decoder = new TextDecoder();
 const defaultPalette = "myblue: '#99ccff'";
 
 export async function createProject(projectPath: string, noQuestions: boolean) {
@@ -38,43 +35,38 @@ function getDefaultConfig(projectPath: string): ProjectOptions {
   };
 }
 
+async function ask(question: string, defaultAnswer = "") {
+  console.log(
+    `%c${question}%c${defaultAnswer ? " (" + defaultAnswer + ")" : ""}`,
+    "font-weight: bold",
+    "font-weight: normal",
+  );
+  const buffer = new Uint8Array(1024);
+  await Deno.stdin.read(buffer);
+  const answer = decoder.decode(buffer);
+  return answer.split("\n")[0].trim() || defaultAnswer;
+}
+
 async function askConfig(projectPath: string) {
   const folderName = basename(projectPath);
-  return await prompt([
-    {
-      type: Input,
-      name: "name",
-      message: "Project name:",
-      default: folderName,
-    },
-    {
-      type: Input,
-      name: "version",
-      message: "Version:",
-      default: "1.0.0",
-    },
-    {
-      type: Input,
-      name: "license",
-      message: "License:",
-      default: "MIT",
-    },
-    {
-      type: Input,
-      name: "author",
-      message: "Author:",
-    },
-    {
-      type: Input,
-      name: "url",
-      message: "Project url:",
-    },
-    {
-      type: Input,
-      name: "description",
-      message: "Description:",
-    },
-  ]);
+  const defConfig = {
+    name: folderName,
+    author: "",
+    version: "1.0.0",
+    url: "",
+    license: "MIT",
+    description: "A (neo)vim colorscheme",
+  };
+
+  const config = {
+    name: await ask("Project name:", defConfig.name as string),
+    description: await ask("Description:"),
+    version: await ask("Version:", defConfig.version),
+    license: await ask("License:", defConfig.license),
+    author: await ask("Author:"),
+    url: await ask("URL:"),
+  };
+  return config;
 }
 
 async function createBoilerplate(projectPath: string, options: ProjectOptions) {

@@ -1,4 +1,4 @@
-import { basename } from "./deps.ts";
+import { basename } from "jsr:@std/path@0.219.1";
 
 import {
   List,

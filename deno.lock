@@ -1,5 +1,46 @@
 {
   "version": "3",
+  "packages": {
+    "specifiers": {
+      "jsr:@jacoborus/hexterm": "jsr:@jacoborus/hexterm@2.1.0",
+      "jsr:@std/assert@^0.219.1": "jsr:@std/assert@0.219.1",
+      "jsr:@std/fs@0.219.1": "jsr:@std/fs@0.219.1",
+      "jsr:@std/path@0.219.1": "jsr:@std/path@0.219.1",
+      "jsr:@std/path@^0.219.1": "jsr:@std/path@0.219.1",
+      "jsr:@std/yaml@0.219.1": "jsr:@std/yaml@0.219.1",
+      "npm:eta@1.14.2": "npm:eta@1.14.2"
+    },
+    "jsr": {
+      "@jacoborus/hexterm@2.1.0": {
+        "integrity": "2b57c9a9e05f497ec50d01bad54807249e51b7956803b11c9e528675ea5b33c3"
+      },
+      "@std/assert@0.219.1": {
+        "integrity": "e76c2a1799a78f0f4db7de04bdc9b908a7a4b821bb65eda0285885297d4fb8af"
+      },
+      "@std/fs@0.219.1": {
+        "integrity": "c18daa9bede16463d040dcdde575fce13be4bb7807cb6211094abd0c723117a5",
+        "dependencies": [
+          "jsr:@std/assert@^0.219.1",
+          "jsr:@std/path@^0.219.1"
+        ]
+      },
+      "@std/path@0.219.1": {
+        "integrity": "e5c0ffef3a8ef2b48e9e3d88a1489320e8fb2cc7be767b17c91a1424ffb4c8ed",
+        "dependencies": [
+          "jsr:@std/assert@^0.219.1"
+        ]
+      },
+      "@std/yaml@0.219.1": {
+        "integrity": "62c99e2f3f006bbbd5d3d909f7bc148190a5411849d6e5dc7a8608960457b1df"
+      }
+    },
+    "npm": {
+      "eta@1.14.2": {
+        "integrity": "sha512-wZmJAV7EFUG5W8XNXSazIdichnWEhGB1OWg4tnXWPj0CPNUcFdgorGNO6N9p6WBUgoUe4P0OziJYn1+6zxP2aQ==",
+        "dependencies": {}
+      }
+    }
+  },
   "remote": {
     "https://deno.land/std@0.196.0/_util/os.ts": "d932f56d41e4f6a6093d56044e29ce637f8dcc43c5a90af43504a889cf1775e3",
     "https://deno.land/std@0.196.0/assert/assert.ts": "9a97dad6d98c238938e7540736b826440ad8c1c1e54430ca4c4e623e585607ee",

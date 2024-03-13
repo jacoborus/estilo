@@ -1,4 +1,6 @@
-import { basename, hexterm, parse as yamlParse, resolve } from "./deps.ts";
+import { parse as yamlParse } from "jsr:@std/yaml@0.219.1";
+import { basename, resolve } from "jsr:@std/path@0.219.1";
+import { hexterm } from "jsr:@jacoborus/hexterm";
 
 import {
   ColorObj,
