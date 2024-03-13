@@ -5,9 +5,10 @@ import { crash } from "../crash.ts";
 import { createProject } from "./create.ts";
 import { loadProjectFiles } from "../load-project.ts";
 import { renderProject } from "../render-project.ts";
+import denojson from "../../deno.json" with { type: "json" };
 
 const helpText = `
-  Estilo: 2.0.0-beta-7
+  Estilo ${denojson.version}
 
     Generate colorschemes for (neo)vim, airline and lightline
 
@@ -22,38 +23,38 @@ const helpText = `
 const command = Deno.args[0];
 const target = Deno.args[1];
 
-if (command === "help" || command === undefined) {
-  console.log(helpText);
-  Deno.exit();
-}
-
 if (command !== "render" && command !== "create") {
-  console.log("%cInvalid command", "color: red");
+  if (command !== "help" && command !== undefined) {
+    console.log("%cInvalid command", "color: red");
+  }
   console.log(helpText);
+} else if (command === "render") {
+  await render();
+} else {
+  create();
 }
 
-if (command === "render") {
+async function render() {
   const projectPath = resolve(target ?? ".");
   checkProject(projectPath);
   const project = loadProjectFiles(projectPath);
   await renderProject(project);
-  Deno.exit();
 }
 
-let projectPath = "";
-
-let auto = false;
-if (target === undefined || target === "-y") {
-  projectPath = resolve(".");
-} else {
-  projectPath = resolve(target);
-}
-if (target === "-y") {
-  auto = true;
-}
-
-if (command === "create") {
-  createProject(projectPath, auto);
+function create() {
+  let projectPath = "";
+  let auto = false;
+  if (target === undefined || target === "-y") {
+    projectPath = resolve(".");
+  } else {
+    projectPath = resolve(target);
+  }
+  if (target === "-y") {
+    auto = true;
+  }
+  if (command === "create") {
+    createProject(projectPath, auto);
+  }
 }
 
 function checkProject(projectPath: string) {
