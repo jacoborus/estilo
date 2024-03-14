@@ -7,3 +7,4 @@ lib
 .vim
 *.bundle.js
 npm
+release

@@ -1,5 +1,5 @@
 import { render } from "npm:eta@1.14.2";
-import { hexterm } from "jsr:@jacoborus/hexterm@2.1.0";
+import { hexterm } from "jsr:@jacoborus/hexterm@2.1.1";
 import assets from "./assets.ts";
 import denojson from "../deno.json" with { type: "json" };
 import { crash, isHexColor } from "./util.ts";
