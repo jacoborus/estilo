@@ -26,7 +26,7 @@ deno install -n estilo --allow-write --allow-read jsr:@jacoborus/estilo
 
 ### Other plaforms
 
-TODO
+[Download the binary for your OS](https://github.com/jacoborus/estilo/releases)
 
 ## CLI
 
