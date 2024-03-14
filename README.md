@@ -36,7 +36,6 @@ Commands:
 
 - **`create [folder]`**: Create an estilo project in [folder] or current folder
 - **`render [folder]`**: Render project in [folder] or current folder
-- **`help [command]`**: Show this help
 
 ## Guide
 
