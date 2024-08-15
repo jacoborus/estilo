@@ -73,12 +73,14 @@ Open `estilos/terminal.yml` and fill each value with a color from your palette.
 ## Add colorschemes to `estilo.yml`
 
 Open `estilo.yml` file and add an object for each colorcheme with its parameters
-inside `colorschemes` list. Every one has 3 parameters:
+inside `colorschemes` list. Every one has 4 parameters:
 
 - name: the name of the colorscheme (should have not spaces)
 - background: 'dark' or 'light' ('dark' by default)
 - palette: the name of the color palette. It's the same as the file inside
   `palettes` folder without the `.yml` extension
+- neovim_legacy_compat: whether to use the old vim theme as the base when
+  using the theme on neovim ('false' by default)
 
 Example:
 

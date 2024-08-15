@@ -18,7 +18,15 @@
 
 set background=<%= it.info.background %>
 
+<% if ( it.info.neovim_legacy_compat ) { %>
+if has('nvim')
+  source $VIMRUNTIME/colors/vim.lua
+else
+  hi clear
+endif
+<% } else { %>
 hi clear
+<% } %>
 
 if exists("syntax_on")
   syntax reset

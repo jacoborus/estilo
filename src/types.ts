@@ -21,6 +21,7 @@ export interface SchemeConfig {
   background: string;
   palette: string;
   description?: string;
+  neovim_legacy_compat?: boolean;
 }
 
 export interface ProjectConfig {
