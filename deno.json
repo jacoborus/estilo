@@ -7,5 +7,8 @@
     "install": "deno task bundle-assets && deno install --allow-read --allow-write estilo.ts",
     "build-npm": "deno run -A scripts/build_npm.ts",
     "create-binaries": "deno run -A scripts/create_binaries.ts"
+  },
+  "imports": {
+    "@deno/dnt": "jsr:@deno/dnt@^0.41.3"
   }
 }
