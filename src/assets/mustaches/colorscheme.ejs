@@ -44,8 +44,7 @@ let Bold = ""
 if exists('g:<%= it.info.name %>_bold')
   let Bold = "bold"
 endif
-
-let g:<%= it.info.name %>_bold = get(g:, '<%it.info.name%>_bold', 0)
+let g:<%= it.info.name %>_bold = get(g:, '<%= it.info.name%>_bold', 0)
 
 <% Object.keys(it.stacks).forEach(function (key) {%>
 <% const { link, fore, back, ui, guisp } = it.stacks[key]; %>
