@@ -51,6 +51,7 @@ export function renderColorscheme(
       background: config.background,
       version: project.config.version,
       estiloVersion: version,
+      neovim_legacy_compat: config.neovim_legacy_compat,
     },
     stacks: parseSyntaxColors(project.syntax, palette),
     term: parseTermColors(project.terminalSyntax, palette),
