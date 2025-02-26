@@ -41,6 +41,21 @@ export function renderColorscheme(
     });
   }
 
+  const allStacks = parseSyntaxColors(project.syntax, palette);
+  const stacks: SyntaxValues = {};
+  const lspStacks: SyntaxValues = {};
+  const treesitterStacks: SyntaxValues = {};
+
+  for (const [name, value] of Object.entries(allStacks)) {
+    if (name.startsWith("@lsp")) {
+      lspStacks[name] = value;
+    } else if (name.startsWith("@")) {
+      treesitterStacks[name] = value;
+    } else {
+      stacks[name] = value;
+    }
+  }
+
   const ctx = {
     info: {
       name: config.name,
@@ -53,7 +68,9 @@ export function renderColorscheme(
       estiloVersion: version,
       neovim_legacy_compat: config.neovim_legacy_compat,
     },
-    stacks: parseSyntaxColors(project.syntax, palette),
+    stacks,
+    lspStacks,
+    treesitterStacks,
     term: parseTermColors(project.terminalSyntax, palette),
   };
 

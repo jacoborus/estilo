@@ -60,6 +60,44 @@ hi <%=key%>
 
 <% }) %>
 
+
+<%- if(it.treesitterStacks && Object.keys(it.treesitterStacks).length){ -%>
+if exists(':TSEnable')
+<% Object.keys(it.treesitterStacks).forEach(function (key) {%>
+<% const { link, fore, back, ui, guisp } = it.treesitterStacks[key]; %>
+<%- if(link){ -%>
+  hi link <%=key%> <%=link%>
+<%- } else { -%>
+  hi <%=key%>
+<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>
+<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>
+<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>
+<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>
+<% } %>
+
+<% }) %>
+endif
+<% } %>
+
+
+<%- if(it.lspStacks && Object.keys(it.lspStacks).length){ -%>
+if exists(':LspInfo')
+<% Object.keys(it.lspStacks).forEach(function (key) {%>
+<% const { link, fore, back, ui, guisp } = it.lspStacks[key]; %>
+<%- if(link){ -%>
+  hi link <%=key%> <%=link%>
+<%- } else { -%>
+  hi <%=key%>
+<%- if(fore){ -%> guifg=<%=fore.hex%> ctermfg=<%=fore.xterm%><%}%>
+<%- if(back){ -%> guibg=<%=back.hex%> ctermbg=<%=back.xterm%><%}%>
+<%- if(ui){ -%> gui=<%=ui%> cterm=<%=ui%><%}%>
+<%- if(guisp){ -%> guisp=<%=guisp.hex%><%}%>
+<% } %>
+
+<% }) %>
+endif
+<% } %>
+
 <% if(it.term.color_0){ %>
 if has('terminal')
   let g:terminal_ansi_colors = [
