@@ -7,7 +7,10 @@
 '@text.todo': ''  # Todo
 #
 '@comment': ''  # Comment
-'@punctuation': ''  # Delimiter
+'@comment.todo': ''  # Comment : "TODO" "WIP"
+'@comment.note': ''  # Comment : "NOTE" "XXX" "INFO" "DOCS" "PERF" "TEST"
+'@comment.warning': ''  # Comment : "HACK" "WARNING" "WARN" "FIX"
+'@comment.error': ''  # Comment : "FIXME" "BUG" "ERROR"
 #
 '@constant': ''  # Constant
 '@constant.builtin': ''  # Special
