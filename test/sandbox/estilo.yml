@@ -1,1 +1,27 @@
-sky: '#bbddff'
+---
+version: 0.17.5
+author: The Author
+name: estilotestcolors
+url: https://github.com/jacoborus/estilo
+license: MIT
+description: A test colorscheme
+colorschemes:
+  - name: testone
+    background: dark
+    palette: testone
+    description: Test one description
+  - name: testtwo
+    background: light
+    palette: testtwo
+    description: Test two description
+common:
+  sky: '#99bbff'
+lightline:
+  - name: testone
+    palette: testone
+    style: regular
+    description: Testone Lightline theme
+  - name: testoneplus
+    palette: testone
+    style: plus
+    description: Testone Lightline theme
