@@ -1,6 +1,6 @@
 import { ensureDirSync } from "jsr:@std/fs@0.219.1";
-import { resolve } from "jsr:@std/path@0.219.1";
-import { Project } from "./types.ts";
+import { resolve } from "@std/path";
+import type { Project } from "./types.ts";
 import { renderColorscheme } from "./render-colorscheme.ts";
 import { renderStatus } from "./render-status.ts";
 

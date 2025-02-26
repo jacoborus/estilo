@@ -1,4 +1,4 @@
-import $ from "jsr:@david/dax";
+import $ from "@david/dax";
 import denojson from "../deno.json" with { type: "json" };
 
 const prefix = `estilo-${denojson.version}-`;
@@ -19,7 +19,7 @@ for await (const arch of archs) {
 
 console.log("Done!");
 
-async function releaseArch(arch: typeof archs[number]) {
+async function releaseArch(arch: (typeof archs)[number]) {
   const folder = "release/" + prefix + arch[1];
   await $`mkdir ${folder} -p`;
   await $`rm -rf ${folder}/*.*`;

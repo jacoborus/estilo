@@ -1,4 +1,4 @@
-import { resolve } from "jsr:@std/path@0.219.1";
+import { resolve } from "@std/path";
 
 import { crash, existsSync } from "./src/util.ts";
 import { createProject } from "./src/create-project.ts";

@@ -3,7 +3,7 @@ import denojson from "../deno.json" with { type: "json" };
 import assets from "./assets.ts";
 import { crash } from "./util.ts";
 
-import {
+import type {
   DataRenderStatus,
   Palette,
   Project,

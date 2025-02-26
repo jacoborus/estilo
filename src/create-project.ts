@@ -1,8 +1,8 @@
-import { ensureDirSync } from "jsr:@std/fs@0.219.1";
-import { basename, resolve } from "jsr:@std/path@0.219.1";
+import { ensureDirSync } from "@std/fs";
+import { basename, resolve } from "@std/path";
 import { render } from "npm:eta@1.14.2";
 
-import { List } from "./types.ts";
+import type { List } from "./types.ts";
 import assets from "./assets.ts";
 
 interface ProjectOptions {
@@ -85,10 +85,7 @@ function createBoilerplate(projectPath: string, options: ProjectOptions) {
     resolve(palettesFolder, options.name + ".yml"),
     defaultPalette,
   );
-  Deno.writeTextFileSync(
-    resolve(syntaxFolder, "base.yml"),
-    assets.syntax.base,
-  );
+  Deno.writeTextFileSync(resolve(syntaxFolder, "base.yml"), assets.syntax.base);
 
   console.log("%c✓  Your project is ready\n", "color: green");
 }

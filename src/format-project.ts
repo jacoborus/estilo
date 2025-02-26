@@ -1,6 +1,6 @@
-import { basename } from "jsr:@std/path@0.219.1";
+import { basename } from "@std/path";
 
-import {
+import type {
   List,
   StatusBrand,
   StatusStyle,

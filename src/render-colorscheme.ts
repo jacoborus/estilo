@@ -1,11 +1,11 @@
 import { render } from "npm:eta@1.14.2";
-import { hexterm } from "jsr:@jacoborus/hexterm@2.1.1";
+import { hexterm } from "@jacoborus/hexterm";
 import assets from "./assets.ts";
 import denojson from "../deno.json" with { type: "json" };
 import { crash, isHexColor } from "./util.ts";
 import { isLegacyUi, parseLegacyUi } from "./legacy-ui.ts";
 
-import {
+import type {
   ColorObj,
   List,
   Palette,

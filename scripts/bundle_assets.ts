@@ -1,4 +1,4 @@
-import { basename, extname, resolve } from "jsr:@std/path@0.219.1";
+import { basename, extname, resolve } from "@std/path";
 
 const projectFolder = resolve(import.meta.dirname as string, "..");
 const srcFolder = resolve(projectFolder, "src");
