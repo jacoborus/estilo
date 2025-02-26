@@ -1,8 +1,8 @@
-import { parse as yamlParse } from "jsr:@std/yaml@0.219.1";
-import { basename, resolve } from "jsr:@std/path@0.219.1";
-import { hexterm } from "jsr:@jacoborus/hexterm@2.1.1";
+import { parse as yamlParse } from "@std/yaml";
+import { basename, resolve } from "@std/path";
+import { hexterm } from "@jacoborus/hexterm";
 
-import {
+import type {
   ColorObj,
   List,
   Palette,
@@ -36,7 +36,7 @@ export function loadProjectFiles(projectUrl: string): Project {
   return {
     projectUrl,
     config,
-    palettes: buildPalettes(paletteFiles, config.commonPalette),
+    palettes: buildPalettes(paletteFiles, config.common),
     syntax: formatSyntax(syntaxFiles),
     terminalSyntax: formatTerminal(terminalFile.content as List),
     airlineStyles: formatStatusStyles(airlineFiles, "airline"),
@@ -44,7 +44,7 @@ export function loadProjectFiles(projectUrl: string): Project {
   };
 }
 
-function loadYmlsInFolder(projectUrl: string, folder: string) {
+function loadYmlsInFolder(projectUrl: string, folder: string): YmlFile[] {
   const folderUrl = resolve(projectUrl, "estilos", folder);
   if (!existsSync(folderUrl)) return [];
   return Array.from(Deno.readDirSync(folderUrl))
