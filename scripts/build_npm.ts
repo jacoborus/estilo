@@ -5,6 +5,7 @@ const version = denojson.version;
 await emptyDir("./npm");
 
 await build({
+  importMap: "./deno.json",
   typeCheck: "single",
   test: false,
   declaration: "inline",
@@ -12,11 +13,13 @@ await build({
   shims: {
     deno: true,
   },
-  entryPoints: [{
-    kind: "bin",
-    name: "estilo", // command name
-    path: "./estilo.ts",
-  }],
+  entryPoints: [
+    {
+      kind: "bin",
+      name: "estilo", // command name
+      path: "./estilo.ts",
+    },
+  ],
   outDir: "./npm",
 
   package: {
@@ -27,20 +30,13 @@ await build({
     license: "MIT",
     author: "Jacobo Tabernero Rey - http://jacobo.codes",
     homepage: "https://github.com/jacoborus/estilo",
-    keywords: [
-      "vim",
-      "color",
-      "scheme",
-      "schemes",
-      "themes",
-      "generator",
-    ],
+    keywords: ["vim", "color", "scheme", "schemes", "themes", "generator"],
     repository: {
-      "type": "git",
-      "url": "git@github.com:jacoborus/hexterm.git",
+      type: "git",
+      url: "git@github.com:jacoborus/hexterm.git",
     },
     bugs: {
-      "url": "https://github.com/jacoborus/hexterm/issues",
+      url: "https://github.com/jacoborus/hexterm/issues",
     },
   },
 

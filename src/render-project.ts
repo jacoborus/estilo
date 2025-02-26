@@ -1,4 +1,4 @@
-import { ensureDirSync } from "jsr:@std/fs@0.219.1";
+import { ensureDir } from "./util.ts";
 import { resolve } from "@std/path";
 import type { Project } from "./types.ts";
 import { renderColorscheme } from "./render-colorscheme.ts";
@@ -14,27 +14,37 @@ export async function renderProject(project: Project): Promise<void> {
 
   for (const config of projectConfig.colorschemes) {
     const rendered = renderColorscheme(config, project);
-    writeThing("colors", rendered, config.name, project.projectUrl);
+    await writeThing("colors", rendered, config.name, project.projectUrl);
   }
 
   if (projectConfig.airline) {
     for (const config of projectConfig.airline) {
-      const rendered = await renderStatus(config, project, "airline");
-      writeThing(paths.airline, rendered, config.name, project.projectUrl);
+      const rendered = renderStatus(config, project, "airline");
+      await writeThing(
+        paths.airline,
+        rendered,
+        config.name,
+        project.projectUrl,
+      );
     }
   }
 
   if (projectConfig.lightline) {
     for (const config of projectConfig.lightline) {
-      const rendered = await renderStatus(config, project, "lightline");
-      writeThing(paths.lightline, rendered, config.name, project.projectUrl);
+      const rendered = renderStatus(config, project, "lightline");
+      await writeThing(
+        paths.lightline,
+        rendered,
+        config.name,
+        project.projectUrl,
+      );
     }
   }
 
   console.log("%c✓  Done, your theme is ready\n", "color: green");
 }
 
-export function writeThing(
+export async function writeThing(
   folder: string,
   txt: string,
   name: string,
@@ -42,6 +52,6 @@ export function writeThing(
 ) {
   const folderPath = resolve(projectPath, folder);
   const filepath = resolve(folderPath, name + ".vim");
-  ensureDirSync(folderPath);
-  Deno.writeTextFileSync(filepath, txt);
+  await ensureDir(folderPath);
+  await Deno.writeTextFile(filepath, txt);
 }

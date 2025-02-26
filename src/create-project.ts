@@ -1,4 +1,4 @@
-import { ensureDirSync } from "@std/fs";
+import { ensureDir } from "./util.ts";
 import { basename, resolve } from "@std/path";
 import { render } from "npm:eta@1.14.2";
 
@@ -20,7 +20,7 @@ export async function createProject(projectPath: string, noQuestions: boolean) {
   const options = noQuestions
     ? getDefaultConfig(projectPath)
     : await askConfig(projectPath);
-  createBoilerplate(projectPath, options as ProjectOptions);
+  await createBoilerplate(projectPath, options as ProjectOptions);
 }
 
 function getDefaultConfig(projectPath: string): ProjectOptions {
@@ -65,16 +65,16 @@ async function askConfig(projectPath: string) {
   return config;
 }
 
-function createBoilerplate(projectPath: string, options: ProjectOptions) {
+async function createBoilerplate(projectPath: string, options: ProjectOptions) {
   const estiloStr = renderConfigFile(options);
 
   const estilosFolder = resolve(projectPath, "estilos");
   const syntaxFolder = resolve(estilosFolder, "syntax");
   const palettesFolder = resolve(estilosFolder, "palettes");
 
-  ensureDirSync(estilosFolder);
-  ensureDirSync(syntaxFolder);
-  ensureDirSync(palettesFolder);
+  await ensureDir(estilosFolder);
+  await ensureDir(syntaxFolder);
+  await ensureDir(palettesFolder);
 
   Deno.writeTextFileSync(resolve(projectPath, "estilo.yml"), estiloStr);
   Deno.writeTextFileSync(

@@ -1,3 +1,5 @@
+import { resolve } from "@std/path";
+
 export function crash(message: string, data?: Record<string, string>): never {
   console.log("%cError: " + message, "color: red");
 
@@ -47,4 +49,29 @@ export function existsSync(path: string): boolean {
     return !e;
   }
   return true;
+}
+
+export async function ensureDir(dir: string) {
+  try {
+    const stat = await Deno.stat(dir);
+    if (!stat.isDirectory) {
+      throw new Error(`Path exists but is not a directory: ${dir}`);
+    }
+  } catch (error) {
+    if (error instanceof Deno.errors.NotFound) {
+      const parent = resolve(dir, "..");
+      if (parent !== dir) {
+        await ensureDir(parent);
+      }
+      try {
+        await Deno.mkdir(dir);
+      } catch (err) {
+        if (!(err instanceof Deno.errors.AlreadyExists)) {
+          throw err;
+        }
+      }
+    } else {
+      throw error;
+    }
+  }
 }
