@@ -1,6 +1,6 @@
 {
   "name": "@jacoborus/estilo",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "exports": "./estilo.ts",
   "tasks": {
     "bundle-assets": "deno run --allow-read --allow-write scripts/bundle_assets.ts",
@@ -9,6 +9,12 @@
     "create-binaries": "deno run -A scripts/create_binaries.ts"
   },
   "imports": {
-    "@deno/dnt": "jsr:@deno/dnt@^0.41.3"
+    "@david/dax": "jsr:@david/dax@^0.42.0",
+    "@deno/dnt": "jsr:@deno/dnt@^0.41.3",
+    "@jacoborus/hexterm": "jsr:@jacoborus/hexterm@^2.1.1",
+    "@std/assert": "jsr:@std/assert@^1.0.11",
+    "@std/fs": "jsr:@std/fs@^1.0.13",
+    "@std/path": "jsr:@std/path@^1.0.8",
+    "@std/yaml": "jsr:@std/yaml@^1.0.5"
   }
 }
