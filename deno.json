@@ -1,6 +1,6 @@
 {
   "name": "@jacoborus/estilo",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "exports": "./estilo.ts",
   "tasks": {
     "bundle-assets": "deno run --allow-read --allow-write scripts/bundle_assets.ts",
