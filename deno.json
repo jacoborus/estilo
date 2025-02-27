@@ -4,13 +4,14 @@
   "exports": "./estilo.ts",
   "tasks": {
     "bundle-assets": "deno run --allow-read --allow-write scripts/bundle_assets.ts",
-    "install": "deno task bundle-assets && deno install --config './deno.json' --global --allow-read --allow-write estilo.ts",
-    "build-npm": "deno run -A scripts/build_npm.ts",
-    "create-binaries": "deno run -A scripts/create_binaries.ts"
+    "install": "deno task bundle-assets && deno install -g -R -W --config './deno.json' estilo.ts",
+    "build-npm": "deno task bundle-assets && deno run -A scripts/build_npm.ts",
+    "create-binaries": "deno task bundle-assets && deno run -A scripts/create_binaries.ts"
   },
   "imports": {
     "@david/dax": "jsr:@david/dax@^0.42.0",
     "@deno/dnt": "jsr:@deno/dnt@^0.41.3",
+    "@eta-dev/eta": "jsr:@eta-dev/eta@^3.5.0",
     "@jacoborus/hexterm": "jsr:@jacoborus/hexterm@^2.1.1",
     "@std/assert": "jsr:@std/assert@^1.0.11",
     "@std/fs": "jsr:@std/fs@^1.0.13",

@@ -1,4 +1,4 @@
-import { render } from "npm:eta@1.14.2";
+import { Eta } from "@eta-dev/eta";
 import denojson from "../deno.json" with { type: "json" };
 import assets from "./assets.ts";
 import { crash } from "./util.ts";
@@ -12,6 +12,7 @@ import type {
   StatusSyntax,
 } from "./types.ts";
 
+const eta = new Eta();
 const version = denojson.version;
 
 function parseStatusColors(
@@ -85,5 +86,5 @@ export function renderStatus(
   };
 
   const context = Object.assign(ctx, { info });
-  return render(assets.mustaches[brand] as string, context) as string;
+  return eta.renderString(assets.mustaches[brand] as string, context) as string;
 }

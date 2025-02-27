@@ -1,4 +1,4 @@
-import { render } from "npm:eta@1.14.2";
+import { Eta } from "@eta-dev/eta";
 import { hexterm } from "@jacoborus/hexterm";
 import assets from "./assets.ts";
 import denojson from "../deno.json" with { type: "json" };
@@ -27,6 +27,7 @@ interface LinkValue {
   link: string;
 }
 
+const eta = new Eta();
 const version = denojson.version;
 
 export function renderColorscheme(
@@ -74,7 +75,7 @@ export function renderColorscheme(
     term: parseTermColors(project.terminalSyntax, palette),
   };
 
-  return render(assets.mustaches["colorscheme"]!, ctx);
+  return eta.renderString(assets.mustaches["colorscheme"]!, ctx);
 }
 
 function parseTermColors(termSyntax: List, palette: Palette) {

@@ -1,6 +1,6 @@
 import { ensureDir } from "./util.ts";
 import { basename, resolve } from "@std/path";
-import { render } from "npm:eta@1.14.2";
+import { Eta } from "@eta-dev/eta";
 
 import type { List } from "./types.ts";
 import assets from "./assets.ts";
@@ -13,6 +13,7 @@ interface ProjectOptions {
   license: string;
 }
 
+const eta = new Eta();
 const decoder = new TextDecoder();
 const defaultPalette = "myblue: '#99ccff'";
 
@@ -91,7 +92,7 @@ async function createBoilerplate(projectPath: string, options: ProjectOptions) {
 }
 
 function renderConfigFile(options: ProjectOptions): string {
-  return render(
+  return eta.renderString(
     assets.mustaches["project"] as string,
     options as unknown as List,
   ) as string;
