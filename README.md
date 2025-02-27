@@ -74,6 +74,8 @@ mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
 - [Ullswater](https://github.com/logicmonkey/Ullswater) by
   [@logicmonkey](https://github.com/logicmonkey)
 - [nour2](https://github.com/ibash/nour2) by [@ibash](https://github.com/ibash)
+- [Ullswater](https://github.com/logicmonkey/Ullswater) by
+  [@logicmonkey](https://github.com/logicmonkey)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
 
 ## Development
