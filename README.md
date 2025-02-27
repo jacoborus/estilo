@@ -3,25 +3,22 @@
 Create and maintain colorschemes for vim, airline and lightline.
 
 [![JSR](https://jsr.io/badges/@jacoborus/estilo)](https://jsr.io/@jacoborus/estilo)
-
----
-
-**HEADS UP!**
-
-You're currently looking at Estilo 2 branch (beta version). If you're looking
-for Estilo 1, please check out
-[`node` branch](https://github.com/jacoborus/estilo/tree/node).
-
----
+[![NPM](https://img.shields.io/npm/v/estilo)](https://www.npmjs.com/package/estilo)
 
 ![estilo-demo](https://cloud.githubusercontent.com/assets/829859/18419822/ea729490-7863-11e6-8d04-ddb327da68cd.gif)
 
 ## Installation
 
-### Deno users
+### Deno
 
 ```sh
-deno install -n estilo --allow-write --allow-read jsr:@jacoborus/estilo
+deno install -n estilo -W -R jsr:@jacoborus/estilo
+```
+
+### Node.js
+
+```sh
+npm install -g estilo
 ```
 
 ### Other plaforms
@@ -76,8 +73,7 @@ mv estilo estilos && mv estilos/addons/nvim-term.yml estilos/terminal.yml
   [@balanceiskey](https://github.com/balanceiskey)
 - [Ullswater](https://github.com/logicmonkey/Ullswater) by
   [@logicmonkey](https://github.com/logicmonkey)
-- [nour2](https://github.com/ibash/nour2) by
-  [@ibash](https://github.com/ibash)
+- [nour2](https://github.com/ibash/nour2) by [@ibash](https://github.com/ibash)
 - [add yours](https://github.com/jacoborus/estilo/issues/new)
 
 ## Development
