@@ -1,7 +1,8 @@
 {
   "name": "@jacoborus/estilo",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "exports": "./estilo.ts",
+  "license": "MIT",
   "tasks": {
     "bundle-assets": "deno run --allow-read --allow-write scripts/bundle_assets.ts",
     "install": "deno task bundle-assets && deno install -g -R -W --config './deno.json' estilo.ts",
