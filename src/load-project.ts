@@ -27,16 +27,22 @@ import {
 
 export function loadProjectFiles(projectUrl: string): Project {
   const config = loadYml(projectUrl, "estilo.yml").content as ProjectConfig;
-  const airlineFiles = loadYmlsInFolder(projectUrl, "airline");
-  const lightlineFiles = loadYmlsInFolder(projectUrl, "lightline");
-  const syntaxFiles = loadYmlsInFolder(projectUrl, "syntax");
-  const paletteFiles = loadYmlsInFolder(projectUrl, "palettes");
+  const airlineFiles = loadYmlsInFolder(projectUrl, "estilos/airline");
+  const lightlineFiles = loadYmlsInFolder(projectUrl, "estilos/lightline");
+  const baseSyntaxFile = loadYml(projectUrl, "estilos/syntax/base.yml");
+  const syntaxFiles = loadYmlsInFolder(
+    projectUrl,
+    "estilos/syntax",
+    "base.yml",
+  );
+  const paletteFiles = loadYmlsInFolder(projectUrl, "estilos/palettes");
   const terminalFile = loadYml(projectUrl, "estilos/terminal.yml");
 
   return {
     projectUrl,
     config,
     palettes: buildPalettes(paletteFiles, config.common),
+    baseSyntax: formatSyntax([baseSyntaxFile]),
     syntax: formatSyntax(syntaxFiles),
     terminalSyntax: formatTerminal(terminalFile.content as List),
     airlineStyles: formatStatusStyles(airlineFiles, "airline"),
@@ -44,11 +50,16 @@ export function loadProjectFiles(projectUrl: string): Project {
   };
 }
 
-function loadYmlsInFolder(projectUrl: string, folder: string): YmlFile[] {
-  const folderUrl = resolve(projectUrl, "estilos", folder);
+function loadYmlsInFolder(
+  projectUrl: string,
+  folder: string,
+  omit?: string,
+): YmlFile[] {
+  const folderUrl = resolve(projectUrl, folder);
   if (!existsSync(folderUrl)) return [];
   return Array.from(Deno.readDirSync(folderUrl))
     .filter((file) => file.name.endsWith(".yml"))
+    .filter((file) => file.name !== omit)
     .map((file) => resolve(folderUrl, file.name))
     .map((filepath) => loadYml(filepath));
 }

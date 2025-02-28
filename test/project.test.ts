@@ -20,7 +20,7 @@ Deno.test("loadProjectFiles", async (t) => {
 
   await t.step("loads syntax rules", () => {
     assertExists(project.syntax);
-    const baseRules = project.syntax.filter((rule) =>
+    const baseRules = project.baseSyntax.filter((rule) =>
       rule.filepath.endsWith("base.yml"),
     );
     const jsonRules = project.syntax.filter((rule) =>

@@ -1,6 +1,6 @@
 {
   "name": "@jacoborus/estilo",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "exports": "./estilo.ts",
   "license": "MIT",
   "tasks": {

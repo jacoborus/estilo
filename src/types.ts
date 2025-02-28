@@ -41,6 +41,7 @@ export interface Project {
   projectUrl: string;
   config: ProjectConfig;
   palettes: Record<string, Palette>;
+  baseSyntax: SyntaxRule[];
   syntax: SyntaxRule[];
   terminalSyntax: List;
   airlineStyles: Record<string, StatusStyle>;

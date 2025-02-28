@@ -12,7 +12,7 @@ Create and maintain colorschemes for vim, airline and lightline.
 ### Deno
 
 ```sh
-deno install -n estilo -W -R jsr:@jacoborus/estilo
+deno install -n estilo -g -W -R jsr:@jacoborus/estilo
 ```
 
 ### Node.js
